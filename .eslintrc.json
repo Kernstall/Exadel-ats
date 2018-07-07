@@ -5,6 +5,15 @@
     "node": true
   },
   "rules": {
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ]
   }
 }
