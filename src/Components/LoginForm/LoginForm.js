@@ -19,6 +19,7 @@ const styles = theme => ({
     alignItems: 'center',
   },
   textField: {
+    marginTop: 0,
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     width: 200,
@@ -31,6 +32,9 @@ const styles = theme => ({
     color: '#000',
     backgroundColor: '#ffb300',
   },
+  loginHeader: {
+    padding: 15,
+  },
 });
 
 class LoginForm extends React.Component {
@@ -42,27 +46,27 @@ class LoginForm extends React.Component {
     return(
       <form className={classes.container} noValidate autoComplete="off">
         <div className={classes.inputContainer}>
-          <Typography variant="headline"  align="inherit">
+          <Typography className={classes.loginHeader} variant="headline" >
             Log In
           </Typography>
-          <Typography variant="subheading" gutterBottom>
+          <Typography variant="subheading">
             Not a member yet?<br />
             <Button size="small" className={classes.button}>Sign Up</Button> now.
           </Typography>
           <TextField
-              id="name"
-              label="Login"
-              className={classes.textField}
-              onChange={this.handleChange('name')}
-              margin="normal"
+            id="name"
+            label="Login"
+            className={classes.textField}
+            onChange={this.handleChange('name')}
+            margin="normal"
           />
           <TextField
-              id="password-input"
-              label="Password"
-              className={classes.textField}
-              type="password"
-              autoComplete="current-password"
-              margin="normal"
+            id="password-input"
+            label="Password"
+            className={classes.textField}
+            type="password"
+            autoComplete="current-password"
+            margin="normal"
           />
           <Button className={classes.loginButton} color="loginButton">
             Login
