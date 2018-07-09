@@ -1,11 +1,26 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
-export default class Footer extends React.Component {
-  render() {
-    return (
-      <footer>
+const styles = theme => ({
+  footer: {
+    height: 40,
+    backgroung: theme.palette.background.paper,
+  },
+});
+
+function Footer(props) {
+  const { classes } = props;
+
+  return (
+    <div className={classes.footer}>
         Footer
-      </footer>
-    );
-  }
+    </div>
+  );
 }
+
+Footer.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Footer);

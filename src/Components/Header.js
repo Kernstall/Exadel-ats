@@ -1,11 +1,20 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 
-export default class Header extends React.Component {
-  render() {
-    return (
-      <header>
+const styles = ({
+  header: {
+    height: 40,
+  },
+});
+
+function Header(props) {
+  const { classes } = props;
+
+  return (
+    <div className={classes.header}>
         Logo
-      </header>
-    );
-  }
+    </div>
+  );
 }
+
+export default withStyles(styles)(Header);
