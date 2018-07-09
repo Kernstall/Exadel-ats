@@ -9,7 +9,6 @@ export default class CenteredTabs extends React.Component {
     super(props);
     this.state = {
       value: 0,
-      tabHeaders: props.tabHeaders,
     };
     this.handleChange = (event, value) => {
       this.setState({ value });
@@ -30,7 +29,7 @@ export default class CenteredTabs extends React.Component {
           fullWidth="true"
         >
 
-          {this.state.tabHeaders.map(tab => (<Tab className="tab" label={tab.tabName} />))}
+          {this.props.tabHeaders.map(tab => (<Tab className="tab" label={tab.tabName} />))}
 
         </Tabs>
       </Paper>
