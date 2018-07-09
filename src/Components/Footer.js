@@ -1,26 +1,25 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
+import sharedStyles from '../Styles/Shared';
 
-const styles = theme => ({
+const styles = ({
   footer: {
     height: 40,
-    backgroung: theme.palette.background.paper,
+    background: '#8080805e',
   },
+  ...sharedStyles,
 });
 
 function Footer(props) {
   const { classes } = props;
 
   return (
-    <div className={classes.footer}>
+    <div className={[classes.footer, classes.flex].join(' ')}>
+      <div className={classes.center}>
         Footer
+      </div>
     </div>
   );
 }
-
-Footer.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(Footer);
