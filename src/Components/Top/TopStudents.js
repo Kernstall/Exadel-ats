@@ -12,11 +12,11 @@ const styles = ({
 });
 
 function TopStudents(props) {
-  const { classes } = props;
+  const { classes, topScoreStudentName } = props;
   return (
     <List component="nav" className={[classes.width]}>
       {
-        props.topScoreStudentName.map(
+        topScoreStudentName.map(
           (student, index) => (
             <StudentInTop
               student={student}
