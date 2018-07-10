@@ -12,6 +12,7 @@ export default class CenteredTabs extends React.Component {
     };
     this.handleChange = (event, value) => {
       this.setState({ value });
+      this.props.callbackOnTabEvent(value);
     };
   }
 
@@ -39,4 +40,5 @@ export default class CenteredTabs extends React.Component {
 
 CenteredTabs.propTypes = {
   tabHeaders: PropTypes.array.isRequired,
+  callbackOnTabEvent: PropTypes.func,
 };
