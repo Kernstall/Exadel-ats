@@ -1,15 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { Route, Link } from "react-router-dom";
-import { Redirect } from 'react-router';
+import { Route, Link } from 'react-router-dom';
 import './style.css';
-import TeacherRegistration from "../RegisterForm/TeacherRegistration/TeacherRegistration";
-import RegisterForm from "../RegisterForm/RegisterForm";
-import Footer from "../Footer";
-import StudentRegistration from "../RegisterForm/StudentRegistration/StudentRegistration";
+import RegisterForm from '../RegisterForm/RegisterForm';
 
 class LoginForm extends React.Component {
   render() {

@@ -22,12 +22,10 @@ class StudentRegistration extends React.Component {
   }
 
   handleSelectUnChange(event) {
-    console.log(event);
     this.setState({
       university: event.target.value,
       faculties: '',
     });
-    console.log(this.state.university);
   }
 
   handleFacultyChange(event) {
@@ -38,7 +36,7 @@ class StudentRegistration extends React.Component {
 
   render() {
     const universitiesArr = Object.keys(universities);
-    const {university} = this.state;
+    const { university } = this.state;
 
     const facultiesArr = universities[university];
 
