@@ -6,8 +6,8 @@ const employeeSchema = new mongoose.Schema({
   email: String,
   password: String,
   status: String,
-  university: String,
+  educationalEstablishment: mongoose.Schema.Types.ObjectId,
   graduateYear: Number,
 });
 
-module.exports = mongoose.model('employeeModel', employeeSchema);
+module.exports = mongoose.model('employee', employeeSchema);

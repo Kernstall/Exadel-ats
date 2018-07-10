@@ -5,7 +5,8 @@ const studentSchema = new mongoose.Schema({
   lastName: String,
   email: String,
   password: String,
-  university: String,
+  educationalEstablishment: mongoose.Schema.Types.ObjectId,
+  faculty: String,
   graduateYear: Number,
   course: String,
   groupNumber: Number,
@@ -26,4 +27,4 @@ const studentSchema = new mongoose.Schema({
   }],
 });
 
-module.exports = mongoose.model('studentModel', studentSchema);
+module.exports = mongoose.model('student', studentSchema);
