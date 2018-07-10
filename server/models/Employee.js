@@ -5,7 +5,10 @@ const employeeSchema = new mongoose.Schema({
   lastName: String,
   email: String,
   password: String,
-  status: String,
+  status: {
+    type: String,
+    enum: ['teacher', 'admin'],
+  },
   educationalEstablishment: mongoose.Schema.Types.ObjectId,
   graduateYear: Number,
 });

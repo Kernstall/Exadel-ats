@@ -20,7 +20,10 @@ const studentSchema = new mongoose.Schema({
     tags: [String],
     attemptId: mongoose.Schema.Types.ObjectId,
     result: mongoose.Schema.Types.ObjectId,
-    status: String,
+    status: {
+      type: String,
+      enum: ['notSent', 'inProgress', 'notPassed', 'passed'],
+    },
     time: mongoose.Schema.Types.ObjectId,
     questionAmount: mongoose.Schema.Types.ObjectId,
     isTraining: Boolean,
