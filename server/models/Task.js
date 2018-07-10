@@ -11,7 +11,7 @@ const task = mongoose.Schema({
     min: 1,
     max: 10,
   },
-  topicsIds: [mongoose.Schema.Types.ObjectId],
+  topicId: mongoose.Schema.Types.ObjectId,
   language: String,
   tags: [String],
   tests:
