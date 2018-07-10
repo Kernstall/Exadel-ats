@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Int32 = require('mongoose-int32');
 
 const task = mongoose.Schema({
     description: String,
@@ -8,7 +7,7 @@ const task = mongoose.Schema({
         unique: true,
     },
     weight: {
-        type: Int32,
+        type: Number,
         min: 1,
         max: 10,
     },
@@ -21,12 +20,12 @@ const task = mongoose.Schema({
                 inputFileAdress: String,
                 outputFileAdress: String,
                 weight: {
-                    type: Int32,
+                    type: Number,
                     min: 1,
                     max: 10,
                 },
             }],
-    passResult: mongoose.Schema.Types.Decimal128,
+    passResult: Number,
 });
 
 module.exports = mongoose.model('task', task);
