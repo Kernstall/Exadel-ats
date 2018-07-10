@@ -4,9 +4,12 @@
   "private": true,
   "description": "Educational web app, developed by Exadel",
   "main": "index.js",
+  "proxy": "http://localhost:3000/",
   "dependencies": {
     "@material-ui/core": "^1.3.1",
+    "@material-ui/icons": "^1.1.0",
     "@types/prop-types": "^15.5.3",
+    "classnames": "^2.2.6",
     "material-ui": "^1.0.0-beta.47",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
@@ -18,6 +21,7 @@
     "redux": "^4.0.0"
   },
   "devDependencies": {
+    "classname-js": "^1.0.2",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-import": "^2.12.0",
