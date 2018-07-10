@@ -1,16 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import './style.css';
 
 class LoginForm extends React.Component {
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
-  };
   render() {
     return (
       <form className="container" noValidate autoComplete="off">
@@ -31,7 +25,6 @@ class LoginForm extends React.Component {
             id="name"
             label="Login"
             className="text-field"
-            onChange={this.handleChange('name')}
             margin="normal"
           />
           <TextField
@@ -50,9 +43,5 @@ class LoginForm extends React.Component {
     );
   }
 }
-
-LoginForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default LoginForm;
