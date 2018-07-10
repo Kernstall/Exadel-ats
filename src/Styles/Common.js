@@ -5,6 +5,19 @@ const Common = ({
       'sans-serif',
     ],
   },
+  centerScreen: {
+    width: '70%',
+    margin: 'auto',
+  },
+  center: {
+    margin: 'auto',
+    color: 'whitesmoke',
+    width: 'fit-content',
+    height: 'fit-content',
+  },
+  flex: {
+    display: 'flex',
+  },
 });
 
 export default Common;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import sharedStyles from '../Styles/Shared';
+import sharedStyles from '../Styles/Common';
 
 const styles = ({
   header: {
-    height: 200,
+    height: '200px',
     background: '#2196f3',
   },
   ...sharedStyles,

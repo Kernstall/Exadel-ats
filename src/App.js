@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 import { Link } from 'react-router-dom';
-import { Switch, Route, Router  } from 'react-router';
+import { Switch, Route } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import LoginForm from './Components/LoginForm/LoginForm';
 import Common from './Styles/Common';
+import TopStudents from './Components/TopStudents';
 
 const styles = ({
   content: {
@@ -23,30 +24,33 @@ class App extends Component {
       <div>
         <div className={classes.content}>
           <Header />
-          <nav>
-            <ul>
-              <li>
-                <Link to="/l">
-                  None
-                </Link>
-              </li>
-              <li>
-                <Link to="/Components/LoginForm">
-                  Footer
-                </Link>
-              </li>
-              <li>
-                <Link to="/Components">
-                  Header
-                </Link>
-              </li>
-            </ul>
-          </nav>
-          <Switch>
-            <Route path="/Components/LoginForm" component={Footer} />
-            <Route path="/Components" component={Header} />
-          </Switch>
-          <LoginForm />
+          <div className={classes.centerScreen}>
+            <nav>
+              <ul>
+                <li>
+                  <Link to="/">
+                    None
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/Components/LoginForm">
+                    Auth
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+            <Switch>
+              <Route path="/Components/LoginForm" component={LoginForm} />
+            </Switch>
+            <TopStudents
+              topScoreStudentName={[
+                'dimon',
+                'sasha',
+                'misha',
+                'nigga',
+              ]}
+            />
+          </div>
         </div>
         <Footer />
       </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import sharedStyles from '../Styles/Shared';
+import sharedStyles from '../Styles/Common';
 
 const styles = ({
   footer: {
