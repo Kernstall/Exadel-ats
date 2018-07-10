@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Question = require('./question.js');
-const Task = require('./task.js');
-const TopicCourse = require('./topicCourse.js');
+const Question = require('./Question.js');
+const Task = require('./Task.js');
+const TopicCourse = require('./TopicCourse.js');
 
 
 async function connectDatabase() {
