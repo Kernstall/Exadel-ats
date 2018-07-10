@@ -14,12 +14,21 @@ const studentSchema = new mongoose.Schema({
     taskId: mongoose.Schema.Types.ObjectId,
     startDate: Date,
     finishDate: Date,
+    isPassed: Boolean,
+    bestResult: Number,
+    attempts:
+      [{
+        date: Date,
+        number: Number,
+        files: [String],
+        result: Number,
+        isPassed: Boolean,
+      }],
   }],
   tests: [{
     topicsIds: [mongoose.Schema.Types.ObjectId],
     tags: [String],
-    attemptId: mongoose.Schema.Types.ObjectId,
-    result: mongoose.Schema.Types.ObjectId,
+    result: Number,
     status: {
       type: String,
       enum: ['notSent', 'inProgress', 'notPassed', 'passed'],
@@ -27,6 +36,14 @@ const studentSchema = new mongoose.Schema({
     time: mongoose.Schema.Types.ObjectId,
     questionAmount: mongoose.Schema.Types.ObjectId,
     isTraining: Boolean,
+    attemptTime: Number,
+    date: Date,
+    questions:
+      [{
+        questionId: mongoose.Schema.Types.ObjectId,
+        selectedAnswers: [String],
+        isPassed: Boolean,
+      }],
   }],
 });
 
