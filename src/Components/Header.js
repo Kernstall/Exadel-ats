@@ -1,11 +1,24 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import sharedStyles from '../Styles/Common';
 
-export default class Header extends React.Component {
-  render() {
-    return (
-      <header>
+const styles = ({
+  header: {
+    height: '200px',
+    background: '#2196f3',
+  },
+  ...sharedStyles,
+});
+
+function Header(props) {
+  const { classes } = props;
+  return (
+    <div className={[classes.header, classes.flex].join(' ')}>
+      <div className={classes.center}>
         Logo
-      </header>
-    );
-  }
+      </div>
+    </div>
+  );
 }
+
+export default withStyles(styles)(Header);
