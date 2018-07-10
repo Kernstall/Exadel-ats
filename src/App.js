@@ -8,6 +8,7 @@ import Footer from './Components/Footer';
 import LoginForm from './Components/LoginForm/LoginForm';
 import Common from './Styles/Common';
 import TopStudents from './Components/TopStudents';
+import TabComponent from './Components/TabComponent/TabComponent';
 
 const styles = ({
   content: {
