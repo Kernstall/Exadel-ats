@@ -1,3 +1,4 @@
 .ContentPanel{
-    min-height: 500px;
+    min-height: fit-content;
+    min-width: 100%;
 }

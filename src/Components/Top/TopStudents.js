@@ -1,7 +1,7 @@
 import React from 'react';
 import List from '@material-ui/core/List';
 import { withStyles } from '@material-ui/core/styles';
-import sharedStyles from '../Styles/Common';
+import sharedStyles from '../../Styles/Common';
 import StudentInTop from './StudentInTop';
 
 const styles = ({

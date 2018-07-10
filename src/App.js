@@ -9,12 +9,16 @@ import Footer from './Components/Footer';
 import RegisterForm from './Components/RegisterForm/RegisterForm';
 import LoginForm from './Components/LoginForm/LoginForm';
 import Common from './Styles/Common';
-import TopStudents from './Components/TopStudents';
+import TopStudents from './Components/Top/TopStudents';
 import TabComponent from './Components/TabComponent/TabComponent';
 
 const styles = ({
   content: {
     minHeight: 'calc(100vh - 40px)',
+  },
+  tabWrapper: {
+    width: '80%',
+    margin: 'auto',
   },
   ...Common,
 });
@@ -27,14 +31,28 @@ class App extends Component {
       <Router>
         <div>
           <div className={classes.content}>
-          <Header />
-          <Route path="/" exact component={LoginForm} />
-          <Route path="/registration" component={RegisterForm} />
+            <Header />
+            <Route path="/" exact component={LoginForm} />
+            <div className={classes.tabWrapper}>
+              <TabComponent tabHeaders={[
+                {
+                  tabName: 'Header',
+                  component: <TopStudents topScoreStudentName={[
+                    'Sasha',
+                    'Misha',
+                    'Bill',
+                    'Andry',
+                  ]}
+                  />,
+                },
+              ]}
+              />
+            </div>
+            <Route path="/registration" component={RegisterForm} />
           </div>
           <Footer />
         </div>
       </Router>
-
     );
   }
 }
