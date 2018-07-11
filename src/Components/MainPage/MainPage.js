@@ -18,7 +18,7 @@ const styles = ({
 const Tops = [
   {
     TopBy: 'Top by Mark',
-    Students: ['Sasha', 'Misha', 'Bill', 'Andry', 'Bill', 'Bill', 'Bill'],
+    Students: ['Sasha', 'Misha', 'Bill', 'Andry', 'Roma', 'Victor', 'Bill'],
   },
   {
     TopBy: 'Top by Tasks',
