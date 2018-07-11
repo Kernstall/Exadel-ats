@@ -25,13 +25,6 @@ connectDatabase();
 
 let taskArray = [];
 
-QuestionModel.find()
-  .then((response) => {
-    taskArray = response;
-    fs.writeFileSync('./questions.json', JSON.stringify(taskArray));
-  });
-
-
 const app = express();
 
 app.use(bodyParser.json());
