@@ -23,8 +23,6 @@ async function connectDatabase() {
 
 connectDatabase();
 
-let taskArray = [];
-
 const app = express();
 
 app.use(bodyParser.json());
