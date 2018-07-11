@@ -6,7 +6,6 @@ const passport = require('passport');
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
 const studentRouter = require('./routes/student-router');
-const studentRouter = require('./routes/student-routes');
 // const teacherRouter = require('./routes/teacher-routes');
 // const adminRouter = require('./routes/admin-routes');
 // const userRouter = require('./routes/user-routes');
@@ -27,8 +26,6 @@ async function connectDatabase() {
 }
 
 connectDatabase();
-
-const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -52,7 +49,7 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // app.use('/api/', authorization??);
-app.use('/api/stusent', studentRouter);
+app.use('/api/student', studentRouter);
 // app.use('/api/teacher', teacherRouter);
 // app.use('/api/admin', adminRouter);
 // app.use('/api/user', userRouter);
