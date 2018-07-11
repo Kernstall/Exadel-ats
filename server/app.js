@@ -5,6 +5,7 @@ const passport = require('passport');
 // const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
+
 const studentRouter = require('./routes/student-routes');
 // const teacherRouter = require('./routes/teacher-routes');
 // const adminRouter = require('./routes/admin-routes');
@@ -38,7 +39,7 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // app.use('/api/', authorization??);
-app.use('/api/stusent', studentRouter);
+app.use('/api/student', studentRouter);
 // app.use('/api/teacher', teacherRouter);
 // app.use('/api/admin', adminRouter);
 // app.use('/api/user', userRouter);
