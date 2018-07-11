@@ -5,7 +5,6 @@ const passport = require('passport');
 // const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
-
 const studentRouter = require('./routes/student-routes');
 // const teacherRouter = require('./routes/teacher-routes');
 // const adminRouter = require('./routes/admin-routes');
