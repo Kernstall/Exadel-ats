@@ -1,10 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const session = require('express-session');
+const session = require('express-session');
 const passport = require('passport');
 // const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
+const studentRouter = require('./routes/student-router');
 const studentRouter = require('./routes/student-routes');
 // const teacherRouter = require('./routes/teacher-routes');
 // const adminRouter = require('./routes/admin-routes');
@@ -13,8 +14,21 @@ const studentRouter = require('./routes/student-routes');
 const app = express();
 
 const dbName = 'TestingSystem';
-const connectionString = `mongodb://localhost:27017/${dbName}`;
-mongoose.connect(connectionString);
+mongoose.Promise = global.Promise;
+
+async function connectDatabase() {
+  mongoose.connect(`mongodb://localhost:27017/${dbName}`)
+    .then(() => {
+      console.log('Connected to database!!!');
+    })
+    .catch((err) => {
+      throw new Error(err);
+    });
+}
+
+connectDatabase();
+
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
