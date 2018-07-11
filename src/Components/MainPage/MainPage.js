@@ -17,11 +17,19 @@ const styles = ({
 
 const Tops = [
   {
-    TopBy: 'Score',
-    Students: ['Sasha', 'Misha', 'Bill', 'Andry'],
+    TopBy: 'Top by Mark',
+    Students: ['Sasha', 'Misha', 'Bill', 'Andry', 'Bill', 'Andry', 'Bill', 'Andry', 'Bill', 'LastStudent'],
   },
   {
-    TopBy: 'Tasks',
+    TopBy: 'Top by Tasks',
+    Students: ['Another Sasha', 'Another Misha', 'Another Bill', 'Another Andry'],
+  },
+  {
+    TopBy: 'Top by Tests',
+    Students: ['Another Sasha', 'Another Misha', 'Another Bill', 'Another Andry'],
+  },
+  {
+    TopBy: 'Top by Activity',
     Students: ['Another Sasha', 'Another Misha', 'Another Bill', 'Another Andry'],
   },
 ];
