@@ -19,10 +19,25 @@
   width: 200px;
 }
 .login-button {
+  transition: .3s;
   width: 200px;
-  color: #000;
-  background-color: #ffb300 !important;
+  color: #fff !important;
+  background-color: #2196f3 !important;
 }
 .login-header {
   padding: 15px;
+}
+
+.login-button:hover {
+  background-color: #1b77c5 !important;
+}
+
+.sign-up-button {
+  transition: .3s;
+  text-decoration: none;
+  color: #2196f3;
+}
+
+.sign-up-button:hover {
+  color: #000;
 }
