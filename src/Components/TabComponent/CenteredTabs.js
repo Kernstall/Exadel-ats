@@ -18,7 +18,6 @@ export default class CenteredTabs extends React.Component {
 
   render() {
     const classes = this.props;
-
     return (
       <Paper className={classes.root}>
         <Tabs
