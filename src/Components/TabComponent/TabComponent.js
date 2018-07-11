@@ -1,9 +1,16 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import CenteredTabs from './CenteredTabs';
 import ContentContainer from './ContentContainer';
 
-export default class TabComponent extends React.Component {
+const styles = {
+  fullWidth: {
+    width: '100%',
+  },
+}
+
+class TabComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,7 +26,7 @@ export default class TabComponent extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className={this.props.classes.fullWidth}>
         <CenteredTabs
           tabHeaders={this.props.tabHeaders}
           callbackOnTabEvent={this.selectedTabChanged}
@@ -36,3 +43,5 @@ TabComponent.propTypes = {
 
 TabComponent.defaultProps = {
 };
+
+export default withStyles(styles)(TabComponent);
