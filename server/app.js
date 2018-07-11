@@ -8,11 +8,6 @@ const flash = require('connect-flash');
 const mongoose = require('mongoose');
 const studentRouter = require('./routes/student-router');
 
-
-const StudentModel = require('./models/Student');
-const TopicModel = require('./models/Topic');
-const QuestionModel = require('./models/Question');
-
 const dbName = 'TestingSystem';
 mongoose.Promise = global.Promise;
 
