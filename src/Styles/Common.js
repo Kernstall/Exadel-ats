@@ -7,7 +7,7 @@ const Common = ({
   },
   centerScreen: {
     width: '70%',
-    margin: 'auto',
+    margin: '0 auto',
   },
   center: {
     margin: 'auto',
