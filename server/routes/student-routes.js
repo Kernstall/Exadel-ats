@@ -18,17 +18,13 @@ router.get('/', (req, res) => {
         const studentInfo = [{
           firstName: result[0].firstName,
           lastName: result[0].lastName,
+          university: result[0].university,
           faculty: result[0].faculty,
           course: result[0].faculty,
           groupNumber: result[0].groupNumber,
           graduateYear: result[0].graduateYear,
         }, result[1]];
-        Promise.resolve(studentInfo);
-      })
-      .then((result) => {
-        Employee.findById({ _id: result[1].teacherId }, (tres) => {
-          Promise.resolve(tres);
-        });
+        res.send(studentInfo);
       })
       .catch(err => res.status(500).send(err));
   } else res.status(400).end();
