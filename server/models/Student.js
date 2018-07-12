@@ -5,7 +5,7 @@ const studentSchema = new mongoose.Schema({
   lastName: String,
   email: String,
   password: String,
-  educationalEstablishment: mongoose.Schema.Types.ObjectId,
+  educationalEstablishmentId: mongoose.Schema.Types.ObjectId,
   faculty: String,
   graduateYear: Number,
   course: String,
@@ -26,6 +26,8 @@ const studentSchema = new mongoose.Schema({
       }],
   }],
   tests: [{
+    startDate: Date,
+    finishDate: Date,
     topicsIds: [mongoose.Schema.Types.ObjectId],
     tags: [String],
     result: Number,

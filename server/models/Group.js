@@ -1,22 +1,13 @@
 const mongoose = require('mongoose');
 
 const GroupSchema = new mongoose.Schema({
-  description: String,
-  name: {
+  teacherId: mongoose.SchemaTypes.ObjectId,
+  groupName: {
     type: String,
     unique: true,
   },
-  weight: Number, // 1-10
-  topicsIds: [mongoose.SchemaTypes.ObjectId],
-  language: String, // Java ect
-  tags: [String],
-  tests:
-    [{
-      inputFileAdress: String,
-      outputFileAdress: String,
-      weight: Number, // 1-10
-    }],
-  passResult: Number,
+  studentIdList: [mongoose.SchemaTypes.ObjectId],
+  topicCourseIds: [mongoose.SchemaTypes.ObjectId],
 });
 
 module.exports = mongoose.model('Group', GroupSchema);

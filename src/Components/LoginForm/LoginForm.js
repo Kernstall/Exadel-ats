@@ -18,9 +18,9 @@ class LoginForm extends React.Component {
             Not a member yet?
             <br />
             <Link to="/registration">
-              <Button size="small">
+              <a className="sign-up-button" href="#">
                 Sign Up
-              </Button>
+              </a>
             </Link>
             {' '}
             now.
