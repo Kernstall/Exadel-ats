@@ -1,5 +1,5 @@
 const express = require('express');
-const Student = require('../models/Student');
+const Student = require('../models/User');
 const dataFunctions = require('../dataFunctions');
 
 const router = express.Router();

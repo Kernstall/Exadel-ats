@@ -1,15 +1,22 @@
 const mongoose = require('mongoose');
 
 const studentSchema = new mongoose.Schema({
+  status: {
+    type: String,
+    enum: ['teacher', 'admin', 'student'],
+  },
   firstName: String,
   lastName: String,
   email: String,
   password: String,
-  educationalEstablishmentId: mongoose.Schema.Types.ObjectId,
+  passwordHash: String,
+  passwordSalt: String,
+  university: String,
   faculty: String,
   graduateYear: Number,
   course: String,
   groupNumber: Number,
+  testsToCheckIds: [mongoose.Schema.Types.ObjectId],
   tasks: [{
     taskId: mongoose.Schema.Types.ObjectId,
     startDate: Date,
@@ -23,9 +30,16 @@ const studentSchema = new mongoose.Schema({
         files: [String],
         result: Number,
         isPassed: Boolean,
+        tests: [Boolean],
+        comments: [{
+          teacherId: mongoose.Schema.Types.ObjectId,
+          date: Date,
+          text: String,
+        }],
       }],
   }],
   tests: [{
+    groupId: mongoose.Schema.Types.ObjectId,
     startDate: Date,
     finishDate: Date,
     topicsIds: [mongoose.Schema.Types.ObjectId],

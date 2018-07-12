@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 
 const educationalEstablishmentSchema = new mongoose.Schema({
-  fullName: String,
-  shortName: String,
+  fullName: {
+    type: String,
+    unique: true,
+  },
+  shortName: {
+    type: String,
+    unique: true,
+  },
   faculties: [{
     fullName: String,
     shortName: String,
