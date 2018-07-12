@@ -1,7 +1,7 @@
 const express = require('express');
 const Student = require('../models/Student');
 const Group = require('../models/Group');
-const Employee = require('../models/Employee');
+// const Employee = require('../models/Employee');
 
 const router = express.Router();
 
@@ -27,6 +27,15 @@ router.get('/', (req, res) => {
         res.send(studentInfo);
       })
       .catch(err => res.status(500).send(err));
+  } else res.status(400).end();
+});
+router.get('/tasks', (req, res) => {
+  if (req.query.id) {
+    Student.findById(req.query.id, (err, student) => {
+      if (!student) res.status(500).send(err);
+      const result = student.tasks;
+      res.send(result);
+    });
   } else res.status(400).end();
 });
 
