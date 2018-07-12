@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import ListItem from "@material-ui/core/es/ListItem/ListItem";
 import List from "@material-ui/core/es/List/List";
 import GroupTemplate from "./GroupTemplate/GroupTemplate";
+import TeacherSelectedGroupComponent from "./TeacherSelectedGroupComponent/TeacherSelectedGroupComponent";
 
 const styles = theme => ({
   root: {
@@ -78,13 +79,7 @@ class TeacherMainPage extends React.Component {
           </Tabs>
           {value === 0 &&
           <TabContainer>
-            <List>
-              {response.map( (item) => (
-                  <ListItem button className={classes.groupTemplate} >
-                    <GroupTemplate groupName={item.groupName} studentsAmount={item.studentsAmount}/>
-                  </ListItem>
-              ))}
-            </List>
+            <TeacherSelectedGroupComponent groupName={response[0].groupName}/>
           </TabContainer>}
           {value === 1 && <TabContainer>Tests</TabContainer>}
           {value === 2 && <TabContainer>Tasks</TabContainer>}
