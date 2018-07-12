@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Link } from 'react-router-dom';
-import { Switch, Route } from 'react-router';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
-import LoginForm from './Components/LoginForm/LoginForm';
+import RegisterForm from './Components/RegisterForm/RegisterForm';
 import Common from './Styles/Common';
-import TopStudents from './Components/TopStudents';
-import TabComponent from './Components/TabComponent/TabComponent';
+import MainPage from './Components/MainPage/MainPage';
 
 const styles = ({
   content: {
@@ -22,39 +20,16 @@ class App extends Component {
     const { classes } = this.props;
 
     return (
-      <div>
-        <div className={classes.content}>
-          <Header />
-          <div className={classes.centerScreen}>
-            <nav>
-              <ul>
-                <li>
-                  <Link to="/">
-                    None
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/Components/LoginForm">
-                    Auth
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-            <Switch>
-              <Route path="/Components/LoginForm" component={LoginForm} />
-            </Switch>
-            <TopStudents
-              topScoreStudentName={[
-                'dimon',
-                'sasha',
-                'misha',
-                'nigga',
-              ]}
-            />
+      <Router>
+        <div>
+          <div className={classes.content}>
+            <Header />
+            <Route path="/" exact component={MainPage} />
+            <Route path="/registration" component={RegisterForm} />
           </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </Router>
     );
   }
 }

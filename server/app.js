@@ -15,7 +15,7 @@ const app = express();
 
 const dbName = 'TestingSystem';
 const connectionString = `mongodb://localhost:27017/${dbName}`;
-mongoose.connect(connectionString);
+//mongoose.connect(connectionString);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
