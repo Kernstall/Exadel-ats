@@ -34,7 +34,6 @@ const styles = {
 const StudentInTop = (props) => {
   const { classes, student, number } = props;
   let listItemIcon;
-  console.log('index', number);
   if (number >= 0 && number < 3) {
     listItemIcon = <StarIcon className={classes.firstPlaces} />;
   } else {

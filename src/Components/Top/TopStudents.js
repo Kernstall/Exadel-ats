@@ -20,7 +20,7 @@ function TopStudents(props) {
           (student, index) => (
             <StudentInTop
               student={student}
-              key={student}
+              key={index}
               number={index}
             />
           ),
