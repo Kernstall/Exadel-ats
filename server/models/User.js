@@ -18,7 +18,10 @@ const studentSchema = new mongoose.Schema({
   groupNumber: Number,
   testsToCheckIds: [mongoose.Schema.Types.ObjectId],
   tasks: [{
-    taskId: mongoose.Schema.Types.ObjectId,
+    taskId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Task',
+  },
     startDate: Date,
     finishDate: Date,
     isPassed: Boolean,
@@ -32,17 +35,26 @@ const studentSchema = new mongoose.Schema({
         isPassed: Boolean,
         tests: [Boolean],
         comments: [{
-          teacherId: mongoose.Schema.Types.ObjectId,
+          teacherId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Users',
+          },
           date: Date,
           text: String,
         }],
       }],
   }],
   tests: [{
-    groupId: mongoose.Schema.Types.ObjectId,
+    groupId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Group',
+  },
     startDate: Date,
     finishDate: Date,
-    topicsIds: [mongoose.Schema.Types.ObjectId],
+    topicsIds: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Topic',
+    }],
     tags: [String],
     result: Number,
     status: {
@@ -56,11 +68,14 @@ const studentSchema = new mongoose.Schema({
     date: Date,
     questions:
       [{
-        questionId: mongoose.Schema.Types.ObjectId,
+        questionId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Question',
+        },
         selectedAnswers: [String],
         isPassed: Boolean,
       }],
   }],
 });
 
-module.exports = mongoose.model('student', studentSchema);
+module.exports = mongoose.model('Users', studentSchema);

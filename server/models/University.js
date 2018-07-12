@@ -15,4 +15,4 @@ const educationalEstablishmentSchema = new mongoose.Schema({
   }],
 });
 
-module.exports = mongoose.model('educationalEstablishment', educationalEstablishmentSchema);
+module.exports = mongoose.model('EducationalEstablishment', educationalEstablishmentSchema);

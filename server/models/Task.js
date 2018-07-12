@@ -11,7 +11,10 @@ const task = mongoose.Schema({
     min: 1,
     max: 10,
   },
-  topicId: mongoose.Schema.Types.ObjectId,
+  topicId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Users',
+  },
   language: String,
   tags: [String],
   tests:
@@ -28,4 +31,4 @@ const task = mongoose.Schema({
   passResult: Number,
 });
 
-module.exports = mongoose.model('task', task);
+module.exports = mongoose.model('Task', task);
