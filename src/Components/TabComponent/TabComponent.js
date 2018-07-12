@@ -8,13 +8,13 @@ const styles = {
   fullWidth: {
     width: '100%',
   },
-}
+};
 
 class TabComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedComponent: undefined,
+      selectedComponent: props.tabHeaders.length > 0 ? props.tabHeaders[0].component : undefined,
     };
 
     this.selectedTabChanged = this.selectedTabChanged.bind(this);
