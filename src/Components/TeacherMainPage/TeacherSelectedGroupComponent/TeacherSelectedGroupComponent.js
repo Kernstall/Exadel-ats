@@ -29,11 +29,8 @@ class TeacherSelectedGroupComponent extends React.Component {
   render() {
     return (
       <div>
-        <Typography>
-          {this.props.groupName}
-        </Typography>
-        <Typography>
-          {`${groupMembers.length} students`}
+        <Typography align="center">
+          {`${this.props.groupName} ${groupMembers.length} students`}
         </Typography>
         <List>
           {groupMembers.map(item => (

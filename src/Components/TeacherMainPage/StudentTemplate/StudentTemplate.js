@@ -1,23 +1,23 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
+import Grid from "@material-ui/core/es/Grid/Grid";
 
 class StudentTemplate extends React.Component {
   render() {
     return (
-      <div>
-        <Typography>
+      <Grid container>
+        <Grid item xs={6} sm={3}>
           {this.props.name}
-        </Typography>
-        <Typography>
-          {this.props.tasksComplete}
-        </Typography>
-        <Typography>
-          {this.props.testsComplete}
-        </Typography>
-        <Typography>
-          {this.props.score}
-        </Typography>
-      </div>
+        </Grid>
+        <Grid item xs={6} sm={3}>
+          {`Tasks complete: ${this.props.tasksComplete}`}
+        </Grid>
+        <Grid item xs={6} sm={3}>
+          {`Tests complete: ${this.props.testsComplete}`}
+        </Grid>
+        <Grid item xs={6} sm={3}>
+          {`Score: ${this.props.score}`}
+        </Grid>
+      </Grid>
     );
   }
 }
