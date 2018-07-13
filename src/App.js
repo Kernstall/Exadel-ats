@@ -7,6 +7,7 @@ import Footer from './Components/Footer';
 import RegisterForm from './Components/RegisterForm/RegisterForm';
 import Common from './Styles/Common';
 import MainPage from './Components/MainPage/MainPage';
+import Spinner from './Components/Shared/Style/Spinner';
 
 const styles = ({
   content: {

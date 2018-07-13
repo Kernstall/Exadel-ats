@@ -1,9 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { Paper, Grid } from '@material-ui/core';
+import { getStudents } from '../../commands/students';
 import LoginForm from '../LoginForm/LoginForm';
 import TabComponent from '../TabComponent/TabComponent';
 import TopStudents from '../Top/TopStudents';
 import Common from '../../Styles/Common';
+import Spinner from '../Shared/Style/Spinner';
 
 const styles = ({
   ...Common,
@@ -13,48 +17,81 @@ const styles = ({
   margin: {
     margin: '20px auto',
   },
+  heightToTop: {
+    height: '100px',
+  },
 });
 
 const Tops = [
   {
     TopBy: 'Top by Mark',
-    Students: ['Sasha', 'Misha', 'Bill', 'Andry', 'Roma', 'Victor', 'Bill'],
+    Students: <TopStudents topScoreStudentName={['asd', 'asd']} />,
   },
   {
     TopBy: 'Top by Tasks',
-    Students: ['1 Sasha', '1 Misha', '1 Bill', '1 Andry'],
+    Students: [],
   },
   {
     TopBy: 'Top by Tests',
-    Students: ['2 Sasha', '2 Misha', '2 Bill', '2 Andry'],
+    Students: [],
   },
   {
     TopBy: 'Top by Activity',
-    Students: ['3 Sasha', '3 Misha', '3 Bill', '3 Andry'],
+    Students: [],
   },
 ];
 
 class MainPage extends React.Component { // ({ classes }) => (
   constructor(props) {
     super(props);
-    this.TabHeaders = [];
+    this.TabHeaders = Tops;
+  }
+
+  componentDidMount() {
+    this.props.getStudents({ param: 'param for command' }); // eslint-disable-line
   }
 
   render() {
-    const { classes } = this.props;
-    this.TabHeaders.length = 0;
-    Tops.forEach(element => this.TabHeaders.push({
-      tabName: element.TopBy,
-      component: <TopStudents topScoreStudentName={element.Students} />,
-    }));
+    const { classes, students, isLoading } = this.props;
+    let rotatingSection;
+
+    if (students) {
+      this.TabHeaders.length = 0;
+      students.forEach(element => this.TabHeaders.push({
+        tabName: element.TopBy,
+        component: <TopStudents topScoreStudentName={element.Students} />,
+      }));
+    } else {
+      rotatingSection = (
+        <Paper className={[classes.flex, classes.heightToTop].join(' ')}>
+          <Spinner />
+        </Paper>
+      );
+    }
+
+
     return (
       <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
-        <TabComponent
-          tabHeaders={this.TabHeaders}
-        />
+        <Grid container direction="column">
+          <TabComponent
+            tabHeaders={this.TabHeaders}
+          />
+          {rotatingSection}
+        </Grid>
         <LoginForm />
       </div>);
   }
 }
 
-export default withStyles(styles)(MainPage);
+const styledComponent = withStyles(styles)(MainPage);
+
+const mapStateToProps = state => ({
+  isLoading: state.students.isLoading,
+  students: state.students.students,
+});
+
+const mapCommandsToProps = dispatch => ({
+  getStudents: param => dispatch(getStudents(param)),
+});
+
+export default connect(mapStateToProps, mapCommandsToProps)(styledComponent);

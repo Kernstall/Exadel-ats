@@ -16,7 +16,7 @@ class TabComponent extends React.Component {
     this.state = {
       selectedComponent: props.tabHeaders.length > 0 ? props.tabHeaders[0].component : undefined,
     };
-
+    console.log('selectedComponent', this.state.selectedComponent);
     this.selectedTabChanged = this.selectedTabChanged.bind(this);
   }
 
@@ -25,6 +25,9 @@ class TabComponent extends React.Component {
   }
 
   render() {
+    console.log('TabComponent', this.props.tabHeaders);
+    console.log('props: ', this.props);
+    console.log('state: ', this.state);
     return (
       <div className={this.props.classes.fullWidth}>
         <CenteredTabs
