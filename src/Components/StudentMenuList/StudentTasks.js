@@ -19,7 +19,7 @@ const styles = theme => ({
   },
 });
 
-class StudentTasksList extends React.Component {
+class StudentTasks extends React.Component {
   state = { open: false };
 
   handleClick = () => {
@@ -48,8 +48,8 @@ class StudentTasksList extends React.Component {
   }
 }
 
-StudentTasksList.propTypes = {
+StudentTasks.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(StudentTasksList);
+export default withStyles(styles)(StudentTasks);

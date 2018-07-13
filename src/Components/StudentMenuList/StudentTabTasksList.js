@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import StudentTasksList from './StudentTasksList';
+import StudentTasksList from './StudentTasks';
 
 const styles = theme => ({
 
@@ -15,7 +15,7 @@ const styles = theme => ({
   },
 });
 
-function StudentList(props) {
+function StudentTabTasksList(props) {
   const {classes, tasksList} = props;
   return (
     <div className={classes.root}>
@@ -37,8 +37,8 @@ function StudentList(props) {
   );
 }
 
-StudentList.propTypes = {
+StudentTabTasksList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(StudentList);
+export default withStyles(styles)(StudentTabTasksList);
