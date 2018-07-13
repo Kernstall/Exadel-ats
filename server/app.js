@@ -30,7 +30,7 @@ app.use(session({
 }));
 */
 
-app.use(flash());
+// app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -38,7 +38,7 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // app.use('/api/', authorization??);
-app.use('/api/stusent', studentRouter);
+app.use('/api/student', studentRouter);
 // app.use('/api/teacher', teacherRouter);
 // app.use('/api/admin', adminRouter);
 // app.use('/api/user', userRouter);
