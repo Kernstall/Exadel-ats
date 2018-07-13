@@ -33,7 +33,7 @@ class TopStudents extends React.Component {
             ),
           )
         }
-        {/*JSON.stringify(students)*/}
+        {console.log(students)}
       </List>
     );
   }

@@ -7,6 +7,7 @@ import Footer from './Components/Footer';
 import RegisterForm from './Components/RegisterForm/RegisterForm';
 import Common from './Styles/Common';
 import MainPage from './Components/MainPage/MainPage';
+import StudentMainPage from './Components/StudentMainPage/StudentMainPage';
 
 const styles = ({
   content: {
@@ -24,8 +25,7 @@ class App extends Component {
         <div>
           <div className={classes.content}>
             <Header />
-            <Route path="/" exact component={MainPage} />
-            <Route path="/registration" component={RegisterForm} />
+            <StudentMainPage />
           </div>
           <Footer />
         </div>
