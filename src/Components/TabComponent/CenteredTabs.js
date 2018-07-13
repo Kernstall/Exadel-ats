@@ -26,10 +26,10 @@ export default class CenteredTabs extends React.Component {
           indicatorColor="primary"
           //textColor="primary"
           centered
-          fullWidth="true"
+          fullWidth
         >
 
-          {this.props.tabHeaders.map(tab => (<Tab className="tab" label={tab.tabName} />))}
+          {this.props.tabHeaders.map((tab, index) => (<Tab className="tab" label={tab.tabName} key={index} />))}
 
         </Tabs>
       </Paper>
