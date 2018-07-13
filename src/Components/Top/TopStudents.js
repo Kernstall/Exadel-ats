@@ -27,13 +27,13 @@ class TopStudents extends React.Component {
             (student, index) => (
               <StudentInTop
                 student={student}
-                key={index}
+                key={index} //eslint-disable-line
                 number={index}
               />
             ),
           )
         }
-        {JSON.stringify(students) /* TODO: Remove it */}
+        {/* JSON.stringify(students) */}
       </List>
     );
   }
