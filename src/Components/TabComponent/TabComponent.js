@@ -21,17 +21,11 @@ class TabComponent extends React.Component {
 
   selectedTabChanged(tabNum) {
     this.setState({ selectedComponent: this.props.tabHeaders[tabNum].component });
-    console.log(1);
   }
 
   render() {
     return (
-
       <div className={this.props.classes.fullWidth}>
-            {console.log('TabComponent.render.props', this.props)}
-            {console.log('TabComponent.render.state', this.state)}
-
-
         <CenteredTabs
           tabHeaders={this.props.tabHeaders}
           callbackOnTabEvent={this.selectedTabChanged}
