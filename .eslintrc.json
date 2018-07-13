@@ -5,6 +5,7 @@
     "node": true
   },
   "rules": {
+    "linebreak-style":"off",
     "no-plusplus": "off",
     "react/jsx-filename-extension": [
       1,
@@ -20,6 +21,18 @@
         {
             "ignorePureComponents": "true"
         }
+    ],
+    "react/forbid-prop-types": [
+      0
+    ],
+    "react/prop-types": [
+      0
+    ],
+    "react/jsx-one-expression-per-line": [
+      0
+    ],
+    "no-underscore-dangle": [
+      1
     ]
   }
 }

@@ -1,16 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { Route, Link } from 'react-router-dom';
 import './style.css';
+import RegisterForm from '../RegisterForm/RegisterForm';
 
 class LoginForm extends React.Component {
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
-  };
   render() {
     return (
       <form className="container" noValidate autoComplete="off">
@@ -21,9 +17,11 @@ class LoginForm extends React.Component {
           <Typography variant="subheading">
             Not a member yet?
             <br />
-            <Button size="small">
-              Sign Up
-            </Button>
+            <Link to="/registration">
+              <a className="sign-up-button" href="#">
+                Sign Up
+              </a>
+            </Link>
             {' '}
             now.
           </Typography>
@@ -31,7 +29,6 @@ class LoginForm extends React.Component {
             id="name"
             label="Login"
             className="text-field"
-            onChange={this.handleChange('name')}
             margin="normal"
           />
           <TextField
@@ -46,13 +43,10 @@ class LoginForm extends React.Component {
             Login
           </Button>
         </div>
+        <Route exact path="/registration" component={RegisterForm} />
       </form>
     );
   }
 }
-
-LoginForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default LoginForm;
