@@ -23,4 +23,20 @@ router.post('/Question', (req, res) => {
     .catch((err) => { res.status(500).send(err); });
 });
 
+router.post('/studentsToGroup', (req, res) => {
+  const groupID = req.query.groupID;
+  const studentIDs = req.body;
+  dataFunctions.addStudentsToGroup(groupID, studentIDs)
+    .then(answer => res.send(answer))
+    .catch((err) => { res.status(500).send(err); });
+});
+
+router.delete('/studentsFromGroup', (req,res) => {
+  const groupID = req.query.groupID;
+  const studentIDs = req.body;
+  dataFunctions.deleteStudentsToGroup(groupID, studentIDs)
+    .then(answer => res.send(answer))
+    .catch((err) => { res.status(500).send(err); });
+});
+
 module.exports = router;
