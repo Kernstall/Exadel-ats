@@ -22,21 +22,5 @@ router.get('/Tasks', (req, res) => {
     });
 });
 
-router.post('/Task', (req, res) => {
-  dataFunctions.addTask(req.body)
-    .then((response) => {
-      res.status(200).send(response);
-    })
-    .catch((err) => { res.status(500).send(err); });
-});
-
-router.post('/Question', (req, res) => {
-  dataFunctions.addQuestion(req.body)
-    .then((response) => {
-      res.status(200).send(response);
-    })
-    .catch((err) => { res.status(500).send(err); });
-});
-
 
 module.exports = router;

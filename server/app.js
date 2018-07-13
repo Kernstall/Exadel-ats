@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const mongoose = require('mongoose');
 
 const studentRouter = require('./routes/student-router');
-// const teacherRouter = require('./routes/teacher-routes');
+const teacherAdminRouter = require('./routes/teacher-admin-router');
 // const adminRouter = require('./routes/admin-routes');
 // const userRouter = require('./routes/user-routes');
 
@@ -51,7 +51,7 @@ passport.deserializeUser((user, done) => done(null, user));
 
 // app.use('/api/', authorization??);
 app.use('/api/student', studentRouter);
-// app.use('/api/teacher', teacherRouter);
+app.use('/api/teacherAdmin', teacherAdminRouter);
 // app.use('/api/admin', adminRouter);
 // app.use('/api/user', userRouter);
 
