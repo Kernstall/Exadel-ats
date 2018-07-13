@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
 
@@ -31,8 +32,15 @@ class StudentTests extends React.Component {
     return (
       <div className={classes.root}>
         <ListItem open="false" button onClick={this.handleClick}>
-          <ListItemText inset primary={test.name} />
-          <ListItemText inset primary={test.result} />
+          <Grid container>
+            <Grid item xs={12} sm={6}>
+              <ListItemText inset primary={test.name} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <ListItemText inset primary={test.result} />
+            </Grid>
+          </Grid>
+
           {this.state.open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
