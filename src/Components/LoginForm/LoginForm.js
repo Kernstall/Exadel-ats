@@ -17,10 +17,8 @@ class LoginForm extends React.Component {
           <Typography variant="subheading">
             Not a member yet?
             <br />
-            <Link to="/registration">
-              <a className="sign-up-button" href="#">
-                Sign Up
-              </a>
+            <Link to="/registration" className="sign-up-button">
+              Sign Up
             </Link>
             {' '}
             now.
