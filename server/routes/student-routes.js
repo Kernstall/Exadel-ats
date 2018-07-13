@@ -1,35 +1,42 @@
 const express = require('express');
+const Student = require('../models/User');
+const Group = require('../models/Group');
+// const Employee = require('../models/Employee');
 
 const router = express.Router();
 
-const info = [{
-  student: {
-    firstName: 'Оля',
-    lastName: 'Ветрова',
-    university: 'БГУ',
-    faculty: 'ФПМИ',
-    course: '3',
-    groupNamber: '6',
-    graduateYear: '2020',
-  },
-  groups: [{
-    name: 'Алгоритмы и структуры данных',
-    count: '15',
-  }, {
-    name: 'Программирование на С++ 2017',
-    count: '13',
-  }],
-}];
-
-
-router.get('/top', (req, res) => {
-  // TODO: get data from mongo db
-  res.status(200).json(info).end();
+router.get('/', (req, res) => {
+  if (req.query.id) {
+    Promise.all([
+      Student.findById({ _id: req.query.id }),
+      Group.find({ studentIdList: req.query.id }),
+    ])
+      .then((result) => {
+        if (!result[0] || !result[1]) {
+          return Promise.reject();
+        }
+        const studentInfo = [{
+          firstName: result[0].firstName,
+          lastName: result[0].lastName,
+          university: result[0].university,
+          faculty: result[0].faculty,
+          course: result[0].faculty,
+          groupNumber: result[0].groupNumber,
+          graduateYear: result[0].graduateYear,
+        }, result[1]];
+        res.send(studentInfo);
+      })
+      .catch(err => res.status(500).send(err));
+  } else res.status(400).end();
 });
-
-router.post('/', (req, res) => {
-  // find by id
-  res.send(info);
+router.get('/tasks', (req, res) => {
+  if (req.query.id) {
+    Student.findById(req.query.id, (err, student) => {
+      if (!student) res.status(500).send(err);
+      const result = student.tasks;
+      res.send(result);
+    });
+  } else res.status(400).end();
 });
 
 module.exports = router;

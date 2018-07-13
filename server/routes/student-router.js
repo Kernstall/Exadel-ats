@@ -8,17 +8,21 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/getStudentTasks/:studentId', (req, res) => {
-  const id = req.params['studentId'];
-  Student.findById({ _id: id })
+router.get('/Tasks', (req, res) => {
+  const id = req.query.studentId;
+  console.log(id);
+  Student.findById(id)
     .then(answer => dataFunctions.getStudentTasks(answer.tasks))
     .then((response) => {
       res.status(200).send(JSON.stringify(response));
     })
-    .catch((err) => { res.status(500).send(err); });
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send(err);
+    });
 });
 
-router.post('/addTask', (req, res) => {
+router.post('/Task', (req, res) => {
   dataFunctions.addTask(req.body)
     .then((response) => {
       res.status(200).send(response);
@@ -26,7 +30,7 @@ router.post('/addTask', (req, res) => {
     .catch((err) => { res.status(500).send(err); });
 });
 
-router.post('/addQuestion', (req, res) => {
+router.post('/Question', (req, res) => {
   dataFunctions.addQuestion(req.body)
     .then((response) => {
       res.status(200).send(response);
