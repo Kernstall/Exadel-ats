@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const question = mongoose.Schema({
   creatorId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Users',
+    ref: 'User',
   },
   topicId: {
     type: mongoose.Schema.Types.ObjectId,

@@ -13,7 +13,7 @@ const task = mongoose.Schema({
   },
   topicId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Users',
+    ref: 'Topic',
   },
   language: String,
   tags: [String],
