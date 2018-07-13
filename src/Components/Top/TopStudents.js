@@ -33,7 +33,6 @@ class TopStudents extends React.Component {
             ),
           )
         }
-        {console.log(students)}
       </List>
     );
   }

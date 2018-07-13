@@ -2,7 +2,12 @@ const express = require('express');
 
 const router = express.Router();
 
-const info = ['Bill Murray', 'Alex Dovgal'];
+const info = [
+  ['Bill Murray #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1'],
+  ['Bill Murray #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2'],
+  ['Bill Murray #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3'],
+  ['Bill Murray #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4']
+];
 
 
 router.get('/top', (req, res) => {
