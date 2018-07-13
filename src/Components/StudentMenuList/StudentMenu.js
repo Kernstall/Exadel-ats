@@ -1,7 +1,9 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import TabComponent from '../TabComponent/TabComponent';
-import StudentList from './StudentTabTasksList';
+import StudentTabTasksList from './StudentTabTasksList';
+import StudentTabTestsList from './StudentTabTestsList';
+import StudentTabHistory from './StudentTabHistory';
 import Common from '../../Styles/Common';
 
 
@@ -15,7 +17,7 @@ const styles = ({
   },
 });
 
-const tasks = [
+const blocks = [
   {
     tabName: 'Tasks',
     tabInfo: [
@@ -45,13 +47,13 @@ const tasks = [
     tabName: 'History',
     tabInfo: [
       {
-        date: 'date1', activity: 'Test test1 passed', score: 'score 10/10',
+        date: 'date1', name: 'Test test1 passed', score: 'score 10/10',
       },
       {
-        date: 'date2', activity: 'Test test2 passed', score: 'score 10/10',
+        date: 'date2', name: 'Test test2 passed', score: 'score 10/10',
       },
       {
-        date: 'date3', activity: 'Test test3 passed', score: 'score 10/10',
+        date: 'date3', name: 'Test test3 passed', score: 'score 10/10',
       },
     ],
   },
@@ -64,29 +66,29 @@ const StudentMenuList = ({ classes }) => (
   <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
     {
 
-      tasks.forEach((task) => {
-        switch (task.tabName) {
+      blocks.forEach((block) => {
+        switch (block.tabName) {
           case 'Tasks':
             TabHeaders.push({
-              tabName: task.tabName,
-              component: <StudentList tasksList={task.tabInfo} />,
+              tabName: block.tabName,
+              component: <StudentTabTasksList tasksList={block.tabInfo} />,
             });
             break;
           case 'Tests':
             TabHeaders.push({
-              tabName: task.tabName,
-              component: <StudentList tasksList={task.tabInfo} />,
+              tabName: block.tabName,
+              component: <StudentTabTestsList testsList={block.tabInfo} />,
             });
             break;
           case 'History':
             TabHeaders.push({
-              tabName: task.tabName,
-              component: <StudentList tasksList={task.tabInfo} />,
+              tabName: block.tabName,
+              component: <StudentTabHistory activitiesList={block.tabInfo} />,
             });
             break;
           default: TabHeaders.push({
-            tabName: task.tabName,
-            component: <StudentList tasksList={task.tabInfo} />,
+            tabName: block.tabName,
+            component: <StudentTabTasksList tasksList={block.tabInfo} />,
           });
         }
       })

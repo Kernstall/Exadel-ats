@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import StudentTasksList from './StudentTasks';
+import StudentTasks from './StudentTasks';
 
 const styles = theme => ({
 
@@ -16,7 +16,7 @@ const styles = theme => ({
 });
 
 function StudentTabTasksList(props) {
-  const {classes, tasksList} = props;
+  const { classes, tasksList } = props;
   return (
     <div className={classes.root}>
       <List
@@ -25,7 +25,7 @@ function StudentTabTasksList(props) {
         {
           tasksList.map(
             (task, index) => (
-              <StudentTasksList
+              <StudentTasks
                 task={task}
                 key={index}
               />
