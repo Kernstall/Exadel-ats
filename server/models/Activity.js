@@ -13,17 +13,34 @@ const ActivitiesSchema = new mongoose.Schema({
     type: String,
     enum: ['student', 'teacher', 'admin'],
   },
-  userId: mongoose.SchemaTypes.ObjectId,
+  userId: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Users',
+  },
   toUserType: {
     type: String,
     enum: ['student', 'teacher', 'admin'],
   },
-  toUserId: mongoose.SchemaTypes.ObjectId,
-  groupId: mongoose.SchemaTypes.ObjectId,
-  taskId: mongoose.SchemaTypes.ObjectId,
-  questionId: mongoose.SchemaTypes.ObjectId,
-  testTopicsIds: [mongoose.SchemaTypes.ObjectId],
-  testAttemptId: mongoose.SchemaTypes.ObjectId,
+  toUserId: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Users',
+  },
+  groupId: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Groups',
+  },
+  taskId: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Tasks',
+  },
+  questionId: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Questions',
+  },
+  testTopicsIds: [{
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Topics',
+  }],
 });
 
 module.exports = mongoose.model('Activities', ActivitiesSchema);
