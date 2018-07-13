@@ -24,7 +24,7 @@ export default class CenteredTabs extends React.Component {
           value={this.state.value}
           onChange={this.handleChange}
           indicatorColor="primary"
-          textColor="primary"
+          //textColor="primary"
           centered
           fullWidth="true"
         >
