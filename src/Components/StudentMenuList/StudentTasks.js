@@ -33,13 +33,13 @@ class StudentTasks extends React.Component {
       <div className={classes.root}>
           <ListItem open="false" button onClick={this.handleClick}>
             <Grid container>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs>
                 <ListItemText inset primary={task.name} />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs>
                 <ListItemText inset primary={task.theme} />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs>
                 <ListItemText inset primary={task.status} />
               </Grid>
             </Grid>
