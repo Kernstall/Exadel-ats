@@ -14,8 +14,19 @@ const studentRouter = require('./routes/student-routes');
 const app = express();
 
 const dbName = 'TestingSystem';
-const connectionString = `mongodb://localhost:27017/${dbName}`;
-//mongoose.connect(connectionString);
+mongoose.Promise = global.Promise;
+
+async function connectDatabase() {
+  mongoose.connect(`mongodb://localhost:27017/${dbName}`)
+    .then(() => {
+      console.log('Connected to database!!!');
+    })
+    .catch((err) => {
+      throw new Error(err);
+    });
+}
+
+connectDatabase();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,7 +42,7 @@ app.use(session({
 }));
 */
 
-app.use(flash());
+// app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 

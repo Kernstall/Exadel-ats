@@ -40,6 +40,10 @@ class MainPage extends React.Component { // ({ classes }) => (
     this.TabHeaders = [];
   }
 
+  componentDidMount() {
+
+  }
+
   render() {
     const { classes } = this.props;
     this.TabHeaders.length = 0;
