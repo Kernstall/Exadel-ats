@@ -1,12 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const session = require('express-session');
+// const session = require('express-session');
 const passport = require('passport');
-const fs = require('fs');
 // const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
-const studentRouter = require('./routes/student-router');
+const studentRouter = require('./routes/student-routes');
+// const teacherRouter = require('./routes/teacher-routes');
+// const adminRouter = require('./routes/admin-routes');
+// const userRouter = require('./routes/user-routes');
+
+const app = express();
 
 const dbName = 'TestingSystem';
 mongoose.Promise = global.Promise;
@@ -23,8 +27,6 @@ async function connectDatabase() {
 
 connectDatabase();
 
-const app = express();
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 /*
@@ -39,14 +41,17 @@ app.use(session({
 }));
 */
 
-app.use(flash());
+// app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/api/student', studentRouter);
-
-
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
+
+// app.use('/api/', authorization??);
+app.use('/api/student', studentRouter);
+// app.use('/api/teacher', teacherRouter);
+// app.use('/api/admin', adminRouter);
+// app.use('/api/user', userRouter);
 
 const server = app.listen(3001, () => console.log(`Server is listening on port ${server.address().port}`));

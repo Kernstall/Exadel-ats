@@ -1,17 +1,26 @@
 const mongoose = require('mongoose');
 
-const studentSchema = new mongoose.Schema({
+module.exports = {
+  status: {
+    type: String,
+    enum: ['teacher', 'admin', 'student'],
+  },
   firstName: String,
   lastName: String,
   email: String,
   password: String,
-  educationalEstablishment: mongoose.Schema.Types.ObjectId,
+  passwordHash: String,
+  passwordSalt: String,
+  university: String,
   faculty: String,
   graduateYear: Number,
   course: String,
   groupNumber: Number,
   tasks: [{
-    taskId: mongoose.Schema.Types.ObjectId,
+    taskId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Task',
+    },
     startDate: Date,
     finishDate: Date,
     isPassed: Boolean,
@@ -23,10 +32,28 @@ const studentSchema = new mongoose.Schema({
         files: [String],
         result: Number,
         isPassed: Boolean,
+        tests: [Boolean],
+        comments: [{
+          teacherId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+          },
+          date: Date,
+          text: String,
+        }],
       }],
   }],
   tests: [{
-    topicsIds: [mongoose.Schema.Types.ObjectId],
+    groupId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Group',
+    },
+    startDate: Date,
+    finishDate: Date,
+    topicsIds: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Topic',
+    }],
     tags: [String],
     result: Number,
     status: {
@@ -40,11 +67,12 @@ const studentSchema = new mongoose.Schema({
     date: Date,
     questions:
       [{
-        questionId: mongoose.Schema.Types.ObjectId,
+        questionId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Question',
+        },
         selectedAnswers: [String],
         isPassed: Boolean,
       }],
   }],
-});
-
-module.exports = mongoose.model('student', studentSchema);
+};
