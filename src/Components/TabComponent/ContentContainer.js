@@ -6,7 +6,7 @@ import './style.css';
 export default class ContentContainer extends React.Component {
   render() {
     return (
-      <Paper className="ContentPanel">
+      <Paper className="content-panel">
         {this.props.component}
       </Paper>
     );
