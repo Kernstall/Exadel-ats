@@ -61,6 +61,7 @@ class MainPage extends React.Component { // ({ classes }) => (
         tabName: element.TopBy,
         component: <TopStudents topScoreStudentName={element.Students} />,
       }));
+      console.log('MainPage.students ', students);
     } else {
       rotatingSection = (
         <Paper className={[classes.flex, classes.heightToTop].join(' ')}>
