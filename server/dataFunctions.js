@@ -47,6 +47,35 @@ exports.addQuestion = function (req) {
   return question.save();
 };
 
+// На вход первым параметром поступает массив ключей, которые должны быть
+// в объекте, вторым же параметром идёт массив объектов, ключи которого надо
+// отфильтровать
+exports.fieldFilter = function (keysArray, objectsArray) {
+  return objectsArray.map(item => keysArray.reduce((obj, key) => {
+    obj[key] = item[key];
+    return obj;
+  }, {}));
+};
+
+exports.getTeachersGroups = function (_teacherID) {
+  // return Group.find({ teacherId: _teacherID }, 'id groupName studentIdList', function (err, res) {
+  //   console.log(res);
+  // });
+
+  return Group.aggregate(
+    [
+      { $match: { teacherId: mongoose.Types.ObjectId(_teacherID) } },
+      {
+        $project: {
+          groupName: 1,
+          studentCount: { $size: '$studentIdList' },
+        },
+      },
+    ],
+  );
+};
+
+
 exports.addStudentsToGroup = function (groupID, studentIDs) {
   return Group.findByIdAndUpdate(groupID,
     { $push: { studentIdList: studentIDs } },
