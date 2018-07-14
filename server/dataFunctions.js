@@ -58,10 +58,6 @@ exports.fieldFilter = function (keysArray, objectsArray) {
 };
 
 exports.getTeachersGroups = function (_teacherID) {
-  // return Group.find({ teacherId: _teacherID }, 'id groupName studentIdList', function (err, res) {
-  //   console.log(res);
-  // });
-
   return Group.aggregate(
     [
       { $match: { teacherId: mongoose.Types.ObjectId(_teacherID) } },
