@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Task = require('./models/Task');
 const Question = require('./models/Question');
+const Group = require('./models/Group');
 
 exports.getStudentTasks = function (taskArrayStud) {
   const arrayTaskIds = [];
@@ -50,8 +51,19 @@ exports.addQuestion = function (req) {
 // в объекте, вторым же параметром идёт массив объектов, ключи которого надо
 // отфильтровать
 exports.fieldFilter = function (keysArray, objectsArray) {
-  return objectsArray.map((item) => keysArray.reduce((obj, key) => {
-    obj[key] = item[key]
+  return objectsArray.map(item => keysArray.reduce((obj, key) => {
+    obj[key] = item[key];
     return obj;
-  }, {}));
+  }, {}))
+};
+exports.addStudentsToGroup = function (groupID, studentIDs) {
+  return Group.findByIdAndUpdate(groupID,
+    { $push: { studentIdList: studentIDs } },
+    { safe: true, upsert: true });
+};
+
+exports.deleteStudentsToGroup = function (groupID, studentIDs) {
+  return Group.findByIdAndUpdate(groupID,
+    { $pullAll: { studentIdList: studentIDs } },
+    { safe: true, upsert: true });
 };
