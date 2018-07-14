@@ -45,3 +45,13 @@ exports.addQuestion = function (req) {
   });
   return question.save();
 };
+
+// На вход первым параметром поступает массив ключей, которые должны быть
+// в объекте, вторым же параметром идёт массив объектов, ключи которого надо
+// отфильтровать
+exports.fieldFilter = function (keysArray, objectsArray) {
+  return objectsArray.map((item) => keysArray.reduce((obj, key) => {
+    obj[key] = item[key]
+    return obj;
+  }, {}));
+};

@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const studentRouter = require('./routes/student-router');
 const teacherAdminRouter = require('./routes/teacher-admin-router');
 // const adminRouter = require('./routes/admin-routes');
-// const userRouter = require('./routes/user-routes');
+const userRouter = require('./routes/user-router');
 
 const app = express();
 
@@ -17,7 +17,7 @@ const dbName = 'TestingSystem';
 mongoose.Promise = global.Promise;
 
 async function connectDatabase() {
-  mongoose.connect(`mongodb://localhost:27017/${dbName}`)
+  mongoose.connect(`mongodb://localhost:27017/${dbName}`, { useNewUrlParser: true })
     .then(() => {
       console.log('Connected to database!!!');
     })
@@ -52,6 +52,7 @@ passport.deserializeUser((user, done) => done(null, user));
 // app.use('/api/', authorization??);
 app.use('/api/student', studentRouter);
 app.use('/api/teacherAdmin', teacherAdminRouter);
+app.use('/api/user', userRouter);
 // app.use('/api/admin', adminRouter);
 // app.use('/api/user', userRouter);
 
