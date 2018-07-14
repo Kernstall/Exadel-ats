@@ -22,6 +22,10 @@ module.exports = {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Task',
     },
+    groupId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Group',
+    },
     startDate: Date,
     finishDate: Date,
     isPassed: Boolean,
