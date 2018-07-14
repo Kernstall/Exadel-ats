@@ -16,6 +16,7 @@ module.exports = {
   graduateYear: Number,
   course: String,
   groupNumber: Number,
+  mediumTaskScore: Number,
   tasks: [{
     taskId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -43,6 +44,7 @@ module.exports = {
         }],
       }],
   }],
+  mediumTestScore: Number,
   tests: [{
     groupId: {
       type: mongoose.Schema.Types.ObjectId,
