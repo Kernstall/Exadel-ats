@@ -7,7 +7,7 @@ import LoginForm from '../LoginForm/LoginForm';
 import TabComponent from '../TabComponent/TabComponent';
 import TopStudents from '../Top/TopStudents';
 import Common from '../../Styles/Common';
-import Spinner from '../Shared/Style/Spinner';
+import Spinner from '../Shared/Spinner';
 
 const styles = ({
   ...Common,
