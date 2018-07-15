@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Task = require('./models/Task');
 const Question = require('./models/Question');
 const Group = require('./models/Group');
+const Student = require('./models/User');
 
 exports.getStudentTasks = function (taskArrayStud) {
   const arrayTaskIds = [];
@@ -66,4 +67,91 @@ exports.deleteStudentsToGroup = function (groupID, studentIDs) {
   return Group.findByIdAndUpdate(groupID,
     { $pullAll: { studentIdList: studentIDs } },
     { safe: true, upsert: true });
+};
+
+exports.getTopTenStudents = async function () {
+  const result = {};
+
+  result.tasksTop = await Student.find({ status: 'student' }, { firstName: true, lastName: 1, mediumTaskScore: 1 })
+    .sort({ mediumTaskScore: -1 }).limit(10);
+  const studentTaskFields = ['firstName', 'lastName', 'mediumTaskScore', '_id'];
+  result.tasksTop = exports.fieldFilter(studentTaskFields, result.tasksTop);
+
+  result.testsTop = await Student.find({ status: 'student' }, { firstName: 1, lastName: 1, mediumTestScore: 1 })
+    .sort({ mediumTestScore: -1 }).limit(10);
+  const studentTestFields = ['firstName', 'lastName', 'mediumTestScore', '_id'];
+  result.testsTop = exports.fieldFilter(studentTestFields, result.testsTop);
+
+  result.activitiesTop = await Student.aggregate([
+    { $match: { status: 'student' } },
+    {
+      $project: {
+        activity: {
+          $let: {
+            vars: {
+              taskActivity: {
+                $reduce: {
+                  input: '$tasks',
+                  initialValue: 0,
+                  in: { $add: ['$$value', { $size: '$$this.attempts' }] },
+                },
+              },
+              testActivity: {
+                $reduce: {
+                  input: '$tests',
+                  initialValue: 0,
+                  in: {
+                    $cond: {
+                      if: {
+                        $ne: ['$$this.status', 'notSent'],
+                      },
+                      then: {
+                        $add: ['$$value', 1],
+                      },
+                      else: {
+                        $add: ['$$value', 0],
+                      },
+                    },
+                  },
+                },
+              },
+            }, // end of vars
+            in: { $add: ['$$taskActivity', '$$testActivity'] },
+          },
+        }, // end of activity field
+        firstName: true,
+        lastName: true,
+      },
+    },
+    {
+      $sort: { activity: -1 },
+    },
+    {
+      $limit: 10,
+    },
+  ]).allowDiskUse(true);
+
+  result.marksTop = await Student.aggregate([
+    { $match: { status: 'student' } },
+    {
+      $project: {
+        marks: {
+          $divide: [
+            {
+              $add: ['$mediumTaskScore', '$mediumTestScore'],
+            },
+            2,
+          ],
+        },
+        firstName: true,
+        lastName: true,
+      },
+    },
+    {
+      $sort: { marks: -1 },
+    },
+    { $limit: 10 },
+  ]);
+
+  return result;
 };
