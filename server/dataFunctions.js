@@ -155,3 +155,10 @@ exports.getTopTenStudents = async function () {
 
   return result;
 };
+
+exports.getGroupInfo = async function (groupID) {
+  const result = {};
+
+  const group = await Group.findById(groupID).populate('studentIdList');
+  console.log(group.studentIdList[0].firstName);
+};
