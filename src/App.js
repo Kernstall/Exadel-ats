@@ -25,9 +25,8 @@ class App extends Component {
         <div>
           <div className={classes.content}>
             <Header />
-            {/* <Route path="/" exact component={MainPage} />
-            <Route path="/registration" component={RegisterForm} /> */}
-            <StudentMainPage />
+            <Route path="/" exact component={MainPage} />
+            <Route path="/registration" component={RegisterForm} />
           </div>
           <Footer />
         </div>
