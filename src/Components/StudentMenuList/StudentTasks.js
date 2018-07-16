@@ -8,6 +8,7 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Grid from '@material-ui/core/Grid';
+import StudentTaskDropDown from './StudentTaskDropDown'
 
 const styles = theme => ({
 
@@ -48,7 +49,7 @@ class StudentTasks extends React.Component {
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItem button className={classes.nested}>
-                <ListItemText inset primary={task.info} />
+                <StudentTaskDropDown taskInfo={task.info} className={this.props.classes.fullWidth}/>
               </ListItem>
             </List>
           </Collapse>

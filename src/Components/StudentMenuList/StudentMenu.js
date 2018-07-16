@@ -22,13 +22,20 @@ const blocks = [
     tabName: 'Tasks',
     tabInfo: [
       {
-        name: 'name1', theme: 'theme1', status: 'status1', info: 'info1',
+        name: 'name1', theme: 'theme1', status: 'status1', info: 'Lorem ipsum dolor sit amet, ' +
+      'consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna' +
+      ' aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ' +
+      'ex ea commodo consequat. Duis aute irure ',
       },
       {
-        name: 'name2', theme: 'theme2', status: 'status2', info: 'info2',
+        name: 'name2', theme: 'theme2', status: 'status2', info: 'Duis aute irure dolor in reprehenderit ' +
+      'in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat ' +
+      'non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."',
       },
       {
-        name: 'name3', theme: 'theme3', status: 'status3', info: 'info3',
+        name: 'name3', theme: 'theme3', status: 'status3', info: 'Duis aute irure dolor in reprehenderit ' +
+      'in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non' +
+      ' proident, sunt in culpa qui officia deserunt mollit anim id est laborum."',
       },
     ],
   },
