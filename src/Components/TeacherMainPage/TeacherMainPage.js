@@ -96,19 +96,19 @@ const response = [
     studentsAmount: 27,
     groupMembers: [
       {
-        name: 'Bob Marley',
+        name: 'Hlib Makov',
         testsComplete: 3,
         tasksComplete: 5,
         score: 8.4,
       },
       {
-        name: 'Aliaxei Dziadziuk',
+        name: 'Andrey Dogov',
         testsComplete: 3,
         tasksComplete: 5,
         score: 8.4,
       },
       {
-        name: 'Maksim Anikeyeu',
+        name: 'Adolf Ukraina',
         testsComplete: 3,
         tasksComplete: 5,
         score: 8.4,
@@ -153,23 +153,23 @@ TabContainer.propTypes = {
 };
 
 class TeacherMainPage extends React.Component {
-  state = {
-    value: 0,
-    isPossibleRender: false,
-    groupInfo: {},
-  };
+  constructor() {
+    super();
+    this.state = {
+      value: 0,
+      isPossibleRender: false,
+      groupInfo: {},
+    };
+  }
 
   handleChange = (e, value) => {
     this.setState({ value });
   };
 
-  _onClick = e => {
-    let a = e.target.closest('[groupid]');
-    let res = a.getAttribute('groupid');
-    let ans = +res;
+  _onClick = groupid => {
     this.setState({
       isPossibleRender: true,
-      groupInfo: response.find((element) => element.groupId === ans),
+      groupInfo: response.find((element) => element.groupId === groupid),
     });
   };
 

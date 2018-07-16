@@ -9,7 +9,7 @@ class TeacherSelectedGroupComponent extends React.Component {
   render() {
     console.log(this.props);
     return (
-      <Link to={`/groups/${this.props.groupId}`}>
+      <div>
         <Typography align="center">
           {`${this.props.groupName} ${this.props.groupMembers.length} students`}
         </Typography>
@@ -25,7 +25,7 @@ class TeacherSelectedGroupComponent extends React.Component {
             </ListItem>
           ))}
         </List>
-      </Link>
+      </div>
     );
   }
 }

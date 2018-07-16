@@ -98,11 +98,13 @@ class GroupsList extends React.Component {
     return (
       <List>
         {response.map((item, index) => (
-          <div groupId={item.groupId} key={index}>
+          <div key={index}>
             {console.log(this.props)}
-            <ListItem button key={index} onClick={this.props.callback}>
-              <GroupTemplate response={item} />
-            </ListItem>
+            <Link to={`/groups/${item.groupId}`}>
+              <ListItem button onClick={() => {this.props.callback(item.groupId)}}>
+                <GroupTemplate response={item} />
+              </ListItem>
+            </Link>
           </div>
         ))}
       </List>
