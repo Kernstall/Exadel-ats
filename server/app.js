@@ -5,7 +5,6 @@ const passport = require('passport');
 // const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
-const teacherAdminRouter = require('./routes/teacher-admin-router');
 const sendMail = require('./mail');
 
 const studentRouter = require('./routes/student-router');
@@ -53,10 +52,8 @@ passport.deserializeUser((user, done) => done(null, user));
 
 // app.use('/api/', authorization??);
 app.use('/api/student', studentRouter);
-app.use('/api/teacherAdmin', teacherAdminRouter);
 app.use('/api/user', userRouter);
 app.use('/api/teacher', teacherRouter);
 // app.use('/api/admin', adminRouter);
-// app.use('/api/user', userRouter);
 
 const server = app.listen(3001, () => console.log(`Server is listening on port ${server.address().port}`));
