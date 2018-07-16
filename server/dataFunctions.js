@@ -172,6 +172,20 @@ exports.getGroupInfo = async (groupID) => {
   const result = {};
 
   const group = await Group.findById(groupID).populate('studentIdList').aggregate([
+    {
+      $project: {
+        groupName: true,
+        amountOfStudents: { $size: '$studentIdList' },
+        students: {
+          $map: {
+            input: '$studentIdList',
+            as: 'student',
+            in: {
 
+            },
+          },
+        },
+      },
+    },
   ]);
 };
