@@ -10,6 +10,7 @@ const styles = ({
   contentDisplay: {
     display: 'flex',
     'flex-wrap': 'wrap-reverse',
+    'justify-content': 'center',
   },
   fullWidth: {
     width: '100%',

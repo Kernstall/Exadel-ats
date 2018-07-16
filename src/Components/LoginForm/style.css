@@ -3,6 +3,8 @@
   flex-wrap: wrap;
   flex-direction: column;
     padding-top: 10px;
+    padding-bottom: 10px;
+    width: 300px;
 }
 .input-container {
   display: flex;
