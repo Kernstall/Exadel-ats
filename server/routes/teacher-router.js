@@ -4,6 +4,7 @@ const Topic = require('../models/Topic');
 const Question = require('../models/Question');
 const mapping = require('../utils/mapping/student');
 const User = require('../models/User');
+const dataFunctions = require('../dataFunctions');
 
 const router = express.Router();
 
@@ -62,6 +63,54 @@ router.get('/questions', (req, res) => {
     });
     res.send(hashSet);
   });
+});
+
+router.post('/task', (req, res) => {
+  dataFunctions.addTask(req.body)
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((err) => { res.status(500).send(err); });
+});
+
+router.post('/question', (req, res) => {
+  dataFunctions.addQuestion(req.body)
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((err) => { res.status(500).send(err); });
+});
+
+router.post('/group/students', (req, res) => {
+  const groupID = req.query.groupID;
+  const studentIDs = req.body;
+  dataFunctions.addStudentsToGroup(groupID, studentIDs)
+    .then(answer => res.send(answer))
+    .catch((err) => { res.status(500).send(err); });
+});
+
+router.delete('/group/students', (req, res) => {
+  const groupID = req.query.groupID;
+  const studentIDs = req.body;
+  dataFunctions.deleteStudentsToGroup(groupID, studentIDs)
+    .then(answer => res.send(answer))
+    .catch((err) => { res.status(500).send(err); });
+});
+
+// Возвращает группы, принадлежащие учителю с количеством людей в них
+router.get('/group', (req, res) => {
+  const teacherID = req.query.teacherID;
+  dataFunctions.getTeachersGroups(teacherID)
+    .then((answer) => {
+      res.send(JSON.stringify(answer));
+    })
+    .catch(err => res.status(500).send(err));
+});
+
+router.get('/group/info', (req, res, next) => {
+  const groupID = req.query.groupID;
+  // Ещё не готов
+  dataFunctions.getGroupInfo(groupID);
 });
 
 module.exports = router;

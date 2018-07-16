@@ -7,7 +7,7 @@ router.use((req, res, next) => {
   next();
 });
 
-router.post('/Task', (req, res) => {
+router.post('/task', (req, res) => {
   dataFunctions.addTask(req.body)
     .then((response) => {
       res.status(200).send(response);
@@ -15,7 +15,7 @@ router.post('/Task', (req, res) => {
     .catch((err) => { res.status(500).send(err); });
 });
 
-router.post('/Question', (req, res) => {
+router.post('/question', (req, res) => {
   dataFunctions.addQuestion(req.body)
     .then((response) => {
       res.status(200).send(response);
