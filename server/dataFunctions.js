@@ -171,6 +171,7 @@ exports.getTopTenStudents = async () => {
 exports.getGroupInfo = async (groupID) => {
   const result = {};
 
-  const group = await Group.findById(groupID).populate('studentIdList');
-  console.log(group.studentIdList[0].firstName);
+  const group = await Group.findById(groupID).populate('studentIdList').aggregate([
+
+  ]);
 };
