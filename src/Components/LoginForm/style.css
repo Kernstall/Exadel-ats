@@ -2,7 +2,9 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  margin-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 300px;
 }
 .input-container {
   display: flex;

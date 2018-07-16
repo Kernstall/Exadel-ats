@@ -20,8 +20,9 @@ class TopStudents extends React.Component {
 
   render() {
     const { classes, topScoreStudentName, students } = this.props;
+    console.log('in component', students);
     return (
-      <List component="nav" className={[classes.width]}>
+      <List component="nav" className={classes.width}>
         {
           topScoreStudentName.map(
             (student, index) => (
@@ -33,7 +34,6 @@ class TopStudents extends React.Component {
             ),
           )
         }
-        {/* JSON.stringify(students) */}
       </List>
     );
   }
