@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper, Grid } from '@material-ui/core';
@@ -8,24 +8,17 @@ import TabComponent from '../TabComponent/TabComponent';
 import TopStudents from '../Top/TopStudents';
 import Common from '../../Styles/Common';
 import Spinner from '../Shared/Spinner';
-import TopTabs from '../TopTabs/TopTabs';
 
 const styles = ({
   ...Common,
-  contentDisplay: {
-    display: 'flex',
-    'flex-wrap': 'wrap-reverse',
-    'justify-content': 'center',
-  },
   fullWidth: {
     width: '100%',
   },
   margin: {
     margin: '20px auto',
   },
-  topStudentsWrapper: {
-    'margin-right': '20px',
-    'flex-grow': '1',
+  heightToTop: {
+    height: '100px',
   },
 });
 
@@ -48,19 +41,47 @@ const Tops = [
   },
 ];
 
-class MainPage extends React.Component {
+class TopTabs extends Component {
+  constructor(props) {
+    super(props);
+    this.TabHeaders = Tops;
+  }
+
+  componentDidMount() {
+    this.props.getStudents({ param: 'param for command' }); // eslint-disable-line
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes, students } = this.props;
+    let rotatingSection;
+    if (students) {
+      this.TabHeaders.length = 0;
+      students.forEach(element => this.TabHeaders.push({
+        tabName: element.TopBy,
+        component: <TopStudents topScoreStudentName={element.Students} />,
+      }));
+    } else {
+      rotatingSection = (
+        <Paper className={[classes.flex, classes.heightToTop].join(' ')}>
+          <Spinner />
+        </Paper>
+      );
+    }
+
     return (
-      <div className={[classes.flex, classes.centerScreen, classes.margin, classes.contentDisplay].join(' ')}>
-        <TopTabs />
-        <LoginForm />
+      <div>
+        <Grid container direction="column">
+          <TabComponent
+            tabHeaders={this.TabHeaders}
+          />
+          {rotatingSection}
+        </Grid>
       </div>
     );
   }
 }
 
-const styledComponent = withStyles(styles)(MainPage);
+const styledComponent = withStyles(styles)(TopTabs);
 
 const mapStateToProps = state => ({
   isLoading: state.students.isLoading,

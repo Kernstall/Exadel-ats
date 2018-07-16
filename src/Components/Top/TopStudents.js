@@ -1,10 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import List from '@material-ui/core/List';
 import { withStyles } from '@material-ui/core/styles';
 import sharedStyles from '../../Styles/Common';
 import StudentInTop from './StudentInTop';
-import { getStudents } from '../../commands/students';
 
 const styles = ({
   width: {
@@ -14,13 +12,8 @@ const styles = ({
 });
 
 class TopStudents extends React.Component {
-  componentDidMount() {
-    this.props.getStudents({ param: 'param for command' }); // eslint-disable-line
-  }
-
   render() {
-    const { classes, topScoreStudentName, students } = this.props;
-    console.log('in component', students);
+    const { classes, topScoreStudentName } = this.props;
     return (
       <List component="nav" className={classes.width}>
         {
@@ -39,15 +32,4 @@ class TopStudents extends React.Component {
   }
 }
 
-const styledComponent = withStyles(styles)(TopStudents);
-
-const mapStateToProps = state => ({
-  isLoading: state.students.isLoading,
-  students: state.students.students,
-});
-
-const mapCommandsToProps = dispatch => ({
-  getStudents: param => dispatch(getStudents(param)),
-});
-
-export default connect(mapStateToProps, mapCommandsToProps)(styledComponent);
+export default withStyles(styles)(TopStudents);

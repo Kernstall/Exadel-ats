@@ -1,9 +1,7 @@
 const Common = ({
   font: {
-    fontFamily: [
-      'Oswald',
-      'sans-serif',
-    ],
+    fontSize: '0.8em',
+    fontWeight: '300',
   },
   centerScreen: {
     width: '70%',

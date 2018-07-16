@@ -7,7 +7,7 @@ import ContentContainer from './ContentContainer';
 const styles = {
   fullWidth: {
     'min-width': '200px',
-    width: 'inherit',
+    width: '100%',
   },
 };
 
@@ -17,7 +17,6 @@ class TabComponent extends React.Component {
     this.state = {
       selectedComponent: props.tabHeaders.length > 0 ? props.tabHeaders[0].component : undefined,
     };
-
     this.selectedTabChanged = this.selectedTabChanged.bind(this);
   }
 
