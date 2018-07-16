@@ -14,6 +14,7 @@ const styles = ({
 class TopStudents extends React.Component {
   render() {
     const { classes, topScoreStudentName } = this.props;
+    console.log('topScoreStudentName', topScoreStudentName);
     return (
       <List component="nav" className={classes.width}>
         {

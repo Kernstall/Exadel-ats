@@ -12,6 +12,7 @@ import Spinner from '../Shared/Spinner';
 const styles = ({
   ...Common,
   fullWidth: {
+    'min-width': '200px',
     width: '100%',
   },
   margin: {
@@ -24,20 +25,20 @@ const styles = ({
 
 const Tops = [
   {
-    TopBy: 'Top by Mark',
-    Students: [],
+    tabName: 'Top',
+    component: [],
   },
   {
-    TopBy: 'Top by Tasks',
-    Students: [],
+    tabName: 'Another top',
+    component: [],
   },
   {
-    TopBy: 'Top by Tests',
-    Students: [],
+    tabName: '..and another',
+    component: [],
   },
   {
-    TopBy: 'Top by Activity',
-    Students: [],
+    tabName: 'just wait please',
+    component: [],
   },
 ];
 
@@ -54,6 +55,8 @@ class TopTabs extends Component {
   render() {
     const { classes, students } = this.props;
     let rotatingSection;
+    let tabs = <Grid><TabComponent tabHeaders={this.TabHeaders} /></Grid>;
+    console.log('this.TabHeaders', this.TabHeaders);
     if (students) {
       this.TabHeaders = Object.keys(students).map(element => ({
         tabName: element,
@@ -62,6 +65,8 @@ class TopTabs extends Component {
         }
         />,
       }));
+      console.log('this.TabHeaders', this.TabHeaders);
+      tabs = <TabComponent tabHeaders={this.TabHeaders} />;
     } else {
       rotatingSection = (
         <Paper className={[classes.flex, classes.heightToTop].join(' ')}>
@@ -73,9 +78,7 @@ class TopTabs extends Component {
     return (
       <div>
         <Grid container direction="column">
-          <TabComponent
-            tabHeaders={this.TabHeaders}
-          />
+          {tabs}
           {rotatingSection}
         </Grid>
       </div>

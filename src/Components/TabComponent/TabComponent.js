@@ -25,6 +25,7 @@ class TabComponent extends React.Component {
   }
 
   render() {
+    console.log('this.props.tabHeaders', this.props.tabHeaders);
     return (
       <div className={this.props.classes.fullWidth}>
         <CenteredTabs
