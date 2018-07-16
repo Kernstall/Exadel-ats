@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 
 const question = mongoose.Schema({
-  creatorId: mongoose.Schema.Types.ObjectId,
-  topicId: mongoose.Schema.Types.ObjectId,
+  creatorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  topicId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Topic',
+  },
   tags: [String],
   description: String,
   correctAnswersIndexes: [Number],
@@ -19,4 +25,4 @@ const question = mongoose.Schema({
   haveCheckedReport: Boolean,
 });
 
-module.exports = mongoose.model('question', question);
+module.exports = mongoose.model('Question', question);
