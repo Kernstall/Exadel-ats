@@ -55,10 +55,12 @@ class TopTabs extends Component {
     const { classes, students } = this.props;
     let rotatingSection;
     if (students) {
-      this.TabHeaders.length = 0;
-      students.forEach(element => this.TabHeaders.push({
-        tabName: element.TopBy,
-        component: <TopStudents topScoreStudentName={element.Students} />,
+      this.TabHeaders = Object.keys(students).map(element => ({
+        tabName: element,
+        component: <TopStudents topScoreStudentName={
+          students[element].map((firstSecondName) => (`${firstSecondName.firstName} ${firstSecondName.lastName}`))
+        }
+        />,
       }));
     } else {
       rotatingSection = (
