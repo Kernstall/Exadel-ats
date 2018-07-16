@@ -31,7 +31,7 @@ router.post('/studentsToGroup', (req, res) => {
     .catch((err) => { res.status(500).send(err); });
 });
 
-router.delete('/studentsFromGroup', (req,res) => {
+router.delete('/studentsFromGroup', (req, res) => {
   const groupID = req.query.groupID;
   const studentIDs = req.body;
   dataFunctions.deleteStudentsToGroup(groupID, studentIDs)
@@ -43,7 +43,7 @@ router.get('/teacherGroup', (req, res) => {
   const teacherID = req.query.teacherID;
   dataFunctions.getTeachersGroups(teacherID)
     .then((answer) => {
-      res.send(answer);
+      res.send(JSON.stringify(answer));
     })
     .catch(err => res.status(500).send(err));
 });
