@@ -43,7 +43,7 @@ router.get('/teacherGroup', (req, res) => {
   const teacherID = req.query.teacherID;
   dataFunctions.getTeachersGroups(teacherID)
     .then((answer) => {
-      res.send(answer);
+      res.send(JSON.stringify(answer));
     })
     .catch(err => res.status(500).send(err));
 });
