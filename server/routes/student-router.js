@@ -10,16 +10,14 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/Tasks', (req, res) => {
+router.get('/tasks', (req, res) => {
   const id = req.query.studentId;
-  console.log(id);
-  Student.findById(id)
+  User.findById(id)
     .then(answer => dataFunctions.getStudentTasks(answer.tasks))
     .then((response) => {
       res.status(200).send(JSON.stringify(response));
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).send(err);
     });
 });
@@ -44,29 +42,6 @@ router.get('/', async (req, res) => {
     console.log(err);
     res.status(500).send(err);
   }
-});
-
-// routes.get('/tests', (req, res) => {
-//   if (req.query.id) {
-//     User.findById({ _id: req.query.id })
-//   } else res.status(400).end();
-// });
-
-
-router.post('/addTask', (req, res) => {
-  dataFunctions.addTask(req.body)
-    .then((response) => {
-      res.status(200).send(response);
-    })
-    .catch((err) => { res.status(500).send(err); });
-});
-
-router.post('/addQuestion', (req, res) => {
-  dataFunctions.addQuestion(req.body)
-    .then((response) => {
-      res.status(200).send(response);
-    })
-    .catch((err) => { res.status(500).send(err); });
 });
 
 module.exports = router;
