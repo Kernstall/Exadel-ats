@@ -169,9 +169,8 @@ exports.getTopTenStudents = async () => {
 };
 
 exports.getGroupInfo = async (groupID) => {
-  const result = {};
-
-  const group = await Group.findById(groupID).populate('studentIdList').aggregate([
+  const buff = await Group.findById(groupID).populate('studentIdList');
+  const result = await Group.findById(groupID).populate('studentIdList').aggregate([
     {
       $project: {
         groupName: true,
@@ -181,11 +180,130 @@ exports.getGroupInfo = async (groupID) => {
             input: '$studentIdList',
             as: 'student',
             in: {
-
+              $project: {
+                firstName: true,
+                lastName: true,
+                amountOfTests: {
+                  $reduce: {
+                    input: '$$student.tests',
+                    initialValue: 0,
+                    in: {
+                      $cond: {
+                        if: {
+                          $eq: ['$$this.groupId', groupID],
+                        },
+                        then: {
+                          $add: ['$$value', 1],
+                        },
+                        else: {
+                          $add: ['$$value', 0],
+                        },
+                      },
+                    },
+                  },
+                }, // Конец подсчёта тестов
+                amountOfTasks: {
+                  $reduce: {
+                    input: '$$student.tasks',
+                    initialValue: 0,
+                    in: {
+                      $cond: {
+                        if: {
+                          $eq: ['$$this.groupId', groupID],
+                        },
+                        then: {
+                          $add: ['$$value', 1],
+                        },
+                        else: {
+                          $add: ['$$value', 0],
+                        },
+                      },
+                    },
+                  },
+                }, // Конец подсчёта заданий
+                testsMarkSum: {
+                  $reduce: {
+                    input: '$$student.tests',
+                    initialValue: 0,
+                    in: {
+                      $cond: {
+                        if: {
+                          $eq: ['$$this.groupId', groupID],
+                        },
+                        then: {
+                          $add: ['$$value', '$$this.result'],
+                        },
+                        else: {
+                          $add: ['$$value', 0],
+                        },
+                      },
+                    },
+                  },
+                }, // Конец подсчёта суммы оценок за тесты
+                tasksMarkSum: {
+                  $reduce: {
+                    input: '$$student.tasks',
+                    initialValue: 0,
+                    in: {
+                      $cond: {
+                        if: {
+                          $eq: ['$$this.groupId', groupID],
+                        },
+                        then: {
+                          $add: ['$$value', '$$this.bestResult'],
+                        },
+                        else: {
+                          $add: ['$$value', 0],
+                        },
+                      },
+                    },
+                  },
+                }, // Конец подсчёта суммы оценок за задания
+              },
+            },
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        groupName: true,
+        amountOfStudents: true,
+        students: {
+          $map: {
+            input: '$students',
+            as: 'student',
+            in: {
+              $project: {
+                firstName: true,
+                lastName: true,
+                amountOfTests: true,
+                amountOfTasks: true,
+                mediumTestMark: {
+                  $divide: [
+                    '$$student.testsMarkSum',
+                    '$$student.amountOfTests',
+                  ],
+                },
+                mediumTaskMark: {
+                  $divide: [
+                    '$$student.tasksMarkSum',
+                    '$$student.amountOfTasks',
+                  ],
+                },
+                mediumMark: {
+                  $divide: [
+                    { $add: ['$$student.tasksMarkSum', '$$student.testsMarkSum'] },
+                    { $add: ['$$student.amountOfTasks', '$$student.amountOfTests'] },
+                  ],
+                },
+              },
             },
           },
         },
       },
     },
   ]);
+
+  return result;
 };
