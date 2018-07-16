@@ -6,27 +6,16 @@ const passport = require('passport');
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
 
-const studentRouter = require('./routes/student-routes');
-// const teacherRouter = require('./routes/teacher-routes');
+const studentRouter = require('./routes/student-router');
+const teacherRouter = require('./routes/teacher-router');
 // const adminRouter = require('./routes/admin-routes');
 // const userRouter = require('./routes/user-routes');
 
 const app = express();
 
 const dbName = 'TestingSystem';
-mongoose.Promise = global.Promise;
-
-async function connectDatabase() {
-  mongoose.connect(`mongodb://localhost:27017/${dbName}`)
-    .then(() => {
-      console.log('Connected to database!!!');
-    })
-    .catch((err) => {
-      throw new Error(err);
-    });
-}
-
-connectDatabase();
+const connectionString = `mongodb://localhost:27017/${dbName}`;
+mongoose.connect(connectionString);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -51,7 +40,7 @@ passport.deserializeUser((user, done) => done(null, user));
 
 // app.use('/api/', authorization??);
 app.use('/api/student', studentRouter);
-// app.use('/api/teacher', teacherRouter);
+app.use('/api/teacher', teacherRouter);
 // app.use('/api/admin', adminRouter);
 // app.use('/api/user', userRouter);
 

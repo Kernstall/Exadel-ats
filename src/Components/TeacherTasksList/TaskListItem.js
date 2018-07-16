@@ -23,7 +23,7 @@ class TaskListItem extends React.Component {
       <div className="taskinfo">
         <ListItemText className="taskname" inset primary={this.props.taskName} />
         <ListItemText className="tags"> <span className="tags-span">тэги: {this.props.tags.join(', ')}</span> </ListItemText>
-        <ListItemText className="score"> <span className="score-span">тэги: {this.props.score}</span> </ListItemText>
+        <ListItemText className="score"> <span className="score-span">оценка: {this.props.score}</span> </ListItemText>
         <ListItemText className="moreButton" onClick={this.go()}> <span className="more-span"> More </span> </ListItemText>
         <Checkbox
           className="chooseTask"

@@ -3,31 +3,36 @@
   justify-content: space-between;
   flex-direction: row;
   height: 50px;
-  background-color: azure;
+  background-color: rgb(246, 252, 252);
+}
+.taskinfo:hover{
+  background-color: rgb(228, 243, 247);
 }
 .taskname{
   display: flex;
   justify-content: center;
   align-content: center;
   align-items: center;
-  width: 40%;
+  width: 45%;
   max-width: 50%;
   padding: 0px;
   height: 100%;
 }
 .taskname span {
-  font-family: serif;
+  display: flex;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 300;
+  user-select: none;
 }
 .tags{
   display: flex;
-  width: 40%;
+  width: 30%;
   align-content: center;
   align-items: center;
   justify-content: center;
 }
 .tags-span{
+  font-size: 15px;
   display: flex;
   padding: 5px;
   height: auto;
@@ -50,20 +55,38 @@
   align-content: center;
   align-items: center;
   justify-content: center;
-  width: 10%;
+  width: 5%;
   height: 100%;
 }
-.root{
+.topic-item{
   width: 100%;
-  margin-left: 10%;
-  max-width: 80%;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   overflow: visible;
+  background-color: rgb(227, 238, 241);
 }
-.topicItemName span{
+.topic-item-name span{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   font-size: 25px;
-  font-weight: 400;
+  font-weight: 300;
+  padding-left: 20px
+}
+.topic-name{
+  display: flex;
+}
+.topic-tasks-count{
+  display: flex;
+  border: 1px solid blue;
+  border-radius: 8px;
+  padding: 3px 7px 0px 7px;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 1.5em;
+  font-style: italic;
 }
 .more-span{
   cursor: pointer;
@@ -80,4 +103,32 @@
   transition: all 0.5s;
   background-color: rgb(43, 38, 109);
   color: white;
+}
+.score{
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+  height: 100%;
+}
+.score-span{
+  display: flex;
+  height: auto;
+  width: auto;
+  padding: 3px 6px 3px 6px;
+  border: 1px rgb(14, 247, 130) solid;
+  background-color: aliceblue;
+  border-radius: 5px;
+}
+.teacher-tasks{
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.set-tasks-button{
+  display: flex;
+  width: 100px;
+  align-self: flex-end;
 }

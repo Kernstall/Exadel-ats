@@ -23,16 +23,18 @@ class TaskInTopic extends React.Component {
 
   objtoJSX = (array) => {
     return array.map((element, index) => (
-      <TaskListItem button taskName={element.taskName} tags={element.tags} />
+      <TaskListItem button taskName={element.taskName} tags={element.tags} score={element.score} />
     ));
   }
 
   render() {
 
     return (
-      <div className="root">
+      <div className="topic-item">
         <ListItem button onClick={this.handleClick}>
-          <ListItemText className="topicItemName" inset primary={this.props.topicName} />
+          <ListItemText className="topic-item-name">
+            <div className="topic-name">{this.props.topicName}</div>
+            <div className="topic-tasks-count">задач: {this.props.tasks.length}</div></ListItemText>
           {this.state.open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
