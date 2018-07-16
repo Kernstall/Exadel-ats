@@ -1,1 +1,2 @@
-export { default as students } from './students'; // eslint-disable-line
+export { default as students } from './students';
+export { default as studentGroups } from './studentGroups';

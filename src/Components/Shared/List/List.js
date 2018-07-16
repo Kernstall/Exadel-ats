@@ -9,13 +9,12 @@ import Paper from '@material-ui/core/Paper';
 import Common from '../../../Styles/Common';
 
 const styles = theme => ({
-
   ...Common,
 });
 
 function InsetList(props) {
   const { classes, info } = props;
-  const childComponent = info.map((element, index) => (
+  const childComponent = info.studentGroups.map(element => (
     <Paper className={classes.control}>
       <ListItem button>
         <Grid container>
