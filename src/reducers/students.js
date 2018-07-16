@@ -6,7 +6,6 @@ const INITIAL_STATE = {
 
 const reducer = (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
-  console.log('reducer');
   switch (type) {
     case 'Entity/Students/Error':
       return {
