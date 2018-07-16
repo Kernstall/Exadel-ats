@@ -52,7 +52,7 @@ class MainPage extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
+      <div className={[classes.flex, classes.centerScreen, classes.margin, classes.contentDisplay].join(' ')}>
         <TopTabs />
         <LoginForm />
       </div>
