@@ -11,6 +11,7 @@ import MainPage from './Components/MainPage/MainPage';
 import StudentMenu from './Components/StudentMenuList/StudentMenu';
 import TeacherAddGroup from './Components/TeacherAddGroup/TeacherAddGroup';
 import createMuiTheme from './Styles/MUIAppTheme';
+import StudentTaskDropDown from './Components/StudentMenuList/StudentTaskDropDown';
 
 const styles = ({
   content: {
