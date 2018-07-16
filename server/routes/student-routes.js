@@ -21,7 +21,6 @@ const info = [
   },
 ];
 
-
 router.get('/top', (req, res) => {
   // TODO: get data from mongo db
   res.status(200).json(info).end();

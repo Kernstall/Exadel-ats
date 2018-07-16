@@ -6,6 +6,7 @@ import ContentContainer from './ContentContainer';
 
 const styles = {
   fullWidth: {
+    'min-width': '200px',
     width: '100%',
   },
 };

@@ -12,14 +12,20 @@ import TopTabs from '../TopTabs/TopTabs';
 
 const styles = ({
   ...Common,
+  contentDisplay: {
+    display: 'flex',
+    'flex-wrap': 'wrap-reverse',
+    'justify-content': 'center',
+  },
   fullWidth: {
     width: '100%',
   },
   margin: {
     margin: '20px auto',
   },
-  heightToTop: {
-    height: '100px',
+  topStudentsWrapper: {
+    'margin-right': '20px',
+    'flex-grow': '1',
   },
 });
 
