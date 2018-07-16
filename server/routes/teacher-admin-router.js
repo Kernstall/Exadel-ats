@@ -39,6 +39,15 @@ router.delete('/studentsFromGroup', (req, res) => {
     .catch((err) => { res.status(500).send(err); });
 });
 
+router.get('/teacherGroup', (req, res) => {
+  const teacherID = req.query.teacherID;
+  dataFunctions.getTeachersGroups(teacherID)
+    .then((answer) => {
+      res.send(answer);
+    })
+    .catch(err => res.status(500).send(err));
+});
+
 router.get('/groupInfo', (req, res, next) => {
   const groupID = req.query.groupID;
 

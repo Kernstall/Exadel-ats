@@ -55,18 +55,36 @@ exports.fieldFilter = function (keysArray, objectsArray) {
   return objectsArray.map(item => keysArray.reduce((obj, key) => {
     obj[key] = item[key];
     return obj;
-  }, {}))
+  }, {}));
 };
+
+exports.getTeachersGroups = function (_teacherID) {
+  return Group.aggregate(
+    [
+      { $match: { teacherId: mongoose.Types.ObjectId(_teacherID) } },
+      {
+        $project: {
+          groupName: 1,
+          studentCount: { $size: '$studentIdList' },
+        },
+      },
+    ],
+  );
+};
+
+
 exports.addStudentsToGroup = function (groupID, studentIDs) {
   return Group.findByIdAndUpdate(groupID,
     { $push: { studentIdList: studentIDs } },
-    { safe: true, upsert: true });
+    { safe: true, upsert: true },
+  );
 };
 
 exports.deleteStudentsToGroup = function (groupID, studentIDs) {
   return Group.findByIdAndUpdate(groupID,
     { $pullAll: { studentIdList: studentIDs } },
-    { safe: true, upsert: true });
+    { safe: true, upsert: true },
+  );
 };
 
 exports.getTopTenStudents = async function () {
