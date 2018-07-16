@@ -54,6 +54,5 @@ app.use('/api/student', studentRouter);
 app.use('/api/user', userRouter);
 app.use('/api/teacher', teacherRouter);
 // app.use('/api/admin', adminRouter);
-// app.use('/api/user', userRouter);
 
 const server = app.listen(3001, () => console.log(`Server is listening on port ${server.address().port}`));
