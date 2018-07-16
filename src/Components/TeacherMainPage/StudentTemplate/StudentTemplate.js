@@ -1,5 +1,5 @@
 import React from 'react';
-import Grid from "@material-ui/core/es/Grid/Grid";
+import Grid from '@material-ui/core/es/Grid/Grid';
 
 class StudentTemplate extends React.Component {
   render() {

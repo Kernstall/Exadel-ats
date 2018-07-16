@@ -1,19 +1,18 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import ListItem from '@material-ui/core/es/ListItem/ListItem';
 import Grid from '@material-ui/core/es/Grid/Grid';
+import {Route} from "react-router-dom";
+import TeacherSelectedGroupComponent from "../TeacherSelectedGroupComponent/TeacherSelectedGroupComponent";
+import { withRouter } from 'react-router-dom';
 
 class GroupTemplate extends React.Component {
   render() {
     return (
-      <ListItem button>
-        <Grid container>
-          <Grid item xs={12} sm={6}>{this.props.groupName}</Grid>
-          <Grid item xs={12} sm={6}>Amount of students: {this.props.studentsAmount}</Grid>
-        </Grid>
-      </ListItem>
+      <Grid container>
+        <Grid item xs={12} sm={6}>{this.props.response.groupName}</Grid>
+        <Grid item xs={12} sm={6}>Amount of students: {this.props.response.studentsAmount}</Grid>
+      </Grid>
     );
   }
 }
 
-export default (GroupTemplate);
+export default withRouter(GroupTemplate);

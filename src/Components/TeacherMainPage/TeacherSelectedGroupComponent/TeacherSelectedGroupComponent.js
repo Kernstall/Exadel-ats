@@ -3,38 +3,19 @@ import Typography from '@material-ui/core/es/Typography/Typography';
 import List from '@material-ui/core/es/List/List';
 import ListItem from '@material-ui/core/es/ListItem/ListItem';
 import StudentTemplate from '../StudentTemplate/StudentTemplate';
-
-const groupMembers = [
-  {
-    name: 'Bob Marley',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-  {
-    name: 'Aliaxei Dziadziuk',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-  {
-    name: 'Maksim Anikeyeu',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-];
+import { Link } from 'react-router-dom';
 
 class TeacherSelectedGroupComponent extends React.Component {
   render() {
+    console.log(this.props);
     return (
-      <div>
+      <Link to={`/groups/${this.props.groupId}`}>
         <Typography align="center">
-          {`${this.props.groupName} ${groupMembers.length} students`}
+          {`${this.props.groupName} ${this.props.groupMembers.length} students`}
         </Typography>
         <List>
-          {groupMembers.map(item => (
-            <ListItem button>
+          {this.props.groupMembers.map((item, index) => (
+            <ListItem button key={index}>
               <StudentTemplate
                 name={item.name}
                 tasksComplete={item.tasksComplete}
@@ -44,7 +25,7 @@ class TeacherSelectedGroupComponent extends React.Component {
             </ListItem>
           ))}
         </List>
-      </div>
+      </Link>
     );
   }
 }

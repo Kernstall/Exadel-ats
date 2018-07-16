@@ -1,22 +1,9 @@
-import React, { Component } from 'react';
-import './App.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles';
-import Header from './Components/Header';
-import Footer from './Components/Footer';
-import RegisterForm from './Components/RegisterForm/RegisterForm';
-import Common from './Styles/Common';
-import MainPage from './Components/MainPage/MainPage';
-import TeacherMainPage from "./Components/TeacherMainPage/TeacherMainPage";
-import TeacherSelectedGroupComponent from "./Components/TeacherMainPage/TeacherSelectedGroupComponent/TeacherSelectedGroupComponent";
-import GroupTemplate from "./Components/TeacherMainPage/GroupTemplate/GroupTemplate";
-
-const styles = ({
-  content: {
-    minHeight: 'calc(100vh - 40px)',
-  },
-  ...Common,
-});
+import React from 'react';
+import List from '@material-ui/core/es/List/List';
+import ListItem from '@material-ui/core/es/ListItem/ListItem';
+import { Link, Route } from 'react-router-dom';
+import GroupTemplate from '../GroupTemplate/GroupTemplate';
+import TeacherSelectedGroupComponent from '../TeacherSelectedGroupComponent/TeacherSelectedGroupComponent';
 
 const response = [
   {
@@ -96,19 +83,31 @@ const response = [
   },
 ];
 
-class App extends Component {
-  render() {
-    const { classes } = this.props;
+const RouteWithProps = ({ path, exact, strict, component: Component, location, ...rest}) => (
+  <Route
+    path={path}
+    exact={exact}
+    strict={strict}
+    location={location}
+    render={(props) => <Component {...props} {...rest} />}
+  />
+);
 
+class GroupsList extends React.Component {
+  render() {
     return (
-      <div>
-        <Header />
-        <Route exact path="/groups" component={TeacherMainPage}/>
-        <Route path="/groups/:id" component={GroupTemplate} />
-        <Footer />
-      </div>
+      <List>
+        {response.map((item, index) => (
+          <div groupId={item.groupId} key={index}>
+            {console.log(this.props)}
+            <ListItem button key={index} onClick={this.props.callback}>
+              <GroupTemplate response={item} />
+            </ListItem>
+          </div>
+        ))}
+      </List>
     );
   }
 }
 
-export default withStyles(styles)(App);
+export default GroupsList;
