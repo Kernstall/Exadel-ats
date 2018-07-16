@@ -6,7 +6,6 @@ const passport = require('passport');
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
 const sendMail = require('./mail');
-
 const studentRouter = require('./routes/student-router');
 const teacherRouter = require('./routes/teacher-router');
 // const adminRouter = require('./routes/admin-routes');
