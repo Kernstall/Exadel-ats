@@ -9,8 +9,14 @@ const GroupSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
-  studentIdList: [mongoose.SchemaTypes.ObjectId],
-  topicCourseIds: [mongoose.SchemaTypes.ObjectId],
+  studentIdList: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  topicCourseIds: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'TopicCourse',
+  }],
 });
 
 module.exports = mongoose.model('Group', GroupSchema);

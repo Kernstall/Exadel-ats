@@ -31,7 +31,7 @@ router.post('/studentsToGroup', (req, res) => {
     .catch((err) => { res.status(500).send(err); });
 });
 
-router.delete('/studentsFromGroup', (req,res) => {
+router.delete('/studentsFromGroup', (req, res) => {
   const groupID = req.query.groupID;
   const studentIDs = req.body;
   dataFunctions.deleteStudentsToGroup(groupID, studentIDs)
@@ -46,6 +46,12 @@ router.get('/teacherGroup', (req, res) => {
       res.send(answer);
     })
     .catch(err => res.status(500).send(err));
+});
+
+router.get('/groupInfo', (req, res, next) => {
+  const groupID = req.query.groupID;
+
+  dataFunctions.getGroupInfo(groupID);
 });
 
 module.exports = router;
