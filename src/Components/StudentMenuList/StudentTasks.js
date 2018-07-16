@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
 
@@ -19,7 +20,7 @@ const styles = theme => ({
   },
 });
 
-class StudentTasksList extends React.Component {
+class StudentTasks extends React.Component {
   state = { open: false };
 
   handleClick = () => {
@@ -31,9 +32,17 @@ class StudentTasksList extends React.Component {
     return (
       <div className={classes.root}>
           <ListItem open="false" button onClick={this.handleClick}>
-            <ListItemText inset primary={task.name} />
-            <ListItemText inset primary={task.theme} />
-            <ListItemText inset primary={task.status} />
+            <Grid container>
+              <Grid item xs>
+                <ListItemText inset primary={task.name} />
+              </Grid>
+              <Grid item xs>
+                <ListItemText inset primary={task.theme} />
+              </Grid>
+              <Grid item xs>
+                <ListItemText inset primary={task.status} />
+              </Grid>
+            </Grid>
             {this.state.open ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
@@ -48,8 +57,8 @@ class StudentTasksList extends React.Component {
   }
 }
 
-StudentTasksList.propTypes = {
+StudentTasks.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(StudentTasksList);
+export default withStyles(styles)(StudentTasks);

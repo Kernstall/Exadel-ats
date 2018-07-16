@@ -8,7 +8,7 @@ import Footer from './Components/Footer';
 import RegisterForm from './Components/RegisterForm/RegisterForm';
 import Common from './Styles/Common';
 import MainPage from './Components/MainPage/MainPage';
-import StudentMenu from './Components/List/StudentMenu';
+import StudentMenu from './Components/StudentMenuList/StudentMenu';
 import TeacherAddGroup from './Components/TeacherAddGroup/TeacherAddGroup';
 import createMuiTheme from './Styles/MUIAppTheme';
 

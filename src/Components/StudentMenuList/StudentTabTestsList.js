@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import StudentTasksList from './StudentTasksList';
+import StudentTests from './StudentTests';
 
 const styles = theme => ({
 
@@ -15,18 +15,18 @@ const styles = theme => ({
   },
 });
 
-function StudentList(props) {
-  const {classes, tasksList} = props;
+function StudentTabTestsList(props) {
+  const { classes, testsList } = props;
   return (
     <div className={classes.root}>
       <List
         component="nav"
       >
         {
-          tasksList.map(
-            (task, index) => (
-              <StudentTasksList
-                task={task}
+          testsList.map(
+            (test, index) => (
+              <StudentTests
+                test={test}
                 key={index}
               />
             ),
@@ -37,8 +37,8 @@ function StudentList(props) {
   );
 }
 
-StudentList.propTypes = {
+StudentTabTestsList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(StudentList);
+export default withStyles(styles)(StudentTabTestsList);
