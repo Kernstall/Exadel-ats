@@ -1,12 +1,12 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-//import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
-import FilterFieldsCard from './FilterFieldsCard';
+import FilterStudentCard from './FilterFieldsCard';
+import Paper from "@material-ui/core/es/Paper/Paper";
 
 const styles = {
-  StudentFilterCard: {
-    maxWidth: '325px',
+  FlexContainerHorizontal: {
+    display: 'flex',
+    'flex-wrap': 'wrap',
   },
 };
 
@@ -14,9 +14,12 @@ class TeacherAddGroup extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <Paper className={classes.StudentFilterCard}>
-        <FilterFieldsCard />
-      </Paper>
+      <div className={classes.FlexContainerHorizontal}>
+        <FilterStudentCard />
+        <Paper>
+          Hello WorldDDDDDDDDDDDDDDDDDD
+        </Paper>
+      </div>
     );
   }
 }

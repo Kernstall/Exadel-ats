@@ -6,6 +6,7 @@ const styles = ({
   footer: {
     height: 40,
     background: '#8080805e',
+    width: '100%',
   },
   ...sharedStyles,
 });

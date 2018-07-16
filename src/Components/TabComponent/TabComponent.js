@@ -6,7 +6,8 @@ import ContentContainer from './ContentContainer';
 
 const styles = {
   fullWidth: {
-    width: '100%',
+    'min-width': '200px',
+    width: 'inherit',
   },
 };
 

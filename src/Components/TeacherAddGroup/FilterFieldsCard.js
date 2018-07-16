@@ -6,10 +6,12 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
 import TextField from '@material-ui/core/TextField';
+import FormSelect from '../Shared/Select/index';
 
 const styles = {
   card: {
     minWidth: 150,
+    maxWidth: 300,
   },
   bullet: {
     display: 'inline-block',
@@ -27,20 +29,53 @@ const styles = {
     'font-size': 'small',
   },
   textField: {
-    '&:after': {
-    },
+  },
+  FlexContainerVertical: {
+    display: 'flex',
+    'flex-direction': 'column',
   },
 };
 
-function SimpleCard(props) {
-  const { classes } = props;
+const universities = {
+  BSU: ['A1', 'B1', 'C1'],
+  BSUIR: ['A2', 'B2', 'C2'],
+};
 
-  return (
-    <div>
+class FilterStudentCard extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      university: '',
+      faculties: '',
+    };
+
+    this.handleSelectUnChange = this.handleSelectUnChange.bind(this);
+    this.handleFacultyChange = this.handleFacultyChange.bind(this);
+  }
+
+
+  handleSelectUnChange(event) {
+    this.setState({
+      university: event.target.value,
+      faculties: '',
+    });
+  }
+
+  handleFacultyChange(event) {
+    this.setState({
+      faculties: event.target.value,
+    });
+  }
+
+  render() {
+    const { classes } = this.props;
+    const universitiesArr = Object.keys(universities);
+    const { university } = this.state;
+    const facultiesArr = universities[university];
+    return (
       <Card className={classes.card}>
         <CardHeader subheader={<Typography className={classes.CardHeaderFontSize}>Введите данные студента для поиска</Typography>} />
-        <CardContent>
-
+        <CardContent className={classes.FlexContainerVertical}>
           <TextField
             id="Student Name"
             label="Имя студента"
@@ -49,21 +84,50 @@ function SimpleCard(props) {
             margin="normal"
           />
           <TextField
-            id="Student Name"
+            id="Student Email"
             label="Email"
             type="search"
             className={classes.textField}
             margin="normal"
           />
+          <FormSelect
+            label="University"
+            value={this.state.university}
+            className={classes.textField}
+            inputProps={{
+              university: 'University',
+              id: '0',
+            }}
+            onChange={this.handleSelectUnChange}
+            options={universitiesArr}
+          />
+          {facultiesArr && (
+            <FormSelect
+              label="Faculty"
+              value={this.state.faculties}
+              className={classes.textField}
+              inputProps={{
+                university: 'Faculty',
+                id: '0',
+              }}
+              onChange={this.handleFacultyChange}
+              options={facultiesArr}
+            />
+          )}
+          <TextField
+            id="with-placeholder"
+            label="Год выпуска"
+            className={classes.textField}
+          />
 
         </CardContent>
       </Card>
-    </div>
-  );
+    );
+  }
 }
 
-SimpleCard.propTypes = {
+FilterStudentCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SimpleCard);
+export default withStyles(styles)(FilterStudentCard);

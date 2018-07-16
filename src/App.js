@@ -16,6 +16,8 @@ const styles = ({
   content: {
     minHeight: 'calc(100vh - 40px)',
   },
+  SpreadWrapper: {
+  },
   ...Common,
 });
 
@@ -24,18 +26,18 @@ class App extends Component {
     const { classes } = this.props;
     return (
       <MuiThemeProvider theme={createMuiTheme}>
-        <Router>
-          <div>
+        <div className={classes.SpreadWrapper}>
+          <Header />
+          <Router>
             <div className={classes.content}>
-              <Header />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
               <Route path="/studentMenu" component={StudentMenu} />
               <Route path="/teacher/addGroup" component={TeacherAddGroup} />
             </div>
-            <Footer />
-          </div>
-        </Router>
+          </Router>
+          <Footer />
+        </div>
       </MuiThemeProvider>
     );
   }
