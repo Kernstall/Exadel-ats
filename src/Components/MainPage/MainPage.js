@@ -7,11 +7,20 @@ import Common from '../../Styles/Common';
 
 const styles = ({
   ...Common,
+  contentDisplay: {
+    display: 'flex',
+    'flex-wrap': 'wrap-reverse',
+    'justify-content': 'center',
+  },
   fullWidth: {
     width: '100%',
   },
   margin: {
     margin: '20px auto',
+  },
+  topStudentsWrapper: {
+    'margin-right': '20px',
+    'flex-grow': '1',
   },
 });
 
@@ -48,10 +57,12 @@ class MainPage extends React.Component { // ({ classes }) => (
       component: <TopStudents topScoreStudentName={element.Students} />,
     }));
     return (
-      <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
-        <TabComponent
-          tabHeaders={this.TabHeaders}
-        />
+      <div className={[classes.flex, classes.centerScreen, classes.margin, classes.contentDisplay].join(' ')}>
+        <div className={classes.topStudentsWrapper}>
+          <TabComponent
+            tabHeaders={this.TabHeaders}
+          />
+        </div>
         <LoginForm />
       </div>);
   }
