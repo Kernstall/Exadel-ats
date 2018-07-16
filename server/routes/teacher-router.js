@@ -81,7 +81,7 @@ router.post('/question', (req, res) => {
     .catch((err) => { res.status(500).send(err); });
 });
 
-router.post('/studentsToGroup', (req, res) => {
+router.post('/group/students', (req, res) => {
   const groupID = req.query.groupID;
   const studentIDs = req.body;
   dataFunctions.addStudentsToGroup(groupID, studentIDs)
@@ -89,7 +89,7 @@ router.post('/studentsToGroup', (req, res) => {
     .catch((err) => { res.status(500).send(err); });
 });
 
-router.delete('/studentsFromGroup', (req, res) => {
+router.delete('/group/students', (req, res) => {
   const groupID = req.query.groupID;
   const studentIDs = req.body;
   dataFunctions.deleteStudentsToGroup(groupID, studentIDs)
@@ -97,7 +97,8 @@ router.delete('/studentsFromGroup', (req, res) => {
     .catch((err) => { res.status(500).send(err); });
 });
 
-router.get('/teacherGroup', (req, res) => {
+// Возвращает группы, принадлежащие учителю с количеством людей в них
+router.get('/group', (req, res) => {
   const teacherID = req.query.teacherID;
   dataFunctions.getTeachersGroups(teacherID)
     .then((answer) => {
@@ -106,9 +107,9 @@ router.get('/teacherGroup', (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
-router.get('/groupInfo', (req, res) => {
+router.get('/group/info', (req, res, next) => {
   const groupID = req.query.groupID;
-
+  // Ещё не готов
   dataFunctions.getGroupInfo(groupID);
 });
 

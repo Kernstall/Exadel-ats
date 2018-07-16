@@ -5,7 +5,7 @@ const dataFunctions = require('../dataFunctions');
 
 const router = express.Router();
 
-router.get('/Tops', async (req, res) => {
+router.get('/tops', async (req, res) => {
   const result = await dataFunctions.getTopTenStudents();
 
   res.send(JSON.stringify(result));
