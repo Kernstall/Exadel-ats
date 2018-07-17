@@ -12,10 +12,7 @@ module.exports = {
   passwordHash: String,
   passwordSalt: String,
   university: String,
-  faculty: String,
   graduateYear: Number,
-  course: String,
-  groupNumber: Number,
   testsToCheck: [
     {
       studentId: mongoose.Schema.Types.ObjectId,
