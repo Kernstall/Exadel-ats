@@ -37,6 +37,9 @@
     ],
     "no-shadow": [
       0
+    ],
+    "prefer-destructuring": [
+      0
     ]
   }
 }

@@ -18,7 +18,6 @@ router.get('/tasks', (req, res) => {
       res.status(200).send(JSON.stringify(response));
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).send(err);
     });
 });
@@ -30,19 +29,34 @@ router.get('/', async (req, res) => {
   }
 
   try {
-    const getStudentTask = User.findById({ _id: req.query.id });
+    const getStudentTask = User.findById(req.query.id);
     const getGroupsTask = Group.find({ studentIdList: req.query.id });
     await Promise.all([getStudentTask, getGroupsTask]);
     const studentModel = await getStudentTask;
-    const groups = await getGroupsTask;
+    let groups = await getGroupsTask;
+
+    // console.log(groups);
+    groups = groups.map(item => item = mapping.mapGroupToDto(item));
+    // console.log(groups);
 
     const student = mapping.mapStudentToDto(studentModel);
-    const result = { student, groups };
+    const result = {student, groups};
     res.status(200).json(result);
   } catch (err) {
-    console.log(err);
-    res.status(500).send(err);
+    res.status(500).send({ err: err.message });
   }
+});
+
+router.get('/group/student/history', (res, req) => {
+  const studentId = res.query.studentID;
+  console.log(studentId);
+  const groupId = res.query.groupID;
+  console.log(groupId);
+  dataFunctions.getStudentHistoryByGroup(studentId, groupId)
+    .then((answer) => {
+      req.send(JSON.stringify(dataFunctions.deleteOtherGroupInfo(answer, groupId)));
+    })
+    .catch(err => req.status(500).send(err));
 });
 
 module.exports = router;

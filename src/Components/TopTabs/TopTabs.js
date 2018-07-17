@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper, Grid } from '@material-ui/core';
 import { getStudents } from '../../commands/students';
-import LoginForm from '../LoginForm/LoginForm';
 import TabComponent from '../TabComponent/TabComponent';
 import TopStudents from '../Top/TopStudents';
 import Common from '../../Styles/Common';
@@ -56,16 +55,14 @@ class TopTabs extends Component {
     const { classes, students } = this.props;
     let rotatingSection;
     let tabs = <Grid><TabComponent tabHeaders={this.TabHeaders} /></Grid>;
-    console.log('this.TabHeaders', this.TabHeaders);
     if (students) {
       this.TabHeaders = Object.keys(students).map(element => ({
         tabName: element,
         component: <TopStudents topScoreStudentName={
-          students[element].map((firstSecondName) => (`${firstSecondName.firstName} ${firstSecondName.lastName}`))
+          students[element].map(firstSecondName => (`${firstSecondName.firstName} ${firstSecondName.lastName}`))
         }
         />,
       }));
-      console.log('this.TabHeaders', this.TabHeaders);
       tabs = <TabComponent tabHeaders={this.TabHeaders} />;
     } else {
       rotatingSection = (

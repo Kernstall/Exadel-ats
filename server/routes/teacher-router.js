@@ -107,10 +107,15 @@ router.get('/group', (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
-router.get('/group/info', (req, res, next) => {
-  const groupID = req.query.groupID;
-  // Ещё не готов
-  dataFunctions.getGroupInfo(groupID);
+router.get('/group/info', async (req, res) => {
+  try {
+    const groupID = req.query.groupID;
+    const result = await dataFunctions.getGroupInfo(groupID);
+    res.send(JSON.stringify(result));
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
 });
 
 module.exports = router;
