@@ -4,19 +4,19 @@ const router = express.Router();
 
 const info = [
   {
-    TopBy: 'Top by Mark',
+    TopBy: 'top by Mark',
     Students: ['Bill Murray #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1', 'Alex Dovgal #1'],
   },
   {
-    TopBy: 'Top by Tasks',
+    TopBy: 'top by Tasks',
     Students: ['Bill Murray #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2', 'Alex Dovgal #2'],
   },
   {
-    TopBy: 'Top by Tests',
+    TopBy: 'top by Tests',
     Students: ['Bill Murray #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3', 'Alex Dovgal #3'],
   },
   {
-    TopBy: 'Top by Activity',
+    TopBy: 'top by Activity',
     Students: ['Bill Murray #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4', 'Alex Dovgal #4'],
   },
 ];

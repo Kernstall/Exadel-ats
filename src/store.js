@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import reducers from './reducers';
+import reducers from './_reducers';
 
 const isProd = process.env.NODE_ENV === 'production';
 const winDevtools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;

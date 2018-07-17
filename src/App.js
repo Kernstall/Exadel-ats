@@ -3,14 +3,14 @@ import './App.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import MuiThemeProvider from '@material-ui/core/es/styles/MuiThemeProvider';
-import Header from './Components/Header';
-import Footer from './Components/Footer';
-import RegisterForm from './Components/RegisterForm/RegisterForm';
-import Common from './Styles/Common';
-import MainPage from './Components/MainPage/MainPage';
-import StudentMenu from './Components/StudentMenuList/StudentMenu';
-import TeacherAddGroup from './Components/TeacherAddGroup/TeacherAddGroup';
-import createMuiTheme from './Styles/MUIAppTheme';
+import Header from './common/Header.jsx';
+import Footer from './common/Footer.jsx';
+import RegisterForm from './pages/registerForm/RegisterForm';
+import Common from './common/Styles/Common';
+import MainPage from './pages/mainPage/MainPage';
+import StudentMenu from './pages/studentMenuList/StudentMenu.jsx';
+import TeacherAddGroup from './pages/teacherAddGroup/TeacherAddGroup.jsx';
+import createMuiTheme from './common/Styles/MUIAppTheme';
 
 const styles = ({
   content: {
