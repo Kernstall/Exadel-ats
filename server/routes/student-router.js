@@ -16,6 +16,7 @@ router.get('/group/tasks', async (req, res) => {
     res.send(JSON.stringify(result));
   }
   catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 });

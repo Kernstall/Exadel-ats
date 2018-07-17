@@ -6,7 +6,7 @@ const User = require('./models/User');
 const Topic = require('./models/Topic');
 
 exports.getStudentTasksByGroup = async (studentId, groupId) => {
-  const tasks = User.aggregate([
+  const tasks = await User.aggregate([
     {$match: {'_id': mongoose.Types.ObjectId(studentId)}},
     {
       $project: {
@@ -31,14 +31,28 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
 
   function getInfoByTaskID(taskId) {
     return Task.findById(taskId)
-      .populate('task.topicId', {'_id': 0, 'name': 1})
+      .populate('topicId', {'_id': 0, 'name': 1})
       .select({
-        'task._id': 0,
-        'task.name': 1,
-        'task.description': 1,
-        'task.topicId.name': 1,
+        '_id': 0,
+        'topicId.name': 1,
+        'name': 1,
+        'description': 1,
       });
   }
+  const result = tasks[0].taskArray;
+  let promissArray = []
+  if (tasks.length !== 0) {
+    for (let i = 0; i < result.length; i++) {
+      result[i].info = getInfoByTaskID(result[i].taskId);
+      promissArray.push(result[i].info);
+    }
+    promissArray = await Promise.all(promissArray);
+    for (let i = 0; i < result.length; i++) {
+      result[i].info = promissArray[i];
+    }
+  }
+
+  return result;
 };
 
 // На вход первым параметром поступает массив ключей, которые должны быть
