@@ -329,6 +329,9 @@ exports.getGroupInfo = async (groupID) => {
   }
 
   result.studentIdList = await Promise.all(result.studentIdList);
+  Object.defineProperty(result, 'studentList',
+    Object.getOwnPropertyDescriptor(result, 'studentIdList'));
+  delete result.studentIdList;
 
   return result;
 };
