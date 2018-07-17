@@ -26,6 +26,7 @@ const styles = ({
   topStudentsWrapper: {
     'margin-right': '20px',
     'flex-grow': '1',
+    'padding-right': '10px',
   },
 });
 
