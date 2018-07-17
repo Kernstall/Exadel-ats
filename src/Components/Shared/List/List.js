@@ -14,6 +14,7 @@ const styles = theme => ({
 
 function InsetList(props) {
   const { classes, info } = props;
+  console.log('info', info);
   const childComponent = info.studentGroups.map(element => (
     <Paper className={classes.control}>
       <ListItem button>
