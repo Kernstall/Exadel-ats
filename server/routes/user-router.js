@@ -15,7 +15,7 @@ router.get('/tops', async (req, res) => {
 
     res.send(JSON.stringify(result));
   } catch (error) {
-    res.status(500).send(error);
+    res.status(400).send(error);
   }
 });
 
