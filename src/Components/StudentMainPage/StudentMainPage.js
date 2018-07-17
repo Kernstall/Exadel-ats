@@ -38,11 +38,22 @@ const styles = {
   captionMargin: {
     margin: '40px',
   },
+  absoluteCenter: {
+    display: 'flex',
+    center: {
+      margin: 'auto',
+    },
+    position: 'absolute',
+    height: '100vh',
+    width: '100%',
+    top: 0,
+    left: 0,
+  },
 };
 
 class StudentMainPage extends Component {
   componentDidMount() {
-    this.props.getStudentGroups({ param: 'param for command' }); // eslint-disable-line
+    this.props.getStudentGroups({ id: '5b45c52b9320560a54780838' }); // eslint-disable-line
   }
 
   JSONtoJSX = (studentInfo, classes) => (
@@ -62,30 +73,42 @@ class StudentMainPage extends Component {
     const { classes, isLoading, studentGroups } = this.props;
 
     console.log('isLoading', isLoading);
-    console.log('students', studentGroups);
+    console.log('studentGroups', studentGroups);
 
     let spinner;
     let groupList;
     let studentInfoComponent;
 
     if (!studentGroups) {
-      spinner = <Spinner />;
+      spinner = (
+        <Grid className={classes.absoluteCenter}>
+          <Spinner className={classes.center} />
+        </Grid>
+      );
     } else {
       spinner = null;
-      groupList = <List info={studentGroups} />;
-      studentInfoComponent = this.JSONtoJSX(studentInfo, classes);
+      groupList = (
+        <div>
+          <Capture className={classes.captionMargin}>
+            Current groups
+          </Capture>
+          <List info={studentGroups} />
+        </div>
+      );
+      studentInfoComponent = (
+        <div>
+          <Capture className={classes.captionMargin}>
+            Information about you
+          </Capture>
+          {/* {this.JSONtoJSX(studentInfo, classes)} */}
+        </div>
+      )
     }
 
     return (
       <Grid className={classes.centerScreen}>
         {spinner}
-        <Capture className={classes.captionMargin}>
-          Current groups
-        </Capture>
         {groupList}
-        <Capture className={classes.captionMargin}>
-          Information about you
-        </Capture>
         <Grid className={[classes.font, classes.wrapper].join(' ')}>
           {studentInfoComponent}
         </Grid>

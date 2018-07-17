@@ -11,6 +11,7 @@ import MainPage from './Components/MainPage/MainPage';
 import StudentMenu from './Components/StudentMenuList/StudentMenu';
 import TeacherAddGroup from './Components/TeacherAddGroup/TeacherAddGroup';
 import createMuiTheme from './Styles/MUIAppTheme';
+import StudentMainPage from './Components/StudentMainPage/StudentMainPage';
 
 const styles = ({
   content: {
@@ -27,13 +28,14 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={createMuiTheme}>
         <div className={classes.SpreadWrapper}>
-          <Header />
           <Router>
             <div className={classes.content}>
+              <Header />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
               <Route path="/studentMenu" component={StudentMenu} />
               <Route path="/teacher/addGroup" component={TeacherAddGroup} />
+              <Route path="/student/mainPage" component={StudentMainPage} />
             </div>
           </Router>
           <Footer />
