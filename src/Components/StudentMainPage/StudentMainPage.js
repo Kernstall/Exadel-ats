@@ -1,27 +1,24 @@
-import React from 'react';
-import Paper from '@material-ui/core/Paper';
+import React, { Component } from 'react';
 import { Grid } from '@material-ui/core/es';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 import Capture from '../Capture/Capture';
 import List from '../Shared/List/List';
 import Common from '../../Styles/Common';
+import { getStudentGroups } from '../../commands/studentGroups';
+import Spinner from '../Shared/Spinner';
 
-const info = [
-  {
-    groupName: '12FAMCS',
-    completedTasks: '476767',
-    allTasks: '6',
-    completedTests: '10',
-    allTests: '20',
-  },
-  {
-    groupName: '13FAMCS',
-    completedTasks: '5',
-    allTasks: '7',
-    completedTests: '9',
-    allTests: '2131231',
-  },
-];
+const info = {
+  studentGroups: [
+    {
+      groupName: '12FAMCS',
+      completedTasks: '476767',
+      allTasks: '6',
+      completedTests: '10',
+      allTests: '20',
+    },
+  ],
+};
 
 const studentInfo = {
   StudentName: 'Igor\'',
@@ -43,34 +40,68 @@ const styles = {
   },
 };
 
+class StudentMainPage extends Component {
+  componentDidMount() {
+    this.props.getStudentGroups({ param: 'param for command' }); // eslint-disable-line
+  }
 
-const StudentMainPage = ({ classes }) => {
-  const studentInfoComponent = Object.keys(studentInfo).map(element => (
-    <Grid>
-      <Grid className={classes.infoCapture}>
-        {element}
+  JSONtoJSX = (studentInfo, classes) => (
+    Object.keys(studentInfo).map(element => (
+      <Grid>
+        <Grid className={classes.infoCapture}>
+          {element}
+        </Grid>
+        <Grid className={[classes.infoContent, classes.content].join(' ')}>
+          {studentInfo[element]}
+        </Grid>
       </Grid>
-      <Grid className={[classes.infoContent, classes.content].join(' ')}>
-        {studentInfo[element]}
-      </Grid>
-    </Grid>
-  ));
-
-  return (
-    <Grid className={classes.centerScreen}>
-      <Capture className={classes.captionMargin}>
-        Current groups
-      </Capture>
-      <List info={info} />
-      <Capture className={classes.captionMargin}>
-        Information about you
-      </Capture>
-      <Grid className={[classes.font, classes.wrapper].join(' ')}>
-        {studentInfoComponent}
-      </Grid>
-    </Grid>
+    ))
   );
-};
 
+  render() {
+    const { classes, isLoading, studentGroups } = this.props;
 
-export default withStyles(styles)(StudentMainPage);
+    console.log('isLoading', isLoading);
+    console.log('students', studentGroups);
+
+    let spinner;
+    let groupList;
+    let studentInfoComponent;
+
+    if (!studentGroups) {
+      spinner = <Spinner />;
+    } else {
+      spinner = null;
+      groupList = <List info={studentGroups} />;
+      studentInfoComponent = this.JSONtoJSX(studentInfo, classes);
+    }
+
+    return (
+      <Grid className={classes.centerScreen}>
+        {spinner}
+        <Capture className={classes.captionMargin}>
+          Current groups
+        </Capture>
+        {groupList}
+        <Capture className={classes.captionMargin}>
+          Information about you
+        </Capture>
+        <Grid className={[classes.font, classes.wrapper].join(' ')}>
+          {studentInfoComponent}
+        </Grid>
+      </Grid>
+    );
+  }
+}
+const styledComponent = withStyles(styles)(StudentMainPage);
+
+const mapStateToProps = state => ({
+  isLoading: state.studentGroups.isLoading,
+  studentGroups: state.studentGroups.studentGroups,
+});
+
+const mapCommandsToProps = dispatch => ({
+  getStudentGroups: param => dispatch(getStudentGroups(param)),
+});
+
+export default connect(mapStateToProps, mapCommandsToProps)(styledComponent);
