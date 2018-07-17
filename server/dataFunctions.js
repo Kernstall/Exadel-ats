@@ -5,15 +5,40 @@ const Group = require('./models/Group');
 const User = require('./models/User');
 const Topic = require('./models/Topic');
 
-exports.getStudentTasks = function (taskArrayStud) {
-  const arrayTaskIds = [];
-  taskArrayStud.forEach((elem) => {
-    arrayTaskIds.push(elem.taskId);
-  });
+exports.getStudentTasksByGroup = async (studentId, groupId) => {
+  const tasks = User.aggregate([
+    {$match: {'_id': mongoose.Types.ObjectId(studentId)}},
+    {
+      $project: {
+        _id: 0,
+        taskArray: {
+          $filter: {
+            input: '$tasks',
+            as: 'task',
+            cond: {$eq: ['$$task.groupId', mongoose.Types.ObjectId(groupId)]},
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        'taskArray.taskId': 1,
+        'taskArray.isPassed': 1,
+      },
+    },
+  ]);
 
-  return Task.find()
-    .where('_id')
-    .in(arrayTaskIds);
+  function getInfoByTaskID(taskId) {
+    return Task.findById(taskId)
+      .populate('task.topicId', {'_id': 0, 'name': 1})
+      .select({
+        'task._id': 0,
+        'task.name': 1,
+        'task.description': 1,
+        'task.topicId.name': 1,
+      });
+  }
 };
 
 // На вход первым параметром поступает массив ключей, которые должны быть
@@ -42,12 +67,12 @@ exports.getTeachersGroups = function (_teacherID) {
 
 
 exports.addStudentsToGroup = (groupID, studentIDs) => Group.findByIdAndUpdate(groupID,
-  { $push: { studentIdList: studentIDs } },
-  { safe: true, upsert: true });
+  {$push: {studentIdList: studentIDs}},
+  {safe: true, upsert: true});
 
 exports.deleteStudentsToGroup = (groupID, studentIDs) => Group.findByIdAndUpdate(groupID,
-  { $pullAll: { studentIdList: studentIDs } },
-  { safe: true, upsert: true });
+  {$pullAll: {studentIdList: studentIDs}},
+  {safe: true, upsert: true});
 
 exports.getTopTenStudents = async () => {
   const result = {};
@@ -185,5 +210,5 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
       }
     });
   }
-  return { taskArray, testArray };
+  return {taskArray, testArray};
 };
