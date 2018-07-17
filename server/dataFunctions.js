@@ -155,7 +155,7 @@ exports.getGroupInfo = async (groupID) => {
   }
 
   function promiseCollector(student) {
-    return Student.aggregate([
+    return User.aggregate([
       { $match: { _id: student._id } },
       {
         $project: {
@@ -297,6 +297,8 @@ exports.getGroupInfo = async (groupID) => {
   }
 
   result.studentIdList = await Promise.all(result.studentIdList);
+  result.studentIdList = result.studentIdList.map(item => item[0]);
+
   Object.defineProperty(result, 'studentList',
     Object.getOwnPropertyDescriptor(result, 'studentIdList'));
   delete result.studentIdList;
