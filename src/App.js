@@ -22,6 +22,84 @@ const styles = ({
   ...Common,
 });
 
+const response = [
+  {
+    groupId: 1,
+    groupName: 'First Group',
+    studentsAmount: 21,
+    groupMembers: [
+      {
+        name: 'Bob Marley',
+        testsComplete: 3,
+        tasksComplete: 5,
+        score: 8.4,
+      },
+      {
+        name: 'Aliaxei Dziadziuk',
+        testsComplete: 3,
+        tasksComplete: 5,
+        score: 8.4,
+      },
+      {
+        name: 'Maksim Anikeyeu',
+        testsComplete: 3,
+        tasksComplete: 5,
+        score: 8.4,
+      },
+    ],
+  },
+  {
+    groupId: 2,
+    groupName: 'Second Group',
+    studentsAmount: 27,
+    groupMembers: [
+      {
+        name: 'Bob Marley',
+        testsComplete: 3,
+        tasksComplete: 5,
+        score: 8.4,
+      },
+      {
+        name: 'Aliaxei Dziadziuk',
+        testsComplete: 3,
+        tasksComplete: 5,
+        score: 8.4,
+      },
+      {
+        name: 'Maksim Anikeyeu',
+        testsComplete: 3,
+        tasksComplete: 5,
+        score: 8.4,
+      },
+    ],
+  },
+  {
+    groupId: 3,
+    groupName: 'Third Group',
+    studentsAmount: 18,
+    groupMembers: [
+      {
+        name: 'Bob Marley',
+        testsComplete: 3,
+        tasksComplete: 5,
+        score: 8.4,
+      },
+      {
+        name: 'Aliaxei Dziadziuk',
+        testsComplete: 3,
+        tasksComplete: 5,
+        score: 8.4,
+      },
+      {
+        name: 'Maksim Anikeyeu',
+        testsComplete: 3,
+        tasksComplete: 5,
+        score: 8.4,
+      },
+    ],
+  },
+];
+
 class App extends Component {
   render() {
     const { classes } = this.props;
