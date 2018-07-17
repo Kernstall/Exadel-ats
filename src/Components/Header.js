@@ -4,7 +4,7 @@ import sharedStyles from '../Styles/Common';
 
 const styles = ({
   header: {
-    height: '200px',
+    height: '60px',
     background: '#2196f3',
   },
   ...sharedStyles,

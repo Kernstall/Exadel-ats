@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const Task = require('./models/Task');
 const Question = require('./models/Question');
 const Group = require('./models/Group');
-const Student = require('./models/User');
+const User = require('./models/User');
+const Topic = require('./models/Topic');
 
 exports.getStudentTasks = (taskArrayStud) => {
   const arrayTaskIds = [];
@@ -13,39 +14,6 @@ exports.getStudentTasks = (taskArrayStud) => {
   return Task.find()
     .where('_id')
     .in(arrayTaskIds);
-};
-
-exports.addTask = (req) => {
-  const task = new Task({
-    description: req.description,
-    name: req.name,
-    weight: req.weight,
-    topicId: req.topicId,
-    language: req.language,
-    tags: req.tags,
-    tests: req.tests,
-    passResult: req.passResult,
-  });
-  return task.save();
-};
-
-exports.addQuestion = (req) => {
-  const question = new Question({
-    creatorId: req.creatorId,
-    topicId: req.topicId,
-    tags: req.tags,
-    description: req.description,
-    correctAnswersIndexes: req.correctAnswersIndexes,
-    answersVariants: req.answersVariants,
-    kind: req.kind,
-    correntAnswersCount: req.correntAnswersCount,
-    wrongAnswersCount: req.wrongAnswersCount,
-    difficultyRate: req.difficultyRate,
-    isTraining: req.isTraining,
-    isBlocked: req.isBlocked,
-    haveCheckedReport: req.haveCheckedReport,
-  });
-  return question.save();
 };
 
 // На вход первым параметром поступает массив ключей, которые должны быть
@@ -61,11 +29,11 @@ exports.fieldFilter = (keysArray, objectsArray) => {
 exports.getTeachersGroups = (_teacherID) => {
   return Group.aggregate(
     [
-      { $match: { teacherId: mongoose.Types.ObjectId(_teacherID) } },
+      {$match: {teacherId: mongoose.Types.ObjectId(_teacherID)}},
       {
         $project: {
           groupName: 1,
-          studentCount: { $size: '$studentIdList' },
+          studentCount: {$size: '$studentIdList'},
         },
       },
     ],
@@ -84,18 +52,18 @@ exports.deleteStudentsToGroup = (groupID, studentIDs) => Group.findByIdAndUpdate
 exports.getTopTenStudents = async () => {
   const result = {};
 
-  result.tasksTop = await Student.find({ status: 'student' }, { firstName: true, lastName: 1, mediumTaskScore: 1 })
-    .sort({ mediumTaskScore: -1 }).limit(10);
+  result.tasksTop = await User.find({status: 'student'}, {firstName: true, lastName: 1, mediumTaskScore: 1})
+    .sort({mediumTaskScore: -1}).limit(10);
   const studentTaskFields = ['firstName', 'lastName', 'mediumTaskScore', '_id'];
   result.tasksTop = exports.fieldFilter(studentTaskFields, result.tasksTop);
 
-  result.testsTop = await Student.find({ status: 'student' }, { firstName: 1, lastName: 1, mediumTestScore: 1 })
-    .sort({ mediumTestScore: -1 }).limit(10);
+  result.testsTop = await User.find({status: 'student'}, {firstName: 1, lastName: 1, mediumTestScore: 1})
+    .sort({mediumTestScore: -1}).limit(10);
   const studentTestFields = ['firstName', 'lastName', 'mediumTestScore', '_id'];
   result.testsTop = exports.fieldFilter(studentTestFields, result.testsTop);
 
-  result.activitiesTop = await Student.aggregate([
-    { $match: { status: 'student' } },
+  result.activitiesTop = await User.aggregate([
+    {$match: {status: 'student'}},
     {
       $project: {
         activity: {
@@ -105,7 +73,7 @@ exports.getTopTenStudents = async () => {
                 $reduce: {
                   input: '$tasks',
                   initialValue: 0,
-                  in: { $add: ['$$value', { $size: '$$this.attempts' }] },
+                  in: {$add: ['$$value', {$size: '$$this.attempts'}]},
                 },
               },
               testActivity: {
@@ -128,7 +96,7 @@ exports.getTopTenStudents = async () => {
                 },
               },
             }, // end of vars
-            in: { $add: ['$$taskActivity', '$$testActivity'] },
+            in: {$add: ['$$taskActivity', '$$testActivity']},
           },
         }, // end of activity field
         firstName: true,
@@ -136,15 +104,15 @@ exports.getTopTenStudents = async () => {
       },
     },
     {
-      $sort: { activity: -1 },
+      $sort: {activity: -1},
     },
     {
       $limit: 10,
     },
   ]).allowDiskUse(true);
 
-  result.marksTop = await Student.aggregate([
-    { $match: { status: 'student' } },
+  result.marksTop = await User.aggregate([
+    {$match: {status: 'student'}},
     {
       $project: {
         marks: {
@@ -160,9 +128,9 @@ exports.getTopTenStudents = async () => {
       },
     },
     {
-      $sort: { marks: -1 },
+      $sort: {marks: -1},
     },
-    { $limit: 10 },
+    {$limit: 10},
   ]);
 
   return result;
@@ -334,4 +302,49 @@ exports.getGroupInfo = async (groupID) => {
   delete result.studentIdList;
 
   return result;
+};
+
+exports.getStudentHistoryByGroup = function (studentID, groupID) {
+  const taskResult = User.findById(studentID)
+    .populate('tasks.taskId', {'_id': 0, 'name': 1})
+    .where({'tasks.groupId': {$eq: groupID}})
+    .select({
+      '_id': 0,
+      'tasks.groupId': 1,
+      'tasks.taskId.name': 1,
+      'tasks.attempts': 1,
+    });
+
+  const testResult = User.findById(studentID)
+    .populate('tests.topicsIds', {'_id': 0, 'name': 1})
+    .select({
+      '_id': 0,
+      'tests.groupId': 1,
+      'tests.topicsIds': 1,
+      'tests.date': 1,
+      'tests.result': 1,
+      'tests.status': 1,
+    })
+    .where({'tests.groupId': {$eq: groupID}});
+  return Promise.all([taskResult, testResult]);
+};
+
+exports.deleteOtherGroupInfo = function (array, groupId) {
+  const taskArray = [];
+  const testArray = [];
+  if (array[0] != null) {
+    array[0].tasks.forEach((elem) => {
+      if (String(elem.groupId) === String(groupId)) {
+        taskArray.push(elem);
+      }
+    });
+  }
+  if (array[1] != null) {
+    array[1].tests.forEach((elem) => {
+      if (String(elem.groupId) === String(groupId)) {
+        testArray.push(elem);
+      }
+    });
+  }
+  return { taskArray, testArray };
 };

@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  students: null,
+  studentGroups: null,
   error: null,
   isLoading: false,
 };
@@ -7,22 +7,22 @@ const INITIAL_STATE = {
 const reducer = (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'Entity/Students/Error':
+    case 'Entity/StudentGroups/Error':
       return {
         ...state,
         error: payload.error,
         isLoading: false,
       };
 
-    case 'Entity/Students/Request':
+    case 'Entity/StudentGroups/Request':
       return {
         ...state,
         isLoading: true,
       };
 
-    case 'Entity/Students/Success':
+    case 'Entity/StudentGroups/Success':
       return {
-        students: payload.students,
+        studentGroups: payload.studentGroups,
         error: null,
         isLoading: false,
       };
