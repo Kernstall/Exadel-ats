@@ -11,23 +11,25 @@ const styles = ({
   ...sharedStyles,
 });
 
-function TopStudents(props) {
-  const { classes, topScoreStudentName } = props;
-  return (
-    <List component="nav" className={[classes.width]}>
-      {
-        topScoreStudentName.map(
-          (student, index) => (
-            <StudentInTop
-              student={student}
-              key={student}
-              number={index}
-            />
-          ),
-        )
-      }
-    </List>
-  );
+class TopStudents extends React.Component {
+  render() {
+    const { classes, topScoreStudentName } = this.props;
+    return (
+      <List component="nav" className={classes.width}>
+        {
+          topScoreStudentName.map(
+            (student, index) => (
+              <StudentInTop
+                student={student}
+                key={index} //eslint-disable-line
+                number={index}
+              />
+            ),
+          )
+        }
+      </List>
+    );
+  }
 }
 
 export default withStyles(styles)(TopStudents);

@@ -1,46 +1,44 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import LoginForm from '../LoginForm/LoginForm';
-import TabComponent from '../TabComponent/TabComponent';
-import TopStudents from '../Top/TopStudents';
 import Common from '../../Styles/Common';
+import TopTabs from '../TopTabs/TopTabs';
 
 const styles = ({
   ...Common,
+  contentDisplay: {
+    display: 'flex',
+    'flex-wrap': 'wrap-reverse',
+    'justify-content': 'center',
+  },
   fullWidth: {
     width: '100%',
   },
   margin: {
     margin: '20px auto',
   },
+  topStudentsWrapper: {
+    'flex-grow': '1',
+    'padding-right': '10px',
+  },
+  flexElem: {
+    'flex-grow': '1',
+    'margin-right': '10px',
+  },
 });
 
-const Tops = [
-  {
-    TopBy: 'Score',
-    Students: ['Sasha', 'Misha', 'Bill', 'Andry'],
-  },
-  {
-    TopBy: 'Tasks',
-    Students: ['Another Sasha', 'Another Misha', 'Another Bill', 'Another Andry'],
-  },
-];
-
-const TabHeaders = [];
-
-const MainPage = ({ classes }) => (
-  <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
-    {
-      Tops.forEach(element => TabHeaders.push({
-        tabName: element.TopBy,
-        component: <TopStudents topScoreStudentName={element.Students} />,
-      }))
-    }
-    <TabComponent
-      tabHeaders={TabHeaders}
-    />
-    <LoginForm />
-  </div>
-);
+class MainPage extends React.Component {
+  render() {
+    const { classes } = this.props;
+    return (
+      <div className={[classes.flex, classes.centerScreen, classes.margin, classes.contentDisplay].join(' ')}>
+        <div className={classes.flexElem}>
+          <TopTabs />
+        </div>
+        <LoginForm />
+      </div>
+    );
+  }
+}
 
 export default withStyles(styles)(MainPage);

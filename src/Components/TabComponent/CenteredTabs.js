@@ -3,8 +3,18 @@ import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import withStyles from "@material-ui/core/es/styles/withStyles";
 
-export default class CenteredTabs extends React.Component {
+const styles = {
+  flexContainer: {
+    display: 'flex',
+  },
+  minWidth: {
+    'min-width': '10px',
+  },
+};
+
+class CenteredTabs extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,20 +27,20 @@ export default class CenteredTabs extends React.Component {
   }
 
   render() {
-    const classes = this.props;
-
+    const { classes } = this.props;
     return (
-      <Paper className={classes.root}>
+      <Paper>
         <Tabs
+          className={classes.minWidth}
           value={this.state.value}
           onChange={this.handleChange}
           indicatorColor="primary"
-          textColor="primary"
+          //textColor="primary"
           centered
-          fullWidth="true"
+          fullWidth
         >
 
-          {this.props.tabHeaders.map(tab => (<Tab className="tab" label={tab.tabName} />))}
+          {this.props.tabHeaders.map((tab, index) => (<Tab className="tab" label={tab.tabName} key={index} />))}
 
         </Tabs>
       </Paper>
@@ -42,3 +52,5 @@ CenteredTabs.propTypes = {
   tabHeaders: PropTypes.array.isRequired,
   callbackOnTabEvent: PropTypes.func,
 };
+
+export default withStyles(styles)(CenteredTabs);

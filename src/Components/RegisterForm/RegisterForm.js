@@ -65,10 +65,7 @@ class RegisterForm extends React.Component {
         <Route exact path="/registration" component={() => <Redirect to="/registration/student"/>}/>
         <Route exact path="/registration/student" component={StudentRegistration}/>
         <Route exact path="/registration/teacher" component={TeacherRegistration}/>
-        <Button
-          className={classes.registerButton}
-          variant="primary"
-        >
+        <Button className={classes.registerButton}>
           Register
         </Button>
       </form>
