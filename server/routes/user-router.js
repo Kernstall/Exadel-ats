@@ -5,7 +5,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const dataFunctions = require('../dataFunctions');
-const TeacherRequest = require('../models/teacherRequest');
+const TeacherRequest = require('../models/TeacherRequest');
 
 const router = express.Router();
 
@@ -24,9 +24,10 @@ router.post('/login', passport.authenticate('local', {
   failureFlash: true,
   successRedirect: '/student??',
 }), (req, res) => {
-  res.cookie('session_id', req.sessionID);
-  // res.send({ info: 1, status: 'logged' });
+  console.log(req.user);
+  res.cookie('session_id', req.sessionID).end();
 });
+
 passport.use(new LocalStrategy((email, password, done) => {
   User.findOne({ email }, (err, user) => {
     if (err) { return done(err); }
@@ -40,17 +41,15 @@ passport.use(new LocalStrategy((email, password, done) => {
   });
 }));
 
-
-router.post('/signup', async (req, res, next) => {
+router.post('/signup', (req, res, next) => {
   if (!req.body || !req.body.status || !req.body.email || !req.body.password || !req.body.firstName
     || !req.body.lastName || !req.body.university || !req.body.faculty || !req.body.graduateYear) {
-    return res.status(400).end();
+    return res.status(400).send({ err: 'not all fields are filled' });
   }
   if (req.body.status === 'student') {
     if (!req.body.course || !req.body.groupNumber) {
-      return res.status(400).end();
+      return res.status(400).send({ err: 'not all fields are filled' });
     }
-    console.log('STUDENT');
     const salt = bcrypt.genSaltSync(10);
     const newStudent = new User({
       email: req.body.email,
@@ -67,15 +66,14 @@ router.post('/signup', async (req, res, next) => {
     });
     return newStudent.save((err) => {
       return err ? next(err) : req.logIn(newStudent, (err2) => {
-        return err2 ? next(err2) : res.redirect('/student??');
+        return err2 ? next(err2) : console.log('logged');// res.redirect('/student??');
       });
     });
   }
   if (req.body.status === 'teacher') {
     if (!req.body.fathersName) {
-      return res.status(400).end();
+      return res.status(400).send({ err: 'not all fields are filled' });
     }
-    console.log('TEACHER');
     const salt = bcrypt.genSaltSync(10);
     const newTeacher = new User({
       email: req.body.email,
@@ -100,7 +98,7 @@ router.post('/signup', async (req, res, next) => {
           return res.status(500).end();
         }
         return req.logIn(newTeacher, (err2) => {
-          return err2 ? next(err2) : console.log('ADD EEE');// res.redirect('/student??');
+          return err2 ? next(err2) : console.log('logged');// res.redirect('/student??');
         });
       });
     });

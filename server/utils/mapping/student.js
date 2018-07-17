@@ -1,7 +1,5 @@
 const mapStudentToDto = model => ({
   id: model._id,
-  firstName: model.firstName,
-  lastName: model.lastName,
   fullName: `${model.firstName} ${model.lastName}`,
   university: model.university,
   faculty: model.faculty,

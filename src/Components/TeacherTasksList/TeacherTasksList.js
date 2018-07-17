@@ -14,46 +14,11 @@ const styles = theme => ({
 
 });
 
-/*
-const topics = [
-  {
-    topicName: 'Многопоточность',
-    tasks: [
-      {
-        taskName: 'Сделать клиент-сервер',
-        tags: ['БГУ', 'Java'],
-      },
-      {
-        taskName: 'Сортировка сообщений',
-        tags: ['БГУИР', 'сортировка'],
-      },
-      {
-        taskName: 'Задача3',
-        tags: ['БГУ'],
-      },
-    ],
-  }, {
-    topicName: 'Сортировка',
-    tasks: [
-      {
-        taskName: 'Пузырек',
-        tags: ['tag1', 'tag2'],
-      },
-      {
-        taskName: 'Шейкерная сортировка',
-        tags: ['tag1', 'tag2'],
-      },
-    ],
-  },
-];
-*/
-
 class TeacherTaskList extends React.Component {
   state = {
     data: []
   }
   componentDidMount() {
-    console.log('I\'m fetch EEEEEEEEEEEE');
     fetch('api/teacher/tasks', {
       method: 'get',
       headers: {
@@ -72,7 +37,12 @@ class TeacherTaskList extends React.Component {
   }
   objtoJSX = (array) => {
     return array.map((element, index) => (
-      <TaskInTopic button topicName={element.topicName} tasks={element.tasks} />
+      <TaskInTopic
+        button
+        topicName={element.topicName}
+        tasks={element.tasks}
+        key={index}
+      />
     ));
   }
 
