@@ -10,16 +10,15 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/tasks', (req, res) => {
-  const id = req.query.studentId;
-  User.findById(id)
-    .then(answer => dataFunctions.getStudentTasks(answer.tasks))
-    .then((response) => {
-      res.status(200).send(JSON.stringify(response));
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+router.get('/group/tasks', async (req, res) => {
+  try {
+    const result = await dataFunctions.getStudentTasksByGroup(req.query.studentId, req.query.groupId);
+    res.send(JSON.stringify(result));
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
 });
 
 router.get('/', async (req, res) => {

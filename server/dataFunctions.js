@@ -5,15 +5,54 @@ const Group = require('./models/Group');
 const User = require('./models/User');
 const Topic = require('./models/Topic');
 
-exports.getStudentTasks = (taskArrayStud) => {
-  const arrayTaskIds = [];
-  taskArrayStud.forEach((elem) => {
-    arrayTaskIds.push(elem.taskId);
-  });
+exports.getStudentTasksByGroup = async (studentId, groupId) => {
+  const tasks = await User.aggregate([
+    {$match: {'_id': mongoose.Types.ObjectId(studentId)}},
+    {
+      $project: {
+        _id: 0,
+        taskArray: {
+          $filter: {
+            input: '$tasks',
+            as: 'task',
+            cond: {$eq: ['$$task.groupId', mongoose.Types.ObjectId(groupId)]},
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        'taskArray.taskId': 1,
+        'taskArray.isPassed': 1,
+      },
+    },
+  ]);
 
-  return Task.find()
-    .where('_id')
-    .in(arrayTaskIds);
+  function getInfoByTaskID(taskId) {
+    return Task.findById(taskId)
+      .populate('topicId', {'_id': 0, 'name': 1})
+      .select({
+        '_id': 0,
+        'topicId.name': 1,
+        'name': 1,
+        'description': 1,
+      });
+  }
+  const result = tasks[0].taskArray;
+  let promissArray = []
+  if (tasks.length !== 0) {
+    for (let i = 0; i < result.length; i++) {
+      result[i].info = getInfoByTaskID(result[i].taskId);
+      promissArray.push(result[i].info);
+    }
+    promissArray = await Promise.all(promissArray);
+    for (let i = 0; i < result.length; i++) {
+      result[i].info = promissArray[i];
+    }
+  }
+
+  return result;
 };
 
 // На вход первым параметром поступает массив ключей, которые должны быть
