@@ -61,7 +61,7 @@ class TopTabs extends Component {
       this.TabHeaders = Object.keys(students).map(element => ({
         tabName: element,
         component: <TopStudents topScoreStudentName={
-          students[element].map((firstSecondName) => (`${firstSecondName.firstName} ${firstSecondName.lastName}`))
+          students[element].map(firstSecondName => (`${firstSecondName.firstName} ${firstSecondName.lastName}`))
         }
         />,
       }));
