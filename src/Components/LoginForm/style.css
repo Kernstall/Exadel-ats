@@ -2,9 +2,9 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-    padding-top: 10px;
     padding-bottom: 10px;
     width: 300px;
+    margin-right: 10px;
 }
 .input-container {
   display: flex;
@@ -46,8 +46,8 @@
 
 @media screen and (min-width: 768px) {
   .container {
-    margin-right: 28px;
-    min-width: calc(100% - 30px);
+    /*min-width: calc(100% - 30px);*/
+      width: 100%;
   }
   .input-container {
     display: flex;
