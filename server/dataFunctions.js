@@ -4,7 +4,7 @@ const Question = require('./models/Question');
 const Group = require('./models/Group');
 const Student = require('./models/User');
 
-exports.getStudentTasks = function (taskArrayStud) {
+exports.getStudentTasks = (taskArrayStud) => {
   const arrayTaskIds = [];
   taskArrayStud.forEach((elem) => {
     arrayTaskIds.push(elem.taskId);
@@ -15,7 +15,7 @@ exports.getStudentTasks = function (taskArrayStud) {
     .in(arrayTaskIds);
 };
 
-exports.addTask = function (req) {
+exports.addTask = (req) => {
   const task = new Task({
     description: req.description,
     name: req.name,
@@ -29,7 +29,7 @@ exports.addTask = function (req) {
   return task.save();
 };
 
-exports.addQuestion = function (req) {
+exports.addQuestion = (req) => {
   const question = new Question({
     creatorId: req.creatorId,
     topicId: req.topicId,
@@ -51,14 +51,14 @@ exports.addQuestion = function (req) {
 // На вход первым параметром поступает массив ключей, которые должны быть
 // в объекте, вторым же параметром идёт массив объектов, ключи которого надо
 // отфильтровать
-exports.fieldFilter = function (keysArray, objectsArray) {
+exports.fieldFilter = (keysArray, objectsArray) => {
   return objectsArray.map(item => keysArray.reduce((obj, key) => {
     obj[key] = item[key];
     return obj;
   }, {}));
 };
 
-exports.getTeachersGroups = function (_teacherID) {
+exports.getTeachersGroups = (_teacherID) => {
   return Group.aggregate(
     [
       { $match: { teacherId: mongoose.Types.ObjectId(_teacherID) } },
@@ -169,141 +169,166 @@ exports.getTopTenStudents = async () => {
 };
 
 exports.getGroupInfo = async (groupID) => {
-  const buff = await Group.findById(groupID).populate('studentIdList');
-  const result = await Group.findById(groupID).populate('studentIdList').aggregate([
+  const request = (await Group.aggregate([
+    { $match: { _id: mongoose.Types.ObjectId(groupID) } },
     {
       $project: {
         groupName: true,
         amountOfStudents: { $size: '$studentIdList' },
-        students: {
-          $map: {
-            input: '$studentIdList',
-            as: 'student',
-            in: {
-              $project: {
-                firstName: true,
-                lastName: true,
-                amountOfTests: {
-                  $reduce: {
-                    input: '$$student.tests',
-                    initialValue: 0,
-                    in: {
-                      $cond: {
-                        if: {
-                          $eq: ['$$this.groupId', groupID],
-                        },
-                        then: {
-                          $add: ['$$value', 1],
-                        },
-                        else: {
-                          $add: ['$$value', 0],
-                        },
-                      },
-                    },
-                  },
-                }, // Конец подсчёта тестов
-                amountOfTasks: {
-                  $reduce: {
-                    input: '$$student.tasks',
-                    initialValue: 0,
-                    in: {
-                      $cond: {
-                        if: {
-                          $eq: ['$$this.groupId', groupID],
-                        },
-                        then: {
-                          $add: ['$$value', 1],
-                        },
-                        else: {
-                          $add: ['$$value', 0],
-                        },
-                      },
-                    },
-                  },
-                }, // Конец подсчёта заданий
-                testsMarkSum: {
-                  $reduce: {
-                    input: '$$student.tests',
-                    initialValue: 0,
-                    in: {
-                      $cond: {
-                        if: {
-                          $eq: ['$$this.groupId', groupID],
-                        },
-                        then: {
-                          $add: ['$$value', '$$this.result'],
-                        },
-                        else: {
-                          $add: ['$$value', 0],
-                        },
-                      },
-                    },
-                  },
-                }, // Конец подсчёта суммы оценок за тесты
-                tasksMarkSum: {
-                  $reduce: {
-                    input: '$$student.tasks',
-                    initialValue: 0,
-                    in: {
-                      $cond: {
-                        if: {
-                          $eq: ['$$this.groupId', groupID],
-                        },
-                        then: {
-                          $add: ['$$value', '$$this.bestResult'],
-                        },
-                        else: {
-                          $add: ['$$value', 0],
-                        },
-                      },
-                    },
-                  },
-                }, // Конец подсчёта суммы оценок за задания
-              },
-            },
-          },
-        },
+        studentIdList: true,
       },
     },
-    {
-      $project: {
-        groupName: true,
-        amountOfStudents: true,
-        students: {
-          $map: {
-            input: '$students',
-            as: 'student',
-            in: {
-              $project: {
-                firstName: true,
-                lastName: true,
-                amountOfTests: true,
-                amountOfTasks: true,
-                mediumTestMark: {
-                  $divide: [
-                    '$$student.testsMarkSum',
-                    '$$student.amountOfTests',
-                  ],
+  ]));
+  let result;
+  if (request.length !== 0) {
+    result = request[0];
+  } else {
+    return null;
+  }
+
+  function promiseCollector(student) {
+    return Student.aggregate([
+      { $match: { _id: student._id } },
+      {
+        $project: {
+          firstName: true,
+          lastName: true,
+          amountOfTests: {
+            $reduce: {
+              input: '$tests',
+              initialValue: 0,
+              in: {
+                $cond: {
+                  if: {
+                    $eq: ['$$this.groupId', mongoose.Types.ObjectId(groupID)],
+                  },
+                  then: {
+                    $add: ['$$value', 1],
+                  },
+                  else: {
+                    $add: ['$$value', 0],
+                  },
                 },
-                mediumTaskMark: {
-                  $divide: [
-                    '$$student.tasksMarkSum',
-                    '$$student.amountOfTasks',
-                  ],
+              },
+            },
+          }, // Конец подсчёта тестов
+          amountOfTasks: {
+            $reduce: {
+              input: '$tasks',
+              initialValue: 0,
+              in: {
+                $cond: {
+                  if: {
+                    $eq: ['$$this.groupId', mongoose.Types.ObjectId(groupID)],
+                  },
+                  then: {
+                    $add: ['$$value', 1],
+                  },
+                  else: {
+                    $add: ['$$value', 0],
+                  },
                 },
-                mediumMark: {
-                  $divide: [
-                    { $add: ['$$student.tasksMarkSum', '$$student.testsMarkSum'] },
-                    { $add: ['$$student.amountOfTasks', '$$student.amountOfTests'] },
-                  ],
+              },
+            },
+          }, // Конец подсчёта заданий
+          testsMarkSum: {
+            $reduce: {
+              input: '$tests',
+              initialValue: 0,
+              in: {
+                $cond: {
+                  if: {
+                    $eq: ['$$this.groupId', mongoose.Types.ObjectId(groupID)],
+                  },
+                  then: {
+                    $add: ['$$value', '$$this.result'],
+                  },
+                  else: {
+                    $add: ['$$value', 0],
+                  },
+                },
+              },
+            },
+          }, // Конец подсчёта суммы оценок за тесты
+          tasksMarkSum: {
+            $reduce: {
+              input: '$tasks',
+              initialValue: 0,
+              in: {
+                $cond: {
+                  if: {
+                    $eq: ['$$this.groupId', mongoose.Types.ObjectId(groupID)],
+                  },
+                  then: {
+                    $add: ['$$value', '$$this.bestResult'],
+                  },
+                  else: {
+                    $add: ['$$value', 0],
+                  },
                 },
               },
             },
           },
         },
       },
-    },
-  ]);
+      {
+        $project: {
+          firstName: true,
+          lastName: true,
+          amountOfTests: true,
+          amountOfTasks: true,
+          mediumTestMark: {
+            $cond: {
+              if: {
+                $eq: ['$amountOfTests', 0],
+              },
+              then: 0,
+              else: {
+                $divide: [
+                  '$testsMarkSum',
+                  '$amountOfTests',
+                ],
+              },
+            },
+          },
+          mediumTaskMark: {
+            $cond: {
+              if: {
+                $eq: ['$amountOfTasks', 0],
+              },
+              then: 0,
+              else: {
+                $divide: [
+                  '$tasksMarkSum',
+                  '$amountOfTasks',
+                ],
+              },
+            },
+          },
+          mediumMark: {
+            $cond: {
+              if: {
+                $eq: [{ $add: ['$amountOfTasks', '$amountOfTests'] }, 0],
+              },
+              then: 0,
+              else: {
+                $divide: [
+                  { $add: ['$tasksMarkSum', '$testsMarkSum'] },
+                  { $add: ['$amountOfTasks', '$amountOfTests'] },
+                ],
+              },
+            },
+          },
+        },
+      },
+    ]);
+  }
+
+  for (let index = 0; index < result.studentIdList.length; index++) {
+    result.studentIdList[index] = promiseCollector(result.studentIdList[index]);
+  }
+
+  result.studentIdList = await Promise.all(result.studentIdList);
 
   return result;
 };
