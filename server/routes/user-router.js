@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 const express = require('express');
-const Student = require('../models/User');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
+const User = require('../models/User');
 const dataFunctions = require('../dataFunctions');
+const TeacherRequest = require('../models/teacherRequest');
 
 const router = express.Router();
 
@@ -15,37 +19,93 @@ router.get('/tops', async (req, res) => {
   }
 });
 
-router.get('/studentGroups', async (req, res) => {
-  try {
-    const result = { // TODO_BACKEND: dataFunctions.getStudentGroups()
-      studentGroups: [
-        {
-          groupName: '12FAMCS',
-          completedTasks: '476767',
-          allTasks: '6',
-          completedTests: '10',
-          allTests: '20',
-        },
-        {
-          groupName: '13FAMCS',
-          completedTasks: '5',
-          allTasks: '7',
-          completedTests: '9',
-          allTests: '2131231',
-        },
-        {
-          groupName: '13FAMCS',
-          completedTasks: '5',
-          allTasks: '7',
-          completedTests: '9',
-          allTests: '2131231',
-        },
-      ],
-    };
-    res.send(JSON.stringify(result));
-  } catch (error) {
-    res.status(500).send(error);
+router.post('/login', passport.authenticate('local', {
+  failureRedirect: '/',
+  failureFlash: true,
+  successRedirect: '/student??',
+}), (req, res) => {
+  res.cookie('session_id', req.sessionID);
+  // res.send({ info: 1, status: 'logged' });
+});
+passport.use(new LocalStrategy((email, password, done) => {
+  User.findOne({ email }, (err, user) => {
+    if (err) { return done(err); }
+    if (!user) {
+      return done(null, false, { message: 'Such email does not exist' });
+    }
+    if (user.passwordHash !== bcrypt.hashSync(password, user.passwordSalt)) {
+      return done(null, false, { message: 'Incorrect password.' });
+    }
+    return done(null, user);
+  });
+}));
+
+
+router.post('/signup', async (req, res, next) => {
+  if (!req.body || !req.body.status || !req.body.email || !req.body.password || !req.body.firstName
+    || !req.body.lastName || !req.body.university || !req.body.faculty || !req.body.graduateYear) {
+    return res.status(400).end();
   }
+  if (req.body.status === 'student') {
+    if (!req.body.course || !req.body.groupNumber) {
+      return res.status(400).end();
+    }
+    console.log('STUDENT');
+    const salt = bcrypt.genSaltSync(10);
+    const newStudent = new User({
+      email: req.body.email,
+      passwordHash: bcrypt.hashSync(req.body.password, salt),
+      passwordSalt: salt,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      university: req.body.university,
+      faculty: req.body.faculty,
+      graduateYear: req.body.graduateYear,
+      course: req.body.course,
+      groupNumber: req.body.groupNumber,
+      status: req.body.status,
+    });
+    return newStudent.save((err) => {
+      return err ? next(err) : req.logIn(newStudent, (err2) => {
+        return err2 ? next(err2) : res.redirect('/student??');
+      });
+    });
+  }
+  if (req.body.status === 'teacher') {
+    if (!req.body.fathersName) {
+      return res.status(400).end();
+    }
+    console.log('TEACHER');
+    const salt = bcrypt.genSaltSync(10);
+    const newTeacher = new User({
+      email: req.body.email,
+      passwordHash: bcrypt.hashSync(req.body.password, salt),
+      passwordSalt: salt,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      fathersName: req.body.fathersName,
+      university: req.body.university,
+      faculty: req.body.faculty,
+      graduateYear: req.body.graduateYear,
+      status: 'student',
+    });
+    newTeacher.save((err, student) => {
+      if (err) return next(err);
+      const newRequest = new TeacherRequest({
+        studentId: student._id,
+        date: new Date(),
+      });
+      return TeacherRequest.collection.insertOne(newRequest, (error) => {
+        if (error) {
+          return res.status(500).end();
+        }
+        return req.logIn(newTeacher, (err2) => {
+          return err2 ? next(err2) : console.log('ADD EEE');// res.redirect('/student??');
+        });
+      });
+    });
+  }
+  return res.status(400).end();
 });
 
 module.exports = router;
