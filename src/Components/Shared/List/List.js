@@ -14,19 +14,38 @@ const styles = theme => ({
 
 function InsetList(props) {
   const { classes, info } = props;
-  console.log('info', info);
-  const childComponent = info.studentGroups.map(element => (
+  const caption = (
+    <Paper
+      className={classes.control}
+      elevation={0}
+    >
+      <ListItem>
+        <Grid container>
+          <Grid item xs={4}>
+            <ListItemText secondary="Группа" />
+          </Grid>
+          <Grid item xs={4}>
+            <ListItemText secondary="Преподаватель" />
+          </Grid>
+          <Grid item xs={4}>
+            <ListItemText secondary="Студентов всего" />
+          </Grid>
+        </Grid>
+      </ListItem>
+    </Paper>
+  );
+  const childComponent = info.groups.map(element => (
     <Paper className={classes.control}>
       <ListItem button>
         <Grid container>
           <Grid item xs={4}>
-            <ListItemText inset primary={element.groupName} />
+            <ListItemText primary={`${element.groupName}`} />
           </Grid>
           <Grid item xs={4}>
-            <ListItemText inset primary={`${element.completedTasks}/${element.allTasks} tasks`} />
+            <ListItemText primary={`${element.teacherFullName}`} />
           </Grid>
           <Grid item xs={4}>
-            <ListItemText inset primary={`${element.completedTests}/${element.allTests} tests`} />
+            <ListItemText primary={`${element.studentsCount}`} />
           </Grid>
         </Grid>
       </ListItem>
@@ -35,6 +54,7 @@ function InsetList(props) {
   return (
     <div>
       <List component="nav">
+        {caption}
         {childComponent}
       </List>
     </div>

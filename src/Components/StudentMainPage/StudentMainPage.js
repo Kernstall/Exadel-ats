@@ -8,35 +8,18 @@ import Common from '../../Styles/Common';
 import { getStudentGroups } from '../../commands/studentGroups';
 import Spinner from '../Shared/Spinner';
 
-const info = {
-  studentGroups: [
-    {
-      groupName: '12FAMCS',
-      completedTasks: '476767',
-      allTasks: '6',
-      completedTests: '10',
-      allTests: '20',
-    },
-  ],
-};
-
-const studentInfo = {
-  StudentName: 'Igor\'',
-  ActiveCourses: ['12FAMCS 13FAMCS'],
-  averageScore: '3.5',
-};
-
 const styles = {
   ...Common,
   wrapper: {
-    padding: '20px 20px 20px 60px',
+    padding: '20px 20px 20px 0px',
   },
   content: {
-    margin: '5px 20px 10px 20px',
+    margin: '5px 20px 10px 0px',
     fontWeight: '100',
+    fontSize: '0.7em',
   },
   captionMargin: {
-    margin: '40px',
+    margin: '100px',
   },
   absoluteCenter: {
     display: 'flex',
@@ -56,28 +39,37 @@ class StudentMainPage extends Component {
     this.props.getStudentGroups({ id: '5b45c52b9320560a54780838' }); // eslint-disable-line
   }
 
-  JSONtoJSX = (studentInfo, classes) => (
-    Object.keys(studentInfo).map(element => (
-      <Grid>
-        <Grid className={classes.infoCapture}>
-          {element}
-        </Grid>
-        <Grid className={[classes.infoContent, classes.content].join(' ')}>
-          {studentInfo[element]}
-        </Grid>
-      </Grid>
-    ))
-  );
+  JSONtoJSX = (studentInfo, classes, keysToRender) => (
+    Object.keys(studentInfo).map((element) => {
+      if (element in keysToRender) {
+        return (
+          <Grid item xs={6}>
+            <Grid className={classes.infoCapture} container justify={'center'}>
+              {keysToRender[element]}
+            </Grid>
+            <Grid className={[classes.infoContent, classes.content].join(' ')} container justify={'center'}>
+              {studentInfo[element]}
+            </Grid>
+          </Grid>
+        );
+      }
+    }));
 
   render() {
     const { classes, isLoading, studentGroups } = this.props;
 
-    console.log('isLoading', isLoading);
-    console.log('studentGroups', studentGroups);
-
     let spinner;
     let groupList;
     let studentInfoComponent;
+
+    const keysToRender = {
+      fullName: 'Имя',
+      university: 'Университет',
+      faculty: 'Факультет',
+      course: 'Курс',
+      groupNumber: 'Номер группы',
+      graduateYear: 'Год окончания',
+    };
 
     if (!studentGroups) {
       spinner = (
@@ -100,9 +92,11 @@ class StudentMainPage extends Component {
           <Capture className={classes.captionMargin}>
             Information about you
           </Capture>
-          {/* {this.JSONtoJSX(studentInfo, classes)} */}
+          <Grid container direction={'row'}>
+            {this.JSONtoJSX(studentGroups.student, classes, keysToRender)}
+          </Grid>
         </div>
-      )
+      );
     }
 
     return (
