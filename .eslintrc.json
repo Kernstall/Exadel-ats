@@ -33,6 +33,9 @@
     ],
     "no-underscore-dangle": [
       1
+    ],
+    "prefer-destructuring": [
+      0
     ]
   }
 }

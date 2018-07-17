@@ -18,8 +18,12 @@ const styles = ({
     margin: '20px auto',
   },
   topStudentsWrapper: {
-    'margin-right': '20px',
     'flex-grow': '1',
+    'padding-right': '10px',
+  },
+  flexElem: {
+    'flex-grow': '1',
+    'margin-right': '10px',
   },
 });
 
@@ -28,7 +32,9 @@ class MainPage extends React.Component {
     const { classes } = this.props;
     return (
       <div className={[classes.flex, classes.centerScreen, classes.margin, classes.contentDisplay].join(' ')}>
-        <TopTabs />
+        <div className={classes.flexElem}>
+          <TopTabs />
+        </div>
         <LoginForm />
       </div>
     );
