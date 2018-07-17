@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -17,13 +17,13 @@ const styles = theme => ({
   },
 });
 
-class StudentTabTasksList extends React.Component {
+class StudentTabTasksList extends Component {
   componentDidMount() {
     this.props.getStudentTasks({
       studentId: '235',
       groupId: '2345',
     },
-    ); // eslint-disable-line
+    );
   }
 
   render() {

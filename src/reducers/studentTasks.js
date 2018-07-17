@@ -1,11 +1,12 @@
 const INITIAL_STATE = {
-  tasksList: null,
+  tasksList: 123,
   error: null,
   isLoading: false,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
+  console.log('state, action', state, action);
   switch (type) {
     case 'Entity/Tasks/Error':
       return {
@@ -22,7 +23,7 @@ const reducer = (state = INITIAL_STATE, action) => {
 
     case 'Entity/Tasks/Success':
       return {
-        tasksList: payload.studentTasks,
+        tasksList: payload.tasksList,
         error: null,
         isLoading: false,
       };
