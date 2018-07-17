@@ -7,9 +7,9 @@ export const tasksRequest = () => ({
   type: 'Entity/Tasks/Request',
 });
 
-export const tasksSuccess = taskList => ({
+export const tasksSuccess = tasksList => ({
   type: 'Entity/Tasks/Success',
-  payload: { taskList },
+  payload: { tasksList },
 });
 
 export default {

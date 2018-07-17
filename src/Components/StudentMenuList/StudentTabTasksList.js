@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import StudentTasks from './StudentTasks';
+import { getStudentTasks } from '../../commands/studentTasks';
 
 const styles = theme => ({
 
@@ -15,30 +17,52 @@ const styles = theme => ({
   },
 });
 
-function StudentTabTasksList(props) {
-  const { classes, tasksList } = props;
-  return (
-    <div className={classes.root}>
-      <List
-        component="nav"
-      >
-        {
-          tasksList.map(
-            (task, index) => (
-              <StudentTasks
-                task={task}
-                key={index}
-              />
-            ),
-          )
-        }
-      </List>
-    </div>
-  );
+class StudentTabTasksList extends React.Component {
+  componentDidMount() {
+    this.props.getStudentTasks({
+      studentId: '235',
+      groupId: '2345',
+    },
+    ); // eslint-disable-line
+  }
+
+  render() {
+    const { classes, tasksList } = this.props;
+    console.log(tasksList);
+    return (
+      <div className={classes.root}>
+        <List
+          component="nav"
+        >
+          {
+            tasksList.map(
+              (task, index) => (
+                <StudentTasks
+                  task={task}
+                  key={index}
+                />
+              ),
+            )
+          }
+        </List>
+      </div>
+    );
+  }
 }
 
 StudentTabTasksList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(StudentTabTasksList);
+const mapStateToProps = state => ({
+  // isLoading: state.tasksList.isLoading,
+  tasksList: state.studentTasks.tasksList,
+});
+
+const mapCommandsToProps = dispatch => ({
+  getStudentTasks: param => dispatch(getStudentTasks(param)),
+});
+
+const styled = withStyles(styles)(StudentTabTasksList);
+
+export default connect(mapStateToProps, mapCommandsToProps)(styled);

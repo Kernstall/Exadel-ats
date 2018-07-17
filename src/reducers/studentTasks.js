@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  taskList: null,
+  tasksList: null,
   error: null,
   isLoading: false,
 };
@@ -22,7 +22,7 @@ const reducer = (state = INITIAL_STATE, action) => {
 
     case 'Entity/Tasks/Success':
       return {
-        taskList: payload.studentTasks,
+        tasksList: payload.studentTasks,
         error: null,
         isLoading: false,
       };
