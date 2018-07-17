@@ -11,37 +11,39 @@ class LoginForm extends React.Component {
     return (
       <form className="container" noValidate autoComplete="off">
         <div className="input-container">
-          <Typography className="login-header" variant="headline">
-            Log In
-          </Typography>
-          <Typography variant="subheading">
-            Not a member yet?
-            <br />
-            <Link to="/registration">
-              <a className="sign-up-button" href="#">
+          <div className="text-panel">
+            <Typography className="login-header" variant="headline">
+              Log In
+            </Typography>
+            <Typography variant="subheading">
+              Not a member yet?
+              <br />
+              <Link to="/registration" className="sign-up-button">
                 Sign Up
-              </a>
-            </Link>
-            {' '}
-            now.
-          </Typography>
-          <TextField
-            id="name"
-            label="Login"
-            className="text-field"
-            margin="normal"
-          />
-          <TextField
-            id="password-input"
-            label="Password"
-            className="text-field"
-            type="password"
-            autoComplete="current-password"
-            margin="normal"
-          />
-          <Button className="login-button">
-            Login
-          </Button>
+              </Link>
+              {' '}
+              now.
+            </Typography>
+          </div>
+          <div className="input-panels">
+            <TextField
+              id="name"
+              label="Login"
+              className="text-field"
+              margin="normal"
+            />
+            <TextField
+              id="password-input"
+              label="Password"
+              className="text-field"
+              type="password"
+              autoComplete="current-password"
+              margin="normal"
+            />
+            <Button className="login-button">
+              Login
+            </Button>
+          </div>
         </div>
         <Route exact path="/registration" component={RegisterForm} />
       </form>

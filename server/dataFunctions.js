@@ -41,21 +41,15 @@ exports.getTeachersGroups = function (_teacherID) {
 };
 
 
-exports.addStudentsToGroup = function (groupID, studentIDs) {
-  return Group.findByIdAndUpdate(groupID,
-    {$push: {studentIdList: studentIDs}},
-    {safe: true, upsert: true},
-  );
-};
+exports.addStudentsToGroup = (groupID, studentIDs) => Group.findByIdAndUpdate(groupID,
+  { $push: { studentIdList: studentIDs } },
+  { safe: true, upsert: true });
 
-exports.deleteStudentsToGroup = function (groupID, studentIDs) {
-  return Group.findByIdAndUpdate(groupID,
-    {$pullAll: {studentIdList: studentIDs}},
-    {safe: true, upsert: true},
-  );
-};
+exports.deleteStudentsToGroup = (groupID, studentIDs) => Group.findByIdAndUpdate(groupID,
+  { $pullAll: { studentIdList: studentIDs } },
+  { safe: true, upsert: true });
 
-exports.getTopTenStudents = async function () {
+exports.getTopTenStudents = async () => {
   const result = {};
 
   result.tasksTop = await User.find({status: 'student'}, {firstName: true, lastName: 1, mediumTaskScore: 1})
@@ -142,7 +136,7 @@ exports.getTopTenStudents = async function () {
   return result;
 };
 
-exports.getGroupInfo = async function (groupID) {
+exports.getGroupInfo = async (groupID) => {
   const result = {};
 
   const group = await Group.findById(groupID).populate('studentIdList');

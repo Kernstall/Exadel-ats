@@ -6,7 +6,6 @@ const passport = require('passport');
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
 const sendMail = require('./mail');
-
 const studentRouter = require('./routes/student-router');
 const teacherRouter = require('./routes/teacher-router');
 // const adminRouter = require('./routes/admin-routes');
@@ -55,6 +54,5 @@ app.use('/api/student', studentRouter);
 app.use('/api/user', userRouter);
 app.use('/api/teacher', teacherRouter);
 // app.use('/api/admin', adminRouter);
-
 
 const server = app.listen(3001, () => console.log(`Server is listening on port ${server.address().port}`));
