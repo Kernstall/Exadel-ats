@@ -28,13 +28,14 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={createMuiTheme}>
         <div className={classes.SpreadWrapper}>
-          <Header />
           <Router>
             <div className={classes.content}>
+              <Header />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
               <Route path="/studentMenu" component={StudentMenu} />
               <Route path="/teacher/addGroup" component={TeacherAddGroup} />
+              <Route path="/student/mainPage" component={StudentMainPage} />
             </div>
           </Router>
           <Footer />

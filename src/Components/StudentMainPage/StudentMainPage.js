@@ -38,6 +38,17 @@ const styles = {
   captionMargin: {
     margin: '40px',
   },
+  absoluteCenter: {
+    display: 'flex',
+    center: {
+      margin: 'auto',
+    },
+    position: 'absolute',
+    height: '100vh',
+    width: '100%',
+    top: 0,
+    left: 0,
+  }
 };
 
 class StudentMainPage extends Component {
@@ -69,23 +80,33 @@ class StudentMainPage extends Component {
     let studentInfoComponent;
 
     if (!studentGroups) {
-      spinner = <Spinner />;
+      spinner = <Grid className={classes.absoluteCenter}><Spinner className={classes.center} /></Grid>;
     } else {
       spinner = null;
-      groupList = <List info={studentGroups} />;
-      studentInfoComponent = this.JSONtoJSX(studentInfo, classes);
+      groupList = (
+        <div>
+          <Capture className={classes.captionMargin}>
+            Current groups
+          </Capture>
+          <List info={studentGroups} />
+        </div>
+      );
+      studentInfoComponent = (
+        <div>
+          <Capture className={classes.captionMargin}>
+            Information about you
+          </Capture>
+          {this.JSONtoJSX(studentInfo, classes)}
+        </div>
+      )
     }
 
     return (
       <Grid className={classes.centerScreen}>
         {spinner}
-        <Capture className={classes.captionMargin}>
-          Current groups
-        </Capture>
+
         {groupList}
-        <Capture className={classes.captionMargin}>
-          Information about you
-        </Capture>
+
         <Grid className={[classes.font, classes.wrapper].join(' ')}>
           {studentInfoComponent}
         </Grid>
