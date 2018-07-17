@@ -31,11 +31,10 @@ class App extends Component {
           <Header />
           <Router>
             <div className={classes.content}>
-              {/* <Route path="/" exact component={MainPage} /> */}
+              <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
               <Route path="/studentMenu" component={StudentMenu} />
               <Route path="/teacher/addGroup" component={TeacherAddGroup} />
-              <StudentMainPage />
             </div>
           </Router>
           <Footer />
