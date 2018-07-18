@@ -32,27 +32,27 @@ class StudentTasks extends React.Component {
     const { classes, task } = this.props;
     return (
       <div className={classes.root}>
-          <ListItem open="false" button onClick={this.handleClick}>
-            <Grid container>
-              <Grid item xs>
-                <ListItemText inset primary={task.name} />
-              </Grid>
-              <Grid item xs>
-                <ListItemText inset primary={task.theme} />
-              </Grid>
-              <Grid item xs>
-                <ListItemText inset primary={task.status} />
-              </Grid>
+        <ListItem open="false" button onClick={this.handleClick}>
+          <Grid container>
+            <Grid item xs>
+              <ListItemText inset primary={task.name} />
             </Grid>
-            {this.state.open ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button className={classes.nested}>
-                <StudentTaskDropDown taskInfo={task.info} className={this.props.classes.fullWidth}/>
-              </ListItem>
-            </List>
-          </Collapse>
+            <Grid item xs>
+              <ListItemText inset primary={task.theme} />
+            </Grid>
+            <Grid item xs>
+              <ListItemText inset primary={task.status} />
+            </Grid>
+          </Grid>
+          {this.state.open ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button className={classes.nested}>
+              <StudentTaskDropDown taskInfo={task.info} className={this.props.classes.fullWidth} />
+            </ListItem>
+          </List>
+        </Collapse>
       </div>
     );
   }

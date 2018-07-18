@@ -20,33 +20,36 @@ const styles = theme => ({
 class StudentTabTasksList extends Component {
   componentDidMount() {
     this.props.getStudentTasks({
-      studentId: '235',
-      groupId: '2345',
-    },
-    );
+      studentId: '5b45b16f75224332745f7595',
+      groupId: '5b4625ba877b5e0734c0a5e3',
+    });
   }
 
   render() {
     const { classes, tasksList } = this.props;
     console.log(tasksList);
-    return (
-      <div className={classes.root}>
-        <List
-          component="nav"
-        >
-          {
-            tasksList.map(
-              (task, index) => (
-                <StudentTasks
-                  task={task}
-                  key={index}
-                />
-              ),
-            )
-          }
-        </List>
-      </div>
-    );
+    if (tasksList) {
+      console.log('tasksList', tasksList);
+      return (
+        <div className={classes.root}>
+          <List
+            component="nav"
+          >
+            {
+              tasksList.map(
+                (task, index) => (
+                  <StudentTasks
+                    task={task}
+                    key={index}
+                  />
+                ),
+              )
+            }
+          </List>
+        </div>
+      );
+    }
+    return null;
   }
 }
 
