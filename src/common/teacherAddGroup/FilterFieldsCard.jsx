@@ -91,7 +91,7 @@ class FilterStudentCard extends React.Component {
             margin="normal"
           />
           <FormSelect
-            label="University"
+            label="Университет"
             value={this.state.university}
             className={classes.textField}
             inputProps={{
@@ -103,7 +103,7 @@ class FilterStudentCard extends React.Component {
           />
           {facultiesArr && (
             <FormSelect
-              label="Faculty"
+              label="Факультет"
               value={this.state.faculties}
               className={classes.textField}
               inputProps={{
