@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const dataFunctions = require('../dataFunctions');
 const TeacherRequest = require('../models/TeacherRequest');
+const University = require('../models/University');
 
 const router = express.Router();
 
@@ -18,14 +19,35 @@ router.get('/tops', async (req, res) => {
     res.status(400).send(error);
   }
 });
+router.get('/universities', async (req, res) => {
+  try {
+    const result = await University.find();
+    res.send(result);
+  } catch (err) {
+    res.status(500).end();
+  }
+});
 
-router.post('/login', passport.authenticate('local', {
-  failureRedirect: '/',
-  failureFlash: true,
-  successRedirect: '/student??',
-}), (req, res) => {
-  console.log(req.user);
-  res.cookie('session_id', req.sessionID).end();
+router.post('/login', (req, res, next) => {
+  if (!req.body.email || !req.body.password) {
+    res.status(400).send({ message: 'not all fields' });
+  }
+  passport.authenticate('local', (err, user) => {
+    if (user) {
+      return req.login(user, (err) => {
+        if (err) {
+          return res.status(401).end();
+        }
+        return res.send({ status: user.status, email: user.email, id: user._id });
+      });
+    }
+    return res.status(401).send({ message: err });
+  })(req, res, next);
+});
+
+router.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.send({ status: 'ok' });
 });
 
 passport.use(new LocalStrategy((email, password, done) => {
@@ -43,11 +65,11 @@ passport.use(new LocalStrategy((email, password, done) => {
 
 router.post('/signup', (req, res, next) => {
   if (!req.body || !req.body.status || !req.body.email || !req.body.password || !req.body.firstName
-    || !req.body.lastName || !req.body.university || !req.body.faculty || !req.body.graduateYear) {
+    || !req.body.lastName || !req.body.university) {
     return res.status(400).send({ err: 'not all fields are filled' });
   }
   if (req.body.status === 'student') {
-    if (!req.body.course || !req.body.groupNumber) {
+    if (!req.body.course || !req.body.groupNumber || !req.body.faculty || !req.body.graduateYear) {
       return res.status(400).send({ err: 'not all fields are filled' });
     }
     const salt = bcrypt.genSaltSync(10);
@@ -65,8 +87,14 @@ router.post('/signup', (req, res, next) => {
       status: req.body.status,
     });
     return newStudent.save((err) => {
-      return err ? next(err) : req.logIn(newStudent, (err2) => {
-        return err2 ? next(err2) : console.log('logged');// res.redirect('/student??');
+      if (err) {
+        return next(err);
+      }
+      return req.logIn(newStudent, (err2) => {
+        if (err2) {
+          return next(err2);
+        }
+        return res.send({ status: req.user.status, email: req.user.email, id: req.user._id });
       });
     });
   }
@@ -83,12 +111,10 @@ router.post('/signup', (req, res, next) => {
       lastName: req.body.lastName,
       fathersName: req.body.fathersName,
       university: req.body.university,
-      faculty: req.body.faculty,
-      graduateYear: req.body.graduateYear,
       status: 'student',
     });
-    newTeacher.save((err, student) => {
-      if (err) return next(err);
+    return newTeacher.save((err, student) => {
+      if (err) return res.status(500).send(err);
       const newRequest = new TeacherRequest({
         studentId: student._id,
         date: new Date(),
@@ -98,7 +124,10 @@ router.post('/signup', (req, res, next) => {
           return res.status(500).end();
         }
         return req.logIn(newTeacher, (err2) => {
-          return err2 ? next(err2) : console.log('logged');// res.redirect('/student??');
+          if (err2) {
+            next(err2);
+          }
+          return res.send({ status: req.user.status, email: req.user.email, id: req.user._id });
         });
       });
     });
