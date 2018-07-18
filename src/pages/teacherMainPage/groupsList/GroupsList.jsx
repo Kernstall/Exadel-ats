@@ -2,7 +2,15 @@ import React from 'react';
 import List from '@material-ui/core/es/List/List';
 import ListItem from '@material-ui/core/es/ListItem/ListItem';
 import { Link, Route } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 import GroupTemplate from '../groupTemplate/GroupTemplate.jsx';
+
+const styles = {
+  noUnderline: {
+    textDecoration: 'none',
+    color: '#000',
+  },
+};
 
 const response = [
   {
@@ -82,25 +90,15 @@ const response = [
   },
 ];
 
-const RouteWithProps = ({ path, exact, strict, component: Component, location, ...rest}) => (
-  <Route
-    path={path}
-    exact={exact}
-    strict={strict}
-    location={location}
-    render={(props) => <Component {...props} {...rest} />}
-  />
-);
-
 class GroupsList extends React.Component {
   render() {
+    const { classes } = this.props;
     return (
       <List>
         {response.map((item, index) => (
-          <div key={index}>
-            {console.log(this.props)}
-            <Link to={`/groups/${item.groupId}`}>
-              <ListItem button onClick={() => {this.props.callback(item.groupId)}}>
+          <div key={`group${index}`}>
+            <Link to={`/groups/${item.groupId}`} className={classes.noUnderline}>
+              <ListItem button>
                 <GroupTemplate response={item} />
               </ListItem>
             </Link>
@@ -111,4 +109,4 @@ class GroupsList extends React.Component {
   }
 }
 
-export default GroupsList;
+export default withStyles(styles)(GroupsList);
