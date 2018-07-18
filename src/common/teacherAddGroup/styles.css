@@ -1,9 +1,14 @@
+.flowing{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
 .drag-and-drop-outer-wrapper {
     display: flex;
     min-width: fit-content;
     height: 500px;
     width: fit-content;
-    /*padding: 2rem;*/
+    position: relative;
     background: white;
 }
 .drag-and-drop-container, .new-group-container {
@@ -33,6 +38,9 @@
     flex-direction: column;
     flex-grow: 1;
     background-color: #dadada;
+}
+.students-wrap:hover, .mentor-wrap:hover {
+    background-color: #aaaaaa;
 }
 .students-liner, .mentor-liner {
     display: flex;
@@ -71,6 +79,7 @@
     color: whitesmoke;
     cursor: move;
     position: relative;
+    list-style-type: none;
 }
 .student:not(:last-child) {
     margin-bottom: 0.5rem;

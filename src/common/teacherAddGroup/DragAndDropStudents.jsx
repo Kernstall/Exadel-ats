@@ -1,78 +1,100 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import './styles.css';
 
-const styles = {
+const studentsPool = [
+  {
+    id: '1',
+    studentName: 'Todd Martinez',
+    eMail: '1234@mail.ru',
+    studentGroup: 'group 2',
+  },
+  {
+    id: '2',
+    studentName: 'Jason Foster',
+    eMail: '1234@mail.ru',
+    studentGroup: 'group 2',
+  },
+  {
+    id: '3',
+    studentName: 'Shirley Allen',
+    eMail: '1234@mail.ru',
+    studentGroup: 'group 2',
+  },
+];
 
+const selectedStudents = [
+  {
+    id: '4',
+    studentName: 'Raman Buyak',
+    eMail: '1234@mail.ru',
+    studentGroup: 'group 2',
+  },
+  {
+    id: '5',
+    studentName: 'Anonymous',
+    eMail: '1234@mail.ru',
+    studentGroup: 'group 2',
+  },
+];
+
+let availableStudents = [];
+
+const updateAvailableStudents = function () {
+  availableStudents = studentsPool.filter(
+    element => selectedStudents.find(selElem => selElem.id === element.id) === undefined,
+  );
 };
-/* const styles = {
-  wrap: {
-  },
-  wrapLiner: {
-    position: 'relative',
-    display: 'flex',
-    width: '100%',
-    height: '100%',
-    padding: '2rem',
-    background: '#dadada',
-  },
-  students: {
-    display: 'flex',
-    'flex-direction': 'column',
-    'flex-grow': 1,
-    'flex-basis': 0,
-  },
-  studentsContainer: {
-    display: 'flex',
-    'flex-direction': 'column',
-    'flex-grow': 1,
-  },
-  studentsHeader: {
-    background: '#aaaaaa',
-    color: 'whitesmoke',
-    padding: '0.5rem',
-  },
-  studentsWrap: {
-    display: 'flex',
-    'flex-direction': 'column',
-    'flex-grow': 1,
-  },
-  studentsLiner: {
-    display: 'flex',
-    'flex-direction': 'column',
-    flex: 1,
-    'flex-basis': 0,
-    padding: '0.5rem',
-    overflow: 'auto',
-    transition: 'all .15s ease-in-out',
-    '&::-webkit-scrollbar': {
-      width: '8px',
-    },
-  },
-  '.ui-draggable-dragging': {
-    'z-index': 999,
-    'box-shadow': '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
-  },
-}; */
+updateAvailableStudents();
 
 class DragAndDropStudents extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      changeFlag: true,
+    };
+  }
+
+  componentDidMount() {
+    /* window.addEventListener('touchmove', this.handleTouchMove);
+    window.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('touchend', this.handleMouseUp);
+    window.addEventListener('mouseup', this.handleMouseUp);
+    window.addEventListener('resize', this.handleResize); */
+  }
+
+  handleSingleLiClick(id) {
+    console.log(availableStudents);
+    let moveElem = availableStudents.find(element => element.id === id);
+    if (moveElem !== undefined) {
+      const index = availableStudents.indexOf(moveElem);
+      availableStudents.splice(index, 1);
+      selectedStudents.push(moveElem);
+    } else {
+      moveElem = selectedStudents.find(element => element.id === id);
+      const index = selectedStudents.indexOf(moveElem);
+      selectedStudents.splice(index, 1);
+      availableStudents.push(moveElem);
+    }
+    this.setState({
+      changeFlag: !this.state.changeFlag,
+    });
+  }
+
   render() {
-    /* const { classes } = this.props; */
     return (
       <div className="drag-and-drop-outer-wrapper">
         <div className="students-container">
           <div className="students-header">Студенты</div>
           <div className="students-wrap">
             <ul className="students-liner draggable droppable" id="students">
-              <li className="student">Todd Martinez</li>
-              <li className="student">Jason Foster</li>
-              <li className="student">Joyce Richardson</li>
-              <li className="student">Karen Gonzalez</li>
-              <li className="student">Mark Russell</li>
-              <li className="student">Shirley Allen</li>
-              <li className="student">Ronald Adams</li>
-              <li className="student">Mark Russell</li>
+              {availableStudents.map(student => (
+                <li
+                  className="student"
+                  key={student.id}
+                  onClick={() => this.handleSingleLiClick(student.id)}
+                >{student.studentName}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -81,8 +103,14 @@ class DragAndDropStudents extends React.Component {
           <div className="mentor-header">Новая группа</div>
           <div className="mentor-wrap">
             <ul className="students-liner draggable droppable" id="students">
-              <li className="student">Todd Martinez</li>
-              <li className="student">Jason Foster</li>
+              {selectedStudents.map(student => (
+                <li
+                  className="student"
+                  key={student.id}
+                  onClick={() => this.handleSingleLiClick(student.id)}
+                >{student.studentName}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
