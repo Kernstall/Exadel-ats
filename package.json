@@ -2,7 +2,7 @@
   "name": "werunner",
   "version": "1.0.0",
   "private": true,
-  "description": "Educational web app, developed by Exadel",
+  "description": "Educational web app, developed by Unit306",
   "main": "index.js",
   "proxy": "http://localhost:3001/",
   "dependencies": {
