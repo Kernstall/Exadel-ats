@@ -25,6 +25,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
         _id: 0,
         'taskArray.taskId': 1,
         'taskArray.isPassed': 1,
+        'taskArray.bestResult': 1,
       },
     },
   ]);
@@ -37,6 +38,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
         'topicId.name': 1,
         'name': 1,
         'description': 1,
+        'weight': 1,
       });
   }
   const result = tasks[0].taskArray;
@@ -50,6 +52,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
       result[i].name = promissArray[i].name;
       result[i].description = promissArray[i].description;
       result[i].theme = promissArray[i].topicId.name;
+      result[i].weight = promissArray[i].weight;
     }
   }
 
