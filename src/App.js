@@ -3,15 +3,15 @@ import './App.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import MuiThemeProvider from '@material-ui/core/es/styles/MuiThemeProvider';
-import Header from './Components/Header';
-import Footer from './Components/Footer';
-import RegisterForm from './Components/RegisterForm/RegisterForm';
-import Common from './Styles/Common';
-import MainPage from './Components/MainPage/MainPage';
-import StudentMenu from './Components/StudentMenuList/StudentMenu';
-import TeacherAddGroup from './Components/TeacherAddGroup/TeacherAddGroup';
-import createMuiTheme from './Styles/MUIAppTheme';
-import StudentMainPage from './Components/StudentMainPage/StudentMainPage';
+import Header from './common/Header.jsx';
+import Footer from './common/Footer.jsx';
+import RegisterForm from './pages/registerFormPage/RegisterFormPage.jsx';
+import Common from './common/styles/Common';
+import MainPage from './pages/mainPage/MainPage.jsx';
+import StudentMenu from './common/studentMenuList/StudentMenu.jsx';
+import TeacherAddGroup from './common/teacherAddGroup/TeacherAddGroup.jsx';
+import createMuiTheme from './common/styles/MUIAppTheme';
+import StudentMainPage from './pages/studentMainPage/StudentMainPage.jsx';
 
 const styles = ({
   content: {
