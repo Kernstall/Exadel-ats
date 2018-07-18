@@ -10,26 +10,26 @@ const styles = {
 
 const activitieToUIName = () => {
   const activitiesName = {
-    '1)studentGroupAddition': 'Студент добавлен в группу',
-    '2)studentGroupRemove': 'Студент удален из группы',
-    '3)groupCreation': 'Добавлена группа студентов',
-    '4)studentTaskAssignment': 'Назначена задача студенту',
-    '5)groupTaskAssignment': 'Назначена задача группе',
-    '6)studentTestAssignment': 'Назначен тест студенту',
-    '7)groupTestAssignment': 'Назначен тест группе',
-    '8)studentTaskSending': 'Стуент отправил решение задачи',
-    '9)studentTestComplete': 'Студент прошел тест',
-    '10)teacherTestCheck': 'Учитель проверил тест',
-    '11)studentQuestionComplaint': 'Студент пожаловался на вопрос',
-    '12)teacherQuestionCreation': 'Учитель создал вопрос',
-    '13)adminQuestionCreation': 'Администратор создал вопрос',
-    '14)teacherTaskCreation': 'Учитель создал задачу',
-    '15)adminTaskCreation': 'Администратор создал задачу',
-    '16)teacherQuestionBlock': 'Учитель заблокировал вопрос',
-    '17)adminQuestionBlock': 'Администратор заблокировал вопрос',
-    '18)teacherRightsToStudentDelegation': 'Студенту переданы права учителя',
-    '19)adminRightsToStudentDelegation': 'Студенту переданы права администратора',
-    '20)adminRightsToTeacherDelegation': 'Учителю переданы права администратора',
+    'studentGroupAddition': 'Студент добавлен в группу',
+    'studentGroupRemove': 'Студент удален из группы',
+    'groupCreation': 'Добавлена группа студентов',
+    'studentTaskAssignment': 'Назначена задача студенту',
+    'groupTaskAssignment': 'Назначена задача группе',
+    'studentTestAssignment': 'Назначен тест студенту',
+    'groupTestAssignment': 'Назначен тест группе',
+    'studentTaskSending': 'Стуент отправил решение задачи',
+    'studentTestComplete': 'Студент прошел тест',
+    'teacherTestCheck': 'Учитель проверил тест',
+    'studentQuestionComplaint': 'Студент пожаловался на вопрос',
+    'teacherQuestionCreation': 'Учитель создал вопрос',
+    'adminQuestionCreation': 'Администратор создал вопрос',
+    'teacherTaskCreation': 'Учитель создал задачу',
+    'adminTaskCreation': 'Администратор создал задачу',
+    'teacherQuestionBlock': 'Учитель заблокировал вопрос',
+    'adminQuestionBlock': 'Администратор заблокировал вопрос',
+    'teacherRightsToStudentDelegation': 'Студенту переданы права учителя',
+    'adminRightsToStudentDelegation': 'Студенту переданы права администратора',
+    'adminRightsToTeacherDelegation': 'Учителю переданы права администратора',
   };
 };
 
@@ -38,7 +38,7 @@ const activities =
   activities: [
     {
       name: 'Alexander Gusev',
-      role: 'admin'
+      role: 'admin',
       activityType: '2)..',
     },
     {
