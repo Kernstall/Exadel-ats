@@ -30,6 +30,10 @@ class StudentTasks extends React.Component {
 
   render() {
     const { classes, task } = this.props;
+    let status = 'Not passed';
+    if (task.isPassed) {
+      status = 'Passed';
+    }
     return (
       <div className={classes.root}>
         <ListItem open="false" button onClick={this.handleClick}>
@@ -41,7 +45,7 @@ class StudentTasks extends React.Component {
               <ListItemText inset primary={task.theme} />
             </Grid>
             <Grid item xs>
-              <ListItemText inset primary={task.status} />
+              <ListItemText inset primary={status} />
             </Grid>
           </Grid>
           {this.state.open ? <ExpandLess /> : <ExpandMore />}
@@ -49,7 +53,7 @@ class StudentTasks extends React.Component {
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItem button className={classes.nested}>
-              <StudentTaskDropDown taskInfo={task.info} className={this.props.classes.fullWidth} />
+              <StudentTaskDropDown taskInfo={task.description} className={this.props.classes.fullWidth} />
             </ListItem>
           </List>
         </Collapse>

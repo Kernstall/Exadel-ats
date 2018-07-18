@@ -34,7 +34,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
       .populate('topicId', {'_id': 0, 'name': 1})
       .select({
         '_id': 0,
-        'topicId.name': 1,
+        'topicId': 1,
         'name': 1,
         'description': 1,
       });
@@ -47,6 +47,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
     }
     promissArray = await Promise.all(promissArray);
     for (let i = 0; i < result.length; i++) {
+      console.log(promissArray[i]);
       result[i].name = promissArray[i].name;
       result[i].description = promissArray[i].description;
       result[i].theme = promissArray[i].topicId.name;
