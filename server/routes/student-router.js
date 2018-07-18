@@ -7,7 +7,10 @@ const Group = require('../models/Group');
 const router = express.Router();
 
 router.use((req, res, next) => {
-  next();
+  if (req.user.status !== 'student') {
+    return res.status(403).end();
+  }
+  return next();
 });
 
 router.get('/group/tasks', async (req, res) => {
@@ -39,7 +42,7 @@ router.get('/', async (req, res) => {
     // console.log(groups);
 
     const student = mapping.mapStudentToDto(studentModel);
-    const result = {student, groups};
+    const result = { student, groups };
     res.status(200).json(result);
   } catch (err) {
     res.status(500).send({ err: err.message });
