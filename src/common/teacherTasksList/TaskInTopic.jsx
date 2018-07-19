@@ -33,10 +33,7 @@ class TaskInTopic extends React.Component {
         <ListItem button onClick={this.handleClick}>
           <ListItemText className="topic-item-name">
             <div className="topic-name">{this.props.topicName}</div>
-            <div className="topic-tasks-count">
-              <span className="topic-tasks-count-word">задач:</span>
-              <span className="topic-tasks-count-number">{this.props.tasks.length}</span>
-            </div>
+            <div className="topic-tasks-count">{this.props.tasks.length}</div>
           </ListItemText>
           {this.state.open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>

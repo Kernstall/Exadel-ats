@@ -2,15 +2,19 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
+const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
-const mongoose = require('mongoose');
+
+const passportControl = require('./utils/passport-control');
+
 const sendMail = require('./mail');
 const studentRouter = require('./routes/student-router');
 const teacherRouter = require('./routes/teacher-router');
 const adminRouter = require('./routes/admin-router');
 const userRouter = require('./routes/user-router');
 const Activity = require('./models/Activity');
+const User = require('./models/User');
 
 const app = express();
 
@@ -19,7 +23,7 @@ const connection = `mongodb://localhost:27017/${dbName}`;
 mongoose.Promise = global.Promise;
 
 async function connectDatabase() {
-  mongoose.connect(connection, {useNewUrlParser: true})
+  mongoose.connect(connection, { useNewUrlParser: true })
     .then(() => {
       console.log('Connected to database!!!');
     })
@@ -36,7 +40,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(session({
   secret: 'EXADELULGOSHIPKE-HE',
@@ -49,16 +53,11 @@ app.use(session({
   cookie: { maxAge: 3 * 24 * 60 * 60 * 1000 },
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(flash());
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
-});
+app.use('/api/user/login', passportControl);
 
 app.use('/api/user', userRouter);
 
