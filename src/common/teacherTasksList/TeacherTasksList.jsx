@@ -28,6 +28,8 @@ class TeacherTaskList extends React.Component {
         if (response.ok) return response.json();
       })
       .then((data) => {
+        console.log('DATA');
+        console.log(data);
         this.setState({ data });
       })
       .catch((error) => {
