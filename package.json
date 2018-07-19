@@ -2,7 +2,7 @@
   "name": "werunner",
   "version": "1.0.0",
   "private": true,
-  "description": "Educational web app, developed by Exadel",
+  "description": "Educational web app, developed by Unit306",
   "main": "index.js",
   "proxy": "http://localhost:3001/",
   "dependencies": {
@@ -29,7 +29,8 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
     "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "react-material-ui-form-validator": "^2.0.1"
   },
   "devDependencies": {
     "classname-js": "^1.0.2",

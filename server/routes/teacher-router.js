@@ -9,7 +9,10 @@ const dataFunctions = require('../dataFunctions');
 const router = express.Router();
 
 router.use((req, res, next) => {
-  next();
+  if (req.user.status !== 'teacher') {
+    return res.status(403).end();
+  }
+  return next();
 });
 
 router.get('/tasks', (req, res) => {
@@ -115,6 +118,15 @@ router.get('/group/info', async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
+  }
+});
+
+router.get('/students', async (req, res) => {
+  try {
+    const result = await dataFunctions.getStudents();
+    res.status(200).send(JSON.stringify(result));
+  } catch (err) {
+    req.status(400).send(err);
   }
 });
 

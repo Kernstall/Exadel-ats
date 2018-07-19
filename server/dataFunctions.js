@@ -26,6 +26,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
         _id: 0,
         'taskArray.taskId': 1,
         'taskArray.isPassed': 1,
+        'taskArray.bestResult': 1,
       },
     },
   ]);
@@ -38,6 +39,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
         'topicId.name': 1,
         'name': 1,
         'description': 1,
+        'weight': 1,
       });
   }
 
@@ -52,6 +54,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
       result[i].name = promissArray[i].name;
       result[i].description = promissArray[i].description;
       result[i].theme = promissArray[i].topicId.name;
+      result[i].weight = promissArray[i].weight;
     }
   }
 
@@ -443,3 +446,16 @@ exports.getUsersActivities = async (name, role, activityType) => {
 
   return result;
 };
+
+exports.getStudents = async () => {
+  const answer = await User.find({status: 'student'})
+    .select({
+      firstName: 1,
+      lastName: 1,
+      email: 1,
+      university: 1,
+      faculty: 1,
+      graduateYear: 1,
+    });
+  return answer;
+}
