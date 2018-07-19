@@ -435,6 +435,7 @@ exports.createGroup = async (groupName, teacherId) => {
   } catch (e) {
     throw e;
   }
+};
 
 function compareByDate(a, b) {
   return new Date(b.date) - new Date(a.date);
@@ -498,4 +499,4 @@ exports.getStudents = async () => {
       graduateYear: 1,
     });
   return answer;
-}
+};
