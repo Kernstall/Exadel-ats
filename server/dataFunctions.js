@@ -396,6 +396,47 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
   return {taskArray, testArray};
 };
 
+exports.getStudents = async () => {
+  const answer = await User.find({status: 'student'})
+    .select({
+      firstName: 1,
+      lastName: 1,
+      email: 1,
+      university: 1,
+      faculty: 1,
+      graduateYear: 1,
+    });
+  return answer;
+}
+
+exports.createGroup = async (groupName, teacherId) => {
+  try {
+    const teacher = await User.findById(teacherId)
+      .select({
+        '_id': 0,
+        'firstName': 1,
+        'lastName': 1,
+        'fathersName': 1,
+      });
+
+    const group = new Group({
+      teacherId: mongoose.Types.ObjectId(teacherId),
+      firstName: teacher.firstName,
+      fathersName: teacher.lastName,
+      lastName: teacher.lastName,
+      groupName: groupName,
+      studentIdList: [],
+      topicCourseIds: [],
+    });
+    let saveGroup = {};
+
+    saveGroup = await group.save();
+    return saveGroup;
+  } catch (e) {
+    throw e;
+  }
+};
+
 function compareByDate(a, b) {
   return new Date(b.date) - new Date(a.date);
 }
@@ -458,4 +499,4 @@ exports.getStudents = async () => {
       graduateYear: 1,
     });
   return answer;
-}
+};

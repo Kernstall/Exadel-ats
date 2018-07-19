@@ -8,12 +8,14 @@ const dataFunctions = require('../dataFunctions');
 
 const router = express.Router();
 
+/*
 router.use((req, res, next) => {
   if (req.user.status !== 'teacher') {
     return res.status(403).end();
   }
   return next();
 });
+*/
 
 router.get('/tasks', (req, res) => {
   let hashSet = {};
@@ -128,6 +130,20 @@ router.get('/students', async (req, res) => {
   } catch (err) {
     req.status(400).send(err);
   }
+});
+
+router.post('/group', async (req, res) => {
+  const groupName = req.query.groupName;
+  const teacherId = req.query.teacherId;
+  const studentArrayIds = req.body;
+  try {
+    const saveGroup = await dataFunctions.createGroup(groupName, teacherId);
+    const updateGroup = await dataFunctions.addStudentsToGroup(saveGroup.id, studentArrayIds);
+    res.status(200).send(JSON.stringify(updateGroup.id));
+  } catch (err) {
+    res.status(400).send(err.toString());
+  }
+
 });
 
 module.exports = router;
