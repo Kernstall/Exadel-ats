@@ -55,7 +55,6 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
     }
     promissArray = await Promise.all(promissArray);
     for (let i = 0; i < result.length; i++) {
-      console.log(promissArray[i]);
       result[i].name = promissArray[i].name;
       result[i].description = promissArray[i].description;
       result[i].theme = promissArray[i].topicId.name;

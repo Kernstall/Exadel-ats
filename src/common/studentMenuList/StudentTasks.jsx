@@ -8,9 +8,9 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Grid from '@material-ui/core/Grid';
-import StudentTaskDropDown from './StudentTaskDropDown.jsx';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import StudentTaskDropDown from './StudentTaskDropDown.jsx';
 
 const styles = theme => ({
 
@@ -23,13 +23,30 @@ const styles = theme => ({
   },
   paper: {
     ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
+    height: '2px',
+    maxWidth: '15%',
+
+  },
+  green: {
+    backgroundColor: '#3AC54A',
+    ...theme.mixins.gutters(),
+    paddingBottom: theme.spacing.unit * 2,
+    height: '2px',
+    maxWidth: '15%',
+  },
+  red: {
+    backgroundColor: '#c5313b',
+    ...theme.mixins.gutters(),
+    paddingBottom: theme.spacing.unit * 2,
+    height: '2px',
+    maxWidth: '15%',
   },
 });
 
 class StudentTasks extends React.Component {
   state = { open: false };
+
 
   handleClick = () => {
     this.setState(state => ({ open: !state.open }));
@@ -37,24 +54,21 @@ class StudentTasks extends React.Component {
 
   render() {
     const { classes, task } = this.props;
-    let status = 'Not passed';
-    if (task.isPassed) {
-      status = 'Passed';
-    }
+
     return (
       <div className={classes.root}>
         <ListItem open="false" button onClick={this.handleClick}>
           <Grid container>
             <Grid item xs>
-              <ListItemText inset primary={task.name} />
+              <ListItemText primary={task.name} />
             </Grid>
             <Grid item xs>
-              <ListItemText inset primary={task.theme} />
+              <ListItemText primary={task.theme} />
             </Grid>
-            <Grid item xs="3" zeroMinWidth>
-              <Paper className={classes.paper} elevation={1}>
-                <Typography noWrap component="p">
-                  {status}
+            <Grid item xs>
+              <Paper className={task.isPassed ? classes.green : classes.red}>
+                <Typography component="p">
+                  {task.bestResult}/{task.weight}
                 </Typography>
               </Paper>
             </Grid>

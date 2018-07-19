@@ -24,13 +24,13 @@ class StudentActivities extends React.Component {
         <ListItem open="false" button onClick={this.handleClick}>
           <Grid container>
             <Grid item xs>
-              <ListItemText inset primary={activity.date} />
+              <ListItemText primary={activity.date} />
             </Grid>
             <Grid item xs>
-              <ListItemText inset primary={activity.name} />
+              <ListItemText primary={activity.name} />
             </Grid>
             <Grid item xs>
-              <ListItemText inset primary={activity.score} />
+              <ListItemText primary={activity.score} />
             </Grid>
           </Grid>
         </ListItem>
