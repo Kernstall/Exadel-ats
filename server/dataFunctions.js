@@ -393,3 +393,16 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
   }
   return { taskArray, testArray };
 };
+
+exports.getStudents = async () => {
+  const answer = await User.find({status: 'student'})
+    .select({
+      firstName: 1,
+      lastName: 1,
+      email: 1,
+      university: 1,
+      faculty: 1,
+      graduateYear: 1,
+    });
+  return answer;
+}
