@@ -19,7 +19,6 @@ const styles = {
     background: '#c3c3c320',
   },
   wrapper1: {
-    color: 'red',
     ...stylesCommon,
   },
   firstPlaces: {
