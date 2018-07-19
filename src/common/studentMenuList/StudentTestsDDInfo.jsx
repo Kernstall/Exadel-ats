@@ -32,10 +32,10 @@ class StudentTestsDDInfo extends React.Component {
       <div className={classes.root}>
         <Grid container>
           <Grid item xs={6}>
-            <ListItemText inset primary={test.theme} />
+            <ListItemText primary={test.theme} />
           </Grid>
           <Grid item xs={6}>
-            <ListItemText inset primary={test.status} />
+            <ListItemText primary={test.status} />
           </Grid>
         </Grid>
       </div>
