@@ -6,7 +6,15 @@ import Button from '@material-ui/core/Button';
 import TaskInTopic from './TaskInTopic.jsx';
 
 const styles = theme => ({
-
+  button: {
+    margin: theme.spacing.unit,
+    color: '#fff',
+    backgroundColor: '#2196f3',
+    '&:hover': {
+      backgroundColor: '#1b77c5',
+    },
+    width: '100px',
+  },
 });
 
 class TeacherTaskList extends React.Component {
@@ -49,12 +57,13 @@ class TeacherTaskList extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div className="teacher-tasks">
         <List>
           {this.objtoJSX(this.state.data)}
         </List>
-        <Button variant="contained" color="primary" className="set-tasks-button">
+        <Button variant="contained" color="primary" className={classes.button}>
           Назначить
         </Button>
       </div>
