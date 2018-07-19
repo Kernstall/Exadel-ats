@@ -27,9 +27,7 @@ class StudentTabTasksList extends Component {
 
   render() {
     const { classes, tasksList } = this.props;
-    console.log(tasksList);
     if (tasksList) {
-      console.log('tasksList', tasksList);
       return (
         <div className={classes.root}>
           <List

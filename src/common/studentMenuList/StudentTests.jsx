@@ -48,7 +48,7 @@ class StudentTests extends React.Component {
           <List component="div" disablePadding>
             <ListItem button className={classes.nested}>
               <StudentTestsDropDown
-                testsInfo={test}
+                testsInfo={test.info}
                 className={this.props.classes.fullWidth}
               />
             </ListItem>

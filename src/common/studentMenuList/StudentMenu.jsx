@@ -28,18 +28,18 @@ const blocks = [
       {
         name: 'Training tests',
         result: 'Avr score1',
-        info: {
+        info: [{
           theme: 'theme1',
           status: '7',
-        },
+        }],
       },
       {
         name: 'Examination tests',
         result: 'Avr score2',
-        info: {
+        info: [{
           theme: 'themethemetheme1',
           status: 'Not passed',
-        },
+        }],
       },
     ],
   },

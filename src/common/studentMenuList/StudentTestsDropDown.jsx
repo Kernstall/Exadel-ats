@@ -15,17 +15,20 @@ const styles = theme => ({
 class StudentTestsDropDown extends React.Component {
   render() {
     const { classes, testsInfo } = this.props;
-    console.log(testsInfo);
     return (
       <div className={classes.fullWidth}>
         <List
           component="nav"
-        >
-
-          <StudentTestsDDInfo
-            test={testsInfo.info}
-          />
-
+        >{
+          testsInfo.map(
+            (test, index) => (
+              <StudentTestsDDInfo
+                test={test}
+                key={index}
+              />
+            ),
+          )
+        }
         </List>
       </div>
     );
