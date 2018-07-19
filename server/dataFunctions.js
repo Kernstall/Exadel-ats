@@ -41,6 +41,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
         'weight': 1,
       });
   }
+
   const result = tasks[0].taskArray;
   let promissArray = []
   if (tasks.length !== 0) {
@@ -85,12 +86,12 @@ exports.getTeachersGroups = (_teacherID) => {
 
 
 exports.addStudentsToGroup = (groupID, studentIDs) => Group.findByIdAndUpdate(groupID,
-  { $push: { studentIdList: studentIDs } },
-  { safe: true, upsert: true });
+  {$push: {studentIdList: studentIDs}},
+  {safe: true, upsert: true});
 
 exports.deleteStudentsToGroup = (groupID, studentIDs) => Group.findByIdAndUpdate(groupID,
-  { $pullAll: { studentIdList: studentIDs } },
-  { safe: true, upsert: true });
+  {$pullAll: {studentIdList: studentIDs}},
+  {safe: true, upsert: true});
 
 exports.getTopTenStudents = async () => {
   const result = {};
@@ -181,11 +182,11 @@ exports.getTopTenStudents = async () => {
 
 exports.getGroupInfo = async (groupID) => {
   const request = (await Group.aggregate([
-    { $match: { _id: mongoose.Types.ObjectId(groupID) } },
+    {$match: {_id: mongoose.Types.ObjectId(groupID)}},
     {
       $project: {
         groupName: true,
-        amountOfStudents: { $size: '$studentIdList' },
+        amountOfStudents: {$size: '$studentIdList'},
         studentIdList: true,
       },
     },
@@ -199,7 +200,7 @@ exports.getGroupInfo = async (groupID) => {
 
   function promiseCollector(student) {
     return User.aggregate([
-      { $match: { _id: student._id } },
+      {$match: {_id: student._id}},
       {
         $project: {
           firstName: true,
@@ -319,13 +320,13 @@ exports.getGroupInfo = async (groupID) => {
           mediumMark: {
             $cond: {
               if: {
-                $eq: [{ $add: ['$amountOfTasks', '$amountOfTests'] }, 0],
+                $eq: [{$add: ['$amountOfTasks', '$amountOfTests']}, 0],
               },
               then: 0,
               else: {
                 $divide: [
-                  { $add: ['$tasksMarkSum', '$testsMarkSum'] },
-                  { $add: ['$amountOfTasks', '$amountOfTests'] },
+                  {$add: ['$tasksMarkSum', '$testsMarkSum']},
+                  {$add: ['$amountOfTasks', '$amountOfTests']},
                 ],
               },
             },
@@ -391,7 +392,48 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
       }
     });
   }
-  return { taskArray, testArray };
+  return {taskArray, testArray};
+};
+
+exports.getStudents = async () => {
+  const answer = await User.find({status: 'student'})
+    .select({
+      firstName: 1,
+      lastName: 1,
+      email: 1,
+      university: 1,
+      faculty: 1,
+      graduateYear: 1,
+    });
+  return answer;
+}
+
+exports.createGroup = async (groupName, teacherId) => {
+  try {
+    const teacher = await User.findById(teacherId)
+      .select({
+        '_id': 0,
+        'firstName': 1,
+        'lastName': 1,
+        'fathersName': 1,
+      });
+
+    const group = new Group({
+      teacherId: mongoose.Types.ObjectId(teacherId),
+      firstName: teacher.firstName,
+      fathersName: teacher.lastName,
+      lastName: teacher.lastName,
+      groupName: groupName,
+      studentIdList: [],
+      topicCourseIds: [],
+    });
+    let saveGroup = {};
+
+    saveGroup = await group.save();
+    return saveGroup;
+  } catch (e) {
+    throw e;
+  }
 };
 
 exports.getStudents = async () => {

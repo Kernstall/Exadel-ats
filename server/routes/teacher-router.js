@@ -130,4 +130,18 @@ router.get('/students', async (req, res) => {
   }
 });
 
+router.post('/group', async (req, res) => {
+  const groupName = req.query.groupName;
+  const teacherId = req.query.teacherId;
+  const studentArrayIds = req.body;
+  try {
+    const saveGroup = await dataFunctions.createGroup(groupName, teacherId);
+    const updateGroup = await dataFunctions.addStudentsToGroup(saveGroup.id, studentArrayIds);
+    res.status(200).send(JSON.stringify(updateGroup.id));
+  } catch (err) {
+    res.status(400).send(err.toString());
+  }
+
+});
+
 module.exports = router;
