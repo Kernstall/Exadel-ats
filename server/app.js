@@ -49,8 +49,6 @@ app.use(session({
   cookie: { maxAge: 3 * 24 * 60 * 60 * 1000 },
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -66,12 +64,14 @@ passport.deserializeUser((id, done) => {
 
 app.use('/api/user', userRouter);
 
+/*
 app.use((req, res, next) => {
   if (!req.isAuthenticated()) {
     return res.status(401).end();
   }
   return next();
 });
+*/
 
 // app.use('/api/', authorization??);
 app.use('/api/student', studentRouter);

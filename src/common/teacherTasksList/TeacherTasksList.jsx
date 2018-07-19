@@ -28,6 +28,8 @@ class TeacherTaskList extends React.Component {
         if (response.ok) return response.json();
       })
       .then((data) => {
+        console.log('DATA');
+        console.log(data);
         this.setState({ data });
       })
       .catch((error) => {
@@ -50,7 +52,7 @@ class TeacherTaskList extends React.Component {
     return (
       <div className="teacher-tasks">
         <List>
-          {this.objtoJSX([this.state])}
+          {this.objtoJSX(this.state.data)}
         </List>
         <Button variant="contained" color="primary" className="set-tasks-button">
           Назначить
