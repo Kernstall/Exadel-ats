@@ -38,10 +38,10 @@ class StudentTests extends React.Component {
         <ListItem open="false" button onClick={this.handleClick}>
           <Grid container>
             <Grid item xs={12} sm={6}>
-              <ListItemText inset primary={test.name} />
+              <ListItemText primary={test.name} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <ListItemText inset primary={test.result} />
+              <ListItemText primary={test.result} />
             </Grid>
           </Grid>
 

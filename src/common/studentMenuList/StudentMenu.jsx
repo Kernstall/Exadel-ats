@@ -41,11 +41,11 @@ const blocks = [
           status: 'Not passed',
         },
         {
-          theme: 'themethemetheme1',
+          theme: 'themet hemet heme1',
           status: 'Not passed',
         },
         {
-          theme: 'themethemetheme1',
+          theme: 'themetheme theme1',
           status: 'Not passed',
         }],
       },

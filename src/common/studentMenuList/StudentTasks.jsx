@@ -23,8 +23,10 @@ const styles = theme => ({
   },
   paper: {
     ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
+    height: '2px',
+    maxWidth: '15%',
+
   },
 });
 
@@ -46,15 +48,15 @@ class StudentTasks extends React.Component {
         <ListItem open="false" button onClick={this.handleClick}>
           <Grid container>
             <Grid item xs>
-              <ListItemText inset primary={task.name} />
+              <ListItemText primary={task.name} />
             </Grid>
             <Grid item xs>
-              <ListItemText inset primary={task.theme} />
+              <ListItemText primary={task.theme} />
             </Grid>
-            <Grid item xs="3" zeroMinWidth>
-              <Paper className={classes.paper} elevation={1}>
-                <Typography noWrap component="p">
-                  {status}
+            <Grid item xs>
+              <Paper className={classes.paper}>
+                <Typography component="p">
+                  {task.bestResult}/{task.weight}
                 </Typography>
               </Paper>
             </Grid>
