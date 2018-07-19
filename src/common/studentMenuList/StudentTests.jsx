@@ -19,6 +19,9 @@ const styles = theme => ({
   nested: {
     paddingLeft: theme.spacing.unit * 4,
   },
+  width: {
+    width: '100%',
+  },
 });
 
 class StudentTests extends React.Component {
@@ -44,8 +47,8 @@ class StudentTests extends React.Component {
 
           {this.state.open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
+        <Collapse in={this.state.open} timeout="auto" unmountOnExit className={classes.width}>
+          <List component="div" disablePadding className={classes.width}>
             <ListItem button className={classes.nested}>
               <StudentTestsDropDown
                 testsInfo={test.info}

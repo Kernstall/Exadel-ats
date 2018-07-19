@@ -17,6 +17,7 @@ const styles = theme => ({
 
 function StudentTabTestsList(props) {
   const { classes, testsList } = props;
+  console.log(testsList);
   return (
     <div className={classes.root}>
       <List

@@ -9,10 +9,19 @@ const styles = theme => ({
 
   root: {
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: 'none',
   },
   nested: {
     paddingLeft: theme.spacing.unit * 4,
+  },
+  listItem: {
+    backgroundColor: 'transparent',
+  },
+  minWidth: {
+    minWidth: '100%',
+  },
+  minWidthItem: {
+    minWidth: '50%',
   },
 });
 
@@ -22,10 +31,10 @@ class StudentTestsDDInfo extends React.Component {
     return (
       <div className={classes.root}>
         <Grid container>
-          <Grid item xs>
+          <Grid item xs={6}>
             <ListItemText inset primary={test.theme} />
           </Grid>
-          <Grid item xs>
+          <Grid item xs={6}>
             <ListItemText inset primary={test.status} />
           </Grid>
         </Grid>
