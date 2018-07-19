@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
 
   try {
     const getStudentTask = User.findById(req.query.id);
-    const getGroupsTask = Group.find({studentIdList: req.query.id});
+    const getGroupsTask = Group.find({ studentIdList: req.query.id });
     await Promise.all([getStudentTask, getGroupsTask]);
     const studentModel = await getStudentTask;
     let groups = await getGroupsTask;
@@ -44,10 +44,10 @@ router.get('/', async (req, res) => {
     // console.log(groups);
 
     const student = mapping.mapStudentToDto(studentModel);
-    const result = {student, groups};
+    const result = { student, groups };
     res.status(200).json(result);
   } catch (err) {
-    res.status(500).send({err: err.message});
+    res.status(500).send({ err: err.message });
   }
 });
 

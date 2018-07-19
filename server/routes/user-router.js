@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const passportControl = require('../utils/passport-control');
 const dataFunctions = require('../dataFunctions');
 const TeacherRequest = require('../models/TeacherRequest');
 const University = require('../models/University');
@@ -27,7 +27,7 @@ router.get('/universities', async (req, res) => {
     res.status(500).end();
   }
 });
-
+/*
 router.post('/login', (req, res, next) => {
   if (!req.body.email || !req.body.password) {
     res.status(400).send({ message: 'not all fields' });
@@ -44,24 +44,20 @@ router.post('/login', (req, res, next) => {
     return res.status(401).send({ message: err });
   })(req, res, next);
 });
+*/
+/*
+router.post('/login', passport.authenticate('local', {
+  failureFlash: true,
+}), (req, res) => {
+  res.cookie('session_id', req.sessionID);
+  res.send('ok');
+});
+*/
 
 router.get('/logout', (req, res) => {
   req.session.destroy();
   res.send({ status: 'ok' });
 });
-
-passport.use(new LocalStrategy((email, password, done) => {
-  User.findOne({ email }, (err, user) => {
-    if (err) { return done(err); }
-    if (!user) {
-      return done(null, false, { message: 'Such email does not exist' });
-    }
-    if (user.passwordHash !== bcrypt.hashSync(password, user.passwordSalt)) {
-      return done(null, false, { message: 'Incorrect password.' });
-    }
-    return done(null, user);
-  });
-}));
 
 router.post('/signup', (req, res, next) => {
   if (!req.body || !req.body.status || !req.body.email || !req.body.password || !req.body.firstName
