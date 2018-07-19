@@ -57,9 +57,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => done(null, user));
-
 app.use('/api/user/login', passportControl);
 
 app.use('/api/user', userRouter);
