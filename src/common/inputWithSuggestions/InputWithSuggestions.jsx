@@ -142,9 +142,12 @@ const styles = theme => ({
 });
 
 class InputWithSuggestions extends React.Component {
-  state = {
-    single: null,
-  };
+  constructor() {
+    super();
+    this.state = {
+      single: null,
+    };
+  }
 
   handleChange = name => (value) => {
     this.setState({
@@ -155,7 +158,6 @@ class InputWithSuggestions extends React.Component {
   render() {
     const { classes } = this.props;
     const { single } = this.state;
-    console.log(this.state);
     return (
       <div className={classes.root}>
         <Input
