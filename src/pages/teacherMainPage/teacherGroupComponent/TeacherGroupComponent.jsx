@@ -6,59 +6,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/es/Button/Button';
-import TeacherSelectedGroupComponent from './teacherSelectedGroupComponent/TeacherSelectedGroupComponent.jsx';
-import GroupsList from './groupsList/GroupsList.jsx';
+import TeacherSelectedGroupComponent from '../teacherSelectedGroupComponent/TeacherSelectedGroupComponent.jsx';
 import {Link} from "react-router-dom";
-
-const groupMembers = [
-  {
-    name: 'Bob Marley',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-  {
-    name: 'Aliaxei Dziadziuk',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-  {
-    name: 'Maksim Anikeyeu',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-];
-
-const styles = theme => ({
-  root: {
-    margin: 'auto',
-    color: 'whitesmoke',
-    height: 'fit-content',
-    backgroundColor: theme.palette.background.paper,
-    width: 700,
-  },
-  groupTemplate: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  createNewGroupButton: {
-    '&:hover': {
-      backgroundColor: '#1b77c5',
-    },
-    transition: '.3s',
-    width: 200,
-    color: '#fff',
-    backgroundColor: '#2196f3',
-  },
-  noUnderline: {
-    textDecoration: 'none',
-    color: '#000',
-  },
-});
 
 const response = [
   {
@@ -92,19 +41,19 @@ const response = [
     studentsAmount: 27,
     groupMembers: [
       {
-        name: 'Hlib Makov',
+        name: 'Bob Marley',
         testsComplete: 3,
         tasksComplete: 5,
         score: 8.4,
       },
       {
-        name: 'Andrey Dogov',
+        name: 'Aliaxei Dziadziuk',
         testsComplete: 3,
         tasksComplete: 5,
         score: 8.4,
       },
       {
-        name: 'Adolf Ukraina',
+        name: 'Maksim Anikeyeu',
         testsComplete: 3,
         tasksComplete: 5,
         score: 8.4,
@@ -138,6 +87,35 @@ const response = [
   },
 ];
 
+const styles = theme => ({
+  root: {
+    margin: 'auto',
+    color: 'whitesmoke',
+    height: 'fit-content',
+    backgroundColor: theme.palette.background.paper,
+    width: 700,
+  },
+  groupTemplate: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  createNewGroupButton: {
+    '&:hover': {
+      backgroundColor: '#1b77c5',
+    },
+    transition: '.3s',
+    width: 200,
+    color: '#fff',
+    backgroundColor: '#2196f3',
+  },
+  noUnderline: {
+    textDecoration: 'none',
+    color: '#000',
+  },
+});
+
 const TabContainer = props => (
   <Typography component="div">
     {props.children}
@@ -148,9 +126,9 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-class TeacherMainPage extends React.Component {
-  constructor() {
-    super();
+class TeacherGroupComponent extends React.Component {
+  constructor(props) {
+    super(props);
     this.state = {
       value: 0,
     };
@@ -161,6 +139,8 @@ class TeacherMainPage extends React.Component {
   };
 
   render() {
+    console.log(this.state);
+    const { groupName, groupMembers } = response.find(item => item.groupId === +this.props.match.params.id);
     const { classes } = this.props;
     const { value } = this.state;
     return (
@@ -172,16 +152,21 @@ class TeacherMainPage extends React.Component {
             indicatorColor="primary"
             centered
           >
-            <Tab label="Groups" />
+            <Link className={classes.noUnderline} to="/teacher">
+              <Tab label="Groups" />
+            </Link>
             <Tab label="Tests" />
             <Tab label="Tasks" />
           </Tabs>
           {value === 0
-            &&
-            <TabContainer>
-              <GroupsList />
+          && <TabContainer>
+            {console.log(this.props.match.params)}
+              <TeacherSelectedGroupComponent
+                groupName={groupName}
+                groupMembers={groupMembers}
+              />
             </TabContainer>
-            }
+          }
           {value === 1 && <TabContainer>Tests</TabContainer>}
           {value === 2 && <TabContainer>Tasks</TabContainer>}
         </AppBar>
@@ -193,4 +178,9 @@ class TeacherMainPage extends React.Component {
   }
 }
 
-export default withStyles(styles)(TeacherMainPage);
+TeacherGroupComponent.propTypes = {
+  groupMembers: PropTypes.object.isRequired,
+  groupName: PropTypes.string.isRequired,
+};
+
+export default withStyles(styles)(TeacherGroupComponent);
