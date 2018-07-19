@@ -24,32 +24,33 @@ const styles = theme => ({
   },
   fullWidth: {
     width: '100%',
-  }
-
-  ,
+  },
 });
+
+
 class StudentTaskDropDown extends React.Component {
-  render() {
-    const { classes, taskInfo } = this.props;
-    return (
-      <div className={classes.fullWidth}>
-        <Paper className={classes.root} elevation={1}>
-          <Typography variant="headline" component="h3">
+
+   render() {
+     const { classes, taskInfo } = this.props;
+     return (
+       <div className={classes.fullWidth}>
+         <Paper className={classes.root} elevation={1}>
+           <Typography variant="headline" component="h3">
             Info
-          </Typography>
-          <Typography component="p">
-            {taskInfo}
-          </Typography>
-          <Button variant="contained" color="primary" className={classes.button}>
+           </Typography>
+           <Typography component="p">
+             {taskInfo}
+           </Typography>
+           <Button variant="contained" color="primary" className={classes.button}>
             Show attempts
-          </Button>
-          <Button variant="contained" color="primary" className={classes.button}>
+           </Button>
+           <Button variant="contained" color="primary" className={classes.button}>
             Upload
-          </Button>
-        </Paper>
-      </div>
-    );
-  }
+           </Button>
+         </Paper>
+       </div>
+     );
+   }
 }
 
 StudentTaskDropDown.propTypes = {
