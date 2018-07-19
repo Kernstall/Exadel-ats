@@ -6,9 +6,14 @@ const Group = require('../models/Group');
 
 const router = express.Router();
 
+/*
 router.use((req, res, next) => {
-  next();
+  if (req.user.status !== 'student') {
+    return res.status(403).end();
+  }
+  return next();
 });
+*/
 
 router.get('/group/tasks', async (req, res) => {
   try {
@@ -29,7 +34,7 @@ router.get('/', async (req, res) => {
 
   try {
     const getStudentTask = User.findById(req.query.id);
-    const getGroupsTask = Group.find({ studentIdList: req.query.id });
+    const getGroupsTask = Group.find({studentIdList: req.query.id});
     await Promise.all([getStudentTask, getGroupsTask]);
     const studentModel = await getStudentTask;
     let groups = await getGroupsTask;
@@ -42,7 +47,7 @@ router.get('/', async (req, res) => {
     const result = {student, groups};
     res.status(200).json(result);
   } catch (err) {
-    res.status(500).send({ err: err.message });
+    res.status(500).send({err: err.message});
   }
 });
 

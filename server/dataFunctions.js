@@ -4,6 +4,11 @@ const Question = require('./models/Question');
 const Group = require('./models/Group');
 const User = require('./models/User');
 const Topic = require('./models/Topic');
+const Activities = require('./models/Activity');
+
+function compareByDate(a, b) {
+  return new Date(b.date) - new Date(a.date);
+}
 
 exports.getStudentTasksByGroup = async (studentId, groupId) => {
   const tasks = await User.aggregate([
@@ -41,6 +46,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
         'weight': 1,
       });
   }
+
   const result = tasks[0].taskArray;
   let promissArray = []
   if (tasks.length !== 0) {
@@ -85,12 +91,12 @@ exports.getTeachersGroups = (_teacherID) => {
 
 
 exports.addStudentsToGroup = (groupID, studentIDs) => Group.findByIdAndUpdate(groupID,
-  { $push: { studentIdList: studentIDs } },
-  { safe: true, upsert: true });
+  {$push: {studentIdList: studentIDs}},
+  {safe: true, upsert: true});
 
 exports.deleteStudentsToGroup = (groupID, studentIDs) => Group.findByIdAndUpdate(groupID,
-  { $pullAll: { studentIdList: studentIDs } },
-  { safe: true, upsert: true });
+  {$pullAll: {studentIdList: studentIDs}},
+  {safe: true, upsert: true});
 
 exports.getTopTenStudents = async () => {
   const result = {};
@@ -181,11 +187,11 @@ exports.getTopTenStudents = async () => {
 
 exports.getGroupInfo = async (groupID) => {
   const request = (await Group.aggregate([
-    { $match: { _id: mongoose.Types.ObjectId(groupID) } },
+    {$match: {_id: mongoose.Types.ObjectId(groupID)}},
     {
       $project: {
         groupName: true,
-        amountOfStudents: { $size: '$studentIdList' },
+        amountOfStudents: {$size: '$studentIdList'},
         studentIdList: true,
       },
     },
@@ -199,7 +205,7 @@ exports.getGroupInfo = async (groupID) => {
 
   function promiseCollector(student) {
     return User.aggregate([
-      { $match: { _id: student._id } },
+      {$match: {_id: student._id}},
       {
         $project: {
           firstName: true,
@@ -319,13 +325,13 @@ exports.getGroupInfo = async (groupID) => {
           mediumMark: {
             $cond: {
               if: {
-                $eq: [{ $add: ['$amountOfTasks', '$amountOfTests'] }, 0],
+                $eq: [{$add: ['$amountOfTasks', '$amountOfTests']}, 0],
               },
               then: 0,
               else: {
                 $divide: [
-                  { $add: ['$tasksMarkSum', '$testsMarkSum'] },
-                  { $add: ['$amountOfTasks', '$amountOfTests'] },
+                  {$add: ['$tasksMarkSum', '$testsMarkSum']},
+                  {$add: ['$amountOfTasks', '$amountOfTests']},
                 ],
               },
             },
@@ -351,13 +357,14 @@ exports.getGroupInfo = async (groupID) => {
 
 exports.getStudentHistoryByGroup = function (studentID, groupID) {
   const taskResult = User.findById(studentID)
-    .populate('tasks.taskId', {'_id': 0, 'name': 1})
+    .populate('tasks.taskId', {'_id': 0, 'name': 1, 'weight': 1,})
     .where({'tasks.groupId': {$eq: groupID}})
     .select({
       '_id': 0,
       'tasks.groupId': 1,
       'tasks.taskId.name': 1,
       'tasks.attempts': 1,
+      'tasks.taskId.weight': 1,
     });
 
   const testResult = User.findById(studentID)
@@ -375,21 +382,142 @@ exports.getStudentHistoryByGroup = function (studentID, groupID) {
 };
 
 exports.deleteOtherGroupInfo = function (array, groupId) {
-  const taskArray = [];
-  const testArray = [];
+  let taskArray = [];
+  let testArray = [];
+  let result = [];
   if (array[0] != null) {
-    array[0].tasks.forEach((elem) => {
-      if (String(elem.groupId) === String(groupId)) {
-        taskArray.push(elem);
-      }
+    taskArray = array[0].tasks.filter((elem) => {
+      return String(elem.groupId) === String(groupId);
+    });
+    taskArray.forEach((task) => {
+      task.attempts.forEach((attempt) => {
+        result.push({
+          'taskName': task.taskId.name,
+          'taskWeight': task.taskId.weight,
+          'isPassed': attempt.isPassed,
+          'date': attempt.date,
+          'result': attempt.result,
+        });
+      });
     });
   }
   if (array[1] != null) {
-    array[1].tests.forEach((elem) => {
-      if (String(elem.groupId) === String(groupId)) {
-        testArray.push(elem);
-      }
+    testArray = array[1].tests.filter((elem) => {
+      return String(elem.groupId) === String(groupId);
+    });
+    testArray.forEach((test) => {
+      result.push({
+        'topicsNames': [],
+        'status': test.status,
+        'date': test.date,
+        'result': test.result,
+      });
+
+      test.topicsIds.forEach((topic) => {
+        result[result.length - 1].topicsNames.push(topic.name);
+      });
     });
   }
-  return { taskArray, testArray };
+  return result.sort(compareByDate);
+};
+
+exports.getStudents = async () => {
+  const answer = await User.find({status: 'student'})
+    .select({
+      firstName: 1,
+      lastName: 1,
+      email: 1,
+      university: 1,
+      faculty: 1,
+      graduateYear: 1,
+    });
+  return answer;
+}
+
+exports.createGroup = async (groupName, teacherId) => {
+  try {
+    const teacher = await User.findById(teacherId)
+      .select({
+        '_id': 0,
+        'firstName': 1,
+        'lastName': 1,
+        'fathersName': 1,
+      });
+
+    const group = new Group({
+      teacherId: mongoose.Types.ObjectId(teacherId),
+      firstName: teacher.firstName,
+      fathersName: teacher.lastName,
+      lastName: teacher.lastName,
+      groupName: groupName,
+      studentIdList: [],
+      topicCourseIds: [],
+    });
+    let saveGroup = {};
+
+    saveGroup = await group.save();
+    return saveGroup;
+  } catch (e) {
+    throw e;
+  }
+};
+
+exports.getUsersActivities = async (name, role, activityType) => {
+  const tmp = await Activities.find({})
+    .populate('userId', {'_id': 0, 'lastName': 1, 'firstName': 1, 'fathersName': 1})
+    .select({
+      '_id': 0,
+      'date': 1,
+      'userType': 1,
+      'type': 1,
+    });
+
+  let result = [];
+
+  tmp.forEach((elem) => {
+    let name = '';
+    if (elem.userId._doc.fathersName) {
+      name = `${elem.userId._doc.lastName} ${elem.userId._doc.firstName} ${elem.userId._doc.fathersName}`;
+    } else {
+      name = `${elem.userId._doc.lastName} ${elem.userId._doc.firstName}`;
+    }
+
+    result.push({'name': name, 'type': elem.type.slice(3), 'userType': elem.userType, 'date': elem.date});
+  });
+
+  if (name) {
+    result = result.filter((elem) => {
+      return elem.name === name;
+    });
+  }
+
+  if (role) {
+    result = result.filter((elem) => {
+      return elem.userType === role;
+    });
+    console.log(result);
+  }
+
+  if (activityType) {
+    result = result.filter((elem) => {
+      return elem.type === activityType;
+    });
+  }
+
+  result.sort(compareByDate);
+
+  return result;
+};
+
+exports.getStudents = async () => {
+  const answer = await User.find({status: 'student'})
+    .select({
+      firstName: 1,
+      lastName: 1,
+      email: 1,
+      university: 1,
+      faculty: 1,
+      graduateYear: 1,
+    });
+  return answer;
 };

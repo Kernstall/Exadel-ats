@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 const ActivitiesSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ['1)studentGroupAddition', '2)studentGroupRemove', '3)groupCreation', '4)studentTaskAssignment', '5)groupTaskAssignment',
-      '6)studentTestAssignment', '7)groupTestAssignment', '8)studentTaskSending', '9)studentTestComplete', '10)teacherTestCheck',
+    enum: ['01)studentGroupAddition', '02)studentGroupRemove', '03)groupCreation', '04)studentTaskAssignment', '05)groupTaskAssignment',
+      '06)studentTestAssignment', '07)groupTestAssignment', '08)studentTaskSending', '09)studentTestComplete', '10)teacherTestCheck',
       '11)studentQuestionComplaint', '12)teacherQuestionCreation', '13)adminQuestionCreation', '14)teacherTaskCreation',
-      '15)adminTaskCreation', '16)teacherQuestionBlock', '17)adminQuestionBlock', '18)teacherRightsToStudentDelegation',
+      '15)adminTaskCreation', '16)teacherTaskBlock', '17)adminTaskBlock', '18)teacherRightsToStudentDelegation',
       '19)adminRightsToStudentDelegation', '20)adminRightsToTeacherDelegation'],
   },
   userType: {
@@ -15,7 +15,7 @@ const ActivitiesSchema = new mongoose.Schema({
   },
   userId: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: 'Users',
+    ref: 'User',
   },
   toUserType: {
     type: String,
@@ -23,25 +23,26 @@ const ActivitiesSchema = new mongoose.Schema({
   },
   toUserId: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: 'Users',
+    ref: 'User',
   },
   groupId: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: 'Groups',
+    ref: 'Group',
   },
   taskId: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: 'Tasks',
+    ref: 'Task',
   },
   questionId: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: 'Questions',
+    ref: 'Question',
   },
-  testTopicsIds: [{
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: 'Topics',
-    optional: true,
-  }],
+  testTopicsIds: {
+    type: [{
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'Topic',
+    }],
+  },
   date: Date,
 });
 
