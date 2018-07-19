@@ -121,4 +121,13 @@ router.get('/group/info', async (req, res) => {
   }
 });
 
+router.get('/students', async (req, res) => {
+  try {
+    const result = await dataFunctions.getStudents();
+    res.status(200).send(JSON.stringify(result));
+  } catch (err) {
+    req.status(400).send(err);
+  }
+});
+
 module.exports = router;
