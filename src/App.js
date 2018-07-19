@@ -12,6 +12,10 @@ import StudentMenu from './common/studentMenuList/StudentMenu.jsx';
 import TeacherAddGroup from './common/teacherAddGroup/TeacherAddGroup.jsx';
 import createMuiTheme from './common/styles/MUIAppTheme';
 import StudentMainPage from './pages/studentMainPage/StudentMainPage.jsx';
+import TeacherMainPage from "./pages/teacherMainPage/TeacherMainPage";
+import TeacherSelectedGroupComponent from "./pages/teacherMainPage/teacherSelectedGroupComponent/TeacherSelectedGroupComponent";
+import TeacherGroupComponent from "./pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent";
+import TeacherTasksList from "./common/teacherTasksList/TeacherTasksList";
 import adminMainPage from './pages/adminMainPage/adminMainPage';
 
 const styles = ({
@@ -37,6 +41,9 @@ class App extends Component {
               <Route path="/studentMenu" component={StudentMenu} />
               <Route path="/teacher/addGroup" component={TeacherAddGroup} />
               <Route path="/student/mainPage" component={StudentMainPage} />
+              <Route exact path="/teacher" component={TeacherMainPage} />
+              <Route path="/teacher/:id" render={props => <TeacherGroupComponent {...props} />} />
+              <Route exact path="/tasks" component={TeacherTasksList} />
               <Route path="/admin" component={adminMainPage} />
             </div>
           </Router>

@@ -4,6 +4,7 @@ const Question = require('./models/Question');
 const Group = require('./models/Group');
 const User = require('./models/User');
 const Topic = require('./models/Topic');
+const Activities = require('./models/Activity');
 
 exports.getStudentTasksByGroup = async (studentId, groupId) => {
   const tasks = await User.aggregate([
@@ -434,6 +435,56 @@ exports.createGroup = async (groupName, teacherId) => {
   } catch (e) {
     throw e;
   }
+
+function compareByDate(a, b) {
+  return new Date(b.date) - new Date(a.date);
+}
+
+exports.getUsersActivities = async (name, role, activityType) => {
+  const tmp = await Activities.find({})
+    .populate('userId', {'_id': 0, 'lastName': 1, 'firstName': 1, 'fathersName': 1})
+    .select({
+      '_id': 0,
+      'date': 1,
+      'userType': 1,
+      'type': 1,
+    });
+
+  let result = [];
+
+  tmp.forEach((elem) => {
+    let name = '';
+    if (elem.userId._doc.fathersName) {
+      name = `${elem.userId._doc.lastName} ${elem.userId._doc.firstName} ${elem.userId._doc.fathersName}`;
+    } else {
+      name = `${elem.userId._doc.lastName} ${elem.userId._doc.firstName}`;
+    }
+
+    result.push({'name': name, 'type': elem.type.slice(3), 'userType': elem.userType, 'date': elem.date});
+  });
+
+  if (name) {
+    result = result.filter((elem) => {
+      return elem.name === name;
+    });
+  }
+
+  if (role) {
+    result = result.filter((elem) => {
+      return elem.userType === role;
+    });
+    console.log(result);
+  }
+
+  if (activityType) {
+    result = result.filter((elem) => {
+      return elem.type === activityType;
+    });
+  }
+
+  result.sort(compareByDate);
+
+  return result;
 };
 
 exports.getStudents = async () => {

@@ -40,7 +40,7 @@ class StudentRegistration extends React.Component {
       faculty: '',
       course: undefined,
       groupNumber: undefined,
-      gradYear: 0,
+      graduateYear: 0,
     };
   }
 
@@ -164,12 +164,12 @@ class StudentRegistration extends React.Component {
           margin="normal"
         />
         <TextField
-          id="gradyear-placeholder"
+          id="graduateYear-placeholder"
           select
           label="Graduation year"
           className="text-field"
-          value={this.state.gradYear}
-          onChange={this.handleChange('gradYear')}
+          value={this.state.graduateYear}
+          onChange={this.handleChange('graduateYear')}
           SelectProps={{
             MenuProps: {
               className: {
