@@ -152,7 +152,7 @@ class TeacherGroupComponent extends React.Component {
             indicatorColor="primary"
             centered
           >
-            <Link to="/teacher">
+            <Link className={classes.noUnderline} to="/teacher">
               <Tab label="Groups" />
             </Link>
             <Tab label="Tests" />
