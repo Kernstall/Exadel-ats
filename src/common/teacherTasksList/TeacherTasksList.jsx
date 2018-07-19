@@ -50,7 +50,7 @@ class TeacherTaskList extends React.Component {
     return (
       <div className="teacher-tasks">
         <List>
-          {this.objtoJSX(this.state.data)}
+          {this.objtoJSX([this.state])}
         </List>
         <Button variant="contained" color="primary" className="set-tasks-button">
           Назначить
