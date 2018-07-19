@@ -31,7 +31,7 @@ class TeacherRegistration extends React.Component {
       status: 'teacher',
       firstName: '',
       lastName: '',
-      fatherName: '',
+      fathersName: '',
       email: '',
       password: '',
       university: '',
@@ -91,8 +91,8 @@ class TeacherRegistration extends React.Component {
         <TextField
           id="fathername-placeholder"
           label="Father name"
-          value={this.state.fatherName}
-          onChange={this.handleChange('fatherName')}
+          value={this.state.fathersName}
+          onChange={this.handleChange('fathersName')}
           placeholder="Input your father name..."
           className="text-field surname"
           margin="normal"
