@@ -22,7 +22,7 @@ class TaskListItem extends React.Component {
     return (
       <div className="taskinfo">
         <div className="taskinfo-first-part">
-          <ListItemText className="taskname" inset primary={this.props.taskName} />
+          <ListItemText className="taskname" primary={this.props.taskName} />
           <ListItemText className="tags"> <span className="tags-span">тэги: {this.props.tags.join(', ')}</span> </ListItemText>
         </div>
         <div className="taskinfo-second-part">
