@@ -26,10 +26,20 @@ const blocks = [
     tabName: 'Tests',
     tabInfo: [
       {
-        name: 'Training tests', result: 'Avr score1', info: 'info1',
+        name: 'Training tests',
+        result: 'Avr score1',
+        info: {
+          theme: 'theme1',
+          status: '7',
+        },
       },
       {
-        name: 'Examination tests', result: 'Avr score2', info: 'info2',
+        name: 'Examination tests',
+        result: 'Avr score2',
+        info: {
+          theme: 'themethemetheme1',
+          status: 'Not passed',
+        },
       },
     ],
   },
