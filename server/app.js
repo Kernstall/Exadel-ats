@@ -62,14 +62,14 @@ passport.deserializeUser((id, done) => {
 
 app.use('/api/user', userRouter);
 
-/*
+
 app.use((req, res, next) => {
   if (!req.isAuthenticated()) {
     return res.status(401).end();
   }
   return next();
 });
-*/
+
 
 // app.use('/api/', authorization??);
 app.use('/api/admin', adminRouter);
