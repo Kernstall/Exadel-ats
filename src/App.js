@@ -42,7 +42,7 @@ class App extends Component {
               <Route path="/teacher/addGroup" component={TeacherAddGroup} />
               <Route path="/student/mainPage" component={StudentMainPage} />
               <Route exact path="/teacher" component={TeacherMainPage} />
-              <Route path="/teacher/:id" render={props => <TeacherGroupComponent {...props} />} />
+              <Route path="/teacher/groups/:id" render={props => <TeacherGroupComponent {...props} />} />
               <Route exact path="/tasks" component={TeacherTasksList} />
               <Route path="/admin" component={adminMainPage} />
             </div>

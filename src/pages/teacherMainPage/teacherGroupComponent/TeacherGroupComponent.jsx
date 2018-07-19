@@ -139,7 +139,6 @@ class TeacherGroupComponent extends React.Component {
   };
 
   render() {
-    console.log(this.state);
     const { groupName, groupMembers } = response.find(item => item.groupId === +this.props.match.params.id);
     const { classes } = this.props;
     const { value } = this.state;

@@ -97,7 +97,7 @@ class GroupsList extends React.Component {
       <List>
         {response.map((item, index) => (
           <div key={`group${index}`}>
-            <Link to={`/teacher/${item.groupId}`} className={classes.noUnderline}>
+            <Link to={`/teacher/groups/${item.groupId}`} className={classes.noUnderline}>
               <ListItem button>
                 <GroupTemplate response={item} />
               </ListItem>
