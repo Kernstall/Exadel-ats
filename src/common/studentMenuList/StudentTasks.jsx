@@ -9,6 +9,8 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Grid from '@material-ui/core/Grid';
 import StudentTaskDropDown from './StudentTaskDropDown.jsx';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
 
@@ -18,6 +20,11 @@ const styles = theme => ({
   },
   nested: {
     paddingLeft: theme.spacing.unit * 4,
+  },
+  paper: {
+    ...theme.mixins.gutters(),
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
   },
 });
 
@@ -30,29 +37,40 @@ class StudentTasks extends React.Component {
 
   render() {
     const { classes, task } = this.props;
+    let status = 'Not passed';
+    if (task.isPassed) {
+      status = 'Passed';
+    }
     return (
       <div className={classes.root}>
-          <ListItem open="false" button onClick={this.handleClick}>
-            <Grid container>
-              <Grid item xs>
-                <ListItemText inset primary={task.name} />
-              </Grid>
-              <Grid item xs>
-                <ListItemText inset primary={task.theme} />
-              </Grid>
-              <Grid item xs>
-                <ListItemText inset primary={task.status} />
-              </Grid>
+        <ListItem open="false" button onClick={this.handleClick}>
+          <Grid container>
+            <Grid item xs>
+              <ListItemText inset primary={task.name} />
             </Grid>
-            {this.state.open ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button className={classes.nested}>
-                <StudentTaskDropDown taskInfo={task.info} className={this.props.classes.fullWidth}/>
-              </ListItem>
-            </List>
-          </Collapse>
+            <Grid item xs>
+              <ListItemText inset primary={task.theme} />
+            </Grid>
+            <Grid item xs="3" zeroMinWidth>
+              <Paper className={classes.paper} elevation={1}>
+                <Typography noWrap component="p">
+                  {status}
+                </Typography>
+              </Paper>
+            </Grid>
+          </Grid>
+          {this.state.open ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button className={classes.nested}>
+              <StudentTaskDropDown
+                taskInfo={task.description}
+                className={this.props.classes.fullWidth}
+              />
+            </ListItem>
+          </List>
+        </Collapse>
       </div>
     );
   }
