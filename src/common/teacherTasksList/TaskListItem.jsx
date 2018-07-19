@@ -21,7 +21,7 @@ class TaskListItem extends React.Component {
   render() {
     return (
       <div className="taskinfo">
-        <ListItemText className="taskname" inset primary={this.props.taskName} />
+        <ListItemText className="taskname" primary={this.props.taskName} />
         <ListItemText className="tags"> <span className="tags-span">тэги: {this.props.tags.join(', ')}</span> </ListItemText>
         <ListItemText className="score"> <span className="score-span">оценка: {this.props.score}</span> </ListItemText>
         <ListItemText className="moreButton" onClick={this.go()}> <span className="more-span"> More </span> </ListItemText>
