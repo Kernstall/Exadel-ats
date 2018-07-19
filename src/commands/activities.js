@@ -16,4 +16,3 @@ export const getActivities = (param) => (dispatch) => {
 //   ? [ name, role, activityType ]
 //   : null
 // const query = api/admin/activities?filter=`${filter}`;
-

@@ -23,7 +23,7 @@
 .students-container, .mentor-container {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    width: 250px;
 }
 .students-header, .mentor-header {
     background: #5b5b5b;

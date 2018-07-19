@@ -1,6 +1,5 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/es/Paper/Paper';
 import FilterStudentCard from './FilterFieldsCard.jsx';
 import DragAndDropStudents from './DragAndDropStudents';
 
