@@ -25,9 +25,57 @@ const styles = {
     marginLeft: '5px',
     width: 'calc(100% - 310px)',
   },
-  SearchBoxWidth: {
-    minWidth: '280px',
-  },
+};
+
+const activitieToUIName = (keyWord) => {
+  const activitiesName = {
+    studentGroupAddition: 'Студент добавлен в группу',
+    studentGroupRemove: 'Студент удален из группы',
+    groupCreation: 'Добавлена группа студентов',
+    studentTaskAssignment: 'Назначена задача студенту',
+    groupTaskAssignment: 'Назначена задача группе',
+    studentTestAssignment: 'Назначен тест студенту',
+    groupTestAssignment: 'Назначен тест группе',
+    studentTaskSending: 'Стуент отправил решение задачи',
+    studentTestComplete: 'Студент прошел тест',
+    teacherTestCheck: 'Учитель проверил тест',
+    studentQuestionComplaint: 'Студент пожаловался на вопрос',
+    teacherQuestionCreation: 'Учитель создал вопрос',
+    adminQuestionCreation: 'Администратор создал вопрос',
+    teacherTaskCreation: 'Учитель создал задачу',
+    adminTaskCreation: 'Администратор создал задачу',
+    teacherQuestionBlock: 'Учитель заблокировал вопрос',
+    adminQuestionBlock: 'Администратор заблокировал вопрос',
+    teacherRightsToStudentDelegation: 'Студенту переданы права учителя',
+    adminRightsToStudentDelegation: 'Студенту переданы права администратора',
+    adminRightsToTeacherDelegation: 'Учителю переданы права администратора',
+  };
+  return activitiesName[keyWord];
+};
+
+const activities = {
+  activities: [
+    {
+      name: 'Alexander Gusev',
+      role: 'teacher',
+      activityType: 'studentGroupAddition',
+    },
+    {
+      name: 'Alexander Gusev',
+      role: 'admin',
+      activityType: 'studentGroupRemove',
+    },
+    {
+      name: 'Alexander Gusev',
+      role: 'teacher',
+      activityType: 'groupCreation',
+    },
+    {
+      name: 'Alexander Gusev',
+      role: 'teacher',
+      activityType: 'studentTaskAssignment',
+    },
+  ],
 };
 
 class adminMainPage extends Component {
@@ -35,43 +83,33 @@ class adminMainPage extends Component {
     super(props);
   }
 
-  componentDidMount() { // eslint-disable-next-line
-    this.props.getActivities({
-      role: 'teacher',
-    });
-  }
-
   render() {
-    const { classes, activities } = this.props;
-
-    if (activities) {
-      return (
-        <Grid
-          alignItems="stretch"
-          justify="center"
-          container
-          flexDirection="row"
-          className={[classes.centerScreen, classes.centerScreenMobile].join(' ')}
-        >
-          <Grid item className={classes.SearchBoxWidth}>
-            <SearchBox />
-          </Grid>
-          <Grid
-            item
-            className={classes.marginLeft}
-          >
-            <List
-              disablePadding="false"
-              component="nav"
-              className={classes.noMargin}
-            >
-              <ActivityListItems info={activities} />
-            </List>
-          </Grid>
+    const { classes } = this.props;
+    return (
+      <Grid
+        alignItems="stretch"
+        justify="center"
+        container
+        flexDirection="row"
+        className={[classes.centerScreen, classes.centerScreenMobile].join(' ')}
+      >
+        <Grid item>
+          <SearchBox />
         </Grid>
-      );
-    }
-    return null;
+        <Grid
+          item
+          className={classes.marginLeft}
+        >
+          <List
+            disablePadding="false"
+            component="nav"
+            className={classes.noMargin}
+          >
+            <ActivityListItems info={activities.activities} />
+          </List>
+        </Grid>
+      </Grid>
+    );
   }
 }
 

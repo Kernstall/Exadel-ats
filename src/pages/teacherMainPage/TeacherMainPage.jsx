@@ -9,27 +9,8 @@ import Button from '@material-ui/core/es/Button/Button';
 import TeacherSelectedGroupComponent from './teacherSelectedGroupComponent/TeacherSelectedGroupComponent.jsx';
 import GroupsList from './groupsList/GroupsList.jsx';
 import {Link} from "react-router-dom";
-
-const groupMembers = [
-  {
-    name: 'Bob Marley',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-  {
-    name: 'Aliaxei Dziadziuk',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-  {
-    name: 'Maksim Anikeyeu',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-];
+import TeacherTasksList from "../../common/teacherTasksList/TeacherTasksList";
+import TeacherQuestionList from "../../common/teacherQuestionList/TeacherQuestionList";
 
 const styles = theme => ({
   root: {
@@ -45,6 +26,11 @@ const styles = theme => ({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    margin: 5,
+  },
   createNewGroupButton: {
     '&:hover': {
       backgroundColor: '#1b77c5',
@@ -54,89 +40,7 @@ const styles = theme => ({
     color: '#fff',
     backgroundColor: '#2196f3',
   },
-  noUnderline: {
-    textDecoration: 'none',
-    color: '#000',
-  },
 });
-
-const response = [
-  {
-    groupId: 1,
-    groupName: 'First Group',
-    studentsAmount: 21,
-    groupMembers: [
-      {
-        name: 'Bob Marley',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Aliaxei Dziadziuk',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Maksim Anikeyeu',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-    ],
-  },
-  {
-    groupId: 2,
-    groupName: 'Second Group',
-    studentsAmount: 27,
-    groupMembers: [
-      {
-        name: 'Hlib Makov',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Andrey Dogov',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Adolf Ukraina',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-    ],
-  },
-  {
-    groupId: 3,
-    groupName: 'Third Group',
-    studentsAmount: 18,
-    groupMembers: [
-      {
-        name: 'Bob Marley',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Aliaxei Dziadziuk',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Maksim Anikeyeu',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-    ],
-  },
-];
 
 const TabContainer = props => (
   <Typography component="div">
@@ -182,12 +86,19 @@ class TeacherMainPage extends React.Component {
               <GroupsList />
             </TabContainer>
             }
-          {value === 1 && <TabContainer>Tests</TabContainer>}
-          {value === 2 && <TabContainer>Tasks</TabContainer>}
+          {value === 1
+            &&
+            <TabContainer>
+              <TeacherQuestionList />
+            </TabContainer>
+          }
+          {value === 2
+            &&
+            <TabContainer>
+              <TeacherTasksList/>
+            </TabContainer>
+          }
         </AppBar>
-        <Button className={classes.createNewGroupButton} variant="contained">
-          Create new group
-        </Button>
       </div>
     );
   }
