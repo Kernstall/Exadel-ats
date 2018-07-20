@@ -1,86 +1,29 @@
 import React from 'react';
 import './styles.css';
+import PropTypes from 'prop-types';
+import TextField from "@material-ui/core/es/TextField/TextField";
+import Input from "@material-ui/core/es/Input/Input";
 
-const studentsPool = [
-  {
-    id: '1',
-    studentName: 'Todd Martinez',
-    eMail: '1234@mail.ru',
-    studentGroup: 'group 2',
-  },
-  {
-    id: '2',
-    studentName: 'Jason Foster',
-    eMail: '1234@mail.ru',
-    studentGroup: 'group 2',
-  },
-  {
-    id: '3',
-    studentName: 'Shirley Allen',
-    eMail: '1234@mail.ru',
-    studentGroup: 'group 2',
-  },
-];
-
-const selectedStudents = [
-  {
-    id: '4',
-    studentName: 'Raman Buyak',
-    eMail: '1234@mail.ru',
-    studentGroup: 'group 2',
-  },
-  {
-    id: '5',
-    studentName: 'Anonymous',
-    eMail: '1234@mail.ru',
-    studentGroup: 'group 2',
-  },
-];
-
-let availableStudents = [];
-/*
-let serverData; */
-
-fetch('/api/teacher/students',
-  {
-    method: 'GET',
-  }).then(response => console.log(response.json())).catch(elem => console.log(elem));
-
-const updateAvailableStudents = function () {
-  availableStudents = studentsPool.filter(
-    element => selectedStudents.find(selElem => selElem.id === element.id) === undefined,
-  );
-};
-updateAvailableStudents();
-
-class DragAndDropStudents extends React.Component {
+export default class DragAndDropStudents extends React.Component {
   constructor() {
     super();
     this.state = {
       changeFlag: true,
     };
-  }
-
-  componentDidMount() {
-    /* window.addEventListener('touchmove', this.handleTouchMove);
-    window.addEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('touchend', this.handleMouseUp);
-    window.addEventListener('mouseup', this.handleMouseUp);
-    window.addEventListener('resize', this.handleResize); */
+    this.selectedStudents = [];
   }
 
   handleSingleLiClick(id) {
-    console.log(availableStudents);
-    let moveElem = availableStudents.find(element => element.id === id);
+    let moveElem = this.availableStudents.find(element => element._id === id);
     if (moveElem !== undefined) {
-      const index = availableStudents.indexOf(moveElem);
-      availableStudents.splice(index, 1);
-      selectedStudents.push(moveElem);
+      const index = this.availableStudents.indexOf(moveElem);
+      this.availableStudents.splice(index, 1);
+      this.selectedStudents.push(moveElem);
     } else {
-      moveElem = selectedStudents.find(element => element.id === id);
-      const index = selectedStudents.indexOf(moveElem);
-      selectedStudents.splice(index, 1);
-      availableStudents.push(moveElem);
+      moveElem = this.selectedStudents.find(element => element._id === id);
+      const index = this.selectedStudents.indexOf(moveElem);
+      this.selectedStudents.splice(index, 1);
+      this.availableStudents.push(moveElem);
     }
     this.setState({
       changeFlag: !this.state.changeFlag,
@@ -88,18 +31,22 @@ class DragAndDropStudents extends React.Component {
   }
 
   render() {
+    this.availableStudents = this.props.studentsPool.filter(
+      element => this.selectedStudents.find(selElem => selElem._id === element._id) === undefined,
+    );
+
     return (
       <div className="drag-and-drop-outer-wrapper">
         <div className="students-container">
           <div className="students-header">Студенты</div>
           <div className="students-wrap">
             <ul className="students-liner draggable droppable" id="students">
-              {availableStudents.map(student => (
+              {this.availableStudents.map(student => (
                 <li
                   className="student"
-                  key={student.id}
-                  onClick={() => this.handleSingleLiClick(student.id)}
-                >{student.studentName}
+                  key={student._id}
+                  onClick={() => this.handleSingleLiClick(student._id)}
+                >{student.firstName + ' ' + student.lastName}
                 </li>
               ))}
             </ul>
@@ -107,15 +54,20 @@ class DragAndDropStudents extends React.Component {
         </div>
 
         <div className="mentor-container">
-          <div className="mentor-header">Новая группа</div>
+          <Input
+            id="Student Email"
+            placeholder="Новая группа"
+            className="contentFit mentor-header"
+            margin="normal"
+          />
           <div className="mentor-wrap">
             <ul className="students-liner draggable droppable" id="students">
-              {selectedStudents.map(student => (
+              {this.selectedStudents.map(student => (
                 <li
                   className="student"
-                  key={student.id}
-                  onClick={() => this.handleSingleLiClick(student.id)}
-                >{student.studentName}
+                  key={student._id}
+                  onClick={() => this.handleSingleLiClick(student._id)}
+                >{student.firstName + ' ' + student.lastName}
                 </li>
               ))}
             </ul>
@@ -126,4 +78,6 @@ class DragAndDropStudents extends React.Component {
   }
 }
 
-export default DragAndDropStudents;
+DragAndDropStudents.propTypes = {
+  studentsPool: PropTypes.array.isRequired,
+};

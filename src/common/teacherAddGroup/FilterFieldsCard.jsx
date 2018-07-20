@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
 import TextField from '@material-ui/core/TextField';
 import FormSelect from '../shared/select/index';
+import Button from "@material-ui/core/es/Button/Button";
 
 const styles = {
   card: {
@@ -33,6 +34,10 @@ const styles = {
   FlexContainerVertical: {
     display: 'flex',
     'flex-direction': 'column',
+  },
+  contentFit: {
+    margin: '0.5rem',
+    padding: '0.25rem',
   },
 };
 
@@ -80,20 +85,20 @@ class FilterStudentCard extends React.Component {
             id="Student Name"
             label="Имя студента"
             type="search"
-            className={classes.textField}
+            className={[classes.textField, classes.contentFit].join(' ')}
             margin="normal"
           />
           <TextField
             id="Student Email"
             label="Email"
             type="search"
-            className={classes.textField}
+            className={[classes.textField, classes.contentFit].join(' ')}
             margin="normal"
           />
           <FormSelect
             label="Университет"
             value={this.state.university}
-            className={classes.textField}
+            className={[classes.textField, classes.contentFit].join(' ')}
             inputProps={{
               university: 'University',
               id: '0',
@@ -105,7 +110,7 @@ class FilterStudentCard extends React.Component {
             <FormSelect
               label="Факультет"
               value={this.state.faculties}
-              className={classes.textField}
+              className={[classes.textField, classes.contentFit].join(' ')}
               inputProps={{
                 university: 'Faculty',
                 id: '0',
@@ -117,9 +122,11 @@ class FilterStudentCard extends React.Component {
           <TextField
             id="with-placeholder"
             label="Год выпуска"
-            className={classes.textField}
+            className={[classes.textField, classes.contentFit].join(' ')}
           />
-
+          <Button className={classes.contentFit}>
+            Filter
+          </Button>
         </CardContent>
       </Card>
     );

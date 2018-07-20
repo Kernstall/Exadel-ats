@@ -11,6 +11,11 @@
     position: relative;
     background: white;
 }
+.contentFit{
+    padding: 0.25rem;
+    font-size: 1em !important;
+    color: whitesmoke !important;
+}
 .drag-and-drop-container, .new-group-container {
     display: flex;
     flex-direction: column;
