@@ -21,9 +21,15 @@ const styles = theme => ({
 class StudentActivities extends React.Component {
   render() {
     const dateToString = (_date) => {
+      function addZero(i) {
+        if (i < 10) {
+          i = `0${i}`;
+        }
+        return i;
+      }
       const date = new Date(Date.parse(_date));
-      const parsedTime = `${date.getDay()}.${date.getMonth()}.${date.getFullYear()}`;
-      const parsedData = `${date.getHours()}:${date.getMinutes()}`;
+      const parsedTime = `${addZero(date.getDay())}.${addZero(date.getMonth())}.${addZero(date.getFullYear())}`;
+      const parsedData = `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
       return `${parsedTime} ${parsedData}`;
     };
     const { classes, activity } = this.props;
@@ -35,10 +41,10 @@ class StudentActivities extends React.Component {
               <ListItemText primary={`${dateToString(activity.date)}`} />
             </Grid>
             <Grid item xs>
-              <ListItemText primary={activity.taskName} />
+              <ListItemText primary={activity.name} />
             </Grid>
             <Grid item xs>
-              <ListItemText primary={activity.isPassed ? 'Passed' : 'Not passed'} />
+              <ListItemText primary={activity.isPassed || activity.status ? 'Passed' : 'Not passed'} />
             </Grid>
           </Grid>
         </ListItem>
