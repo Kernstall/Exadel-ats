@@ -39,9 +39,12 @@ const selectedStudents = [
 
 let availableStudents = [];
 /*
-let serverData;*/
+let serverData; */
 
-fetch('http://localhost:3001/api/teacher/students', { method: 'GET' }).then(response => console.log(response)).catch(elem => console.log(elem));
+fetch('/api/teacher/students',
+  {
+    method: 'GET',
+  }).then(response => console.log(response.json())).catch(elem => console.log(elem));
 
 const updateAvailableStudents = function () {
   availableStudents = studentsPool.filter(
