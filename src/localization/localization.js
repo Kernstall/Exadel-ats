@@ -35,8 +35,6 @@ const localize = (keyWord) => {
   };
 
   const langToWords = (lang) => {
-    console.log(lang());
-    console.log(dictionaries[lang()]);
     return dictionaries[lang()] || null;
   };
 

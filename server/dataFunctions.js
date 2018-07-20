@@ -393,11 +393,11 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
     taskArray.forEach((task) => {
       task.attempts.forEach((attempt) => {
         result.push({
-          'taskName': task.taskId.name,
-          'taskWeight': task.taskId.weight,
+          'name': task.taskId.name,
+          //'taskWeight': task.taskId.weight,
           'isPassed': attempt.isPassed,
           'date': attempt.date,
-          'result': attempt.result,
+          //'result': attempt.result,
         });
       });
     });
@@ -407,15 +407,21 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
       return String(elem.groupId) === String(groupId);
     });
     testArray.forEach((test) => {
+      let status = test.status;
+      if (status !== 'passed'){
+        status = false;
+      } else {
+        status = true;
+      }
       result.push({
-        'topicsNames': [],
-        'status': test.status,
+        'name': '',
+        'status': status,
         'date': test.date,
-        'result': test.result,
+        //'result': test.result,
       });
 
       test.topicsIds.forEach((topic) => {
-        result[result.length - 1].topicsNames.push(topic.name);
+        result[result.length - 1].name += ` ${topic.name}`;
       });
     });
   }

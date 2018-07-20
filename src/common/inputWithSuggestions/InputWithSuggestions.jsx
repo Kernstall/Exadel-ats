@@ -47,6 +47,7 @@ const styles = theme => ({
     },
     '.Select--multi .Select-input': {
       margin: 0,
+      width: '200px',
     },
     '.Select.has-value.is-clearable.Select--single > .Select-control .Select-value': {
       padding: 0,
@@ -56,10 +57,8 @@ const styles = theme => ({
     },
     '.Select-input': {
       display: 'inline-flex !important',
-      padding: 0,
+      maxWidth: '200px',
       height: 'auto',
-      width: '240px',
-      maxWidth: '240px',
     },
     '.Select-input input': {
       background: 'transparent',
@@ -149,9 +148,9 @@ class InputWithSuggestions extends React.Component {
     };
   }
 
-  handleChange = name => (value) => {
+  handleChange = (value) => {
     this.setState({
-      [name]: value,
+      single: value,
     });
   };
 
@@ -161,11 +160,12 @@ class InputWithSuggestions extends React.Component {
     return (
       <div className={classes.root}>
         <Input
+          ref={0}
           disableUnderline
           fullWidth
           inputComponent={SelectWrapped}
           value={single}
-          onChange={this.handleChange('single')}
+          onChange={this.handleChange}
           placeholder="Тип активности ..."
           id="react-select-single"
           inputProps={{

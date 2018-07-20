@@ -67,6 +67,7 @@ class SearchBox extends Component {
   };
 
   render() {
+    // cutAfterNSymbols.cutAfterNSymbols('asdasd asdasdad asdasda asdasdasd asdasdads asdasd', 20, '...'))
     const { classes } = this.props;
     return (
       <Paper className={[classes.parent].join(' ')}>
