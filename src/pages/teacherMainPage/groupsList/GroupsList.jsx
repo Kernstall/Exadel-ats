@@ -91,13 +91,32 @@ const response = [
 ];
 
 class GroupsList extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      response: [],
+    };
+  }
+
+  componentDidMount() {
+    fetch('/api/teacher/group?teacherID=5b451cf8ea26655734a039cc')
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          response: res,
+        });
+        return res;
+      })
+      .then(console.log);
+  }
+
   render() {
     const { classes } = this.props;
     return (
       <List>
-        {response.map((item, index) => (
+        {this.state.response.map((item, index) => (
           <div key={`group${index}`}>
-            <Link to={`/teacher/${item.groupId}`} className={classes.noUnderline}>
+            <Link to={`/teacher/${item._id}`} className={classes.noUnderline}>
               <ListItem button>
                 <GroupTemplate response={item} />
               </ListItem>

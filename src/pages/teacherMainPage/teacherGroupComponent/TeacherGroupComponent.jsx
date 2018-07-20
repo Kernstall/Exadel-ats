@@ -101,7 +101,7 @@ const styles = theme => ({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  createNewGroupButton: {
+  addStudentButton: {
     '&:hover': {
       backgroundColor: '#1b77c5',
     },
@@ -127,11 +127,28 @@ TabContainer.propTypes = {
 };
 
 class TeacherGroupComponent extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       value: 0,
+      groupName: '',
+      amountOfStudents: '',
+      studentList: [],
+      _id: '',
     };
+  }
+
+  componentDidMount() {
+    fetch(`/api/teacher/group/info?groupID=${this.props.match.params.id}`)
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          groupName: res.groupName,
+          amountOfStudents: res.amountOfStudents,
+          studentList: res.studentList,
+          _id: res._id,
+        });
+      });
   }
 
   handleChange = (e, value) => {
@@ -140,7 +157,7 @@ class TeacherGroupComponent extends React.Component {
 
   render() {
     console.log(this.state);
-    const { groupName, groupMembers } = response.find(item => item.groupId === +this.props.match.params.id);
+    const { groupName, studentList } = this.state;
     const { classes } = this.props;
     const { value } = this.state;
     return (
@@ -160,27 +177,21 @@ class TeacherGroupComponent extends React.Component {
           </Tabs>
           {value === 0
           && <TabContainer>
-            {console.log(this.props.match.params)}
               <TeacherSelectedGroupComponent
                 groupName={groupName}
-                groupMembers={groupMembers}
+                groupMembers={studentList}
               />
             </TabContainer>
           }
           {value === 1 && <TabContainer>Tests</TabContainer>}
           {value === 2 && <TabContainer>Tasks</TabContainer>}
         </AppBar>
-        <Button className={classes.createNewGroupButton} variant="contained">
-          Create new group
+        <Button className={classes.addStudentButton} variant="contained">
+          Add student
         </Button>
       </div>
     );
   }
 }
-
-TeacherGroupComponent.propTypes = {
-  groupMembers: PropTypes.object.isRequired,
-  groupName: PropTypes.string.isRequired,
-};
 
 export default withStyles(styles)(TeacherGroupComponent);
