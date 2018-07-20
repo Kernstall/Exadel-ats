@@ -2,11 +2,51 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { Route, Link } from 'react-router-dom';
+import {Route, Link, Redirect} from 'react-router-dom';
 import './style.css';
 import RegisterForm from '../../pages/registerFormPage/RegisterFormPage.jsx';
 
 class LoginForm extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      username: '',
+      password: '',
+      isLogged: false,
+    };
+  }
+
+  componentDidUpdate() {
+    console.log(this.state);
+  }
+
+  handleChange = name => e => {
+    this.setState({
+      [name]: e.target.value,
+    });
+  };
+
+  handleClick = e => {
+    fetch('/api/user/login', {
+      method: 'POST',
+      body: JSON.stringify(this.state),
+      headers: {
+        'Content-type': 'application/json',
+      },
+    })
+      .then(res => {
+        console.log(res);
+        if (res.ok) {
+          return res;
+        }
+      })
+      .then(res => res.json())
+      .then(console.log)
+      .then(() => this.setState({ isLogged: true }))
+      .then(() => console.log(this.state.isLogged))
+      .catch(err => console.log(err));
+  };
+
   render() {
     return (
       <form className="container" noValidate autoComplete="off">
@@ -31,6 +71,7 @@ class LoginForm extends React.Component {
               label="Login"
               className="text-field"
               margin="normal"
+              onChange={this.handleChange('username')}
             />
             <TextField
               id="password-input"
@@ -39,13 +80,15 @@ class LoginForm extends React.Component {
               type="password"
               autoComplete="current-password"
               margin="normal"
+              onChange={this.handleChange('password')}
             />
-            <Button className="login-button">
+            <Button onClick={this.handleClick} className="login-button">
               Login
             </Button>
           </div>
         </div>
         <Route exact path="/registration" component={RegisterForm} />
+        <Route exact path="/" render={() => (this.state.isLogged ? <Redirect to="/teacher" /> : <Redirect to="/" />)} />
       </form>
     );
   }
