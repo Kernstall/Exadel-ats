@@ -53,14 +53,12 @@ router.get('/', async (req, res) => {
 
 router.get('/group/student/history', (res, req) => {
   const studentId = res.query.studentID;
-  console.log(studentId);
   const groupId = res.query.groupID;
-  console.log(groupId);
   dataFunctions.getStudentHistoryByGroup(studentId, groupId)
     .then((answer) => {
       req.send(JSON.stringify(dataFunctions.deleteOtherGroupInfo(answer, groupId)));
     })
-    .catch(err => req.status(500).send(err));
+    .catch(err => req.status(500).send(err.toString()));
 });
 
 router.get('/group/student/tests', async (req, res) => {
