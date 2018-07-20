@@ -16,15 +16,23 @@ const styles = theme => ({
   },
 });
 
+
+
 class StudentActivities extends React.Component {
   render() {
+    const dateToString = (_date) => {
+      const date = new Date(Date.parse(_date));
+      const parsedTime = `${date.getDay()}.${date.getMonth()}.${date.getFullYear()}`;
+      const parsedData = `${date.getHours()}:${date.getMinutes()}`;
+      return `${parsedTime} ${parsedData}`;
+    };
     const { classes, activity } = this.props;
     return (
       <div className={classes.root}>
         <ListItem open="false" button onClick={this.handleClick}>
           <Grid container>
             <Grid item xs>
-              <ListItemText primary={activity.date} />
+              <ListItemText primary={`${dateToString(activity.date)}`} />
             </Grid>
             <Grid item xs>
               <ListItemText primary={activity.taskName} />

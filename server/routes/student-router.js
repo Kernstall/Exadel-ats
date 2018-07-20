@@ -54,10 +54,10 @@ router.get('/group/history', (res, req) => {
     .catch(err => req.status(500).send(err));
 });
 
-router.get('/group/student/tests', async (req, res) => {
+router.get('/group/tests', async (req, res) => {
   try {
-    const studentId = req.query.studentID;
-    const groupId = req.query.groupID;
+    const studentId = req.query.studentId;
+    const groupId = req.query.groupId;
     const result = await dataFunctions.getGroupStudentTests(studentId, groupId);
     res.status(200).send(JSON.stringify(result));
   } catch (e) {
