@@ -27,89 +27,51 @@ const styles = {
   },
 };
 
-const activitieToUIName = (keyWord) => {
-  const activitiesName = {
-    studentGroupAddition: 'Студент добавлен в группу',
-    studentGroupRemove: 'Студент удален из группы',
-    groupCreation: 'Добавлена группа студентов',
-    studentTaskAssignment: 'Назначена задача студенту',
-    groupTaskAssignment: 'Назначена задача группе',
-    studentTestAssignment: 'Назначен тест студенту',
-    groupTestAssignment: 'Назначен тест группе',
-    studentTaskSending: 'Стуент отправил решение задачи',
-    studentTestComplete: 'Студент прошел тест',
-    teacherTestCheck: 'Учитель проверил тест',
-    studentQuestionComplaint: 'Студент пожаловался на вопрос',
-    teacherQuestionCreation: 'Учитель создал вопрос',
-    adminQuestionCreation: 'Администратор создал вопрос',
-    teacherTaskCreation: 'Учитель создал задачу',
-    adminTaskCreation: 'Администратор создал задачу',
-    teacherQuestionBlock: 'Учитель заблокировал вопрос',
-    adminQuestionBlock: 'Администратор заблокировал вопрос',
-    teacherRightsToStudentDelegation: 'Студенту переданы права учителя',
-    adminRightsToStudentDelegation: 'Студенту переданы права администратора',
-    adminRightsToTeacherDelegation: 'Учителю переданы права администратора',
-  };
-  return activitiesName[keyWord];
-};
-
-const activities = {
-  activities: [
-    {
-      name: 'Alexander Gusev',
-      role: 'teacher',
-      activityType: 'studentGroupAddition',
-    },
-    {
-      name: 'Alexander Gusev',
-      role: 'admin',
-      activityType: 'studentGroupRemove',
-    },
-    {
-      name: 'Alexander Gusev',
-      role: 'teacher',
-      activityType: 'groupCreation',
-    },
-    {
-      name: 'Alexander Gusev',
-      role: 'teacher',
-      activityType: 'studentTaskAssignment',
-    },
-  ],
-};
-
-class adminMainPage extends Component {
+class AdminMainPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
   }
 
+  componentDidMount() { // eslint-disable-next-line
+    this.props.getActivities({
+      name: 'Ярошеня Юлия Сергеевна',
+      role: 'teacher',
+      activityType: 'teacherQuestionCreation',
+    });
+  }
+
   render() {
-    const { classes } = this.props;
-    return (
-      <Grid
-        alignItems="stretch"
-        justify="center"
-        container
-        flexDirection="row"
-        className={[classes.centerScreen, classes.centerScreenMobile].join(' ')}
-      >
-        <Grid item>
-          <SearchBox />
-        </Grid>
+    const { classes, activities } = this.props;
+    console.log(activities);
+
+    if (activities) {
+      return (
         <Grid
-          item
-          className={classes.marginLeft}
+          alignItems="stretch"
+          justify="center"
+          container
+          flexDirection="row"
+          className={[classes.centerScreen, classes.centerScreenMobile].join(' ')}
         >
-          <List
-            disablePadding="false"
-            component="nav"
-            className={classes.noMargin}
+          <Grid item>
+            <SearchBox />
+          </Grid>
+          <Grid
+            item
+            className={classes.marginLeft}
           >
-            <ActivityListItems info={activities.activities} />
-          </List>
+            <List
+              disablePadding="false"
+              component="nav"
+              className={classes.noMargin}
+            >
+              <ActivityListItems info={activities} />
+            </List>
+          </Grid>
         </Grid>
-      </Grid>
-    );
+      );
+    }
+    return null;
   }
 }
 
@@ -122,4 +84,4 @@ const mapCommandsToProps = dispatch => ({
   getActivities: param => dispatch(getActivities(param)),
 });
 
-export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(adminMainPage));
+export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminMainPage));
