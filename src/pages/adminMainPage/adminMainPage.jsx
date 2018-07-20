@@ -25,6 +25,9 @@ const styles = {
     marginLeft: '5px',
     width: 'calc(100% - 310px)',
   },
+  SearchBoxWidth: {
+    minWidth: '280px',
+  },
 };
 
 class adminMainPage extends Component {
@@ -34,15 +37,12 @@ class adminMainPage extends Component {
 
   componentDidMount() { // eslint-disable-next-line
     this.props.getActivities({
-      name: 'Ярошеня Юлия Сергеевна',
       role: 'teacher',
-      activityType: 'teacherQuestionCreation',
     });
   }
 
   render() {
     const { classes, activities } = this.props;
-    console.log(activities);
 
     if (activities) {
       return (
@@ -53,7 +53,7 @@ class adminMainPage extends Component {
           flexDirection="row"
           className={[classes.centerScreen, classes.centerScreenMobile].join(' ')}
         >
-          <Grid item>
+          <Grid item className={classes.SearchBoxWidth}>
             <SearchBox />
           </Grid>
           <Grid
