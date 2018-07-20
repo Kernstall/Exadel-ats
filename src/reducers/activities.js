@@ -1,28 +1,28 @@
 const INITIAL_STATE = {
-  tasksList: null,
+  activities: null,
   error: null,
-  isLoading: false,
+  isLoading: false, // !
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'Entity/Tasks/Error':
+    case 'Entity/Activities/Error':
       return {
         ...state,
         error: payload.error,
         isLoading: false,
       };
 
-    case 'Entity/Tasks/Request':
+    case 'Entity/Activities/Request':
       return {
         ...state,
         isLoading: true,
       };
 
-    case 'Entity/Tasks/Success':
+    case 'Entity/Activities/Success':
       return {
-        tasksList: payload.tasksList,
+        activities: payload.activities,
         error: null,
         isLoading: false,
       };

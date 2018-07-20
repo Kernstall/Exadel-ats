@@ -8,6 +8,7 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Grid from '@material-ui/core/Grid';
+import StudentTestsDropDown from './StudentTestsDropDown.jsx';
 
 const styles = theme => ({
 
@@ -17,6 +18,9 @@ const styles = theme => ({
   },
   nested: {
     paddingLeft: theme.spacing.unit * 4,
+  },
+  width: {
+    width: '100%',
   },
 });
 
@@ -34,19 +38,22 @@ class StudentTests extends React.Component {
         <ListItem open="false" button onClick={this.handleClick}>
           <Grid container>
             <Grid item xs={12} sm={6}>
-              <ListItemText inset primary={test.name} />
+              <ListItemText primary={test.name} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <ListItemText inset primary={test.result} />
+              <ListItemText primary={test.result} />
             </Grid>
           </Grid>
 
           {this.state.open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
+        <Collapse in={this.state.open} timeout="auto" unmountOnExit className={classes.width}>
+          <List component="div" disablePadding className={classes.width}>
             <ListItem button className={classes.nested}>
-              <ListItemText inset primary={test.info} />
+              <StudentTestsDropDown
+                testsInfo={test.info}
+                className={this.props.classes.fullWidth}
+              />
             </ListItem>
           </List>
         </Collapse>

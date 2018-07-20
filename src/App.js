@@ -12,10 +12,11 @@ import StudentMenu from './common/studentMenuList/StudentMenu.jsx';
 import TeacherAddGroup from './common/teacherAddGroup/TeacherAddGroup.jsx';
 import createMuiTheme from './common/styles/MUIAppTheme';
 import StudentMainPage from './pages/studentMainPage/StudentMainPage.jsx';
-import TeacherMainPage from "./pages/teacherMainPage/TeacherMainPage";
-import TeacherSelectedGroupComponent from "./pages/teacherMainPage/teacherSelectedGroupComponent/TeacherSelectedGroupComponent";
-import TeacherGroupComponent from "./pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent";
-import TeacherTasksList from "./common/teacherTasksList/TeacherTasksList";
+import AdminMainPage from './pages/adminMainPage/AdminMainPage.jsx';
+import TeacherMainPage from './pages/teacherMainPage/TeacherMainPage';
+import TeacherSelectedGroupComponent from './pages/teacherMainPage/teacherSelectedGroupComponent/TeacherSelectedGroupComponent';
+import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent';
+import TeacherTasksList from './common/teacherTasksList/TeacherTasksList';
 
 const styles = ({
   content: {
@@ -25,84 +26,6 @@ const styles = ({
   },
   ...Common,
 });
-
-const response = [
-  {
-    groupId: 1,
-    groupName: 'First Group',
-    studentsAmount: 21,
-    groupMembers: [
-      {
-        name: 'Bob Marley',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Aliaxei Dziadziuk',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Maksim Anikeyeu',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-    ],
-  },
-  {
-    groupId: 2,
-    groupName: 'Second Group',
-    studentsAmount: 27,
-    groupMembers: [
-      {
-        name: 'Bob Marley',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Aliaxei Dziadziuk',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Maksim Anikeyeu',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-    ],
-  },
-  {
-    groupId: 3,
-    groupName: 'Third Group',
-    studentsAmount: 18,
-    groupMembers: [
-      {
-        name: 'Bob Marley',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Aliaxei Dziadziuk',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Maksim Anikeyeu',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-    ],
-  },
-];
 
 class App extends Component {
   render() {
@@ -121,6 +44,7 @@ class App extends Component {
               <Route exact path="/teacher" component={TeacherMainPage} />
               <Route path="/teacher/:id" render={props => <TeacherGroupComponent {...props} />} />
               <Route exact path="/tasks" component={TeacherTasksList} />
+              <Route path="/admin" component={AdminMainPage} />
             </div>
           </Router>
           <Footer />
