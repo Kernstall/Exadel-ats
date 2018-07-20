@@ -522,3 +522,57 @@ exports.getStudents = async () => {
     });
   return answer;
 };
+
+exports.getGroupStudentTests = async (studentId, groupId) => {
+  const result = await User.find({_id: mongoose.Types.ObjectId(studentId)})
+    .populate('tests.topicsIds', {_id: 0, name: 1})
+    .select({
+      _id: 0,
+      'tests.result': 1,
+      'tests.groupId': 1,
+      'tests.isTraining': 1,
+      'tests.status': 1,
+    });
+  let trainingTests = [];
+  let notTrainingTests = [];
+  let trCount = 0;
+  let notTrCount = 0;
+  let trSum = 0;
+  let notTrSum = 0;
+
+  if (result.length !== 0) {
+    for (let i = 0; i < result[0].tests.length; i++) {
+      console.log(result[0].tests[i].isTraining);
+      if (String(result[0].tests[i].groupId) === String(groupId)) {
+        if (result[0].tests[i].isTraining) {
+          trCount += 1;
+          trSum += result[0].tests[i].result;
+          trainingTests.push({
+            topicsNames: result[0].tests[i].topicsIds,
+            status: result[0].tests[i].status,
+            result: result[0].tests[i].result,
+          });
+        } else {
+          notTrCount += 1;
+          notTrSum += result[0].tests[i].result;
+          notTrainingTests.push({
+            topicsNames: result[0].tests[i].topicsIds,
+            status: result[0].tests[i].status,
+            result: result[0].tests[i].result,
+          });
+        }
+      }
+    }
+  }
+
+  return [{
+    name: 'Training tests',
+    info: trainingTests,
+    avgMark: trSum / trCount,
+  }, {
+    name: 'Examination tests',
+    info: notTrainingTests,
+    avgMark: notTrSum / notTrCount,
+  }];
+}
+;
