@@ -62,12 +62,12 @@ app.use('/api/user/login', passportControl);
 app.use('/api/user', userRouter);
 
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   if (!req.isAuthenticated()) {
     return res.status(401).end();
   }
-  return next();
-});
+  //return next();
+});*/
 
 
 // app.use('/api/', authorization??);
