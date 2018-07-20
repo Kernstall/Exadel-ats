@@ -8,7 +8,7 @@ const saveTokenData = (data) => {
 };
 
 export const login = (username, password) => {
-  return axios.post('http://localhost:8080/login', {
+  return axios.post('/api/user/login', {
     username,
     password,
   }).then(response => saveTokenData(response.data));

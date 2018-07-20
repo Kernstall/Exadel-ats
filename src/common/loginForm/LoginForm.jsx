@@ -13,6 +13,7 @@ class LoginForm extends React.Component {
     this.state = {
       username: '',
       password: '',
+      isLogged: false,
     };
   }
 
@@ -27,11 +28,16 @@ class LoginForm extends React.Component {
   };
 
   handleClick = e => {
-    login(this.state).then(() => {
-      makeRequest('/api/user/login', {
-        method: 'GET',
-      }).then(() => this.props.history.push('/data'));
-    });
+    fetch('/api/user/login', {
+      method: 'POST',
+      body: JSON.stringify(this.state),
+      headers: {
+        'Content-type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(res => console.log(res))
+      .catch(rej => console.log(`Rejected: ${rej}`));
   };
 
   render() {
