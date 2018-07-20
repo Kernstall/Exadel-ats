@@ -13,7 +13,7 @@ export const getActivities = (param) => (dispatch) => {
 
   let query = 'api/admin/activities?';
   query = propsToQuery(query, param);
-
+  console.log(query);
   dispatch(Actions.activitiesRequest());
   fetch(query)
     .then(response => response.json())
