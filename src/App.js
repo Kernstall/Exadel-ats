@@ -14,7 +14,6 @@ import createMuiTheme from './common/styles/MUIAppTheme';
 import StudentMainPage from './pages/studentMainPage/StudentMainPage.jsx';
 import AdminMainPage from './pages/adminMainPage/AdminMainPage.jsx';
 import TeacherMainPage from './pages/teacherMainPage/TeacherMainPage';
-import TeacherSelectedGroupComponent from './pages/teacherMainPage/teacherSelectedGroupComponent/TeacherSelectedGroupComponent';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent';
 import TeacherTasksList from './common/teacherTasksList/TeacherTasksList';
 
@@ -42,7 +41,7 @@ class App extends Component {
               <Route path="/teacher/addGroup" component={TeacherAddGroup} />
               <Route path="/student/mainPage" component={StudentMainPage} />
               <Route exact path="/teacher" component={TeacherMainPage} />
-              <Route path="/teacher/:id" render={props => <TeacherGroupComponent {...props} />} />
+              <Route path="/teacher/groups/:id" render={props => <TeacherGroupComponent {...props} />} />
               <Route exact path="/tasks" component={TeacherTasksList} />
               <Route path="/admin" component={AdminMainPage} />
             </div>

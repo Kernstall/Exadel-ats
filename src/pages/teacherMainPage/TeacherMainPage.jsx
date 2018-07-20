@@ -40,10 +40,6 @@ const styles = theme => ({
     color: '#fff',
     backgroundColor: '#2196f3',
   },
-  noUnderline: {
-    textDecoration: 'none',
-    color: '#000',
-  },
 });
 
 const TabContainer = props => (
@@ -88,11 +84,6 @@ class TeacherMainPage extends React.Component {
             &&
             <TabContainer>
               <GroupsList />
-              <div className={classes.buttonContainer}>
-                <Button className={classes.createNewGroupButton} variant="contained">
-                  Create new group
-                </Button>
-              </div>
             </TabContainer>
             }
           {value === 1
