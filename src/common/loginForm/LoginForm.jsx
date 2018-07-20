@@ -2,9 +2,10 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import {Route, Link, Redirect} from 'react-router-dom';
+import { Route, Link, Redirect } from 'react-router-dom';
 import './style.css';
 import RegisterForm from '../../pages/registerFormPage/RegisterFormPage.jsx';
+import { login, makeRequest } from './api';
 
 class LoginForm extends React.Component {
   constructor() {
@@ -12,7 +13,6 @@ class LoginForm extends React.Component {
     this.state = {
       username: '',
       password: '',
-      isLogged: false,
     };
   }
 
@@ -27,24 +27,11 @@ class LoginForm extends React.Component {
   };
 
   handleClick = e => {
-    fetch('/api/user/login', {
-      method: 'POST',
-      body: JSON.stringify(this.state),
-      headers: {
-        'Content-type': 'application/json',
-      },
-    })
-      .then(res => {
-        console.log(res);
-        if (res.ok) {
-          return res;
-        }
-      })
-      .then(res => res.json())
-      .then(console.log)
-      .then(() => this.setState({ isLogged: true }))
-      .then(() => console.log(this.state.isLogged))
-      .catch(err => console.log(err));
+    login(this.state).then(() => {
+      makeRequest('/api/user/login', {
+        method: 'GET',
+      }).then(() => this.props.history.push('/data'));
+    });
   };
 
   render() {

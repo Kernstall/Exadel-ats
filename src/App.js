@@ -17,6 +17,7 @@ import TeacherSelectedGroupComponent from "./pages/teacherMainPage/teacherSelect
 import TeacherGroupComponent from "./pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent";
 import TeacherTasksList from "./common/teacherTasksList/TeacherTasksList";
 import adminMainPage from './pages/adminMainPage/adminMainPage';
+import PrivateRoute from "./common/loginForm/PrivateRouter";
 
 const styles = ({
   content: {
@@ -41,6 +42,7 @@ class App extends Component {
               <Route path="/studentMenu" component={StudentMenu} />
               <Route path="/teacher/addGroup" component={TeacherAddGroup} />
               <Route path="/student/mainPage" component={StudentMainPage} />
+              <PrivateRoute path="/student/mainPage" component={StudentMainPage} />
               <Route exact path="/teacher" component={TeacherMainPage} />
               <Route path="/teacher/:id" render={props => <TeacherGroupComponent {...props} />} />
               <Route exact path="/tasks" component={TeacherTasksList} />
