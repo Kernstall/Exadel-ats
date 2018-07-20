@@ -27,10 +27,10 @@ class StudentActivities extends React.Component {
               <ListItemText primary={activity.date} />
             </Grid>
             <Grid item xs>
-              <ListItemText primary={activity.name} />
+              <ListItemText primary={activity.taskName} />
             </Grid>
             <Grid item xs>
-              <ListItemText primary={activity.score} />
+              <ListItemText primary={activity.isPassed ? 'Passed' : 'Not passed'} />
             </Grid>
           </Grid>
         </ListItem>
