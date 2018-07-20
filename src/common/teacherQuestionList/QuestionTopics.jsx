@@ -36,10 +36,14 @@ const styles = theme => ({
 });
 
 class TaskInTopic extends React.Component {
-  state = {
-    open: false,
-    checked: false,
-  };
+
+  constructor() {
+    super();
+    this.state = {
+      open: false,
+      checked: false,
+    };
+  }
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });

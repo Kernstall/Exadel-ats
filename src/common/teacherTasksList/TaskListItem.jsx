@@ -80,13 +80,16 @@ const styles = theme => ({
 });
 
 class TaskListItem extends React.Component {
-  state = { checked: false };
+  constructor() {
+    super();
+    this.state = {
+      checked: false,
+    };
+  }
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
-
-  go() { }
 
   render() {
     const {

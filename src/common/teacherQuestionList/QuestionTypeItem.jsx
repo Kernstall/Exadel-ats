@@ -40,8 +40,6 @@ const styles = theme => ({
 });
 
 class QuestionTypeItem extends React.Component {
-  go() { }
-
   render() {
     const {
       classes, type, count,

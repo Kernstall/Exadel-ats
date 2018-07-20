@@ -35,7 +35,12 @@ const styles = theme => ({
 });
 
 class TaskInTopic extends React.Component {
-  state = { open: false };
+  constructor() {
+    super();
+    this.state = {
+      open: false,
+    };
+  }
 
   handleClick = () => {
     this.setState(state => ({ open: !state.open }));
