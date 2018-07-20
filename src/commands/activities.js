@@ -20,3 +20,14 @@ export const getActivities = (param) => (dispatch) => {
     .then(body => dispatch(Actions.activitiesSuccess(body)))
     .catch(err => dispatch(Actions.activitiesRequest(err)));
 };
+<<<<<<< HEAD
+
+
+// example
+
+// const enum = (isFilter)
+//   ? [ name, role, activityType ]
+//   : null
+// const query = api/admin/activities?filter=`${filter}`;
+=======
+>>>>>>> 7a747f4905dadc00c3a4e91b9270e25508577663
