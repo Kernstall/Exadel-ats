@@ -32,7 +32,12 @@ passport.deserializeUser((id, done) => {
 router.post('/',
   passport.authenticate('local'),
   (req, res) => {
-    res.send({ status: req.user.status, email: req.user.email, id: req.user._id });
+    res.send({
+      status: req.user.status,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      id: req.user._id,
+    });
   });
 
 module.exports = router;

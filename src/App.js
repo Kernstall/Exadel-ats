@@ -12,7 +12,7 @@ import StudentMenu from './common/studentMenuList/StudentMenu.jsx';
 import TeacherAddGroup from './common/teacherAddGroup/TeacherAddGroup.jsx';
 import createMuiTheme from './common/styles/MUIAppTheme';
 import StudentMainPage from './pages/studentMainPage/StudentMainPage.jsx';
-import AdminMainPage from './pages/adminMainPage/AdminMainPage';
+import AdminMainPage from './pages/adminMainPage/AdminMainPage.jsx';
 import TeacherMainPage from './pages/teacherMainPage/TeacherMainPage';
 import TeacherSelectedGroupComponent from './pages/teacherMainPage/teacherSelectedGroupComponent/TeacherSelectedGroupComponent';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent';
