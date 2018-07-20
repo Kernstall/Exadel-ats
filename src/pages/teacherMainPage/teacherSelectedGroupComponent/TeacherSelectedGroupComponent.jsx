@@ -9,6 +9,7 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import blue from '@material-ui/core/colors/blue';
 import StudentTemplate from '../studentTemplate/StudentTemplate.jsx';
+import Button from "@material-ui/core/es/Button/Button";
 
 const styles = {
   groupsAlign: {
@@ -21,6 +22,26 @@ const styles = {
     '&$checked': {
       color: blue[500],
     },
+  },
+  addStudentButton: {
+    '&:hover': {
+      backgroundColor: '#1b77c5',
+    },
+    transition: '.3s',
+    width: 200,
+    color: '#fff',
+    backgroundColor: '#2196f3',
+  },
+  teacherButtonsHolder: {
+    display: 'flex',
+    paddingTop: 25,
+  },
+  buttonCorrection: {
+    paddingRight: 25,
+  },
+  noUnderline: {
+    textDecoration: 'none',
+    color: '#000',
   },
   checked: {},
 };
@@ -80,6 +101,21 @@ class TeacherSelectedGroupComponent extends React.Component {
             </ListItem>
           ))}
         </List>
+        <Button className={classes.addStudentButton} variant="contained">
+          Add student
+        </Button>
+        <div className={classes.teacherButtonsHolder}>
+          <div className={classes.buttonCorrection}>
+            <Button className={classes.addStudentButton} variant="contained">
+              Add test
+            </Button>
+          </div>
+          <div className={classes.buttonCorrection}>
+            <Button className={classes.addStudentButton} variant="contained">
+              Add task
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }

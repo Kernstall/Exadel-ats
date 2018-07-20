@@ -9,84 +9,6 @@ import Button from '@material-ui/core/es/Button/Button';
 import TeacherSelectedGroupComponent from '../teacherSelectedGroupComponent/TeacherSelectedGroupComponent.jsx';
 import {Link} from "react-router-dom";
 
-const response = [
-  {
-    groupId: 1,
-    groupName: 'First Group',
-    studentsAmount: 21,
-    groupMembers: [
-      {
-        name: 'Bob Marley',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Aliaxei Dziadziuk',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Maksim Anikeyeu',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-    ],
-  },
-  {
-    groupId: 2,
-    groupName: 'Second Group',
-    studentsAmount: 27,
-    groupMembers: [
-      {
-        name: 'Bob Marley',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Aliaxei Dziadziuk',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Maksim Anikeyeu',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-    ],
-  },
-  {
-    groupId: 3,
-    groupName: 'Third Group',
-    studentsAmount: 18,
-    groupMembers: [
-      {
-        name: 'Bob Marley',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Aliaxei Dziadziuk',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-      {
-        name: 'Maksim Anikeyeu',
-        testsComplete: 3,
-        tasksComplete: 5,
-        score: 8.4,
-      },
-    ],
-  },
-];
-
 const styles = theme => ({
   root: {
     margin: 'auto',
@@ -94,12 +16,6 @@ const styles = theme => ({
     height: 'fit-content',
     backgroundColor: theme.palette.background.paper,
     width: 700,
-  },
-  groupTemplate: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   addStudentButton: {
     '&:hover': {
@@ -109,6 +25,13 @@ const styles = theme => ({
     width: 200,
     color: '#fff',
     backgroundColor: '#2196f3',
+  },
+  teacherButtonsHolder: {
+    display: 'flex',
+    paddingTop: 25,
+  },
+  buttonCorrection: {
+    paddingRight: 25,
   },
   noUnderline: {
     textDecoration: 'none',
@@ -172,8 +95,12 @@ class TeacherGroupComponent extends React.Component {
             <Link className={classes.noUnderline} to="/teacher">
               <Tab label="Groups" />
             </Link>
-            <Tab label="Tests" />
-            <Tab label="Tasks" />
+            <Link className={classes.noUnderline} to="/teacher">
+              <Tab label="Tests" />
+            </Link>
+            <Link className={classes.noUnderline} to="/teacher">
+              <Tab label="Tasks" />
+            </Link>
           </Tabs>
           {value === 0
           && <TabContainer>
@@ -186,9 +113,6 @@ class TeacherGroupComponent extends React.Component {
           {value === 1 && <TabContainer>Tests</TabContainer>}
           {value === 2 && <TabContainer>Tasks</TabContainer>}
         </AppBar>
-        <Button className={classes.addStudentButton} variant="contained">
-          Add student
-        </Button>
       </div>
     );
   }

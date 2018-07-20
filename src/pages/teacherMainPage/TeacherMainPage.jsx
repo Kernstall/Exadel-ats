@@ -9,27 +9,8 @@ import Button from '@material-ui/core/es/Button/Button';
 import TeacherSelectedGroupComponent from './teacherSelectedGroupComponent/TeacherSelectedGroupComponent.jsx';
 import GroupsList from './groupsList/GroupsList.jsx';
 import {Link} from "react-router-dom";
-
-const groupMembers = [
-  {
-    name: 'Bob Marley',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-  {
-    name: 'Aliaxei Dziadziuk',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-  {
-    name: 'Maksim Anikeyeu',
-    testsComplete: 3,
-    tasksComplete: 5,
-    score: 8.4,
-  },
-];
+import TeacherTasksList from "../../common/teacherTasksList/TeacherTasksList";
+import TeacherQuestionList from "../../common/teacherQuestionList/TeacherQuestionList";
 
 const styles = theme => ({
   root: {
@@ -48,7 +29,7 @@ const styles = theme => ({
   buttonContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
-    paddingTop: 30,
+    margin: 5,
   },
   createNewGroupButton: {
     '&:hover': {
@@ -107,16 +88,26 @@ class TeacherMainPage extends React.Component {
             &&
             <TabContainer>
               <GroupsList />
+              <div className={classes.buttonContainer}>
+                <Button className={classes.createNewGroupButton} variant="contained">
+                  Create new group
+                </Button>
+              </div>
             </TabContainer>
             }
-          {value === 1 && <TabContainer>Tests</TabContainer>}
-          {value === 2 && <TabContainer>Tasks</TabContainer>}
+          {value === 1
+            &&
+            <TabContainer>
+              <TeacherQuestionList />
+            </TabContainer>
+          }
+          {value === 2
+            &&
+            <TabContainer>
+              <TeacherTasksList/>
+            </TabContainer>
+          }
         </AppBar>
-        <div className={classes.buttonContainer}>
-          <Button className={classes.createNewGroupButton} variant="contained">
-            Create new group
-          </Button>
-        </div>
       </div>
     );
   }
