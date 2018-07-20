@@ -6,6 +6,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import Select from 'react-select';
 import Typography from '@material-ui/core/Typography';
 import Option from '../option/Option';
+import cutAfterNSymbols from '../../../util';
 
 const styles = {
   clearIcon: {
@@ -26,8 +27,8 @@ function SelectWrapped(props) {
       clearRenderer={() => <ClearIcon className={classes.clearIcon} />}
       valueComponent={(valueProps) => {
         const { children } = valueProps;
-
-        return <div className="Select-value">{children}</div>;
+        const s = cutAfterNSymbols.cutAfterNSymbols(children, 20, '...');
+        return <div className="Select-value">{s}</div>;
       }}
       {...other}
     />

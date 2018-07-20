@@ -5,16 +5,14 @@ export const getActivities = (param) => (dispatch) => {
 
   function propsToQuery(body, params) {
     let query = body;
-    for (const key in params) {
+    for (const key in params) { // eslint-disable-line
       query += `${key}=${params[key]}&&`;
     }
     return query;
   }
 
-  console.log('param', param);
   let query = 'api/admin/activities?';
   query = propsToQuery(query, param);
-  console.log('query::after', query);
 
   dispatch(Actions.activitiesRequest());
   fetch(query)

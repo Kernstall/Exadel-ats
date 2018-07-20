@@ -6,6 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { withStyles } from '@material-ui/core/styles';
 import Common from '../../../common/styles/Common';
 import localize from '../../../localization/localization';
+import cutAfterNSymbols from '../../../util';
 
 const styles = {
   ...Common,
