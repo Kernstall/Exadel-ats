@@ -6,14 +6,12 @@ const Group = require('../models/Group');
 
 const router = express.Router();
 
-
 /*router.use((req, res, next) => {
   if (req.user.status !== 'student') {
     return res.status(403).end();
   }
   return next();
 });*/
-
 
 router.get('/group/tasks', async (req, res) => {
   try {
@@ -51,20 +49,22 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/group/student/history', (res, req) => {
-  const studentId = res.query.studentID;
-  const groupId = res.query.groupID;
+router.get('/group/history', (res, req) => {
+  const studentId = res.query.studentId;
+  console.log(studentId);
+  const groupId = res.query.groupId;
+  console.log(groupId);
   dataFunctions.getStudentHistoryByGroup(studentId, groupId)
     .then((answer) => {
       req.send(JSON.stringify(dataFunctions.deleteOtherGroupInfo(answer, groupId)));
     })
-    .catch(err => req.status(500).send(err.toString()));
+    .catch(err => req.status(500).send(err));
 });
 
-router.get('/group/student/tests', async (req, res) => {
+router.get('/group/tests', async (req, res) => {
   try {
-    const studentId = req.query.studentID;
-    const groupId = req.query.groupID;
+    const studentId = req.query.studentId;
+    const groupId = req.query.groupId;
     const result = await dataFunctions.getGroupStudentTests(studentId, groupId);
     res.status(200).send(JSON.stringify(result));
   } catch (e) {
