@@ -79,7 +79,6 @@ class TeacherGroupComponent extends React.Component {
   };
 
   render() {
-    console.log(this.state);
     const { groupName, studentList } = this.state;
     const { classes } = this.props;
     const { value } = this.state;
