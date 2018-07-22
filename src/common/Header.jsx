@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Route, Link, Redirect } from 'react-router-dom';
+import Grid from '@material-ui/core/Grid';
 import sharedStyles from './styles/Common';
 import logo from './logo.png';
 
@@ -8,20 +9,53 @@ const styles = ({
   header: {
     height: '60px',
     background: '#2196f3',
-    backgroundImage: 'url("/123.png")',
   },
   img: {
     width: '2px',
     top: `${window.screen.height * 0.01}px`,
     left: `${window.screen.width / 2}px`,
-    zIndex: '10',
     position: 'absolute',
+    zIndex: 99,
     transition: '1s',
     '&:hover': {
-      width: '1000px',
-      top: `${window.screen.height * (-0.4)}px`,
-      left: `${window.screen.width * (0)}px`,
-      transform: 'rotate(1070deg)',
+      animation: '3s mymove forwards, 3s red forwards, 10s 3s beat infinite linear',
+    },
+  },
+  '@keyframes mymove': {
+    '100%': {
+      top: `${window.screen.height * (0)}px`,
+      left: `${window.screen.width * (0.4)}px`,
+      width: '30%',
+      transform: 'rotate(1080deg)',
+    },
+  },
+  '@keyframes beat': {
+    '0%': {
+      opacity: '1%',
+    },
+    '10%, 30%, 50%, 70%, 90%': {
+      opacity: '20%',
+      background: 'red',
+      borderRadius: '100%',
+    },
+    '20%': {
+      opacity: '100%',
+      background: 'blue',
+    },
+    '40%': {
+      opacity: '10%',
+      background: 'green',
+    },
+    '60%': {
+      opacity: '100%',
+      background: 'yellow',
+    },
+    '80%': {
+      opacity: '100%',
+      background: 'blue',
+    },
+    '100%': {
+      transform: 'rotate(360deg)',
     },
   },
   ...sharedStyles,
@@ -36,6 +70,7 @@ function Header(props) {
         <Link style={{ textDecoration: 'none', color: 'white' }} to="/">
           Logo
         </Link>
+        <Grid className={classes.anim} />
       </div>
     </div>
   );

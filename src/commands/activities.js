@@ -1,5 +1,7 @@
-import { activities as Actions } from '../actions';
 import { isNullOrUndefined } from 'util';
+import { activities as Actions } from '../actions';
+import englishToRussian from '../util/englishToRussian';
+import firstLetterToUpperCase from '../util/firstLetterToUpperCase';
 
 // eslint-disable-next-line
 export const getActivities = (param) => (dispatch) => {
@@ -7,8 +9,9 @@ export const getActivities = (param) => (dispatch) => {
   function propsToQuery(body, params) {
     let query = body;
     for (const key in params) { // eslint-disable-line
-      if (!isNullOrUndefined(params[key]))
+      if (!isNullOrUndefined(params[key])) {
         query += `${key}=${params[key]}&&`;
+      }
     }
     return query;
   }
@@ -17,6 +20,10 @@ export const getActivities = (param) => (dispatch) => {
   if (param.role == 'all') { // TODO : delete it immideatly
     param.role = '';
   }
+  if (!isNullOrUndefined(param.name.match(/^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/ig))) {
+    param.name = englishToRussian(param.name);
+  }
+  // param.name = param.name ? firstLetterToUpperCase(param.name) : param.name; TODO : amend it
   query = propsToQuery(query, param);
   console.log(query);
   dispatch(Actions.activitiesRequest());
