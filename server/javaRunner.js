@@ -7,8 +7,8 @@ const Task = require('./models/Task');
 const dbName = 'TestingSystem';
 const connection = `mongodb://localhost:27017/${dbName}`;
 
-const commonSrcCodePath = '\\dataFileStorage\\srcCodes';
-const commonTaskPath = '\\dataFileStorage\\tasks';
+const commonSrcCodePath = 'dataFileStorage\\srcCodes';
+const commonTaskPath = 'dataFileStorage\\tasks';
 exports.placeInputFile = async (inputFromFileWay, inputWhereFileWay) => {
   return new Promise((resolve, reject) => {
     cp.exec(`copy ${inputFromFileWay} ${inputWhereFileWay}`, (error, stdout, stderr) => {
@@ -22,6 +22,19 @@ exports.placeInputFile = async (inputFromFileWay, inputWhereFileWay) => {
   });
 };
 
+exports.placeOutputFile = async (outputWhereFileWay) => {
+  return new Promise((resolve, reject) => {
+    cp.exec(`echo. 2> ${outputWhereFileWay}`, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve();
+    });
+    // echo. 2> bin\output.txt
+  });
+};
+
 exports.removeInputFile = async (inputWhereFileWay) => {
   return new Promise((resolve, reject) => {
     cp.exec(`del /q ${inputWhereFileWay}`, (error, stdout, stderr) => {
@@ -31,7 +44,6 @@ exports.removeInputFile = async (inputWhereFileWay) => {
       }
       resolve();
     });
-    // copy ..\check\355ea642ea43112e\input.txt bin
   });
 };
 
@@ -48,9 +60,9 @@ exports.removeOutputFile = async (outputWhereFileWay) => {
   });
 };
 
-exports.buildFunc = async () => {
+exports.buildFunc = async (path) => {
   return new Promise((resolve, reject) => {
-    cp.exec('javac -d bin src/*.java', (error, stdout, stderr) => {
+    cp.exec(`javac -d ${path}\\bin ${path}\\src\\*.java`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
@@ -60,9 +72,9 @@ exports.buildFunc = async () => {
   });
 };
 
-exports.runFunc = async (mainFileName) => {
+exports.runFunc = async (path, mainFileName) => {
   return new Promise((resolve, reject) => {
-    cp.exec(`java -classpath ./bin ${mainFileName}`, { timeout: 50 * 1000 }, (error, stdout, stderr) => {
+    cp.exec(`java -classpath .\\${path} ${mainFileName}`, { timeout: 30 * 1000 }, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
@@ -78,9 +90,9 @@ exports.runFunc = async (mainFileName) => {
   });
 };
 
-exports.deleteBinFunc = async () => {
+exports.deleteBinFunc = async (path) => {
   return new Promise((resolve, reject) => {
-    cp.exec('rmdir bin /s /q', (error, stdout, stderr) => {
+    cp.exec(`rmdir ${path} /s /q`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
@@ -90,13 +102,15 @@ exports.deleteBinFunc = async () => {
   });
 };
 
-exports.createBinFunc = async () => {
+exports.createBinFunc = async (path) => {
   return new Promise((resolve, reject) => {
-    cp.exec('mkdir bin', (error, stdout, stderr) => {
+    cp.exec(`mkdir ${path}\\bin`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
       }
+      console.log(stdout);
+      console.log(stderr);
       resolve();
     });
   });
@@ -114,9 +128,20 @@ exports.readFile = async (fileName) => {
   });
 };
 
-exports.checkStudentAttempt = async (studentId, taskId) => {
+exports.checkFileExistence = async (path) => {
+  return new Promise((resolve, reject) => {
+    fs.access(path, fs.constants.F_OK, (err) => {
+      if (err) {
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    });
+  });
+};
+
+exports.checkStudentAttempt = async (studentId, taskId, mainFileName) => {
   try {
-    const userPath = `${commonSrcCodePath}\\${studentId}\\${taskId}`;
     let tests = await Task.aggregate([
       { $match: { _id: mongoose.Types.ObjectId(taskId) } },
       { $project: { tests: true } },
@@ -124,11 +149,35 @@ exports.checkStudentAttempt = async (studentId, taskId) => {
     if (tests.length === 0) {
       throw new Error('Incorrect task id');
     }
-    tests = tests[0];
-    const protoTaskPath = `${commonSrcCodePath}\\${taskId}`;
+    if (await exports.checkFileExistence(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`)) {
+      // Удаление папки bin, если таковая по какой-либо непредвиденной причине
+      // осталась в директории
+      await exports.deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`);
+    }
+
+    // Создание папки bin
+    await exports.createBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2`); // Работает
+
+    // Компиляция файлов в папку bin
+    await exports.buildFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2`);
+
+    tests = tests[0].tests;
+
     // console.log(tests._id.toString());
     for (let index = 0; index < tests.length; index++) {
-      let taskPath = `${protoTaskPath}\\${tests[index]._id.toString()}`;
+      // Копирование очередного входного файла в папку bin
+      await exports.placeInputFile(`${commonTaskPath}\\${taskId}\\${tests[index]._id.toString()}\\input\\${tests[index].inputFileAdress}`,
+        `${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`);
+      // Создание файла для выходных данных
+      await exports.placeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin\\${tests[index].outputFileAdress}`);
+      // Запуск скомпилированных файлов
+      await exports.runFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`, mainFileName);
+      // Удаление входного файла
+      await exports.removeInputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin\\${tests[index].inputFileAdress}`);
+      // Сравнение выходного файла и ожидаемого результата
+      // ...
+      // Удаление выходного файла
+      await exports.removeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin\\${tests[index].outputFileAdress}`);
     }
   } catch (error) {
     // Тут что-то должно быть
@@ -142,7 +191,7 @@ async function connectDatabase() {
   mongoose.connect(connection, { useNewUrlParser: true })
     .then(() => {
       console.log('Connected to database!!!');
-      // exports.checkStudentAttempt('5b45b16f75224332745f7595', '5b44fb2508a2b31ddcddab32');
+      exports.checkStudentAttempt('5b45b16f75224332745f7595', '5b44fb2508a2b31ddcddab32', 'HelloWorld');
     })
     .catch((err) => {
       throw new Error(err);
