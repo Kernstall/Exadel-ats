@@ -25,25 +25,41 @@ const styles = {
     marginLeft: '5px',
     width: 'calc(100% - 310px)',
   },
+  SearcBox: {
+    minWidth: '300px',
+  },
 };
 
 class AdminMainPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
+    this.state = {
+      historyFilter: {
+        name: '',
+        role: '',
+        activityType: '',
+      },
+    };
   }
 
   componentDidMount() { // eslint-disable-next-line
-    this.props.getActivities({
-      name: 'Ярошеня Юлия Сергеевна',
-      role: 'teacher',
-      activityType: 'teacherQuestionCreation',
-    });
+    this.props.getActivities(this.state.historyFilter);
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    prevState.historyFilter == this.state.historyFilter
+      || this.props.getActivities(this.state.historyFilter);
+  }
+
+  handleHistoryFilter = (name, role, activityType) => {
+    const newState = {
+      historyFilter: { name: name, role: role, activityType: activityType },
+    };
+    this.setState(newState);
+  };
 
   render() {
     const { classes, activities } = this.props;
-    console.log(activities);
-
     if (activities) {
       return (
         <Grid
@@ -53,8 +69,8 @@ class AdminMainPage extends Component {
           flexDirection="row"
           className={[classes.centerScreen, classes.centerScreenMobile].join(' ')}
         >
-          <Grid item>
-            <SearchBox />
+          <Grid item className={classes.SearcBox}>
+            <SearchBox handleHistoryFilter={this.handleHistoryFilter} />
           </Grid>
           <Grid
             item
