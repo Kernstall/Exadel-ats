@@ -23,7 +23,7 @@ export const getActivities = (param) => (dispatch) => {
   if (!isNullOrUndefined(param.name.match(/^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/ig))) {
     param.name = englishToRussian(param.name);
   }
-  // param.name = param.name ? firstLetterToUpperCase(param.name) : param.name; TODO : amend it
+  param.name = firstLetterToUpperCase(param.name);
   query = propsToQuery(query, param);
   console.log(query);
   dispatch(Actions.activitiesRequest());
