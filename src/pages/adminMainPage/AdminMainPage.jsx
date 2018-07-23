@@ -7,6 +7,7 @@ import Common from '../../common/styles/Common';
 import { getActivities } from '../../commands/activities';
 import SearchBox from '../../common/searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
+import Menue from './menue/Menue';
 
 const styles = {
   ...Common,
@@ -27,6 +28,9 @@ const styles = {
   },
   SearcBox: {
     minWidth: '300px',
+  },
+  menue: {
+    margin: '10px',
   },
 };
 
@@ -53,7 +57,7 @@ class AdminMainPage extends Component {
 
   handleHistoryFilter = (name, role, activityType) => {
     const newState = {
-      historyFilter: { name: name, role: role, activityType: activityType },
+      historyFilter: { name, role, activityType },
     };
     this.setState(newState);
   };
@@ -71,6 +75,7 @@ class AdminMainPage extends Component {
         >
           <Grid item className={classes.SearcBox}>
             <SearchBox handleHistoryFilter={this.handleHistoryFilter} />
+            <Menue className={classes.menue} />
           </Grid>
           <Grid
             item

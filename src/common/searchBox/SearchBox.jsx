@@ -11,6 +11,7 @@ const styles = {
   parent: {
     maxWidth: '300px',
     padding: '0px 5px 10px',
+    marginBottom: '10px',
   },
   caption: {
     fontSize: '0.7em',
