@@ -38,7 +38,7 @@ const styles = {
 
 class StudentMainPage extends Component {
   componentDidMount() {
-    this.props.getStudentGroups({ id: this.props.match.params.id }); // eslint-disable-line
+    this.props.getStudentGroups({id: this.props.match.params.id}); // eslint-disable-line
   }
 
   JSONtoJSX = (studentInfo, classes, keysToRender) => (

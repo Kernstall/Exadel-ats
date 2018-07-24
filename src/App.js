@@ -19,8 +19,6 @@ import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent
 import TeacherTasksList from './common/teacherTasksList/TeacherTasksList';
 import { PrivateRoute } from './common/loginForm/PrivateRouter';
 
-const history = createHistory();
-
 const styles = ({
   content: {
     minHeight: 'calc(100vh - 40px)',
@@ -37,7 +35,7 @@ class App extends Component {
       <MuiThemeProvider theme={createMuiTheme}>
         <div className={classes.SpreadWrapper}>
           <Header />
-          <Router history={history}>
+          <Router>
             <div className={classes.content}>
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
