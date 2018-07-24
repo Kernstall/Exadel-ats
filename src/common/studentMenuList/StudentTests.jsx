@@ -41,7 +41,7 @@ class StudentTests extends React.Component {
               <ListItemText primary={test.name} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <ListItemText primary={test.result} />
+              <ListItemText primary={'Average score: ' + test.avgMark} />
             </Grid>
           </Grid>
 

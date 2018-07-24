@@ -27,27 +27,41 @@ const blocks = [
     tabInfo: [
       {
         name: 'Training tests',
-        result: 'Avr score1',
-        info: [{
-          theme: 'e1',
-          status: 'N',
-        }],
+        info: [],
+        avgMark: null,
       },
       {
         name: 'Examination tests',
-        result: 'Avr score2',
-        info: [{
-          theme: 'theme2',
-          status: 'Not passed',
-        },
-        {
-          theme: 'themet hemet heme1',
-          status: 'Not passed',
-        },
-        {
-          theme: 'themetheme theme1',
-          status: 'Not passed',
-        }],
+        info: [
+          {
+            topicsNames: [
+              {
+                name: 'ООП. С++',
+              },
+              {
+                name: 'Многопоточность. С++',
+              },
+              {
+                name: 'ООП. JAVA',
+              },
+              {
+                name: 'Многопоточность. JAVA',
+              },
+            ],
+            status: 'notSent',
+            result: 10,
+          },
+          {
+            topicsNames: [
+              {
+                name: 'ООП. С++',
+              },
+            ],
+            status: 'notSent',
+            result: 2,
+          },
+        ],
+        avgMark: 10,
       },
     ],
   },
