@@ -12,10 +12,10 @@ class FormSelect extends React.Component {
       inputProps,
       onChange,
       options,
+      className,
     } = this.props;
-
     return (
-      <FormControl className="text-field">
+      <FormControl className={className}>
         <InputLabel>{label}</InputLabel>
         <Select
           value={value}
