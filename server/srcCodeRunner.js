@@ -1,7 +1,6 @@
 const cp = require('child_process');
 const fs = require('fs');
 const mongoose = require('mongoose');
-const User = require('./models/User');
 const Task = require('./models/Task');
 // const got = require('got');
 
@@ -10,6 +9,78 @@ const connection = `mongodb://localhost:27017/${dbName}`;
 
 const commonSrcCodePath = 'dataFileStorage\\srcCodes';
 const commonTaskPath = 'dataFileStorage\\tasks';
+
+async function javaBuildFunc(path) {
+  return new Promise((resolve, reject) => {
+    cp.exec(`javac -d ${path}\\bin ${path}\\src\\*.java`, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+async function cppBuildFunc(path) {
+  return new Promise((resolve, reject) => {
+    // g++ ABS_LIB.cpp ABS_LIB.h structs.h structs.cpp main.cpp
+    cp.exec(`cd ${path}\\src &&  g++ *.cpp *.h -o ..\\bin\\main.exe`, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+async function javaRunFunc(path, mainFileName) {
+  return new Promise((resolve, reject) => {
+    cp.exec(`cd ${path} && java ${mainFileName}`, { timeout: 30 * 1000 }, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      if (stdout) {
+        console.log(stdout);
+      }
+      if (stderr) {
+        console.log(stderr);
+      }
+      resolve();
+    });
+  });
+}
+
+async function cppRunFunc(path) {
+  return new Promise((resolve, reject) => {
+    cp.exec(`cd ${path} && main.exe`, { timeout: 30 * 1000 }, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      if (stdout) {
+        console.log(stdout);
+      }
+      if (stderr) {
+        console.log(stderr);
+      }
+      resolve();
+    });
+  });
+}
+
+const builder = {
+  java: javaBuildFunc,
+  cpp: cppBuildFunc,
+};
+
+const runner = {
+  java: javaRunFunc,
+  cpp: cppRunFunc,
+};
+
 exports.placeInputFile = async (inputFromFileWay, inputWhereFileWay) => {
   return new Promise((resolve, reject) => {
     cp.exec(`copy ${inputFromFileWay} ${inputWhereFileWay}`, (error, stdout, stderr) => {
@@ -58,36 +129,6 @@ exports.removeOutputFile = async (outputWhereFileWay) => {
       resolve();
     });
     // del /q bin\input.txt
-  });
-};
-
-exports.buildFunc = async (path) => {
-  return new Promise((resolve, reject) => {
-    cp.exec(`javac -d ${path}\\bin ${path}\\src\\*.java`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-  });
-};
-
-exports.runFunc = async (path, mainFileName) => {
-  return new Promise((resolve, reject) => {
-    cp.exec(`cd ${path} && java ${mainFileName}`, { timeout: 30 * 1000 }, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      if (stdout) {
-        console.log(stdout);
-      }
-      if (stderr) {
-        console.log(stderr);
-      }
-      resolve();
-    });
   });
 };
 
@@ -150,8 +191,9 @@ exports.compareFiles = async (firstFileName, secondFileName) => {
   return false;
 };
 
-exports.checkStudentAttempt = async (studentId, taskId, mainFileName) => {
+exports.checkStudentAttempt = async (studentId, taskId, mainFileName, attemptNumber, lang) => {
   try {
+    const results = [];
     let tests = await Task.aggregate([
       { $match: { _id: mongoose.Types.ObjectId(taskId) } },
       { $project: { tests: true } },
@@ -159,17 +201,17 @@ exports.checkStudentAttempt = async (studentId, taskId, mainFileName) => {
     if (tests.length === 0) {
       throw new Error('Incorrect task id');
     }
-    if (await exports.checkFileExistence(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`)) {
+    if (await exports.checkFileExistence(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`)) {
       // Удаление папки bin, если таковая по какой-либо непредвиденной причине
       // осталась в директории
-      await exports.deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`);
+      await exports.deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`);
     }
 
     // Создание папки bin
-    await exports.createBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`); // Работает
+    await exports.createBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`); // Работает
 
     // Компиляция файлов в папку bin
-    await exports.buildFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2`);
+    await builder[lang.toLowerCase()](`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}`);
 
     tests = tests[0].tests;
 
@@ -177,34 +219,47 @@ exports.checkStudentAttempt = async (studentId, taskId, mainFileName) => {
     for (let index = 0; index < tests.length; index++) {
       // Копирование очередного входного файла в папку bin
       await exports.placeInputFile(`${commonTaskPath}\\${taskId}\\${tests[index]._id.toString()}\\input\\${tests[index].inputFileAdress}`,
-        `${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`);
+        `${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`);
       // Создание файла для выходных данных
-      await exports.placeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin\\${tests[index].outputFileAdress}`);
+      await exports.placeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].outputFileAdress}`);
       // Запуск скомпилированных файлов
-      await exports.runFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`, mainFileName);
+      await runner[lang.toLowerCase()](`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`, mainFileName);
       // Удаление входного файла
-      await exports.removeInputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin\\${tests[index].inputFileAdress}`);
+      await exports.removeInputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].inputFileAdress}`);
       // Сравнение выходного файла и ожидаемого результата
-      await exports.compareFiles(`${commonTaskPath}\\${taskId}\\${tests[index]._id.toString()}\\expextedOutput\\${tests[index].outputFileAdress}`,
-        `${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin\\${tests[index].outputFileAdress}`);
+      let isSuccessfull;
+      try {
+        isSuccessfull = await exports.compareFiles(`${commonTaskPath}\\${taskId}\\${tests[index]._id.toString()}\\expextedOutput\\${tests[index].outputFileAdress}`,
+          `${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].outputFileAdress}`);
+      } catch (error) {
+        isSuccessfull = false;
+      }
+      results.push({
+        success: isSuccessfull,
+        weight: tests[index].weight,
+        _id: tests[index]._id.toString(),
+      });
       // Удаление выходного файла
-      await exports.removeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin\\${tests[index].outputFileAdress}`);
+      await exports.removeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].outputFileAdress}`);
     }
     // Удаление папки bin
-    await exports.deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`);
+    await exports.deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`);
+
+    return results;
   } catch (error) {
     // Тут что-то должно быть
-    console.log(error);
+    throw error;
   }
 };
+
 // exports.deleteBinFunc();
 // exports.runFunc('HelloWorld').catch(error => error.message);
-// exports.createBinFunc().then(exports.buildFunc).then(() => exports.runFunc('HelloWorld')).then(exports.deleteBinFunc);
+// exports.createBinFunc().then(exports.javaBuildFunc).then(() => exports.runFunc('HelloWorld')).then(exports.deleteBinFunc);
 async function connectDatabase() {
   mongoose.connect(connection, { useNewUrlParser: true })
     .then(() => {
       console.log('Connected to database!!!');
-      exports.checkStudentAttempt('5b45b16575224332745f7587', '5b44fb2508a2b31ddcddab32', 'Process');
+      exports.checkStudentAttempt('5b45b16575224332745f7587', '5b44fb2508a2b31ddcddab32', 'Process', 2, 'Java');
     })
     .catch((err) => {
       throw new Error(err);
