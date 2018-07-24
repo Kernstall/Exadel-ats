@@ -28,14 +28,15 @@ const styles = theme => ({
 class StudentTestsDDInfo extends React.Component {
   render() {
     const { classes, test } = this.props;
+    const themes = test.topicsNames.map(theme => theme.name);
     return (
       <div className={classes.root}>
-        <Grid container>
+        <Grid container spacing={24}>
           <Grid item xs={6}>
-            <ListItemText primary={test.theme} />
+            <ListItemText primary={themes.join(' ')} />
           </Grid>
           <Grid item xs={6}>
-            <ListItemText primary={test.status} />
+            <ListItemText primary={(test.result > 0) ? test.result : 'Not sent'} />
           </Grid>
         </Grid>
       </div>
