@@ -35,23 +35,22 @@ class TeacherAddGroup extends React.Component {
   }
 
   handleFilterChanges(filterObject) {
-    console.log(filterObject);
     this.setState({
       filter: filterObject,
     });
   }
 
   render() {
-    const { classes, availableStudentsList: availableStudentsList } = this.props;
+    const { classes, availableStudentsList } = this.props;
     let filteredArray;
     if (availableStudentsList) {
       filteredArray = availableStudentsList.filter((element) => {
         const fName = (element.firstName + ' ' + element.lastName).indexOf(this.state.filter.name) >= 0;
         const fEmail = element.email.indexOf(this.state.filter.email) >= 0;
-        const fUnivesity = element.university === this.state.filter.university || this.state.filter.university === ' ';
-        const fYear = element.graduateYear === this.state.filter.year || this.state.filter.year === undefined;
-        const fFaculty = element.faculty === this.state.filter.faculty || this.state.filter.faculty === ' ';
-        return fName && fEmail;
+        const fUnivesity = element.university === this.state.filter.university || this.state.filter.university === '';
+        const fYear = isNaN(element.graduateYear === this.state.filter.year || this.state.filter.year);
+        const fFaculty = element.faculty === this.state.filter.faculty || this.state.filter.faculty === '';
+        return fName && fEmail && fFaculty && fUnivesity && fYear;
       });
     } else {
       filteredArray = [];

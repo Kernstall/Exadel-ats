@@ -7,11 +7,12 @@ import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/es/Button/Button';
+import FormControl from '@material-ui/core/es/FormControl/FormControl';
 import FormSelect from '../shared/select/index';
 
 const styles = {
   card: {
-    minWidth: 150,
+    minWidth: 200,
     maxWidth: 300,
   },
   bullet: {
@@ -29,21 +30,25 @@ const styles = {
   CardHeaderFontSize: {
     'font-size': 'small',
   },
-  textField: {
-  },
   FlexContainerVertical: {
     display: 'flex',
     'flex-direction': 'column',
   },
   contentFit: {
-    margin: '0.5rem',
-    padding: '0.25rem',
+    'margin-top': '0.5rem',
+  },
+  formControl: {
+    overflow: 'hidden',
+  },
+  formSelectWrapper: {
+    'margin-top': '0.5rem',
+    width: '100%',
   },
 };
 
 const universities = {
-  BSU: ['A1', 'B1', 'C1'],
-  BSUIR: ['A2', 'B2', 'C2'],
+  БГУ: ['A1', 'B1', 'C1'],
+  БГУИР: ['A2', 'B2', 'C2'],
 };
 
 class FilterStudentCard extends React.Component {
@@ -63,9 +68,9 @@ class FilterStudentCard extends React.Component {
     const filter = {};
     filter.name = document.querySelector('#Student_Name').value;
     filter.email = document.querySelector('#Student_Email').value;
-    filter.university = '';
-    filter.faculty = '';
-    filter.year = undefined;
+    filter.university = this.state.university;
+    filter.faculty = this.state.faculties;
+    filter.year = parseInt(document.querySelector('#graduation_year').value, 10);
     this.props.callback(filter);
   }
 
@@ -88,52 +93,65 @@ class FilterStudentCard extends React.Component {
     const { university } = this.state;
     const facultiesArr = universities[university];
 
-    /*const studentNameComponent = (
-      <TextField
-        id="Student_Name"
-        label="Имя студента"
+    const FUCKYOU = (
+      <FormSelect
+        fullWidth
         type="search"
-        className={[classes.textField, classes.contentFit].join(' ')}
-        margin="normal"
+        label="Факультет"
+        value={this.state.faculties}
+        inputProps={{
+          university: 'Faculty',
+          id: '0',
+        }}
+        onChange={this.handleFacultyChange}
+        options={facultiesArr}
       />
-    );*/
+    );
 
     return (
       <Card className={classes.card}>
-        <CardHeader subheader={<Typography className={classes.CardHeaderFontSize}>Введите данные студента для поиска</Typography>} />
+        <CardHeader
+          subheader={
+            <Typography className={classes.CardHeaderFontSize}>Введите данные студента для поиска</Typography>
+            }
+        />
         <CardContent className={classes.FlexContainerVertical}>
-          {/*{studentNameComponent}
-          {console.log(studentNameComponent.props.inputProps)}*/}
-          <TextField
-            id="Student_Name"
-            label="Имя студента"
-            type="search"
-            className={[classes.textField, classes.contentFit].join(' ')}
-            margin="normal"
-          />
-          <TextField
-            id="Student_Email"
-            label="Email"
-            type="search"
-            className={[classes.textField, classes.contentFit].join(' ')}
-            margin="normal"
-          />
-          <FormSelect
-            label="Университет"
-            value={this.state.university}
-            className={[classes.textField, classes.contentFit].join(' ')}
-            inputProps={{
-              university: 'University',
-              id: '0',
-            }}
-            onChange={this.handleSelectUnChange}
-            options={universitiesArr}
-          />
-          {facultiesArr && (
+
+          <FormControl className={classes.formControl}>
+            <TextField
+              id="Student_Name"
+              label="Имя студента"
+              type="search"
+              className={classes.contentFit}
+              margin="normal"
+            />
+            <TextField
+              id="Student_Email"
+              label="Email"
+              type="search"
+              className={classes.contentFit}
+              margin="normal"
+            />
             <FormSelect
+              className={classes.formSelectWrapper}
+              type="search"
+              label="Университет"
+              value={this.state.university}
+              fullWidth
+              inputProps={{
+                university: 'University',
+                id: '0',
+              }}
+              onChange={this.handleSelectUnChange}
+              options={universitiesArr}
+            />
+            {facultiesArr && (
+            <FormSelect
+              className={classes.formSelectWrapper}
+              fullWidth
+              type="search"
               label="Факультет"
               value={this.state.faculties}
-              className={[classes.textField, classes.contentFit].join(' ')}
               inputProps={{
                 university: 'Faculty',
                 id: '0',
@@ -141,15 +159,18 @@ class FilterStudentCard extends React.Component {
               onChange={this.handleFacultyChange}
               options={facultiesArr}
             />
-          )}
-          <TextField
-            id="graduation_year"
-            label="Год выпуска"
-            className={[classes.textField, classes.contentFit].join(' ')}
-          />
-          <Button className={classes.contentFit} onClick={() => this.handleApplyFilter()}>
-            Filter
-          </Button>
+            )}
+            <TextField
+              type="search"
+              id="graduation_year"
+              label="Год выпуска"
+              className={classes.contentFit}
+            />
+            <Button className={classes.contentFit} onClick={() => this.handleApplyFilter()}>
+              Filter
+            </Button>
+          </FormControl>
+
         </CardContent>
       </Card>
     );

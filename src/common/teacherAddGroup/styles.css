@@ -3,6 +3,11 @@
     top: 0;
     right: 0;
 }
+.formSelect-size{
+    width: 50px;
+    margin: 0.5rem;
+    padding: 0.25rem;
+}
 .drag-and-drop-outer-wrapper {
     display: flex;
     min-width: fit-content;
