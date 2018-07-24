@@ -3,6 +3,7 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const User = require('./models/User');
 const Task = require('./models/Task');
+// const got = require('got');
 
 const dbName = 'TestingSystem';
 const connection = `mongodb://localhost:27017/${dbName}`;
@@ -74,7 +75,7 @@ exports.buildFunc = async (path) => {
 
 exports.runFunc = async (path, mainFileName) => {
   return new Promise((resolve, reject) => {
-    cp.exec(`java -classpath .\\${path} ${mainFileName}`, { timeout: 30 * 1000 }, (error, stdout, stderr) => {
+    cp.exec(`cd ${path} && java ${mainFileName}`, { timeout: 30 * 1000 }, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
@@ -104,7 +105,7 @@ exports.deleteBinFunc = async (path) => {
 
 exports.createBinFunc = async (path) => {
   return new Promise((resolve, reject) => {
-    cp.exec(`mkdir ${path}\\bin`, (error, stdout, stderr) => {
+    cp.exec(`mkdir ${path}`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
@@ -140,6 +141,15 @@ exports.checkFileExistence = async (path) => {
   });
 };
 
+exports.compareFiles = async (firstFileName, secondFileName) => {
+  const firstContent = (await exports.readFile(firstFileName)).toString();
+  const secondContent = (await exports.readFile(secondFileName)).toString();
+  if (firstContent === secondContent) {
+    return true;
+  }
+  return false;
+};
+
 exports.checkStudentAttempt = async (studentId, taskId, mainFileName) => {
   try {
     let tests = await Task.aggregate([
@@ -156,7 +166,7 @@ exports.checkStudentAttempt = async (studentId, taskId, mainFileName) => {
     }
 
     // Создание папки bin
-    await exports.createBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2`); // Работает
+    await exports.createBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`); // Работает
 
     // Компиляция файлов в папку bin
     await exports.buildFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2`);
@@ -175,10 +185,13 @@ exports.checkStudentAttempt = async (studentId, taskId, mainFileName) => {
       // Удаление входного файла
       await exports.removeInputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin\\${tests[index].inputFileAdress}`);
       // Сравнение выходного файла и ожидаемого результата
-      // ...
+      await exports.compareFiles(`${commonTaskPath}\\${taskId}\\${tests[index]._id.toString()}\\expextedOutput\\${tests[index].outputFileAdress}`,
+        `${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin\\${tests[index].outputFileAdress}`);
       // Удаление выходного файла
       await exports.removeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin\\${tests[index].outputFileAdress}`);
     }
+    // Удаление папки bin
+    await exports.deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\2\\bin`);
   } catch (error) {
     // Тут что-то должно быть
     console.log(error);
@@ -191,7 +204,7 @@ async function connectDatabase() {
   mongoose.connect(connection, { useNewUrlParser: true })
     .then(() => {
       console.log('Connected to database!!!');
-      exports.checkStudentAttempt('5b45b16f75224332745f7595', '5b44fb2508a2b31ddcddab32', 'HelloWorld');
+      exports.checkStudentAttempt('5b45b16575224332745f7587', '5b44fb2508a2b31ddcddab32', 'Process');
     })
     .catch((err) => {
       throw new Error(err);
