@@ -30,7 +30,7 @@ class TeacherTaskList extends React.Component {
   }
 
   componentDidMount() {
-    fetch('api/teacher/questions', {
+    fetch('/api/teacher/questions', {
       method: 'get',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -40,8 +40,6 @@ class TeacherTaskList extends React.Component {
         if (response.ok) return response.json();
       })
       .then((data) => {
-        console.log('DATA');
-        console.log(data);
         this.setState({ data });
       })
       .catch((error) => {
@@ -59,7 +57,7 @@ class TeacherTaskList extends React.Component {
         key={index}
       />
     ));
-  }
+  };
 
   render() {
     const { classes } = this.props;

@@ -30,7 +30,7 @@ class TeacherTaskList extends React.Component {
   }
 
   componentDidMount() {
-    fetch('api/teacher/tasks', {
+    fetch('/api/teacher/tasks', {
       method: 'get',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -56,7 +56,7 @@ class TeacherTaskList extends React.Component {
         key={index}
       />
     ));
-  }
+  };
 
   render() {
     const { classes } = this.props;

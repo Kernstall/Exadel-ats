@@ -7,7 +7,7 @@ import './style.css';
 import createHistory from 'history/createBrowserHistory';
 import RegisterForm from '../../pages/registerFormPage/RegisterFormPage.jsx';
 import { login } from './api';
-import StudentMainPage from "../../pages/studentMainPage/StudentMainPage";
+import StudentMainPage from '../../pages/studentMainPage/StudentMainPage';
 
 const history = createHistory();
 
@@ -42,13 +42,16 @@ class LoginForm extends React.Component {
       },
     })
       .then(res => res.json())
-      .then(res => {
+      .then((res) => {
+        localStorage.setItem('user', JSON.stringify({
+          username: this.state.username,
+          password: this.state.password,
+        }));
         this.setState({
           _id: res.id,
           status: res.status,
           isLogged: true,
         });
-        history.push(`/${this.state.status}/${this.state._id}`)
         console.log(res);
       });
   };
@@ -94,7 +97,14 @@ class LoginForm extends React.Component {
           </div>
         </div>
         <Route exact path="/registration" component={RegisterForm} />
-        {this.state.isLogged && <Redirect to={`/${this.state.status}/${this.state._id}`} /> }
+        {this.state.isLogged && this.state.status === 'teacher'
+          ? <Redirect to={`/teacher/${this.state._id}`} />
+          : this.state.status === 'student'
+            ? <Redirect to={`/student/${this.state._id}`} />
+            : this.state.status === 'admin'
+              ? <Redirect to="/admin" />
+              : <Redirect to="/" />
+        }
       </form>
     );
   }

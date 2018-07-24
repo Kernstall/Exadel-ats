@@ -7,6 +7,8 @@ import List from '../../common/shared/list/List';
 import Common from '../../common/styles/Common';
 import { getStudentGroups } from '../../commands/studentGroups';
 import Spinner from '../../common/shared/spinner/index';
+import Button from "@material-ui/core/es/Button/Button";
+import {Redirect} from "react-router-dom";
 
 const styles = {
   ...Common,
@@ -54,6 +56,11 @@ class StudentMainPage extends Component {
         );
       }
     }));
+
+  _logout = () => {
+    localStorage.removeItem('user');
+    this.props.history.push('/');
+  };
 
   render() {
     const { classes, studentGroups } = this.props;
@@ -106,6 +113,9 @@ class StudentMainPage extends Component {
         <Grid className={[classes.font, classes.wrapper].join(' ')}>
           {studentInfoComponent}
         </Grid>
+        <Button onClick={this._logout} className={classes.createNewGroupButton} variant="contained">
+          LOG OUT
+        </Button>
       </Grid>
     );
   }
