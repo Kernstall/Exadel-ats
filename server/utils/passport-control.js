@@ -29,15 +29,26 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-router.post('/',
-  passport.authenticate('local'),
-  (req, res) => {
-    res.send({
-      status: req.user.status,
-      firstName: req.user.firstName,
-      lastName: req.user.lastName,
-      id: req.user._id,
-    });
-  });
+router.post('/', (req, res, next) => {
+  if (!req.body.username || !req.body.password) {
+    res.status(400).send({ message: 'not all fields' });
+  }
+  passport.authenticate('local', (err, user) => {
+    if (user) {
+      return req.login(user, (err) => {
+        if (err) {
+          return res.status(401).end();
+        }
+        return res.send({
+          status: user.status,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          id: user._id,
+        });
+      });
+    }
+    return res.status(401).send({ status: 'not right fiels' });
+  })(req, res, next);
+});
 
 module.exports = router;

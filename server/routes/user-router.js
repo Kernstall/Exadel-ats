@@ -27,32 +27,6 @@ router.get('/universities', async (req, res) => {
     res.status(500).end();
   }
 });
-/*
-router.post('/login', (req, res, next) => {
-  if (!req.body.email || !req.body.password) {
-    res.status(400).send({ message: 'not all fields' });
-  }
-  passport.authenticate('local', (err, user) => {
-    if (user) {
-      return req.login(user, (err) => {
-        if (err) {
-          return res.status(401).end();
-        }
-        return res.send({ status: user.status, email: user.email, id: user._id });
-      });
-    }
-    return res.status(401).send({ message: err });
-  })(req, res, next);
-});
-*/
-/*
-router.post('/login', passport.authenticate('local', {
-  failureFlash: true,
-}), (req, res) => {
-  res.cookie('session_id', req.sessionID);
-  res.send('ok');
-});
-*/
 
 router.get('/logout', (req, res) => {
   req.session.destroy();

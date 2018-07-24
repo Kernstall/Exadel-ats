@@ -6,8 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/es/Button/Button';
 import FormSelect from '../shared/select/index';
-import Button from "@material-ui/core/es/Button/Button";
 
 const styles = {
   card: {
@@ -59,6 +59,16 @@ class FilterStudentCard extends React.Component {
   }
 
 
+  handleApplyFilter() {
+    const filter = {};
+    filter.name = document.querySelector('#Student_Name').value;
+    filter.email = document.querySelector('#Student_Email').value;
+    filter.university = '';
+    filter.faculty = '';
+    filter.year = undefined;
+    this.props.callback(filter);
+  }
+
   handleSelectUnChange(event) {
     this.setState({
       university: event.target.value,
@@ -77,19 +87,32 @@ class FilterStudentCard extends React.Component {
     const universitiesArr = Object.keys(universities);
     const { university } = this.state;
     const facultiesArr = universities[university];
+
+    /*const studentNameComponent = (
+      <TextField
+        id="Student_Name"
+        label="Имя студента"
+        type="search"
+        className={[classes.textField, classes.contentFit].join(' ')}
+        margin="normal"
+      />
+    );*/
+
     return (
       <Card className={classes.card}>
         <CardHeader subheader={<Typography className={classes.CardHeaderFontSize}>Введите данные студента для поиска</Typography>} />
         <CardContent className={classes.FlexContainerVertical}>
+          {/*{studentNameComponent}
+          {console.log(studentNameComponent.props.inputProps)}*/}
           <TextField
-            id="Student Name"
+            id="Student_Name"
             label="Имя студента"
             type="search"
             className={[classes.textField, classes.contentFit].join(' ')}
             margin="normal"
           />
           <TextField
-            id="Student Email"
+            id="Student_Email"
             label="Email"
             type="search"
             className={[classes.textField, classes.contentFit].join(' ')}
@@ -120,11 +143,11 @@ class FilterStudentCard extends React.Component {
             />
           )}
           <TextField
-            id="with-placeholder"
+            id="graduation_year"
             label="Год выпуска"
             className={[classes.textField, classes.contentFit].join(' ')}
           />
-          <Button className={classes.contentFit}>
+          <Button className={classes.contentFit} onClick={() => this.handleApplyFilter()}>
             Filter
           </Button>
         </CardContent>
@@ -135,6 +158,7 @@ class FilterStudentCard extends React.Component {
 
 FilterStudentCard.propTypes = {
   classes: PropTypes.object.isRequired,
+  callback: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(FilterStudentCard);

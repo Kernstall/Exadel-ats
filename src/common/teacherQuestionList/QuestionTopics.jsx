@@ -29,8 +29,6 @@ const styles = theme => ({
   topicCount: {
     display: 'flex',
     fontSize: 17,
-    border: '2px #dbf4ff solid',
-    borderRadius: 20,
     padding: 7,
   },
 });
