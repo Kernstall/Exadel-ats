@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  tasksList: null,
+  teacher_AvailableStudentsList: null,
   error: null,
   isLoading: false,
 };
@@ -7,22 +7,22 @@ const INITIAL_STATE = {
 const reducer = (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'Entity/Tasks/Error':
+    case 'Entity/TeacherGetStudents/Error':
       return {
         ...state,
         error: payload.error,
         isLoading: false,
       };
 
-    case 'Entity/Tasks/Request':
+    case 'Entity/TeacherGetStudents/Request':
       return {
         ...state,
         isLoading: true,
       };
 
-    case 'Entity/Tasks/Success':
+    case 'Entity/TeacherGetStudents/Success':
       return {
-        tasksList: payload.tasksList,
+        teacher_AvailableStudentsList: payload.teacher_AvailableStudentsList,
         error: null,
         isLoading: false,
       };

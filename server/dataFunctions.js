@@ -393,11 +393,11 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
     taskArray.forEach((task) => {
       task.attempts.forEach((attempt) => {
         result.push({
-          'taskName': task.taskId.name,
-          'taskWeight': task.taskId.weight,
+          'name': task.taskId.name,
+          //'taskWeight': task.taskId.weight,
           'isPassed': attempt.isPassed,
           'date': attempt.date,
-          'result': attempt.result,
+          //'result': attempt.result,
         });
       });
     });
@@ -407,15 +407,21 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
       return String(elem.groupId) === String(groupId);
     });
     testArray.forEach((test) => {
+      let status = test.status;
+      if (status !== 'passed'){
+        status = false;
+      } else {
+        status = true;
+      }
       result.push({
-        'topicsNames': [],
-        'status': test.status,
+        'name': '',
+        'status': status,
         'date': test.date,
-        'result': test.result,
+        //'result': test.result,
       });
 
       test.topicsIds.forEach((topic) => {
-        result[result.length - 1].topicsNames.push(topic.name);
+        result[result.length - 1].name += ` ${topic.name}`;
       });
     });
   }
@@ -522,3 +528,57 @@ exports.getStudents = async () => {
     });
   return answer;
 };
+
+exports.getGroupStudentTests = async (studentId, groupId) => {
+  const result = await User.find({_id: mongoose.Types.ObjectId(studentId)})
+    .populate('tests.topicsIds', {_id: 0, name: 1})
+    .select({
+      _id: 0,
+      'tests.result': 1,
+      'tests.groupId': 1,
+      'tests.isTraining': 1,
+      'tests.status': 1,
+    });
+  let trainingTests = [];
+  let notTrainingTests = [];
+  let trCount = 0;
+  let notTrCount = 0;
+  let trSum = 0;
+  let notTrSum = 0;
+
+  if (result.length !== 0) {
+    for (let i = 0; i < result[0].tests.length; i++) {
+      console.log(result[0].tests[i].isTraining);
+      if (String(result[0].tests[i].groupId) === String(groupId)) {
+        if (result[0].tests[i].isTraining) {
+          trCount += 1;
+          trSum += result[0].tests[i].result;
+          trainingTests.push({
+            topicsNames: result[0].tests[i].topicsIds,
+            status: result[0].tests[i].status,
+            result: result[0].tests[i].result,
+          });
+        } else {
+          notTrCount += 1;
+          notTrSum += result[0].tests[i].result;
+          notTrainingTests.push({
+            topicsNames: result[0].tests[i].topicsIds,
+            status: result[0].tests[i].status,
+            result: result[0].tests[i].result,
+          });
+        }
+      }
+    }
+  }
+
+  return [{
+    name: 'Training tests',
+    info: trainingTests,
+    avgMark: trSum / trCount,
+  }, {
+    name: 'Examination tests',
+    info: notTrainingTests,
+    avgMark: notTrSum / notTrCount,
+  }];
+}
+;

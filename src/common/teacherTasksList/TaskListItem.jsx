@@ -1,48 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-import './styles.css'
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core/es';
 
 const styles = theme => ({
-  button: {
-    margin: theme.spacing.unit,
-    color: '#fff',
-    backgroundColor: '#2196f3',
-    '&:hover': {
-      backgroundColor: '#1b77c5',
-    },
-    width: 'auto',
-    maxWidth: '10%',
-  },
   root: {
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
-    width: '95%',
+    width: '97%',
+    margin: 5,
+    padding: '10px 5px 10px 5px !important',
   },
-  tags: {
-    display: 'flex',
-    width: '35%',
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  checkbox: {
-    width: '10%',
+  taskinfo: {
+    justify: 'center',
+    direction: 'row',
   },
   taskname: {
+    display: 'flex',
     justifyContent: 'flex-start',
     alignContent: 'center',
     alignItems: 'center',
-    width: '45%',
+    width: '35%',
+    boxSizing: 'border-box',
     maxWidth: '70%',
-    height: '100%',
+    fontSize: 17,
+    fontWeight: 300,
+  },
+  tags: {
+    display: 'flex',
+    width: '30%',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    boxSizing: 'border-box',
+  },
+  tagsInner: {
+    width: 'auto',
+    padding: 10,
   },
   score: {
     display: 'flex',
@@ -50,56 +49,72 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: '10%',
-    height: '100%',
   },
-  taskinfo: {
-    justify: 'center',
-    direction: 'row',
+  scoreInner: {
+    width: 'auto',
+    padding: '5px 12px 5px 10px',
+    borderRadius: 5,
+    backgroundColor: '#E6E6FA',
+  },
+  button: {
+    display: 'flex',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: theme.spacing.unit,
+    color: '#fff',
+    backgroundColor: '#2196f3',
+    '&:hover': {
+      backgroundColor: '#1b77c5',
+    },
+    width: 'auto',
+    maxWidth: '15%',
+    boxSizing: 'border-box',
+    height: 35,
+  },
+  checkbox: {
+    width: '5%',
+    boxSizing: 'border-box',
   },
 });
 
 class TaskListItem extends React.Component {
-  state = { checked: false };
+  constructor() {
+    super();
+    this.state = {
+      checked: false,
+    };
+  }
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
 
-  go() { }
-  /*
-  <div className="taskinfo-first-part">
-            <ListItemText className="taskname" primary={this.props.taskName} />
-            <ListItemText className="tags"> <span className="tags-span">тэги: {this.props.tags.join(', ')}</span> </ListItemText>
-          </div>
-          <div className="taskinfo-second-part">
-            <ListItemText className="score"> <span className="score-span">оценка: {this.props.score}</span> </ListItemText>
-            <Button variant="contained" color="primary" className={classes.button}>
-              Подробнее
-            </Button>
-            <Checkbox
-              className="chooseTask"
-              checked={this.state.checked}
-              onChange={this.handleChange('checked')}
-              value="checked"
-              color="primary"
-            />
-          </div>
-  */
-
   render() {
-    const { classes } = this.props;
+    const {
+      classes, taskName, tags, score,
+    } = this.props;
     return (
       <div className="taskinfo">
         <Paper className={classes.root} elevation={1}>
-          <Grid container className={classes.taskinfo}>
-            <Typography component="p" className={classes.taskname}>
-              {this.props.taskName}
+          <Grid container className={classes.taskinfo} justify="center" wrap="nowrap">
+            <Typography className={classes.taskname}>
+              {taskName}
             </Typography>
             <Typography component="p" className={classes.tags}>
-              тэги: {this.props.tags.join(', ')}
+              <span className={classes.tagsInner}> {(tags.length === 0)
+                ? 'Нет тэгов'
+                : ((tags.length > 0 && tags[0].length > 10)
+                  ? ('тэги: ' + tags[0])
+                  : ((tags.length === 2 && tags[1].length > 10)
+                    ? ('тэги: ' + tags[0])
+                    : ((tags.length === 2)
+                      ? ('тэги: ' + tags[0] + ', ' + tags[1])
+                      : ('тэги: ' + tags[0] + ', ' + tags[1] + '..'))))}
+              </span>
             </Typography>
             <Typography className={classes.score}>
-              оценка: {this.props.score}
+              <span className={classes.scoreInner}>{score}</span>
             </Typography>
             <Button variant="contained" color="primary" className={classes.button}>
               Подробнее
@@ -113,7 +128,7 @@ class TaskListItem extends React.Component {
             />
           </Grid>
         </Paper>
-      </div >
+      </div>
     );
   }
 }

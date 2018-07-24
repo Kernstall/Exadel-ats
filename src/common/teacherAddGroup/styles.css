@@ -1,0 +1,104 @@
+.flowing{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.drag-and-drop-outer-wrapper {
+    display: flex;
+    min-width: fit-content;
+    height: 500px;
+    width: fit-content;
+    position: relative;
+    background: white;
+}
+.contentFit{
+    padding: 0.25rem;
+    font-size: 1em !important;
+    color: whitesmoke !important;
+}
+.drag-and-drop-container, .new-group-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+.drag-and-drop-container:not(:last-of-type), .new-group-container:not(:last-of-type) {
+    margin-right: 6rem;
+}
+.students-container, .mentor-container {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+}
+.students-header, .mentor-header {
+    background: #5b5b5b;
+    color: whitesmoke;
+    padding: 0.5rem;
+}
+.students-header.mentor-header, .mentor-header.mentor-header {
+    background: #44587d;
+}
+.students-wrap, .mentor-wrap {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: #dadada;
+}
+.students-wrap:hover, .mentor-wrap:hover {
+    background-color: #aaaaaa;
+}
+.students-liner, .mentor-liner {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    flex-basis: 0;
+    padding: 0.5rem;
+    transition: all 0.15s ease-in-out;
+    overflow: auto;
+}
+.students-liner::-webkit-scrollbar, .mentor-liner::-webkit-scrollbar {
+    width: 8px;
+}
+.students-liner::-webkit-scrollbar-track, .mentor-liner::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, .05);
+    border-radius: 0 0 2px;
+}
+.students-liner::-webkit-scrollbar-thumb, .mentor-liner::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, .25);
+    margin-right: 2px;
+}
+.students-liner::-webkit-scrollbar-corner, .mentor-liner::-webkit-scrollbar-corner {
+    background: transparent;
+}
+.students-liner::-webkit-scrollbar-button, .mentor-liner::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+}
+.students-liner::-webkit-scrollbar-thumb:active, .mentor-liner::-webkit-scrollbar-thumb:active {
+    background: rgba(0, 0, 0, 0.4);
+}
+.student {
+    background: slategrey;
+    padding: 0.75rem;
+    color: whitesmoke;
+    cursor: move;
+    position: relative;
+    list-style-type: none;
+}
+.student:not(:last-child) {
+    margin-bottom: 0.5rem;
+}
+.ui-draggable-dragging {
+    z-index: 999;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+.droppable-highlight {
+    background: #b6e8cb;
+}
+.droppable-highlight.drag-within {
+    background-color: #68d094;
+}
+li.ui-draggable-dragging {
+    list-style: none;
+}

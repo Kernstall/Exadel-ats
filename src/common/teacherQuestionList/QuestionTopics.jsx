@@ -7,7 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import TaskListItem from './TaskListItem.jsx';
+import QuestionTypeItem from './QuestionTypeItem.jsx';
+import Checkbox from '@material-ui/core/Checkbox';
 
 const styles = theme => ({
   topicItem: {
@@ -33,12 +34,18 @@ const styles = theme => ({
 });
 
 class TaskInTopic extends React.Component {
+
   constructor() {
     super();
     this.state = {
       open: false,
+      checked: false,
     };
   }
+
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.checked });
+  };
 
   handleClick = () => {
     this.setState(state => ({ open: !state.open }));
@@ -46,24 +53,31 @@ class TaskInTopic extends React.Component {
 
   objtoJSX = array => (
     array.map((element, index) => (
-      <TaskListItem button taskName={element.taskName} tags={element.tags} score={element.score} />
+      <QuestionTypeItem button type={element.type} count={element.count} />
     ))
   );
 
   render() {
-    const { classes, topicName, tasks } = this.props;
+    const { classes, topicName, count, questions } = this.props;
     return (
       <div>
         <ListItem button onClick={this.handleClick}>
           <Grid className={classes.topicItem}>
             <div className={classes.topicName}>{topicName}</div>
-            <div className={classes.topicCount}>задач: {tasks.length}</div>
+            <div className={classes.topicCount}>вопросов: {count}</div>
           </Grid>
+          <Checkbox
+            className={classes.checkbox}
+            checked={this.state.checked}
+            onChange={this.handleChange('checked')}
+            value="checked"
+            color="primary"
+          />
           {this.state.open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {this.objtoJSX(tasks)}
+            {this.objtoJSX(questions)}
           </List>
         </Collapse>
       </div>
