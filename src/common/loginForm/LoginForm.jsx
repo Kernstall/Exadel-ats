@@ -4,8 +4,12 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { Route, Link, Redirect } from 'react-router-dom';
 import './style.css';
+import createHistory from 'history/createBrowserHistory';
 import RegisterForm from '../../pages/registerFormPage/RegisterFormPage.jsx';
-import { login, makeRequest } from './api';
+import { login } from './api';
+import StudentMainPage from "../../pages/studentMainPage/StudentMainPage";
+
+const history = createHistory();
 
 class LoginForm extends React.Component {
   constructor() {
@@ -13,6 +17,8 @@ class LoginForm extends React.Component {
     this.state = {
       username: '',
       password: '',
+      _id: '',
+      status: '',
       isLogged: false,
     };
   }
@@ -21,13 +27,13 @@ class LoginForm extends React.Component {
     console.log(this.state);
   }
 
-  handleChange = name => e => {
+  handleChange = name => (e) => {
     this.setState({
       [name]: e.target.value,
     });
   };
 
-  handleClick = e => {
+  handleClick = (e) => {
     fetch('/api/user/login', {
       method: 'POST',
       body: JSON.stringify(this.state),
@@ -36,8 +42,15 @@ class LoginForm extends React.Component {
       },
     })
       .then(res => res.json())
-      .then(res => console.log(res))
-      .catch(rej => console.log(`Rejected: ${rej}`));
+      .then(res => {
+        this.setState({
+          _id: res.id,
+          status: res.status,
+          isLogged: true,
+        });
+        history.push(`/${this.state.status}/${this.state._id}`)
+        console.log(res);
+      });
   };
 
   render() {
@@ -81,7 +94,7 @@ class LoginForm extends React.Component {
           </div>
         </div>
         <Route exact path="/registration" component={RegisterForm} />
-        <Route exact path="/" render={() => (this.state.isLogged ? <Redirect to="/teacher" /> : <Redirect to="/" />)} />
+        {this.state.isLogged && <Redirect to={`/${this.state.status}/${this.state._id}`} /> }
       </form>
     );
   }
