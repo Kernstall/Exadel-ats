@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
+import Spinner from '../shared/spinner/index';
 import QuestionTopics from './QuestionTopics';
+import { getTeacherQuestions } from '../../commands/teacherQuestions';
 
 const styles = theme => ({
   button: {
@@ -21,32 +24,14 @@ const styles = theme => ({
   },
 });
 
-class TeacherTaskList extends React.Component {
+class TeacherQuestionList extends React.Component {
   constructor() {
     super();
-    this.state = {
-      data: [],
-    };
+    this.Questions = [];
   }
 
   componentDidMount() {
-    fetch('api/teacher/questions', {
-      method: 'get',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-      })
-      .then((data) => {
-        console.log('DATA');
-        console.log(data);
-        this.setState({ data });
-      })
-      .catch((error) => {
-        console.log('Request failed', error);
-      });
+    this.props.getTeacherQuestions();
   }
 
   objtoJSX = (array) => {
@@ -62,11 +47,19 @@ class TeacherTaskList extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, teacherQuestions } = this.props;
+    let load;
+    if (teacherQuestions) {
+      console.log(teacherQuestions);
+      this.Questions = this.objtoJSX(teacherQuestions);
+    } else {
+      load = (<Spinner />);
+    }
     return (
       <div className={classes.flex}>
         <List>
-          {this.objtoJSX(this.state.data)}
+          {this.Questions}
+          {load}
         </List>
         <Button variant="contained" color="primary" className={classes.button}>
           Назначить
@@ -76,8 +69,16 @@ class TeacherTaskList extends React.Component {
   }
 }
 
-TeacherTaskList.propTypes = {
+TeacherQuestionList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TeacherTaskList);
+const mapStateToProps = state => ({
+  teacherQuestions: state.teacherQuestions.teacherQuestions,
+});
+
+const mapCommandsToProps = dispatch => ({
+  getTeacherQuestions: param => dispatch(getTeacherQuestions(param)),
+});
+
+export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(TeacherQuestionList));
