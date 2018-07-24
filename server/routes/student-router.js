@@ -19,7 +19,6 @@ router.get('/group/tasks', async (req, res) => {
     res.send(JSON.stringify(result));
   }
   catch (err) {
-    console.log(err);
     res.status(500).send(err);
   }
 });
@@ -37,9 +36,7 @@ router.get('/', async (req, res) => {
     const studentModel = await getStudentTask;
     let groups = await getGroupsTask;
 
-    // console.log(groups);
     groups = groups.map(item => item = mapping.mapGroupToDto(item));
-    // console.log(groups);
 
     const student = mapping.mapStudentToDto(studentModel);
     const result = { student, groups };
