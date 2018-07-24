@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Button from '@material-ui/core/Button';
-import TaskInTopic from './TaskInTopic.jsx';
+import QuestionTopics from './QuestionTopics';
 
 const styles = theme => ({
   button: {
@@ -30,7 +30,7 @@ class TeacherTaskList extends React.Component {
   }
 
   componentDidMount() {
-    fetch('api/teacher/tasks', {
+    fetch('api/teacher/questions', {
       method: 'get',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -40,6 +40,8 @@ class TeacherTaskList extends React.Component {
         if (response.ok) return response.json();
       })
       .then((data) => {
+        console.log('DATA');
+        console.log(data);
         this.setState({ data });
       })
       .catch((error) => {
@@ -49,10 +51,11 @@ class TeacherTaskList extends React.Component {
 
   objtoJSX = (array) => {
     return array.map((element, index) => (
-      <TaskInTopic
+      <QuestionTopics
         button
         topicName={element.topicName}
-        tasks={element.tasks}
+        count={element.count}
+        questions={element.questions}
         key={index}
       />
     ));

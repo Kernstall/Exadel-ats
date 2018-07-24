@@ -53,17 +53,7 @@ const blocks = [
   },
   {
     tabName: 'History',
-    tabInfo: [
-      {
-        date: 'date1', name: 'Test test1 passed', score: 'score 10/10',
-      },
-      {
-        date: 'date2', name: 'Test test2 passed', score: 'score 10/10',
-      },
-      {
-        date: 'date3', name: 'Test test3 passed', score: 'score 10/10',
-      },
-    ],
+    tabInfo: [],
   },
 
 ];
@@ -91,7 +81,7 @@ const StudentMenuList = ({ classes }) => (
           case 'History':
             TabHeaders.push({
               tabName: block.tabName,
-              component: <StudentTabHistory activitiesList={block.tabInfo} />,
+              component: <StudentTabHistory historyList={block.tabInfo} />,
             });
             break;
           default: TabHeaders.push({
