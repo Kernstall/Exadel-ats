@@ -42,10 +42,10 @@ class TeacherAddGroup extends React.Component {
   }
 
   render() {
-    const { classes, teacher_AvailableStudentsList } = this.props;
+    const { classes, availableStudentsList: availableStudentsList } = this.props;
     let filteredArray;
-    if (teacher_AvailableStudentsList) {
-      filteredArray = teacher_AvailableStudentsList.filter((element) => {
+    if (availableStudentsList) {
+      filteredArray = availableStudentsList.filter((element) => {
         const fName = (element.firstName + ' ' + element.lastName).indexOf(this.state.filter.name) >= 0;
         const fEmail = element.email.indexOf(this.state.filter.email) >= 0;
         const fUnivesity = element.university === this.state.filter.university || this.state.filter.university === ' ';
@@ -59,7 +59,7 @@ class TeacherAddGroup extends React.Component {
     return (
       <div className={classes.FlexContainerHorizontal}>
         <FilterStudentCard callback={this.handleFilterChanges} />
-        {teacher_AvailableStudentsList ? <DragAndDropStudents studentsPool={filteredArray} /> : <Spinner /> }
+        {availableStudentsList ? <DragAndDropStudents studentsPool={filteredArray} /> : <Spinner /> }
       </div>
     );
   }
@@ -69,7 +69,7 @@ const styledComponent = withStyles(styles)(TeacherAddGroup);
 
 const mapStateToProps = state => ({
   isLoading: state.teacherCreateGroup.isLoading,
-  teacher_AvailableStudentsList: state.teacherCreateGroup.teacher_AvailableStudentsList,
+  availableStudentsList: state.teacherCreateGroup.availableStudentsList,
 });
 
 const mapCommandsToProps = dispatch => ({

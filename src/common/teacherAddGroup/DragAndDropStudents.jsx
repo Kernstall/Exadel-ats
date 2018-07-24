@@ -1,8 +1,8 @@
 import React from 'react';
 import './styles.css';
 import PropTypes from 'prop-types';
-import TextField from "@material-ui/core/es/TextField/TextField";
-import Input from "@material-ui/core/es/Input/Input";
+import TextField from '@material-ui/core/es/TextField/TextField';
+import Input from '@material-ui/core/es/Input/Input';
 
 export default class DragAndDropStudents extends React.Component {
   constructor() {
@@ -46,7 +46,7 @@ export default class DragAndDropStudents extends React.Component {
                   className="student"
                   key={student._id}
                   onClick={() => this.handleSingleLiClick(student._id)}
-                >{student.firstName + ' ' + student.lastName}
+                >{`${student.firstName} ${student.lastName}`}
                 </li>
               ))}
             </ul>
@@ -56,9 +56,8 @@ export default class DragAndDropStudents extends React.Component {
         <div className="mentor-container">
           <Input
             id="Student Email"
-            placeholder="Новая группа"
+            placeholder="Введите имя"
             className="contentFit mentor-header"
-            margin="normal"
           />
           <div className="mentor-wrap">
             <ul className="students-liner draggable droppable" id="students">
@@ -67,7 +66,7 @@ export default class DragAndDropStudents extends React.Component {
                   className="student"
                   key={student._id}
                   onClick={() => this.handleSingleLiClick(student._id)}
-                >{student.firstName + ' ' + student.lastName}
+                >{`${student.firstName} ${student.lastName}`}
                 </li>
               ))}
             </ul>

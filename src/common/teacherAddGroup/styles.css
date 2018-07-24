@@ -12,7 +12,6 @@
     background: white;
 }
 .contentFit{
-    padding: 0.25rem;
     font-size: 1em !important;
     color: whitesmoke !important;
 }
@@ -30,22 +29,21 @@
     flex-direction: column;
     width: 250px;
 }
-.students-header, .mentor-header {
-    background: #5b5b5b;
-    color: whitesmoke;
-    padding: 0.5rem;
+.students-container {
+    border-right: gray 1px;
 }
-.students-header.mentor-header, .mentor-header.mentor-header {
-    background: #44587d;
+.students-header, .mentor-header {
+    line-height: 55px;
+    background: #1769AA;
+    color: whitesmoke;
+    padding: 0.25rem;
+    height: 55px;
 }
 .students-wrap, .mentor-wrap {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     background-color: #dadada;
-}
-.students-wrap:hover, .mentor-wrap:hover {
-    background-color: #aaaaaa;
 }
 .students-liner, .mentor-liner {
     display: flex;
@@ -82,7 +80,7 @@
     background: slategrey;
     padding: 0.75rem;
     color: whitesmoke;
-    cursor: move;
+    cursor: pointer;
     position: relative;
     list-style-type: none;
 }
