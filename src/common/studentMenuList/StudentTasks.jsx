@@ -77,9 +77,9 @@ class StudentTasks extends React.Component {
         </ListItem>
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem button className={classes.nested}>
+            <ListItem className={classes.nested}>
               <StudentTaskDropDown
-                taskInfo={task.description}
+                taskInfo={task}
                 className={this.props.classes.fullWidth}
               />
             </ListItem>

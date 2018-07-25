@@ -3,7 +3,7 @@ import { Grid } from '@material-ui/core/es';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/es/Button/Button';
-import { Link, Redirect } from 'react-router-dom';
+import { Route, Link, Redirect } from 'react-router-dom';
 import Capture from '../../common/capture/Capture.jsx';
 import List from '../../common/shared/list/List';
 import Common from '../../common/styles/Common';

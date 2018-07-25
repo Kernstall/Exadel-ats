@@ -7,7 +7,7 @@ import Common from '../../common/styles/Common';
 import { getActivities } from '../../commands/activities';
 import SearchBox from '../../common/searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
-import Button from "@material-ui/core/es/Button/Button";
+import Menue from './menue/Menue';
 
 const styles = {
   ...Common,
@@ -26,100 +26,73 @@ const styles = {
     marginLeft: '5px',
     width: 'calc(100% - 310px)',
   },
+  SearcBox: {
+    minWidth: '300px',
+  },
+  menue: {
+    margin: '10px',
+  },
 };
 
-const activitieToUIName = (keyWord) => {
-  const activitiesName = {
-    studentGroupAddition: 'Студент добавлен в группу',
-    studentGroupRemove: 'Студент удален из группы',
-    groupCreation: 'Добавлена группа студентов',
-    studentTaskAssignment: 'Назначена задача студенту',
-    groupTaskAssignment: 'Назначена задача группе',
-    studentTestAssignment: 'Назначен тест студенту',
-    groupTestAssignment: 'Назначен тест группе',
-    studentTaskSending: 'Стуент отправил решение задачи',
-    studentTestComplete: 'Студент прошел тест',
-    teacherTestCheck: 'Учитель проверил тест',
-    studentQuestionComplaint: 'Студент пожаловался на вопрос',
-    teacherQuestionCreation: 'Учитель создал вопрос',
-    adminQuestionCreation: 'Администратор создал вопрос',
-    teacherTaskCreation: 'Учитель создал задачу',
-    adminTaskCreation: 'Администратор создал задачу',
-    teacherQuestionBlock: 'Учитель заблокировал вопрос',
-    adminQuestionBlock: 'Администратор заблокировал вопрос',
-    teacherRightsToStudentDelegation: 'Студенту переданы права учителя',
-    adminRightsToStudentDelegation: 'Студенту переданы права администратора',
-    adminRightsToTeacherDelegation: 'Учителю переданы права администратора',
-  };
-  return activitiesName[keyWord];
-};
-
-const activities = {
-  activities: [
-    {
-      name: 'Alexander Gusev',
-      role: 'teacher',
-      activityType: 'studentGroupAddition',
-    },
-    {
-      name: 'Alexander Gusev',
-      role: 'admin',
-      activityType: 'studentGroupRemove',
-    },
-    {
-      name: 'Alexander Gusev',
-      role: 'teacher',
-      activityType: 'groupCreation',
-    },
-    {
-      name: 'Alexander Gusev',
-      role: 'teacher',
-      activityType: 'studentTaskAssignment',
-    },
-  ],
-};
-
-class adminMainPage extends Component {
+class AdminMainPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
+    this.state = {
+      historyFilter: {
+        name: '',
+        role: '',
+        activityType: '',
+      },
+    };
   }
 
-  _logout = () => {
-    fetch('/api/user/logout').then(res => res.json()).then(console.log);
-    localStorage.removeItem('user');
-    this.props.history.push('/');
+  componentDidMount() { // eslint-disable-next-line
+    this.props.getActivities(this.state.historyFilter);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    prevState.historyFilter == this.state.historyFilter
+      || this.props.getActivities(this.state.historyFilter);
+  }
+
+  handleHistoryFilter = (name, role, activityType) => {
+    const newState = {
+      historyFilter: { name, role, activityType },
+    };
+    this.setState(newState);
   };
 
   render() {
-    const { classes } = this.props;
-    return (
-      <Grid
-        alignItems="stretch"
-        justify="center"
-        container
-        flexDirection="row"
-        className={[classes.centerScreen, classes.centerScreenMobile].join(' ')}
-      >
-        <Grid item>
-          <SearchBox />
-        </Grid>
+    const { classes, activities } = this.props;
+    if (activities) {
+      return (
         <Grid
-          item
-          className={classes.marginLeft}
+          alignItems="stretch"
+          justify="center"
+          container
+          flexDirection="row"
+          className={[classes.centerScreen, classes.centerScreenMobile].join(' ')}
         >
-          <List
-            disablePadding="false"
-            component="nav"
-            className={classes.noMargin}
+          <Grid item className={classes.SearcBox}>
+            <SearchBox handleHistoryFilter={this.handleHistoryFilter} />
+            <Menue className={classes.menue} />
+          </Grid>
+          <Grid
+            item
+            className={classes.marginLeft}
           >
-            <ActivityListItems info={activities.activities} />
-          </List>
+            <List
+              disablePadding="false"
+              component="nav"
+              className={classes.noMargin}
+            >
+              <ActivityListItems info={activities} />
+            </List>
+          </Grid>
         </Grid>
-        <Button onClick={this._logout} className={classes.createNewGroupButton} variant="contained">
-          LOG OUT
-        </Button>
-      </Grid>
-    );
+      );
+    }
+    return null;
   }
 }
 
@@ -132,4 +105,4 @@ const mapCommandsToProps = dispatch => ({
   getActivities: param => dispatch(getActivities(param)),
 });
 
-export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(adminMainPage));
+export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminMainPage));

@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  teacher_AvailableStudentsList: null,
+  availableStudentsList: null,
   error: null,
   isLoading: false,
 };
@@ -22,7 +22,7 @@ const reducer = (state = INITIAL_STATE, action) => {
 
     case 'Entity/TeacherGetStudents/Success':
       return {
-        teacher_AvailableStudentsList: payload.teacher_AvailableStudentsList,
+        availableStudentsList: payload.availableStudentsList,
         error: null,
         isLoading: false,
       };

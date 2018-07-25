@@ -7,9 +7,9 @@ const getStudentsRequest = () => ({
   type: 'Entity/TeacherGetStudents/Request',
 });
 
-const getStudentsSuccess = teacher_AvailableStudentsList => ({
+const getStudentsSuccess = availableStudentsList => ({
   type: 'Entity/TeacherGetStudents/Success',
-  payload: { teacher_AvailableStudentsList },
+  payload: { availableStudentsList },
 });
 
 export default {
