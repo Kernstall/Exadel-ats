@@ -1,6 +1,9 @@
+const app = require('express');
+const bodyParser = require('body-parser');
 const cp = require('child_process');
 const fs = require('fs');
 const mongoose = require('mongoose');
+const multer = require('multer');
 const Task = require('./models/Task');
 // const got = require('got');
 
@@ -9,6 +12,57 @@ const connection = `mongodb://localhost:27017/${dbName}`;
 
 const commonSrcCodePath = 'dataFileStorage\\srcCodes';
 const commonTaskPath = 'dataFileStorage\\tasks';
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const storageText = multer.diskStorage({
+  destination(req, file, cb) {
+    let index = file.originalname.indexOf('input.txt');
+    let number;
+    if (index === -1) {
+      index = file.originalname.indexOf('output.txt');
+      number = file.originalname.slice(0, index);
+    } else {
+      number = file.originalname.slice(0, index);
+    }
+    cb(null, `tasks\\${req.query.taskId}\\${number}`);
+  },
+  filename(req, file, cb) {
+    let index = file.originalname.indexOf('input.txt');
+    let nameOfFile;
+    if (index === -1) {
+      index = file.originalname.indexOf('output.txt');
+      nameOfFile = file.originalname.slice(index);
+    } else {
+      nameOfFile = file.originalname.slice(index);
+    }
+    cb(null, `${nameOfFile}`);
+  },
+});
+
+const storageSrcCode = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, `srcCodes\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
+  },
+  filename(req, file, cb) {
+    cb(null, `${file.originalname}`);
+  },
+});
+
+const uploadText = multer({
+  storage: storageText,
+  fileFilter(req, file, cb) {
+
+  },
+});
+
+const uploadSrcCode = multer({
+  storage: storageSrcCode,
+  fileFilter(req, file, cb) {
+
+  },
+});
 
 async function javaBuildFunc(path) {
   return new Promise((resolve, reject) => {
@@ -81,7 +135,7 @@ const runner = {
   cpp: cppRunFunc,
 };
 
-exports.placeInputFile = async (inputFromFileWay, inputWhereFileWay) => {
+async function placeInputFile(inputFromFileWay, inputWhereFileWay) {
   return new Promise((resolve, reject) => {
     cp.exec(`copy ${inputFromFileWay} ${inputWhereFileWay}`, (error, stdout, stderr) => {
       if (error) {
@@ -92,9 +146,9 @@ exports.placeInputFile = async (inputFromFileWay, inputWhereFileWay) => {
     });
     // copy ..\check\355ea642ea43112e\input.txt bin
   });
-};
+}
 
-exports.placeOutputFile = async (outputWhereFileWay) => {
+async function placeOutputFile(outputWhereFileWay) {
   return new Promise((resolve, reject) => {
     cp.exec(`echo. 2> ${outputWhereFileWay}`, (error, stdout, stderr) => {
       if (error) {
@@ -105,9 +159,9 @@ exports.placeOutputFile = async (outputWhereFileWay) => {
     });
     // echo. 2> bin\output.txt
   });
-};
+}
 
-exports.removeInputFile = async (inputWhereFileWay) => {
+async function removeInputFile(inputWhereFileWay) {
   return new Promise((resolve, reject) => {
     cp.exec(`del /q ${inputWhereFileWay}`, (error, stdout, stderr) => {
       if (error) {
@@ -117,9 +171,9 @@ exports.removeInputFile = async (inputWhereFileWay) => {
       resolve();
     });
   });
-};
+}
 
-exports.removeOutputFile = async (outputWhereFileWay) => {
+async function removeOutputFile(outputWhereFileWay) {
   return new Promise((resolve, reject) => {
     cp.exec(`del /q ${outputWhereFileWay}`, (error, stdout, stderr) => {
       if (error) {
@@ -130,9 +184,9 @@ exports.removeOutputFile = async (outputWhereFileWay) => {
     });
     // del /q bin\input.txt
   });
-};
+}
 
-exports.deleteBinFunc = async (path) => {
+async function deleteBinFunc(path) {
   return new Promise((resolve, reject) => {
     cp.exec(`rmdir ${path} /s /q`, (error, stdout, stderr) => {
       if (error) {
@@ -142,9 +196,9 @@ exports.deleteBinFunc = async (path) => {
       resolve();
     });
   });
-};
+}
 
-exports.createBinFunc = async (path) => {
+async function createBinFunc(path) {
   return new Promise((resolve, reject) => {
     cp.exec(`mkdir ${path}`, (error, stdout, stderr) => {
       if (error) {
@@ -156,9 +210,9 @@ exports.createBinFunc = async (path) => {
       resolve();
     });
   });
-};
+}
 
-exports.readFile = async (fileName) => {
+async function readFile(fileName) {
   return new Promise((resolve, reject) => {
     fs.readFile(fileName, (error, data) => {
       if (error) {
@@ -168,9 +222,9 @@ exports.readFile = async (fileName) => {
       }
     });
   });
-};
+}
 
-exports.checkFileExistence = async (path) => {
+async function checkFileExistence(path) {
   return new Promise((resolve, reject) => {
     fs.access(path, fs.constants.F_OK, (err) => {
       if (err) {
@@ -180,18 +234,18 @@ exports.checkFileExistence = async (path) => {
       }
     });
   });
-};
+}
 
-exports.compareFiles = async (firstFileName, secondFileName) => {
-  const firstContent = (await exports.readFile(firstFileName)).toString();
-  const secondContent = (await exports.readFile(secondFileName)).toString();
+async function compareFiles(firstFileName, secondFileName) {
+  const firstContent = (await readFile(firstFileName)).toString();
+  const secondContent = (await readFile(secondFileName)).toString();
   if (firstContent === secondContent) {
     return true;
   }
   return false;
-};
+}
 
-exports.checkStudentAttempt = async (studentId, taskId, mainFileName, attemptNumber, lang) => {
+async function checkStudentAttempt(studentId, taskId, mainFileName, attemptNumber, lang) {
   try {
     const results = [];
     let tests = await Task.aggregate([
@@ -201,14 +255,14 @@ exports.checkStudentAttempt = async (studentId, taskId, mainFileName, attemptNum
     if (tests.length === 0) {
       throw new Error('Incorrect task id');
     }
-    if (await exports.checkFileExistence(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`)) {
+    if (await checkFileExistence(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`)) {
       // Удаление папки bin, если таковая по какой-либо непредвиденной причине
       // осталась в директории
-      await exports.deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`);
+      await deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`);
     }
 
     // Создание папки bin
-    await exports.createBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`); // Работает
+    await createBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`); // Работает
 
     // Компиляция файлов в папку bin
     await builder[lang.toLowerCase()](`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}`);
@@ -218,18 +272,18 @@ exports.checkStudentAttempt = async (studentId, taskId, mainFileName, attemptNum
     // console.log(tests._id.toString());
     for (let index = 0; index < tests.length; index++) {
       // Копирование очередного входного файла в папку bin
-      await exports.placeInputFile(`${commonTaskPath}\\${taskId}\\${tests[index]._id.toString()}\\input\\${tests[index].inputFileAdress}`,
+      await placeInputFile(`${commonTaskPath}\\${taskId}\\${tests[index]._id.toString()}\\input\\${tests[index].inputFileAdress}`,
         `${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`);
       // Создание файла для выходных данных
-      await exports.placeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].outputFileAdress}`);
+      await placeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].outputFileAdress}`);
       // Запуск скомпилированных файлов
       await runner[lang.toLowerCase()](`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`, mainFileName);
       // Удаление входного файла
-      await exports.removeInputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].inputFileAdress}`);
+      await removeInputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].inputFileAdress}`);
       // Сравнение выходного файла и ожидаемого результата
       let isSuccessfull;
       try {
-        isSuccessfull = await exports.compareFiles(`${commonTaskPath}\\${taskId}\\${tests[index]._id.toString()}\\expextedOutput\\${tests[index].outputFileAdress}`,
+        isSuccessfull = await compareFiles(`${commonTaskPath}\\${taskId}\\${tests[index]._id.toString()}\\expextedOutput\\${tests[index].outputFileAdress}`,
           `${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].outputFileAdress}`);
       } catch (error) {
         isSuccessfull = false;
@@ -240,29 +294,38 @@ exports.checkStudentAttempt = async (studentId, taskId, mainFileName, attemptNum
         _id: tests[index]._id.toString(),
       });
       // Удаление выходного файла
-      await exports.removeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].outputFileAdress}`);
+      await removeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].outputFileAdress}`);
     }
     // Удаление папки bin
-    await exports.deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`);
+    await deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`);
 
     return results;
   } catch (error) {
     // Тут что-то должно быть
     throw error;
   }
-};
+}
 
-// exports.deleteBinFunc();
-// exports.runFunc('HelloWorld').catch(error => error.message);
-// exports.createBinFunc().then(exports.javaBuildFunc).then(() => exports.runFunc('HelloWorld')).then(exports.deleteBinFunc);
+// deleteBinFunc();
+// runFunc('HelloWorld').catch(error => error.message);
+// createBinFunc().then(javaBuildFunc).then(() => runFunc('HelloWorld')).then(deleteBinFunc);
 async function connectDatabase() {
   mongoose.connect(connection, { useNewUrlParser: true })
     .then(() => {
       console.log('Connected to database!!!');
-      exports.checkStudentAttempt('5b45b16575224332745f7587', '5b44fb2508a2b31ddcddab32', 'Process', 2, 'Java');
+      checkStudentAttempt('5b45b16575224332745f7587', '5b44fb2508a2b31ddcddab32', 'Process', 2, 'Java');
     })
     .catch((err) => {
       throw new Error(err);
     });
 }
+
+app.post('server/files', async (req, res) => {
+
+});
+
+app.post('server/run', async (req, res) => {
+
+});
+
 connectDatabase();
