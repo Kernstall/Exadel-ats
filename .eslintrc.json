@@ -8,6 +8,8 @@
   "rules": {
     "linebreak-style":"off",
     "no-plusplus": "off",
+    "no-await-in-loop": "off",
+    "arrow-body-style": "off",
     "react/jsx-filename-extension": [
       1,
       {
