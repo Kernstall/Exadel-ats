@@ -1,4 +1,4 @@
-const app = require('express');
+const express = require('express');
 const bodyParser = require('body-parser');
 const cp = require('child_process');
 const fs = require('fs');
@@ -7,6 +7,7 @@ const multer = require('multer');
 const Task = require('./models/Task');
 // const got = require('got');
 
+const app = express();
 const dbName = 'TestingSystem';
 const connection = `mongodb://localhost:27017/${dbName}`;
 
@@ -16,8 +17,46 @@ const commonTaskPath = 'dataFileStorage\\tasks';
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+async function checkFileExistence(path) {
+  return new Promise((resolve, reject) => {
+    fs.access(path, fs.constants.F_OK, (err) => {
+      if (err) {
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    });
+  });
+}
+
+async function deleteBinFunc(path) {
+  return new Promise((resolve, reject) => {
+    cp.exec(`rmdir ${path} /s /q`, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+async function createBinFunc(path) {
+  return new Promise((resolve, reject) => {
+    cp.exec(`mkdir ${path}`, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      console.log(stdout);
+      console.log(stderr);
+      resolve();
+    });
+  });
+}
+
 const storageText = multer.diskStorage({
-  destination(req, file, cb) {
+  async destination(req, file, cb) {
     let index = file.originalname.indexOf('input.txt');
     let number;
     if (index === -1) {
@@ -26,6 +65,11 @@ const storageText = multer.diskStorage({
     } else {
       number = file.originalname.slice(0, index);
     }
+
+    if (!(await checkFileExistence(`tasks\\${req.query.taskId}\\${number}`))) {
+      await createBinFunc(`tasks\\${req.query.taskId}\\${number}`);
+    }
+
     cb(null, `tasks\\${req.query.taskId}\\${number}`);
   },
   filename(req, file, cb) {
@@ -42,7 +86,10 @@ const storageText = multer.diskStorage({
 });
 
 const storageSrcCode = multer.diskStorage({
-  destination(req, file, cb) {
+  async destination(req, file, cb) {
+    if (!(await checkFileExistence(`srcCodes\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`))) {
+      await createBinFunc(`srcCodes\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
+    }
     cb(null, `srcCodes\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
   },
   filename(req, file, cb) {
@@ -53,14 +100,30 @@ const storageSrcCode = multer.diskStorage({
 const uploadText = multer({
   storage: storageText,
   fileFilter(req, file, cb) {
-
+    try {
+      if (file.originalname.match(/^\d+input.txt$|^\d+output.txt$/)) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+      }
+    } catch (error) {
+      cb(error);
+    }
   },
 });
 
 const uploadSrcCode = multer({
   storage: storageSrcCode,
   fileFilter(req, file, cb) {
-
+    try {
+      if (file.originalname.match(/.cpp$|.java$|.h|.c$/)) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+      }
+    } catch (error) {
+      cb(error);
+    }
   },
 });
 
@@ -186,32 +249,6 @@ async function removeOutputFile(outputWhereFileWay) {
   });
 }
 
-async function deleteBinFunc(path) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`rmdir ${path} /s /q`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-  });
-}
-
-async function createBinFunc(path) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`mkdir ${path}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      console.log(stdout);
-      console.log(stderr);
-      resolve();
-    });
-  });
-}
-
 async function readFile(fileName) {
   return new Promise((resolve, reject) => {
     fs.readFile(fileName, (error, data) => {
@@ -219,18 +256,6 @@ async function readFile(fileName) {
         reject(error);
       } else {
         resolve(data);
-      }
-    });
-  });
-}
-
-async function checkFileExistence(path) {
-  return new Promise((resolve, reject) => {
-    fs.access(path, fs.constants.F_OK, (err) => {
-      if (err) {
-        resolve(false);
-      } else {
-        resolve(true);
       }
     });
   });
@@ -313,19 +338,25 @@ async function connectDatabase() {
   mongoose.connect(connection, { useNewUrlParser: true })
     .then(() => {
       console.log('Connected to database!!!');
-      checkStudentAttempt('5b45b16575224332745f7587', '5b44fb2508a2b31ddcddab32', 'Process', 2, 'Java');
+      // checkStudentAttempt('5b45b16575224332745f7587', '5b44fb2508a2b31ddcddab32', 'Process', 2, 'Java');
     })
     .catch((err) => {
       throw new Error(err);
     });
 }
 
-app.post('server/files', async (req, res) => {
+app.post('/server/textfiles', async (req, res, next) => {
+  next();
+});
+
+app.post('/server/textfiles', uploadText.array('files'), async (req, res, next) => {
+  res.status(200).send('Files should have been downloaded');
+});
+
+app.post('/server/run', async (req, res) => {
 
 });
 
-app.post('server/run', async (req, res) => {
-
-});
+const server = app.listen(3002, () => console.log(`Server is listening on port ${server.address().port}`));
 
 connectDatabase();
