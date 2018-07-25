@@ -44,7 +44,7 @@ const ErrorWindow = function (props) {
         </Typography>
         <Button
           className={classes.button}
-          onCick={callback ? callback.bind(this) : null}
+          onClick={callback}
         >
           OK
         </Button>
@@ -53,7 +53,7 @@ const ErrorWindow = function (props) {
   );
 };
 
-ErrorWindow.PropTypes = {
+ErrorWindow.propTypes = {
   message: PropTypes.string.isRequired,
   callback: PropTypes.func.isRequired,
 };

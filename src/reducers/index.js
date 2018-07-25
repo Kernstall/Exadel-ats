@@ -8,6 +8,7 @@ import teacherCreateGroup from './teacherCreateGroup';
 import studentTests from './studentTests';
 import teacherQuestions from './teacherQuestions';
 import teacherTasks from './teacherTasks';
+import errorMessage from './errorMessage';
 
 export default combineReducers({
   students,
@@ -19,4 +20,5 @@ export default combineReducers({
   studentTests,
   teacherQuestions,
   teacherTasks,
+  errorMessage,
 });
