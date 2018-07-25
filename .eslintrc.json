@@ -45,6 +45,9 @@
     ],
     "import/extensions": [
       0
+    ],
+    "react/destructuring-assignment": [
+      0
     ]
   }
 }

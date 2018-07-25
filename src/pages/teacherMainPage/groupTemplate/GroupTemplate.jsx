@@ -7,7 +7,7 @@ class GroupTemplate extends React.Component {
     return (
       <Grid container>
         <Grid item xs={12} sm={6}>{this.props.response.groupName}</Grid>
-        <Grid item xs={12} sm={6}>Amount of students: {this.props.response.studentsAmount}</Grid>
+        <Grid item xs={12} sm={6}>Amount of students: {this.props.response.studentCount}</Grid>
       </Grid>
     );
   }

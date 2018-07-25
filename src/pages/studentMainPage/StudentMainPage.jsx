@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid } from '@material-ui/core/es';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
+import { Route, Link, Redirect } from 'react-router-dom';
 import Capture from '../../common/capture/Capture.jsx';
 import List from '../../common/shared/list/List';
 import Common from '../../common/styles/Common';
@@ -36,7 +37,7 @@ const styles = {
 
 class StudentMainPage extends Component {
   componentDidMount() {
-    this.props.getStudentGroups({ id: '5b45c52b9320560a54780838' }); // eslint-disable-line
+    this.props.getStudentGroups({ id: '5b45b16d75224332745f758e' }); // eslint-disable-line
   }
 
   JSONtoJSX = (studentInfo, classes, keysToRender) => (
@@ -44,10 +45,10 @@ class StudentMainPage extends Component {
       if (element in keysToRender) {
         return (
           <Grid item xs={6}>
-            <Grid className={classes.infoCapture} container justify={'center'}>
+            <Grid className={classes.infoCapture} container justify="center">
               {keysToRender[element]}
             </Grid>
-            <Grid className={[classes.infoContent, classes.content].join(' ')} container justify={'center'}>
+            <Grid className={[classes.infoContent, classes.content].join(' ')} container justify="center">
               {studentInfo[element]}
             </Grid>
           </Grid>
@@ -92,7 +93,7 @@ class StudentMainPage extends Component {
           <Capture className={classes.captionMargin}>
             Information about you
           </Capture>
-          <Grid container direction={'row'}>
+          <Grid container direction="row">
             {this.JSONtoJSX(studentGroups.student, classes, keysToRender)}
           </Grid>
         </div>
@@ -106,6 +107,9 @@ class StudentMainPage extends Component {
         <Grid className={[classes.font, classes.wrapper].join(' ')}>
           {studentInfoComponent}
         </Grid>
+        {/* <Route exact path="/student/mainPage" component={() => <Redirect to="/" />} /> */}
+        <Route exact path="/studentMenu" component={<StudentMainPage />} />
+
       </Grid>
     );
   }

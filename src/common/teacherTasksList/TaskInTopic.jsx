@@ -3,43 +3,67 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import Grid from '@material-ui/core/Grid';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import TaskListItem from './TaskListItem.jsx';
-import './styles.css';
 
 const styles = theme => ({
-
+  topicItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    paddingRight: 10,
+    userSelect: 'none',
+  },
+  topicName: {
+    display: 'flex',
+    fontSize: 18,
+    fontWeight: 300,
+  },
+  topicCount: {
+    display: 'flex',
+    fontSize: 17,
+    padding: 7,
+  },
 });
 
 class TaskInTopic extends React.Component {
-  state = { open: false };
+  constructor() {
+    super();
+    this.state = {
+      open: false,
+    };
+  }
 
   handleClick = () => {
     this.setState(state => ({ open: !state.open }));
   };
 
-  objtoJSX = (array) => {
-    return array.map((element, index) => (
+  objtoJSX = array => (
+    array.map((element, index) => (
       <TaskListItem button taskName={element.taskName} tags={element.tags} score={element.score} />
-    ));
-  }
+    ))
+  );
 
   render() {
-
+    const { classes, topicName, tasks } = this.props;
     return (
-      <div className="topic-item">
+      <div>
         <ListItem button onClick={this.handleClick}>
-          <ListItemText className="topic-item-name">
-            <div className="topic-name">{this.props.topicName}</div>
-            <div className="topic-tasks-count">задач: {this.props.tasks.length}</div></ListItemText>
+          <Grid className={classes.topicItem}>
+            <div className={classes.topicName}>{topicName}</div>
+            <div className={classes.topicCount}>задач: {tasks.length}</div>
+          </Grid>
           {this.state.open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {this.objtoJSX(this.props.tasks)}
+            {this.objtoJSX(tasks)}
           </List>
         </Collapse>
       </div>

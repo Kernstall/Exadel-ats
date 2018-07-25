@@ -16,21 +16,35 @@ const styles = theme => ({
   },
 });
 
+
+
 class StudentActivities extends React.Component {
   render() {
+    const dateToString = (_date) => {
+      function addZero(i) {
+        if (i < 10) {
+          i = `0${i}`;
+        }
+        return i;
+      }
+      const date = new Date(Date.parse(_date));
+      const parsedTime = `${addZero(date.getDay())}.${addZero(date.getMonth())}.${addZero(date.getFullYear())}`;
+      const parsedData = `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
+      return `${parsedTime} ${parsedData}`;
+    };
     const { classes, activity } = this.props;
     return (
       <div className={classes.root}>
         <ListItem open="false" button onClick={this.handleClick}>
           <Grid container>
             <Grid item xs>
-              <ListItemText inset primary={activity.date} />
+              <ListItemText primary={`${dateToString(activity.date)}`} />
             </Grid>
             <Grid item xs>
-              <ListItemText inset primary={activity.name} />
+              <ListItemText primary={activity.name} />
             </Grid>
             <Grid item xs>
-              <ListItemText inset primary={activity.score} />
+              <ListItemText primary={activity.isPassed || activity.status ? 'Passed' : 'Not passed'} />
             </Grid>
           </Grid>
         </ListItem>
