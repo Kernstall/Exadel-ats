@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route, Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -39,7 +40,9 @@ function InsetList(props) {
       <ListItem button>
         <Grid container>
           <Grid item xs={4}>
-            <ListItemText primary={`${element.groupName}`} />
+            <Link to="/studentMenu">
+              <ListItemText primary={`${element.groupName}`} />
+            </Link>
           </Grid>
           <Grid item xs={4}>
             <ListItemText primary={`${element.teacherFullName}`} />
