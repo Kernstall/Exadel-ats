@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
     // console.log(groups);
 
     const student = mapping.mapStudentToDto(studentModel);
-    const result = {student, groups};
+    const result = { student, groups };
     res.status(200).json(result);
   } catch (err) {
     res.status(500).send({ err: err.message });
