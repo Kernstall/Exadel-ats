@@ -16,6 +16,7 @@ import AdminMainPage from './pages/adminMainPage/AdminMainPage.jsx';
 import TeacherMainPage from './pages/teacherMainPage/TeacherMainPage';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent';
 import TeacherTasksList from './common/teacherTasksList/TeacherTasksList';
+import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 
 const styles = ({
   content: {
@@ -31,6 +32,7 @@ class App extends Component {
     const { classes } = this.props;
     return (
       <MuiThemeProvider theme={createMuiTheme}>
+        <ErrorDispatcher />
         <div className={classes.SpreadWrapper}>
           <Router>
             <div className={classes.content}>
