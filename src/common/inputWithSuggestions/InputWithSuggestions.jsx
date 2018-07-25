@@ -5,21 +5,83 @@ import Input from '@material-ui/core/Input';
 import SelectWrapped from './selectWrapped/SelectWrapped';
 
 const suggestions = [
-  { label: 'Студент добавлен в группу' },
-  { label: 'Студент удален из группы' },
-  { label: 'Добавлена группа студентов' },
-  { label: 'Назначена задача студенту' },
-  { label: 'Назначена задача группе' },
-  { label: 'Назначен тест студенту' },
-  { label: 'Стуент отправил решение задачи' },
-  { label: 'Студент прошел тест' },
-  { label: 'Учитель проверил тест' },
-  { label: 'Студент пожаловался на вопрос' },
-  { label: 'Учитель создал вопрос' },
-].map(suggestion => ({
-  value: suggestion.label,
-  label: suggestion.label,
-}));
+  {
+    label: 'Студент добавлен в группу',
+    value: 'studentGroupAddition',
+  },
+  {
+    label: 'Студент удален из группы',
+    value: 'studentGroupRemove',
+  },
+  {
+    label: 'Добавлена группа студентов',
+    value: 'groupCreation',
+  },
+  {
+    label: 'Назначена задача студенту',
+    value: 'studentTaskAssignment',
+  },
+  {
+    label: 'Назначена задача группе',
+    value: 'groupTestAssignment',
+  },
+  {
+    label: 'Назначен тест студенту',
+    value: 'studentTestAssignment',
+  },
+  {
+    label: 'Стуент отправил решение задачи',
+    value: 'studentTaskSending',
+  },
+  {
+    label: 'Студент прошел тест',
+    value: 'studentTestComplete',
+  },
+  {
+    label: 'Учитель проверил тест',
+    value: 'teacherTestCheck',
+  },
+  {
+    label: 'Студент пожаловался на вопрос',
+    value: 'studentQuestionComplaint',
+  },
+  {
+    label: 'Учитель создал вопрос',
+    value: 'teacherQuestionCreation',
+  },
+  {
+    label: 'adminQuestionCreation',
+    value: 'Администратор создал вопрос',
+  },
+  {
+    label: 'teacherTaskCreation',
+    value: 'Учитель создал задачу',
+  },
+  {
+    label: 'adminTaskCreation',
+    value: 'Администратор создал задачу',
+  },
+  {
+    label: 'teacherQuestionBlock',
+    value: 'Учитель заблокировал вопрос',
+  },
+  {
+    label: 'adminQuestionBlock',
+    value: 'Администратор заблокировал вопрос',
+  },
+  {
+    label: 'teacherRightsToStudentDelegation',
+    value: 'Студенту переданы права учителя',
+  },
+  {
+    label: 'adminRightsToStudentDelegation',
+    value: 'Студенту переданы права администратора',
+  },
+  {
+    label: 'adminRightsToTeacherDelegation',
+    value: 'Учителю переданы права администратора',
+  },
+];
 
 const ITEM_HEIGHT = 32;
 
@@ -152,6 +214,7 @@ class InputWithSuggestions extends React.Component {
     this.setState({
       single: value,
     });
+    this.props.onHandleChange('activityType', value);
   };
 
   render() {
@@ -160,7 +223,6 @@ class InputWithSuggestions extends React.Component {
     return (
       <div className={classes.root}>
         <Input
-          ref={0}
           disableUnderline
           fullWidth
           inputComponent={SelectWrapped}
@@ -169,6 +231,7 @@ class InputWithSuggestions extends React.Component {
           placeholder="Тип активности ..."
           id="react-select-single"
           inputProps={{
+            onChange: this.handleChange,
             classes,
             name: 'react-select-single',
             instanceId: 'react-select-single',

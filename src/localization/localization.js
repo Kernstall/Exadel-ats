@@ -25,6 +25,10 @@ const localize = (keyWord) => {
     teacherRightsToStudentDelegation: 'Студенту переданы права учителя',
     adminRightsToStudentDelegation: 'Студенту переданы права администратора',
     adminRightsToTeacherDelegation: 'Учителю переданы права администратора',
+    name: 'Имя',
+    type: 'Тип активности',
+    userType: 'Роль',
+    date: 'Дата / Время',
   };
 
   const dictionaries = {
