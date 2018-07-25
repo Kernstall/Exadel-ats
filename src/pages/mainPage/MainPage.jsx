@@ -23,7 +23,6 @@ const styles = ({
   },
   flexElem: {
     'flex-grow': '1',
-    'margin-right': '10px',
   },
 });
 
@@ -31,7 +30,13 @@ class MainPage extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={[classes.flex, classes.centerScreen, classes.margin, classes.contentDisplay].join(' ')}>
+      <div className={[
+        classes.flex,
+        classes.centerScreen,
+        classes.margin,
+        classes.contentDisplay,
+        classes.scrollbar].join(' ')}
+      >
         <div className={classes.flexElem}>
           <TopTabs />
         </div>
