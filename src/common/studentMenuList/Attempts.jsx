@@ -44,7 +44,7 @@ const styles = theme => ({
   },
 });
 
-class StudentTasks extends React.Component {
+class Attempts extends React.Component {
   state = { open: false };
 
 
@@ -53,22 +53,35 @@ class StudentTasks extends React.Component {
   };
 
   render() {
-    const { classes, task } = this.props;
+    const dateToString = (_date) => {
+      function addZero(i) {
+        if (i < 10) {
+          i = `0${i}`;
+        }
+        return i;
+      }
+      const date = new Date(Date.parse(_date));
+      const parsedTime = `${addZero(date.getDay())}.${addZero(date.getMonth())}.${addZero(date.getFullYear())}`;
+      const parsedData = `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
+      return `${parsedTime} ${parsedData}`;
+    };
+
+    const { classes, attempt } = this.props;
 
     return (
       <div className={classes.root}>
         <ListItem open="false" button onClick={this.handleClick}>
           <Grid container>
             <Grid item xs>
-              <ListItemText primary={task.name} />
+              <ListItemText primary={`${dateToString(attempt.date)}`} />
             </Grid>
             <Grid item xs>
-              <ListItemText primary={task.theme} />
+              <ListItemText primary={`№: ${attempt.number}`} />
             </Grid>
             <Grid item xs>
-              <Paper className={task.isPassed ? classes.green : classes.red}>
+              <Paper className={attempt.isPassed ? classes.green : classes.red}>
                 <Typography component="p">
-                  {task.bestResult}/{task.weight}
+                  {attempt.result}
                 </Typography>
               </Paper>
             </Grid>
@@ -78,10 +91,7 @@ class StudentTasks extends React.Component {
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItem button className={classes.nested}>
-              <StudentTaskDropDown
-                taskInfo={task}
-                className={this.props.classes.fullWidth}
-              />
+              code
             </ListItem>
           </List>
         </Collapse>
@@ -90,8 +100,8 @@ class StudentTasks extends React.Component {
   }
 }
 
-StudentTasks.propTypes = {
+Attempts.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(StudentTasks);
+export default withStyles(styles)(Attempts);
