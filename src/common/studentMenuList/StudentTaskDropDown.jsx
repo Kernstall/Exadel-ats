@@ -24,10 +24,10 @@ const styles = theme => ({
   },
   fullWidth: {
     width: '100%',
-  }
-
-  ,
+  },
 });
+
+
 class StudentTaskDropDown extends React.Component {
   render() {
     const { classes, taskInfo } = this.props;

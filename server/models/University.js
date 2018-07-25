@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const educationalEstablishmentSchema = new mongoose.Schema({
+const UniversitySchema = new mongoose.Schema({
   fullName: {
     type: String,
     unique: true,
@@ -15,4 +15,4 @@ const educationalEstablishmentSchema = new mongoose.Schema({
   }],
 });
 
-module.exports = mongoose.model('EducationalEstablishment', educationalEstablishmentSchema);
+module.exports = mongoose.model('University', UniversitySchema);

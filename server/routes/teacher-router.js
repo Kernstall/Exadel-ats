@@ -134,7 +134,8 @@ router.get('/students', async (req, res) => {
 
 router.post('/group', async (req, res) => {
   const groupName = req.query.groupName;
-  const teacherId = req.user.teacherId;
+  //const teacherId = req.user.teacherId;
+  const teacherId = req.query.teacherId;
   const studentArrayIds = req.body;
   try {
     const saveGroup = await dataFunctions.createGroup(groupName, teacherId);

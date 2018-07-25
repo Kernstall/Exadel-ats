@@ -26,26 +26,48 @@ const blocks = [
     tabName: 'Tests',
     tabInfo: [
       {
-        name: 'Training tests', result: 'Avr score1', info: 'info1',
+        name: 'Training tests',
+        info: [],
+        avgMark: null,
       },
       {
-        name: 'Examination tests', result: 'Avr score2', info: 'info2',
+        name: 'Examination tests',
+        info: [
+          {
+            topicsNames: [
+              {
+                name: 'ООП. С++',
+              },
+              {
+                name: 'Многопоточность. С++',
+              },
+              {
+                name: 'ООП. JAVA',
+              },
+              {
+                name: 'Многопоточность. JAVA',
+              },
+            ],
+            status: 'notSent',
+            result: 10,
+          },
+          {
+            topicsNames: [
+              {
+                name: 'ООП. С++',
+              },
+            ],
+            status: 'notSent',
+            result: 2,
+          },
+        ],
+        avgMark: 10,
       },
     ],
   },
   {
     tabName: 'History',
-    tabInfo: [
-      {
-        date: 'date1', name: 'Test test1 passed', score: 'score 10/10',
-      },
-      {
-        date: 'date2', name: 'Test test2 passed', score: 'score 10/10',
-      },
-      {
-        date: 'date3', name: 'Test test3 passed', score: 'score 10/10',
-      },
-    ],
+    tabInfo: [],
   },
 
 ];
@@ -73,7 +95,7 @@ const StudentMenuList = ({ classes }) => (
           case 'History':
             TabHeaders.push({
               tabName: block.tabName,
-              component: <StudentTabHistory activitiesList={block.tabInfo} />,
+              component: <StudentTabHistory historyList={block.tabInfo} />,
             });
             break;
           default: TabHeaders.push({
