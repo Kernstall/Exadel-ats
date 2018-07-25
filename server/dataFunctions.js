@@ -31,6 +31,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
         'taskArray.taskId': 1,
         'taskArray.isPassed': 1,
         'taskArray.bestResult': 1,
+        'taskArray.attempts': 1,
       },
     },
   ]);
