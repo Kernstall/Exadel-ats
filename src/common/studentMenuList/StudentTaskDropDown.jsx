@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import Attempts from './Attempts.jsx';
 
 const styles = theme => ({
   root: {
@@ -29,8 +31,15 @@ const styles = theme => ({
 
 
 class StudentTaskDropDown extends React.Component {
+  state = { isShowAttempts: false };
+
+  handleShowAttempts = () => {
+    this.setState({ isShowAttempts: true });
+  };
+
   render() {
     const { classes, taskInfo } = this.props;
+
     return (
       <div className={classes.fullWidth}>
         <Paper className={classes.root} elevation={1}>
@@ -38,14 +47,35 @@ class StudentTaskDropDown extends React.Component {
             Info
           </Typography>
           <Typography component="p">
-            {taskInfo}
+            {taskInfo.description}
           </Typography>
-          <Button variant="contained" color="primary" className={classes.button}>
+          <Button onClick={this.handleShowAttempts} variant="contained" color="primary" className={classes.button}>
             Show attempts
           </Button>
           <Button variant="contained" color="primary" className={classes.button}>
-            Upload
+            Upload solution
           </Button>
+          {
+            this.state.isShowAttempts
+              && (
+              <div className={classes.root}>
+                <List
+                  component="nav"
+                >
+                  {
+                  taskInfo.attempts.map(
+                    (attempt, index) => (
+                      <Attempts
+                        attempt={attempt}
+                        key={index}
+                      />
+                    ),
+                  )
+                }
+                </List>
+              </div>
+              )
+          }
         </Paper>
       </div>
     );
