@@ -6,9 +6,13 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/es/Button/Button';
+import { Redirect } from 'react-router';
+import { connect } from 'react-redux';
 import GroupsList from './groupsList/GroupsList.jsx';
 import TeacherTasksList from '../../common/teacherTasksList/TeacherTasksList';
 import TeacherQuestionList from '../../common/teacherQuestionList/TeacherQuestionList';
+import { logout } from '../../commands/userLogin';
+import {Link} from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -63,8 +67,7 @@ class TeacherMainPage extends React.Component {
   };
 
   _logout = () => {
-    localStorage.removeItem('user');
-    this.props.history.push('/');
+    this.props.logout();
   };
 
   render() {
@@ -106,12 +109,25 @@ class TeacherMainPage extends React.Component {
             )
           }
         </AppBar>
-        <Button onClick={this._logout} className={classes.createNewGroupButton} variant="contained">
-          LOG OUT
-        </Button>
+        <Link to="/">
+          <Button onClick={this._logout} className={classes.createNewGroupButton} variant="contained">
+            LOG OUT
+          </Button>
+        </Link>
       </div>
     );
   }
 }
 
-export default withStyles(styles)(TeacherMainPage);
+const styledComponent = withStyles(styles)(TeacherMainPage);
+
+const mapStateToProps = state => ({
+  isLoading: state.userLogin.isLoading,
+  response: state.userLogin.response,
+});
+
+const mapCommandsToProps = dispatch => ({
+  logout: param => dispatch(logout(param)),
+});
+
+export default connect(mapStateToProps, mapCommandsToProps)(styledComponent);

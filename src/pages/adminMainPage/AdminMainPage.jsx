@@ -7,6 +7,7 @@ import Common from '../../common/styles/Common';
 import { getActivities } from '../../commands/activities';
 import SearchBox from '../../common/searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
+import Button from "@material-ui/core/es/Button/Button";
 
 const styles = {
   ...Common,
@@ -83,6 +84,12 @@ class adminMainPage extends Component {
     super(props);
   }
 
+  _logout = () => {
+    fetch('/api/user/logout').then(res => res.json()).then(console.log);
+    localStorage.removeItem('user');
+    this.props.history.push('/');
+  };
+
   render() {
     const { classes } = this.props;
     return (
@@ -108,6 +115,9 @@ class adminMainPage extends Component {
             <ActivityListItems info={activities.activities} />
           </List>
         </Grid>
+        <Button onClick={this._logout} className={classes.createNewGroupButton} variant="contained">
+          LOG OUT
+        </Button>
       </Grid>
     );
   }
