@@ -24,46 +24,7 @@ const blocks = [
   },
   {
     tabName: 'Tests',
-    tabInfo: [
-      {
-        name: 'Training tests',
-        info: [],
-        avgMark: null,
-      },
-      {
-        name: 'Examination tests',
-        info: [
-          {
-            topicsNames: [
-              {
-                name: 'ООП. С++',
-              },
-              {
-                name: 'Многопоточность. С++',
-              },
-              {
-                name: 'ООП. JAVA',
-              },
-              {
-                name: 'Многопоточность. JAVA',
-              },
-            ],
-            status: 'notSent',
-            result: 10,
-          },
-          {
-            topicsNames: [
-              {
-                name: 'ООП. С++',
-              },
-            ],
-            status: 'notSent',
-            result: 2,
-          },
-        ],
-        avgMark: 10,
-      },
-    ],
+    tabInfo: [],
   },
   {
     tabName: 'History',

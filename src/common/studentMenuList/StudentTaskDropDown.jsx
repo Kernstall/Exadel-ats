@@ -29,8 +29,15 @@ const styles = theme => ({
 
 
 class StudentTaskDropDown extends React.Component {
+  state = { isShowAttempts: false };
+
+  handleShowAttempts = () => {
+    this.setState({ isShowAttempts: true });
+  };
+
   render() {
     const { classes, taskInfo } = this.props;
+
     return (
       <div className={classes.fullWidth}>
         <Paper className={classes.root} elevation={1}>
@@ -40,12 +47,16 @@ class StudentTaskDropDown extends React.Component {
           <Typography component="p">
             {taskInfo}
           </Typography>
-          <Button variant="contained" color="primary" className={classes.button}>
+          <Button onClick={this.handleShowAttempts} variant="contained" color="primary" className={classes.button}>
             Show attempts
           </Button>
           <Button variant="contained" color="primary" className={classes.button}>
-            Upload
+            Upload solution
           </Button>
+          {
+            this.state.isShowAttempts
+              && <h2>smth</h2>
+          }
         </Paper>
       </div>
     );
