@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import LoginForm from '../../common/loginForm/LoginForm.jsx';
 import Common from '../../common/styles/Common';
 import TopTabs from '../../common/topTabs/TopTabs.jsx';
+import {Redirect} from "react-router-dom";
 
 const styles = ({
   ...Common,
@@ -23,7 +24,6 @@ const styles = ({
   },
   flexElem: {
     'flex-grow': '1',
-    'margin-right': '10px',
   },
 });
 
@@ -31,7 +31,13 @@ class MainPage extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={[classes.flex, classes.centerScreen, classes.margin, classes.contentDisplay].join(' ')}>
+      <div className={[
+        classes.flex,
+        classes.centerScreen,
+        classes.margin,
+        classes.contentDisplay,
+        classes.scrollbar].join(' ')}
+      >
         <div className={classes.flexElem}>
           <TopTabs />
         </div>

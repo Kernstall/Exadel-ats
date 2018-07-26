@@ -35,7 +35,7 @@ class StudentActivities extends React.Component {
     const { classes, activity } = this.props;
     return (
       <div className={classes.root}>
-        <ListItem open="false" button onClick={this.handleClick}>
+        <ListItem open="false" onClick={this.handleClick}>
           <Grid container>
             <Grid item xs>
               <ListItemText primary={`${dateToString(activity.date)}`} />

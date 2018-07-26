@@ -11,6 +11,7 @@ const styles = {
   parent: {
     maxWidth: '300px',
     padding: '0px 5px 10px',
+    marginBottom: '10px',
   },
   caption: {
     fontSize: '0.7em',
@@ -52,22 +53,35 @@ const currencies = [
     value: 'administartor',
     label: 'Администратор',
   },
+  {
+    value: 'all',
+    label: 'Любая роль',
+  },
 ];
 
 class SearchBox extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
-    this.state = { currency: 'student' };
+    this.state = { role: 'all' };
   }
 
   handleChange = name => (event) => {
     this.setState({
       [name]: event.target.value,
     });
+    this.state[name] = event.target.value;
+    this.props.handleHistoryFilter(this.state.name, this.state.role, this.state.activityType);
+  };
+
+  handleChangeChild = (name, value) => {
+    this.setState({
+      [name]: value,
+    });
+    this.state[name] = value;
+    this.props.handleHistoryFilter(this.state.name, this.state.role, this.state.activityType);
   };
 
   render() {
-    // cutAfterNSymbols.cutAfterNSymbols('asdasd asdasdad asdasda asdasdasd asdasdads asdasd', 20, '...'))
     const { classes } = this.props;
     return (
       <Paper className={[classes.parent].join(' ')}>
@@ -79,15 +93,16 @@ class SearchBox extends Component {
             placeholder="Имя ..."
             className={classes.input}
             disableUnderline
+            onChange={this.handleChange('name')}
           />
         </Paper>
         <Paper className={classes.child} elevation={0}>
           <TextField
-            id="select-currency"
+            id="select-role"
             select
             className={classes.textField}
-            value={this.state.currency}
-            onChange={this.handleChange('currency')}
+            value={this.state.role}
+            onChange={this.handleChange('role')}
             InputProps={{
               disableUnderline: true,
             }}
@@ -100,7 +115,7 @@ class SearchBox extends Component {
           </TextField>
         </Paper>
         <Paper className={classes.child} elevation={0}>
-          <InputWithSuggestions />
+          <InputWithSuggestions onHandleChange={this.handleChangeChild} />
         </Paper>
       </Paper>
     );
