@@ -4,6 +4,7 @@ export { default as studentTasks } from './studentTasks';
 export { default as activities } from './activities';
 export { default as studentHistory } from './studentHistory';
 export { default as teacherCreateGroup } from './teacherCreateGroup';
+export { default as userLogin } from './userLogin';
 export { default as studentTests } from './studentTests';
 export { default as teacherQuestions } from './teacherQuestions';
 export { default as teacherTasks } from './teacherTasks';
