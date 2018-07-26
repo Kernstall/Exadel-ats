@@ -1,16 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Collapse from '@material-ui/core/Collapse';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import StudentTaskDropDown from './StudentTaskDropDown.jsx';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
 
@@ -45,13 +41,6 @@ const styles = theme => ({
 });
 
 class Attempts extends React.Component {
-  state = { open: false };
-
-
-  handleClick = () => {
-    this.setState(state => ({ open: !state.open }));
-  };
-
   render() {
     const dateToString = (_date) => {
       function addZero(i) {
@@ -70,7 +59,7 @@ class Attempts extends React.Component {
 
     return (
       <div className={classes.root}>
-        <ListItem open="false" button onClick={this.handleClick}>
+        <ListItem open="false" button>
           <Grid container>
             <Grid item xs>
               <ListItemText primary={`${dateToString(attempt.date)}`} />
@@ -86,15 +75,7 @@ class Attempts extends React.Component {
               </Paper>
             </Grid>
           </Grid>
-          {this.state.open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItem button className={classes.nested}>
-              code
-            </ListItem>
-          </List>
-        </Collapse>
       </div>
     );
   }
