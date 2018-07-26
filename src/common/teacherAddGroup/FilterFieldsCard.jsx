@@ -93,21 +93,6 @@ class FilterStudentCard extends React.Component {
     const { university } = this.state;
     const facultiesArr = universities[university];
 
-    const FUCKYOU = (
-      <FormSelect
-        fullWidth
-        type="search"
-        label="Факультет"
-        value={this.state.faculties}
-        inputProps={{
-          university: 'Faculty',
-          id: '0',
-        }}
-        onChange={this.handleFacultyChange}
-        options={facultiesArr}
-      />
-    );
-
     return (
       <Card className={classes.card}>
         <CardHeader

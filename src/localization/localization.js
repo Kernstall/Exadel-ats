@@ -29,6 +29,10 @@ const localize = (keyWord) => {
     type: 'Тип активности',
     userType: 'Роль',
     date: 'Дата / Время',
+    tasksTop: 'Лучшие по задачам',
+    testsTop: 'Лучшие по тестам',
+    activitiesTop: 'Лучшие по активности',
+    marksTop: 'Лучшие по оценкам',
   };
 
   const dictionaries = {

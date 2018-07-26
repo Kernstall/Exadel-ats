@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { Grid } from '@material-ui/core/es';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
+import Button from '@material-ui/core/es/Button/Button';
 import { Route, Link, Redirect } from 'react-router-dom';
 import Capture from '../../common/capture/Capture.jsx';
 import List from '../../common/shared/list/List';
 import Common from '../../common/styles/Common';
 import { getStudentGroups } from '../../commands/studentGroups';
 import Spinner from '../../common/shared/spinner/index';
+import { logout } from '../../commands/userLogin';
 
 const styles = {
   ...Common,
@@ -37,7 +39,7 @@ const styles = {
 
 class StudentMainPage extends Component {
   componentDidMount() {
-    this.props.getStudentGroups({ id: '5b45b16d75224332745f758e' }); // eslint-disable-line
+    this.props.getStudentGroups({id: this.props.match.params.id}); // eslint-disable-line
   }
 
   JSONtoJSX = (studentInfo, classes, keysToRender) => (
@@ -55,6 +57,10 @@ class StudentMainPage extends Component {
         );
       }
     }));
+
+  _logout = () => {
+    this.props.logout();
+  };
 
   render() {
     const { classes, studentGroups } = this.props;
@@ -107,9 +113,11 @@ class StudentMainPage extends Component {
         <Grid className={[classes.font, classes.wrapper].join(' ')}>
           {studentInfoComponent}
         </Grid>
-        {/* <Route exact path="/student/mainPage" component={() => <Redirect to="/" />} /> */}
-        <Route exact path="/studentMenu" component={<StudentMainPage />} />
-
+        <Link to="/">
+          <Button onClick={this._logout} className={classes.createNewGroupButton} variant="contained">
+            LOG OUT
+          </Button>
+        </Link>
       </Grid>
     );
   }
@@ -119,10 +127,12 @@ const styledComponent = withStyles(styles)(StudentMainPage);
 const mapStateToProps = state => ({
   isLoading: state.studentGroups.isLoading,
   studentGroups: state.studentGroups.studentGroups,
+  response: state.userLogin.response,
 });
 
 const mapCommandsToProps = dispatch => ({
   getStudentGroups: param => dispatch(getStudentGroups(param)),
+  logout: param => dispatch(logout(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(styledComponent);
