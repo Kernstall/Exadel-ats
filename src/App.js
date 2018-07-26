@@ -16,6 +16,8 @@ import AdminMainPage from './pages/adminMainPage/AdminMainPage.jsx';
 import TeacherMainPage from './pages/teacherMainPage/TeacherMainPage';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent';
 import TeacherTasksList from './common/teacherTasksList/TeacherTasksList';
+import TaskView from './common/taskView/TaskView';
+import TeacherTaskEdit from './common/teachetTaskEdit/TeacherTaskEdit';
 
 const styles = ({
   content: {
@@ -44,6 +46,8 @@ class App extends Component {
               <Route path="/teacher/groups/:id" render={props => <TeacherGroupComponent {...props} />} />
               <Route exact path="/tasks" component={TeacherTasksList} />
               <Route path="/admin" component={AdminMainPage} />
+              <Route path="/teacher/task/edit" component={TeacherTaskEdit} />
+              <Route path="/teacher/tasks/:id" component={TaskView} />
             </div>
           </Router>
           <Footer />
