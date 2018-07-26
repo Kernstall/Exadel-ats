@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import StarIcon from '@material-ui/icons/Star';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import sharedStyles from '../styles/Common';
+import medal from '../../img/medal-solid.svg';
 
 const stylesCommon = {
   wrapper: {
@@ -12,6 +10,8 @@ const stylesCommon = {
     background: '#c3c3c320',
   },
 };
+
+const medalSize = 20;
 
 const styles = {
   wrapper: {
@@ -21,31 +21,87 @@ const styles = {
   wrapper1: {
     ...stylesCommon,
   },
-  firstPlaces: {
-    opacity: '1',
+  itemText: {
+    marginLeft: 20,
+  },
+  firstPlace: {
+    backgroundColor: 'rgb(212,175,55)',
+  },
+  secondPlace: {
+    backgroundColor: 'rgb(169,169,169)',
+  },
+  thirdPlace: {
+    backgroundColor: 'rgb(222,184,135)',
   },
   otherPlaces: {
-    opacity: '0.3',
+    backgroundColor: 'rgb(169,169,169, .3)',
   },
-  ...sharedStyles,
+  medal: {
+    display: 'inline-block',
+    width: `${medalSize}px`,
+    height: `${medalSize}px`,
+    '-webkit-mask': `url(${medal}) no-repeat 50% 50%`,
+    '-webkit-mask-size': 'cover',
+    zIndex: '999',
+    position: 'absolute',
+  },
+  medalAnimationHandler: {
+    animation: '.2s pulse forwards',
+    animationTimingFunction: 'cubic-beizer(.59,1.83,.8,.72)',
+  },
+  '@keyframes pulse': {
+    '0%': {
+      width: `${medalSize}px`,
+      height: `${medalSize}px`,
+    },
+    '70%': {
+      width: `${medalSize * 2}px`,
+      height: `${medalSize * 2}px`,
+
+    },
+    '100%': {
+      width: `${medalSize}px`,
+      height: `${medalSize}px`,
+    },
+  },
 };
 
-const StudentInTop = (props) => {
-  const { classes, student, number } = props;
-  let listItemIcon;
-  if (number >= 0 && number < 3) {
-    listItemIcon = <StarIcon className={classes.firstPlaces} />;
-  } else {
-    listItemIcon = <StarIcon className={classes.otherPlaces} />;
+class StudentInTop extends Component {
+  constructor() {
+    super();
+    this.state = { isOver: false };
   }
-  return (
-    <ListItem button className={classes.wrapper}>
-      <ListItemIcon>
-        {listItemIcon}
-      </ListItemIcon>
-      <ListItemText inset primary={student} />
-    </ListItem>
-  );
-};
+
+  handleAnimation = () => {
+    console.log(this.state);
+    this.setState({ isOver: !this.state.isOver });
+  }
+
+  render() {
+    const { classes, student, number } = this.props;
+    let className;
+    if (number == 0) {
+      className = classes.firstPlace;
+    } else if (number == 1) {
+      className = classes.secondPlace;
+    } else if (number == 2) {
+      className = classes.thirdPlace;
+    } else {
+      className = classes.otherPlaces;
+    }
+    const animation = this.state.isOver ? ` ${classes.medalAnimationHandler}` : '';
+    return (
+      <ListItem
+        button
+        className={classes.wrapper}
+        onMouseEnter={this.handleAnimation}
+        onMouseLeave={this.handleAnimation}
+      >
+        <div className={[className, classes.medal, animation, { root: classes.noMargin }].join(' ')} />
+        <ListItemText className={classes.itemText} inset primary={student} />
+      </ListItem>
+    );
+  }
+}
 
 export default withStyles(styles)(StudentInTop);
