@@ -4,10 +4,7 @@ import { teacherCreateGroup as Actions } from '../actions';
 
 export const getAvailableStudents = (filter) => (dispatch) => {
   dispatch(Actions.getStudentsRequest());
-  fetch('/api/teacher/students',
-    {
-      method: 'GET',
-    })
+  fetch('/api/teacher/students')
     .then(response => response.json())
     .then(body => dispatch(Actions.getStudentsSuccess(body)))
     .catch(err => dispatch(Actions.getStudentsError(err)));

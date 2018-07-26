@@ -43,7 +43,7 @@ class TeacherTaskList extends React.Component {
         key={index}
       />
     ));
-  }
+  };
 
   render() {
     const { classes, teacherTasks } = this.props;

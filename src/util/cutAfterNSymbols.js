@@ -8,7 +8,6 @@ const cutAfterNSymbols = (inputString, maxLength, replacingString) => {
   let result = '';
   for (let counter = 0, symbolsAmount = 0; symbolsAmount + words[counter].length + replacingString.length < maxLength; symbolsAmount += words[counter].length, counter++) {
     result += `${words[counter]} `;
-    console.log('result', result);
   }
   return `${result}${replacingString}`;
 };

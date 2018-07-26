@@ -5,6 +5,7 @@ import { Link, Route } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import GroupTemplate from '../groupTemplate/GroupTemplate.jsx';
 import Button from "@material-ui/core/es/Button/Button";
+import TeacherAddGroup from "../../../common/teacherAddGroup/TeacherAddGroup";
 
 const styles = {
   noUnderline: {
@@ -37,7 +38,7 @@ class GroupsList extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/teacher/group?teacherID=5b451cf8ea26655734a039cc')
+    fetch(`/api/teacher/group?teacherID=${this.props.id}`)
       .then(res => res.json())
       .then(res => {
         this.setState({
