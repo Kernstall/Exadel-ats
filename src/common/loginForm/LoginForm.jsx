@@ -4,14 +4,24 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { Route, Link, Redirect } from 'react-router-dom';
 import './style.css';
-import axios from 'axios';
-import createHistory from 'history/createBrowserHistory';
+import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import RegisterForm from '../../pages/registerFormPage/RegisterFormPage.jsx';
+import logo from '../../img/logo.png';
 import { login } from '../../commands/userLogin';
-import { getStudents } from '../../commands/students';
 
-const history = createHistory();
+const styles = {
+  img: {
+    height: `${window.screen.height * 0.1}px`,
+  },
+  link: {
+    fontWeight: '100',
+    color: '#c8c8c8',
+  },
+  input: {
+    color: '#c3c3c3',
+  },
+};
 
 class LoginForm extends React.Component {
   constructor() {
@@ -36,66 +46,36 @@ class LoginForm extends React.Component {
     });
   };
 
-  handleClick = (e) => {
+  handleClick = () => {
     this.props.login(this.state);
-    /* axios.post('/api/user/login', {
-      username: this.state.username,
-      password: this.state.password,
-    })/!* .then(res => console.log(res.headers.etag, res.data)); *!/
-      .then((res) => {
-        console.log(res);
-        localStorage.setItem(`user`, res.headers.etag);
-        this.setState({
-          _id: res.data.id,
-          status: res.data.status,
-          isLogged: true,
-        });
-      }); */
-    /* fetch('/api/user/login', {
-      method: 'POST',
-      body: JSON.stringify(this.state),
-      headers: {
-        'Content-type': 'application/json',
-        'Set-Cookie': 'true',
-      },
-      credentials: 'include',
-    })
-      .then(res => {console.log(res); return res;})
-      .then(res => res.json())
-      .then((res) => {
-        localStorage.setItem('user', JSON.stringify({
-          username: this.state.username,
-          password: this.state.password,
-        }));
-        this.setState({
-          _id: res.id,
-          status: res.status,
-          isLogged: true,
-        });
-        console.log(res);
-      }); */
   };
 
   render() {
+    const { classes } = this.props;
     return (
       <form className="container" noValidate autoComplete="off">
         <div className="input-container">
           <div className="text-panel">
-            <Typography className="login-header" variant="headline">
-              Log In
-            </Typography>
-            <Typography variant="subheading">
+            <img className={classes.img} src={logo} alt="logo" />
+          </div>
+          <div className="input-panels">
+            <Typography variant="subheading" className={classes.link}>
               Not a member yet?
-              <br />
+              {' '}
               <Link to="/registration" className="sign-up-button">
                 Sign Up
               </Link>
               {' '}
               now.
             </Typography>
-          </div>
-          <div className="input-panels">
             <TextField
+              autoFocus
+              InputLabelProps={{
+                className: classes.input,
+              }}
+              inputProps={{
+                className: classes.input,
+              }}
               id="name"
               label="Login"
               className="text-field"
@@ -103,6 +83,12 @@ class LoginForm extends React.Component {
               onChange={this.handleChange('username')}
             />
             <TextField
+              InputLabelProps={{
+                className: classes.input,
+              }}
+              inputProps={{
+                className: classes.input,
+              }}
               id="password-input"
               label="Password"
               className="text-field"
@@ -111,7 +97,7 @@ class LoginForm extends React.Component {
               margin="normal"
               onChange={this.handleChange('password')}
             />
-            <Button onClick={this.handleClick} className="login-button">
+            <Button onClick={this.handleClick} className="login-button" fullWidth>
               Login
             </Button>
           </div>
@@ -134,4 +120,4 @@ const mapCommandsToProps = dispatch => ({
   login: param => dispatch(login(param)),
 });
 
-export default connect(mapStateToProps, mapCommandsToProps)(LoginForm);
+export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(LoginForm));
