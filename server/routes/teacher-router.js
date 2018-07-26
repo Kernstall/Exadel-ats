@@ -75,7 +75,9 @@ router.post('/task', (req, res) => {
     .then((response) => {
       res.status(200).send(response);
     })
-    .catch((err) => { res.status(500).send(err); });
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 
 router.post('/question', (req, res) => {
@@ -83,7 +85,9 @@ router.post('/question', (req, res) => {
     .then((response) => {
       res.status(200).send(response);
     })
-    .catch((err) => { res.status(500).send(err); });
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 
 router.post('/group/students', (req, res) => {
@@ -91,7 +95,9 @@ router.post('/group/students', (req, res) => {
   const studentIDs = req.body;
   dataFunctions.addStudentsToGroup(groupID, studentIDs)
     .then(answer => res.send(answer))
-    .catch((err) => { res.status(500).send(err); });
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 
 router.delete('/group/students', (req, res) => {
@@ -99,7 +105,9 @@ router.delete('/group/students', (req, res) => {
   const studentIDs = req.body;
   dataFunctions.deleteStudentsToGroup(groupID, studentIDs)
     .then(answer => res.send(answer))
-    .catch((err) => { res.status(500).send(err); });
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 
 // Возвращает группы, принадлежащие учителю с количеством людей в них
@@ -134,8 +142,7 @@ router.get('/students', async (req, res) => {
 
 router.post('/group', async (req, res) => {
   const groupName = req.query.groupName;
-  //const teacherId = req.user.teacherId;
-  const teacherId = req.query.teacherId;
+  const teacherId = req.user.teacherId;
   const studentArrayIds = req.body;
   try {
     const saveGroup = await dataFunctions.createGroup(groupName, teacherId);
