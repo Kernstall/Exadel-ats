@@ -57,7 +57,7 @@ class AttemptFiles extends React.Component {
            codeInfo.forEach((code) => {
              TabHeaders.push({
                tabName: `${code.name}.${code.extension}`,
-               component: <AttemptCode codeString={code.code} />,
+               component: <AttemptCode codeString={code.code} lang={code.extension} />,
              });
            })
          }

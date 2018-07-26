@@ -4,25 +4,21 @@ import { withStyles } from '@material-ui/core/styles';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/styles/hljs';
 
-const styles = theme => ({
-
-  root: {
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-  },
-  nested: {
-    paddingLeft: theme.spacing.unit * 4,
-  },
-  width: {
-    width: '100%',
+const styles = ({
+  text: {
+    fontSize: '15px',
+    maxWidth: '100%',
+    overflowX: 'hidden',
   },
 });
 
 class AttemptCode extends React.Component {
   render() {
-    const { classes, codeString } = this.props;
+    const { lang, codeString, classes } = this.props;
     return (
-      <SyntaxHighlighter language="javascript" style={docco}>{codeString}</SyntaxHighlighter>
+      <div className={classes.text}>
+        <SyntaxHighlighter language={lang} style={docco}>{codeString}</SyntaxHighlighter>
+      </div>
     );
   }
 }
