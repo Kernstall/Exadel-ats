@@ -149,9 +149,12 @@ router.post('/group', async (req, res) => {
     const updateGroup = await dataFunctions.addStudentsToGroup(saveGroup.id, studentArrayIds);
     res.status(200).send(JSON.stringify(updateGroup.id));
   } catch (err) {
-    res.status(400).send(err.toString());
+    if (err.toString() === 'Error: Duplicate key') {
+      res.status(409).send(err.toString());
+    } else {
+      res.status(400).send(err.toString());
+    }
   }
-
 });
 
 module.exports = router;
