@@ -4,6 +4,7 @@ import './style.css';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import Button from '@material-ui/core/es/Button/Button';
 import { withStyles } from '@material-ui/core/styles';
+import { Redirect } from 'react-router-dom';
 import FormSelect from '../../../common/shared/select/index';
 
 const universities = {
@@ -35,9 +36,8 @@ class TeacherRegistration extends React.Component {
       email: '',
       password: '',
       university: '',
+      isRedirected: false,
     };
-
-    this.handleSelectUnChange = this.handleSelectUnChange.bind(this);
   }
 
   handleChange = name => (event) => {
@@ -45,12 +45,6 @@ class TeacherRegistration extends React.Component {
       [name]: event.target.value,
     });
   };
-
-  handleSelectUnChange(event) {
-    this.setState({
-      university: event.target.value,
-    });
-  }
 
   handleSubmit = () => {
     fetch('/api/user/signup', {
@@ -61,6 +55,7 @@ class TeacherRegistration extends React.Component {
       },
     }).then(res => res.json())
       .then(res => console.log(`Success: ${res}`))
+      .then(() => this.setState({ isRedirected: true }))
       .catch(rej => console.log(`Rejected: ${rej}`));
   };
 
@@ -137,6 +132,7 @@ class TeacherRegistration extends React.Component {
         <Button onClick={this.handleSubmit} className={classes.registerButton}>
           Register
         </Button>
+        {this.state.isRedirected && <Redirect to="/" />}
       </section>
     );
   }

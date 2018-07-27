@@ -14,6 +14,23 @@ const styles = theme => ({
     alignItems: 'center',
     marginTop: 20,
   },
+  taskTitle: {
+    alignSelf: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    color: 'grey',
+    alignItems: 'center',
+  },
+  score: {
+    display: 'flex',
+    width: 'auto',
+    padding: '4px 11px 4px 9px',
+    borderRadius: 5,
+    marginLeft: 10,
+    fontWeight: 400,
+    fontSize: 24,
+    backgroundColor: '#E6E6FA',
+  },
   button: {
     margin: theme.spacing.unit,
     color: '#fff',
@@ -100,10 +117,16 @@ class TaskView extends React.Component {
     const text = 'Тот, кто писал эту программу, явно делал это в спешке.. На самом деле, нет: программа-то учебная, и этот кто-то нарочно запихнул туда лишние переменные, а те, что надо, не объявил. Исправляем ситуацию: лишние переменные закомментируем, а недостающие — объявим. И наступит тогда в программе всеобщая гармония.';
     const tags = ['БГУ', 'Последовательность', 'Василенко', 'ФПМИ'];
     const data = '1\n2\n3\n4\n2\n3\n4\n2\n3';
+    const taskName = 'Чистка кода';
+    const score = 6;
 
     return (
       <div className={classes.root}>
         <div className={classes.flex}>
+          <div className={classes.taskTitle}>
+            <Typography variant="display1">{taskName}</Typography>
+            <Typography variant="h3" className={classes.score}>{score}</Typography>
+          </div>
           <Typography variant="display1">Условие</Typography>
           <Typography className={classes.taskInfo}>{text}</Typography>
           <div className={classes.example}>
@@ -128,8 +151,8 @@ class TaskView extends React.Component {
             <Button variant="contained" color="primary" className={classes.button}>
               <Link className={classes.mylink} to="/">Редактировать</Link>
             </Button>
-            <Button onClick={this.context.router.history.goBack} variant="contained" color="primary" className={classes.button}>
-              Назад к группе
+            <Button variant="contained" color="primary" className={classes.button}>
+              <Link className={classes.mylink} to="/teacher/group">Назад к группе</Link>
             </Button>
           </div>
         </div>

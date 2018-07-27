@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const User = require('../models/User');
 const dataFunctions = require('../dataFunctions');
 const mapping = require('../utils/mapping/student');
@@ -24,14 +25,9 @@ router.get('/group/tasks', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-  if (!req.query.id) {
-    res.status(400).end();
-    return;
-  }
-
   try {
-    const getStudentTask = User.findById(req.query.id);
-    const getGroupsTask = Group.find({ studentIdList: req.query.id });
+    const getStudentTask = User.findById(req.user._id);
+    const getGroupsTask = Group.find({ studentIdList: req.user._id });
     await Promise.all([getStudentTask, getGroupsTask]);
     const studentModel = await getStudentTask;
     let groups = await getGroupsTask;
@@ -67,6 +63,9 @@ router.get('/group/tests', async (req, res) => {
   } catch (e) {
     res.status(400).send(e.toString());
   }
+});
+
+router.post('/task/attempt', async (req, res) => {
 
 });
 

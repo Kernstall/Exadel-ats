@@ -9,3 +9,4 @@ export { default as studentTests } from './studentTests';
 export { default as teacherQuestions } from './teacherQuestions';
 export { default as teacherTasks } from './teacherTasks';
 export { default as errorMessage } from './errorMessage';
+export { default as attemptCode } from './attemptCode';

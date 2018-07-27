@@ -10,6 +10,7 @@ import studentTests from './studentTests';
 import teacherQuestions from './teacherQuestions';
 import teacherTasks from './teacherTasks';
 import errorMessage from './errorMessage';
+import attemptCode from './attemptCode';
 
 export default combineReducers({
   students,
@@ -23,4 +24,5 @@ export default combineReducers({
   teacherQuestions,
   teacherTasks,
   errorMessage,
+  attemptCode,
 });
