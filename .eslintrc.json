@@ -48,6 +48,9 @@
     ],
     "react/destructuring-assignment": [
       0
+    ],
+    "no-unused-expressions": [
+      0
     ]
   }
 }

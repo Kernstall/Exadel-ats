@@ -16,7 +16,7 @@ export const getActivities = (param) => (dispatch) => {
     return query;
   }
 
-  let query = 'api/admin/activities?';
+  let query = '/api/admin/activities?';
   if (param.role == 'all') { // TODO : delete it immideatly
     param.role = '';
   }
@@ -27,7 +27,14 @@ export const getActivities = (param) => (dispatch) => {
   query = propsToQuery(query, param);
   console.log(query);
   dispatch(Actions.activitiesRequest());
-  fetch(query)
+  fetch(query,
+    {
+      headers: {
+        'Content-type': 'application/json',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    })
     .then(response => response.json())
     .then(body => dispatch(Actions.activitiesSuccess(body)))
     .catch(err => dispatch(Actions.activitiesRequest(err)));
