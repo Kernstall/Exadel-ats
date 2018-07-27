@@ -10,7 +10,6 @@ export const getAttemptCode = ({ taskId, attemptNumber }) => (dispatch) => {
     credentials: 'include',
   })
     .then(response => response.json())
-    .then((res) => { console.log(res); return res; })
     .then(body => dispatch(Actions.attemptSuccess(body)))
     .catch(err => dispatch(Actions.attemptRequest(err)));
 };
