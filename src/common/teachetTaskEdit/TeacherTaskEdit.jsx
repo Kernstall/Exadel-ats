@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import AddCircle from '@material-ui/icons/AddCircle';
 import TextField from '@material-ui/core/TextField';
 import { Typography } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Chip from '@material-ui/core/Chip';
 import TestsBar from './TestsBar';
@@ -20,6 +21,10 @@ const styles = theme => ({
     '&:hover': {
       backgroundColor: '#1b77c5',
     },
+  },
+  mylink: {
+    textDecoration: 'none',
+    color: 'white',
   },
   rightIcon: {
     marginLeft: theme.spacing.unit,
@@ -135,6 +140,12 @@ const styles = theme => ({
     fontSize: 28,
     cursor: 'pointer',
   },
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    marginTop: 10,
+  },
 });
 
 class TeacherTaskEdit extends React.Component {
@@ -171,6 +182,9 @@ class TeacherTaskEdit extends React.Component {
       });
     };
     this.handleClick = data => () => {
+      if (data.length < 3) {
+        return;
+      }
       this.setState((state) => {
         const tags = state.tags;
         tags.push(data);
@@ -183,7 +197,7 @@ class TeacherTaskEdit extends React.Component {
         tagToAdd: this.input.value,
       });
     };
-  };
+  }
 
   handleClickAddTest = () => {
     const { tests } = this.state;
@@ -313,6 +327,14 @@ class TeacherTaskEdit extends React.Component {
             handleClickAddTest={this.handleClickAddTest}
             tests={tests}
           />
+          <div className={classes.buttonContainer}>
+            <Button variant="contained" color="primary" className={classes.button}>
+              Сохранить
+            </Button>
+            <Button variant="contained" color="primary" className={classes.button}>
+              Отмена
+            </Button>
+          </div>
         </div>
       </div>
     );

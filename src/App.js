@@ -25,7 +25,7 @@ import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 
 const styles = ({
   content: {
-    minHeight: 'calc(100vh - 100px)',
+    minHeight: 'calc(100vh - 40px)',
   },
   ...Common,
 });
@@ -48,7 +48,7 @@ class App extends Component {
               <PrivateRoute exact path="/teacher/id/:id" component={TeacherMainPage} />
               <Route path="/admin" component={AdminMainPage} />
               <Route exact path="/:attemptNumber&&taskId" component={AttemptFiles} />
-              <Route path="/teacher/task/edit" component={TeacherTaskEdit} />
+              <Route path="/teacher/task/:id" component={TeacherTaskEdit} />
               <Route path="/teacher/tasks/:id" component={TaskView} />
             </div>
           </Router>
