@@ -36,8 +36,6 @@ class LoginForm extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log('STATE', this.state);
-    console.log('PROPS', this.props);
   }
 
   handleChange = name => (e) => {
@@ -104,7 +102,7 @@ class LoginForm extends React.Component {
         </div>
         <Route exact path="/registration" component={RegisterForm} />
         {
-          this.props.response && <Redirect to={`/${this.props.response.status}/${this.props.response.id}`} />
+          this.props.response && <Redirect to={`/${this.props.response.status}/id/${this.props.response.id}`} />
         }
       </form>
     );

@@ -33,43 +33,49 @@ const blocks = [
 
 ];
 
-const TabHeaders = [];
 
-const StudentMenuList = ({ classes }) => (
-  <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
-    {
+class StudentMenuList extends React.Component {
+  render() {
+    const { classes } = this.props;
+    const TabHeaders = [];
+    return (
+      <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
+        {
 
-      blocks.forEach((block) => {
-        switch (block.tabName) {
-          case 'Tasks':
-            TabHeaders.push({
-              tabName: block.tabName,
-              component: <StudentTabTasksList tasksList={block.tabInfo} />,
-            });
-            break;
-          case 'Tests':
-            TabHeaders.push({
-              tabName: block.tabName,
-              component: <StudentTabTestsList testsList={block.tabInfo} />,
-            });
-            break;
-          case 'History':
-            TabHeaders.push({
-              tabName: block.tabName,
-              component: <StudentTabHistory historyList={block.tabInfo} />,
-            });
-            break;
-          default: TabHeaders.push({
-            tabName: block.tabName,
-            component: <StudentTabTasksList tasksList={block.tabInfo} />,
-          });
-        }
-      })
-    }
-    <TabComponent
-      tabHeaders={TabHeaders}
-    />
-  </div>
-);
+        blocks.forEach((block) => {
+          switch (block.tabName) {
+            case 'Tasks':
+              TabHeaders.push({
+                tabName: block.tabName,
+                component: <StudentTabTasksList tasksList={block.tabInfo} />,
+              });
+              break;
+            case 'Tests':
+              TabHeaders.push({
+                tabName: block.tabName,
+                component: <StudentTabTestsList testsList={block.tabInfo} />,
+              });
+              break;
+            case 'History':
+              TabHeaders.push({
+                tabName: block.tabName,
+                component: <StudentTabHistory historyList={block.tabInfo} />,
+              });
+              break;
+            default:
+              TabHeaders.push({
+                tabName: block.tabName,
+                component: <StudentTabTasksList tasksList={block.tabInfo} />,
+              });
+          }
+        })
+      }
+        <TabComponent
+          tabHeaders={TabHeaders}
+        />
+      </div>
+    );
+  }
+}
 
 export default withStyles(styles)(StudentMenuList);
