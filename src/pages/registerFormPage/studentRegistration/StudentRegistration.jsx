@@ -22,6 +22,9 @@ const styles = theme => ({
       backgroundColor: '#1b77c5',
     },
   },
+  width: {
+    width: 300,
+  },
 });
 
 const gradYears = [2019, 2020, 2021, 2022, 2023, 2024, 2025];
@@ -123,6 +126,7 @@ class StudentRegistration extends React.Component {
           }}
           onChange={this.handleChange('university')}
           options={universitiesArr}
+          className={classes.width}
         />
         {facultiesArr && (
         <FormSelect
@@ -133,6 +137,7 @@ class StudentRegistration extends React.Component {
             university: 'Faculty',
             id: '0',
           }}
+          className={classes.width}
           onChange={this.handleChange('faculty')}
           options={facultiesArr}
         />

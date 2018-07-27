@@ -21,6 +21,9 @@ const styles = theme => ({
       backgroundColor: '#1b77c5',
     },
   },
+  width: {
+    width: 300,
+  },
 });
 
 class TeacherRegistration extends React.Component {
@@ -131,6 +134,7 @@ class TeacherRegistration extends React.Component {
             university: 'University',
             id: '0',
           }}
+          className={classes.width}
           onChange={this.handleChange('university')}
           options={universitiesArr}
         />

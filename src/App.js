@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import MuiThemeProvider from '@material-ui/core/es/styles/MuiThemeProvider';
 import createHistory from 'history/createBrowserHistory';
@@ -22,7 +22,7 @@ import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 
 const styles = ({
   content: {
-    minHeight: 'calc(100vh - 100px)',
+    minHeight: 'calc(100vh - 40px)',
   },
   ...Common,
 });
@@ -34,9 +34,9 @@ class App extends Component {
       <MuiThemeProvider theme={createMuiTheme}>
         <ErrorDispatcher />
         <div className={classes.minHeight}>
-          <Header />
           <Router>
             <div className={classes.content}>
+              <Header />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
               <Route path="/studentMenu" component={StudentMenu} />

@@ -16,7 +16,7 @@ export const getActivities = (param) => (dispatch) => {
     return query;
   }
 
-  let query = 'api/admin/activities?';
+  let query = '/api/admin/activities?';
   if (param.role == 'all') { // TODO : delete it immideatly
     param.role = '';
   }

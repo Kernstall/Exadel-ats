@@ -1,98 +1,37 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/es';
-import List from '@material-ui/core/List';
-import Grid from '@material-ui/core/Grid';
-import Common from '../../common/styles/Common';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import { getActivities } from '../../commands/activities';
-import SearchBox from '../../common/searchBox/SearchBox.jsx';
-import ActivityListItems from './ActivityListItems/ActivityListItems';
 import HeaderMenue from './headerMenue/HeaderMenue';
+import AdminTeacherPage from '../adminTeacherPage/AdminTeacherPage';
+import AdminHistoryPage from '../adminHistoryPage/AdminHistoryPage';
+import AdminGroupPage from '../adminGroupPage/AdminGroupPage';
+import AdminStatisticsPage from '../adminStatisticsPage/AdminStatisticsPage';
+import AdminStudentPage from '../adminStudentPage/AdminStudentPage';
+import AdminTaskPage from '../adminTaskPage/AdminTaskPage';
 
 const styles = {
-  ...Common,
-  centerScreen: {
-    width: '70%',
-    margin: '0 auto',
-    paddingTop: '10px',
-  },
-  '@media (max-width: 400px)': {
-    centerScreenMobile: {
-      width: '100%',
-      display: 'flex',
-    },
-  },
-  marginLeft: {
-    marginLeft: '5px',
-    width: 'calc(100% - 310px)',
-  },
-  SearcBox: {
-    minWidth: '300px',
-  },
-  menue: {
-    margin: '10px',
+  root: {
+    marginTop: 6,
   },
 };
 
 class AdminMainPage extends Component {
-  constructor(props) { // eslint-disable-line
-    super(props);
-    this.state = {
-      historyFilter: {
-        name: '',
-        role: '',
-        activityType: '',
-      },
-    };
-  }
-
-  componentDidMount() { // eslint-disable-next-line
-    this.props.getActivities(this.state.historyFilter);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    prevState.historyFilter == this.state.historyFilter
-      || this.props.getActivities(this.state.historyFilter);
-  }
-
-  handleHistoryFilter = (name, role, activityType) => {
-    const newState = {
-      historyFilter: { name, role, activityType },
-    };
-    this.setState(newState);
-  };
-
   render() {
-    const { classes, activities } = this.props;
-    if (activities) {
-      return (
-        <Grid
-          alignItems="stretch"
-          justify="center"
-          container
-          flexDirection="row"
-          className={[classes.centerScreen, classes.centerScreenMobile].join(' ')}
-        >
-          <HeaderMenue />
-          <Grid item className={classes.SearcBox}>
-            <SearchBox handleHistoryFilter={this.handleHistoryFilter} />
-          </Grid>
-          <Grid
-            item
-            className={classes.marginLeft}
-          >
-            <List
-              disablePadding="false"
-              component="nav"
-              className={classes.noMargin}
-            >
-              <ActivityListItems info={activities} />
-            </List>
-          </Grid>
-        </Grid>
-      );
-    }
-    return null;
+    const { classes } = this.props;
+    return (
+      <div className={classes.root}>
+        <HeaderMenue />
+        <Route exact path="/admin" component={() => <Redirect to="/admin/history" />} />
+        <Route path="/admin/history" exact component={AdminHistoryPage} />
+        <Route path="/admin/teachers" exact component={AdminTeacherPage} />
+        <Route path="/admin/students" exact component={AdminStudentPage} />
+        <Route path="/admin/groups" exact component={AdminGroupPage} />
+        <Route path="/admin/statistics" exact component={AdminStatisticsPage} />
+        <Route path="/admin/tasks" exact component={AdminTaskPage} />
+      </div>
+    );
   }
 }
 
