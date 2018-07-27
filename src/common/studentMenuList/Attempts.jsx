@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Link from "react-router-dom/es/Link";
+import Link from 'react-router-dom/es/Link';
 
 const styles = theme => ({
 
@@ -39,6 +39,9 @@ const styles = theme => ({
     height: '2px',
     maxWidth: '15%',
   },
+  noUnderline: {
+    textDecoration: 'none',
+  },
 });
 
 class Attempts extends React.Component {
@@ -50,34 +53,36 @@ class Attempts extends React.Component {
         }
         return i;
       }
+
       const date = new Date(Date.parse(_date));
       const parsedTime = `${addZero(date.getDay())}.${addZero(date.getMonth())}.${addZero(date.getFullYear())}`;
       const parsedData = `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
       return `${parsedTime} ${parsedData}`;
     };
 
-    const { classes, attempt } = this.props;
+    const { classes, attempt, taskId } = this.props;
 
     return (
       <div className={classes.root}>
-        <ListItem open="false" button>
-          <Link to="/studentMenu/attemptCode" />
-          <Grid container>
-            <Grid item xs>
-              <ListItemText primary={`${dateToString(attempt.date)}`} />
+        <Link to={`/${attempt.number}&&${taskId}`} className={classes.noUnderline}>
+          <ListItem open="false" button>
+            <Grid container>
+              <Grid item xs>
+                <ListItemText primary={`${dateToString(attempt.date)}`} />
+              </Grid>
+              <Grid item xs>
+                <ListItemText primary={`№: ${attempt.number}`} />
+              </Grid>
+              <Grid item xs>
+                <Paper className={attempt.isPassed ? classes.green : classes.red}>
+                  <Typography component="p">
+                    {attempt.result}
+                  </Typography>
+                </Paper>
+              </Grid>
             </Grid>
-            <Grid item xs>
-              <ListItemText primary={`№: ${attempt.number}`} />
-            </Grid>
-            <Grid item xs>
-              <Paper className={attempt.isPassed ? classes.green : classes.red}>
-                <Typography component="p">
-                  {attempt.result}
-                </Typography>
-              </Paper>
-            </Grid>
-          </Grid>
-        </ListItem>
+          </ListItem>
+        </Link>
       </div>
     );
   }

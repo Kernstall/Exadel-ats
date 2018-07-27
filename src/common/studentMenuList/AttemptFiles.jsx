@@ -1,13 +1,10 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/styles/hljs';
+import { connect } from 'react-redux';
 import TabComponent from '../tabComponent/TabComponent.jsx';
-import StudentTabTasksList from './StudentTabTasksList.jsx';
-import StudentTabTestsList from './StudentTabTestsList.jsx';
-import StudentTabHistory from './StudentTabHistory.jsx';
 import Common from '../styles/Common';
 import AttemptCode from './AttemptCode';
+import { getAttemptCode } from '../../commands/attemptCode';
 
 const styles = ({
   ...Common,
@@ -48,18 +45,25 @@ const codeInfo = [
 const TabHeaders = [];
 
 class AttemptFiles extends React.Component {
+  componentDidMount() {
+    this.props.getAttemptCode({
+      taskId: '5b45b16f75224332745f7595',
+      attemptNumber: this.props.match.params.attemptNumber,
+    });
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes, attemptCode } = this.props;
     return (
       <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
         {
 
-           codeInfo.forEach((code) => {
-             TabHeaders.push({
-               tabName: `${code.name}.${code.extension}`,
-               component: <AttemptCode codeString={code.code} lang={code.extension} />,
-             });
-           })
+          attemptCode.forEach((code) => {
+            TabHeaders.push({
+              tabName: `${code.name}.${code.extension}`,
+              component: <AttemptCode codeString={code.code} lang={code.extension} />,
+            });
+          })
          }
         <TabComponent
           tabHeaders={TabHeaders}
@@ -69,4 +73,15 @@ class AttemptFiles extends React.Component {
   }
 }
 
-export default withStyles(styles)(AttemptFiles);
+const mapStateToProps = state => ({
+  // isLoading: state.tasksList.isLoading,
+  attemptCode: state.attemptCode.attemptCode,
+});
+
+const mapCommandsToProps = dispatch => ({
+  getAttemptCode: param => dispatch(getAttemptCode(param)),
+});
+
+const styled = withStyles(styles)(AttemptFiles);
+
+export default connect(mapStateToProps, mapCommandsToProps)(styled);

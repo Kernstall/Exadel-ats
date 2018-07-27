@@ -17,7 +17,7 @@ import AdminMainPage from './pages/adminMainPage/AdminMainPage.jsx';
 import TeacherMainPage from './pages/teacherMainPage/TeacherMainPage';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent';
 import TeacherTasksList from './common/teacherTasksList/TeacherTasksList';
-import AttemptCode from './common/studentMenuList/AttemptFiles';
+import AttemptFiles from './common/studentMenuList/AttemptFiles';
 import { PrivateRoute } from './common/loginForm/PrivateRouter';
 import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 
@@ -40,7 +40,6 @@ class App extends Component {
           <Header />
           <Router>
             <div className={classes.content}>
-              <Header />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
               <Route path="/studentMenu" component={StudentMenu} />
@@ -48,7 +47,7 @@ class App extends Component {
               <PrivateRoute exact path="/student/:id" component={StudentMainPage} />
               <PrivateRoute exact path="/teacher/:id" component={TeacherMainPage} />
               <Route path="/admin" component={AdminMainPage} />
-              <Route path="/studentMenu/attemptCode" component={AttemptCode} />
+              <Route exact path="/:attemptNumber&&taskId" component={AttemptFiles} />
             </div>
           </Router>
           <Footer />
