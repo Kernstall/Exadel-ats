@@ -70,12 +70,11 @@ class StudentInTop extends Component {
   constructor() {
     super();
     this.state = { isOver: false };
-  }
+  };
 
   handleAnimation = () => {
-    console.log(this.state);
     this.setState({ isOver: !this.state.isOver });
-  }
+  };
 
   render() {
     const { classes, student, number } = this.props;
