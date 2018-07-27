@@ -636,7 +636,7 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
       answer.push({});
       answer[i].name = attemptInfo.files[i];
       answer[i].extension = getExtension(attemptInfo.files[i]);
-      answer[i].fileContents = await readFile(`dataFileStorage/srcCodes/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
+      answer[i].fileContents = await readFile(`server/dataFileStorage/srcCodes/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
     }
     return answer;
   } catch (e) {
