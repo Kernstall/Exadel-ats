@@ -39,6 +39,7 @@ class App extends Component {
           <Header />
           <Router>
             <div className={classes.content}>
+              <Header />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
               <Route path="/studentMenu" component={StudentMenu} />
