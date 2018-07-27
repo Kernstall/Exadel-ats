@@ -36,8 +36,6 @@ class LoginForm extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log('STATE', this.state);
-    console.log('PROPS', this.props);
   }
 
   handleChange = name => (e) => {

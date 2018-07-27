@@ -70,7 +70,7 @@ class StudentInTop extends Component {
   constructor() {
     super();
     this.state = { isOver: false };
-  }
+  };
 
   handleAnimation = () => {
     this.setState({ isOver: !this.state.isOver });
