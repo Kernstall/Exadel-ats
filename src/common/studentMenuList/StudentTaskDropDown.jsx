@@ -67,6 +67,7 @@ class StudentTaskDropDown extends React.Component {
                     (attempt, index) => (
                       <Attempts
                         attempt={attempt}
+                        taskId={taskInfo.taskId}
                         key={index}
                       />
                     ),
