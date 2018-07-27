@@ -19,7 +19,8 @@ import TaskView from './common/taskView/TaskView';
 import TeacherTaskEdit from './common/teachetTaskEdit/TeacherTaskEdit';
 import { PrivateRoute } from './common/loginForm/PrivateRouter';
 import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
-
+import GroupsList from './pages/teacherMainPage/groupsList/GroupsList';
+import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent.jsx';
 const styles = ({
   content: {
     minHeight: 'calc(100vh - 40px)',
@@ -50,6 +51,7 @@ class App extends Component {
               <Route exact path="/:attemptNumber&&taskId" component={AttemptFiles} />
               <Route path="/teacher/task/:id" component={TeacherTaskEdit} />
               <Route path="/teacher/tasks/:id" component={TaskView} />
+              <Route path="/teacher/groups/:id" component={TeacherGroupComponent} />
             </div>
           </Router>
           <Footer />
