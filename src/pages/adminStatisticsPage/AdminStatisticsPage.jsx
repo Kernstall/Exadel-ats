@@ -76,6 +76,7 @@ class AdminStatisticsPage extends Component {
               <ActivityListItems info={activities} />
             </List>
           </Grid>
+          <h1>Stats</h1>
         </Grid>
       );
     }

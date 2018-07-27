@@ -24,7 +24,7 @@ class AdminMainPage extends Component {
       <Router className={classes.root}>
         <div>
           <HeaderMenue />
-          <Route exact path="/admin" component={() => <Redirect to="/admin/history" />} />
+          <Route path="/admin" component={() => <Redirect to="/admin/history" />} />
           <Route path="/admin/history" exact component={AdminHistoryPage} />
           <Route path="/admin/teachers" exact component={AdminTeacherPage} />
           <Route path="/admin/students" exact component={AdminStudentPage} />

@@ -76,6 +76,7 @@ class AdminTaskPage extends Component {
               <ActivityListItems info={activities} />
             </List>
           </Grid>
+          <h1>Tasks</h1>
         </Grid>
       );
     }

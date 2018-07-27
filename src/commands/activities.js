@@ -27,7 +27,14 @@ export const getActivities = (param) => (dispatch) => {
   query = propsToQuery(query, param);
   console.log(query);
   dispatch(Actions.activitiesRequest());
-  fetch(query)
+  fetch(query,
+    {
+      headers: {
+        'Content-type': 'application/json',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    })
     .then(response => response.json())
     .then(body => dispatch(Actions.activitiesSuccess(body)))
     .catch(err => dispatch(Actions.activitiesRequest(err)));

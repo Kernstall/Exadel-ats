@@ -76,6 +76,7 @@ class AdminGroupPage extends Component {
               <ActivityListItems info={activities} />
             </List>
           </Grid>
+          <h1>Groups</h1>
         </Grid>
       );
     }

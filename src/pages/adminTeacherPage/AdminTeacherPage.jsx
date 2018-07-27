@@ -76,7 +76,7 @@ class AdminTeacherPage extends Component {
               <ActivityListItems info={activities} />
             </List>
           </Grid>
-          <h1>AnotherOne</h1>
+          <h1>Teacher</h1>
         </Grid>
       );
     }
