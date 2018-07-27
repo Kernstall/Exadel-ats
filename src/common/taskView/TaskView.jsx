@@ -152,7 +152,7 @@ class TaskView extends React.Component {
               <Link className={classes.mylink} to="/">Редактировать</Link>
             </Button>
             <Button variant="contained" color="primary" className={classes.button}>
-              <Link className={classes.mylink} to="/teacher/group">Редактировать</Link>
+              <Link className={classes.mylink} to="/teacher/group">Назад к группе</Link>
             </Button>
           </div>
         </div>
