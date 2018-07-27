@@ -50,7 +50,6 @@ class TeacherQuestionList extends React.Component {
     const { classes, teacherQuestions } = this.props;
     let load;
     if (teacherQuestions) {
-      console.log(teacherQuestions);
       this.Questions = this.objtoJSX(teacherQuestions);
     } else {
       load = (<Spinner />);

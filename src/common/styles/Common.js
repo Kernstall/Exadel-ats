@@ -32,11 +32,11 @@ const Common = ({
       background: 'rgba(0, 0, 0, 0.05)',
     },
     '*::-webkit-scrollbar-thumb:hover': {
-      background: 'rgba(255, 0, 0, 0.8)',
+      background: '#5d5d5d',
     },
     '*::-webkit-scrollbar-thumb': {
       width: '5px',
-      background: 'rgba(255, 0, 0, 0.6)',
+      background: '#5d5d5d50',
       borderRadius: '3px',
     },
   },
