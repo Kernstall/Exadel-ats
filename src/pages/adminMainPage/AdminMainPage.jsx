@@ -21,16 +21,18 @@ class AdminMainPage extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.root}>
-        <HeaderMenue />
-        <Route exact path="/admin" component={() => <Redirect to="/admin/history" />} />
-        <Route path="/admin/history" exact component={AdminHistoryPage} />
-        <Route path="/admin/teachers" exact component={AdminTeacherPage} />
-        <Route path="/admin/students" exact component={AdminStudentPage} />
-        <Route path="/admin/groups" exact component={AdminGroupPage} />
-        <Route path="/admin/statistics" exact component={AdminStatisticsPage} />
-        <Route path="/admin/tasks" exact component={AdminTaskPage} />
-      </div>
+      <Router className={classes.root}>
+        <div>
+          <HeaderMenue />
+          <Route exact path="/admin" component={() => <Redirect to="/admin/history" />} />
+          <Route path="/admin/history" exact component={AdminHistoryPage} />
+          <Route path="/admin/teachers" exact component={AdminTeacherPage} />
+          <Route path="/admin/students" exact component={AdminStudentPage} />
+          <Route path="/admin/groups" exact component={AdminGroupPage} />
+          <Route path="/admin/statistics" exact component={AdminStatisticsPage} />
+          <Route path="/admin/tasks" exact component={AdminTaskPage} />
+        </div>
+      </Router>
     );
   }
 }
