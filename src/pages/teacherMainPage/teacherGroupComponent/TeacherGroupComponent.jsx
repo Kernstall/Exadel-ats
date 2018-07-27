@@ -7,7 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/es/Button/Button';
 import TeacherSelectedGroupComponent from '../teacherSelectedGroupComponent/TeacherSelectedGroupComponent.jsx';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -62,7 +62,13 @@ class TeacherGroupComponent extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/api/teacher/group/info?groupID=${this.props.match.params.id}`)
+    fetch(`/api/teacher/group/info?groupID=${this.props.match.params.id}`, {
+      headers: {
+        'Content-type': 'application/json',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    })
       .then(res => res.json())
       .then(res => {
         this.setState({
@@ -102,7 +108,7 @@ class TeacherGroupComponent extends React.Component {
             </Link>
           </Tabs>
           {value === 0
-          && <TabContainer>
+            && <TabContainer>
               <TeacherSelectedGroupComponent
                 groupName={groupName}
                 groupMembers={studentList}

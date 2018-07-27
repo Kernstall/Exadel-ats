@@ -110,8 +110,7 @@ router.delete('/group/students', (req, res) => {
 
 // Возвращает группы, принадлежащие учителю с количеством людей в них
 router.get('/group', (req, res) => {
-  const teacherID = req.query.teacherID;
-  dataFunctions.getTeachersGroups(teacherID)
+  dataFunctions.getTeachersGroups(req.user._id)
     .then((answer) => {
       res.send(JSON.stringify(answer));
     })

@@ -38,7 +38,7 @@ class GroupsList extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/api/teacher/group?teacherID=${this.props.id}`, {
+    fetch(`/api/teacher/group`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
@@ -57,6 +57,7 @@ class GroupsList extends React.Component {
   }
 
   render() {
+    console.log(this.state.response);
     const { classes } = this.props;
     return (
       <List>
