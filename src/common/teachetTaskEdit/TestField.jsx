@@ -52,12 +52,6 @@ const styles = theme => ({
     color: 'blue',
     cursor: 'pointer',
   },
-  editButton: {
-    display: 'flex',
-    color: 'blue',
-    cursor: 'pointer',
-    fontSize: 26,
-  },
   bootstrapInputOutput: {
     display: 'flex',
     width: '85%',
@@ -75,44 +69,22 @@ class TestField extends React.Component {
     super(props);
     this.id = '';
     this.state = {
-      editDisabled: true,
-      edit: false,
-      upload: true,
+      isUploaded: false,
     };
-    this.clicked = false;
-  }
-
-  handleClickEdit = () => {
-    this.setState({ editDisabled: false });
-  }
-
-  handleClickUpload = () => {
-    this.clicked = true;
-  }
-
-  value = (idName, inputText) => {
-    if (!this.clicked) {
-      return inputText;
-    }
-    if (document.getElementById(idName).files.length === 0) {
-      return inputText;
-    }
-    this.setState({ edit: false });
-    return document.getElementById(idName).files[0].name;
   }
 
   render() {
-    const { edit, editDisabled, upload } = this.state;
+    const { isUploaded } = this.state;
     const { classes, inputText, isNew, id } = this.props;
-    const idName = `add-file-${id}`;
+    const inputId = `add-file-${id}`;
     return (
       <div className={classes.testItem}>
         <TextField
-          value={this.value(idName, inputText)}
+          value={inputText}
           rows={1}
           className={classes.bootstrapInputOutput}
           multiline
-          disabled={editDisabled}
+          disabled
           InputProps={{
             disableUnderline: true,
             classes: {
@@ -126,28 +98,19 @@ class TestField extends React.Component {
         />
         {isNew && (
           <div className={classes.editAndUpload}>
-            {edit && (
-              <Edit
-                className={classes.editButton}
-                onClick={this.handleClickEdit}
-              />)}
-            {upload && (
-              <input
-                accept="text/plain"
-                className={classes.input}
-                id={idName}
-                multiple
-                type="file"
+            <input
+              accept="text/plain"
+              className={classes.input}
+              id={inputId}
+              multiple
+              type="file"
+            />
+            <label htmlFor={inputId}>
+              <CloudUploadIcon
+                className={classes.addButton}
+                onClick={this.handleClickUpload}
               />
-            )}
-            {upload && (
-              <label htmlFor={idName}>
-                <CloudUploadIcon
-                  className={classes.addButton}
-                  onClick={this.handleClickUpload}
-                />
-              </label>
-            )}
+            </label>
           </div>)}
       </div>
     );
