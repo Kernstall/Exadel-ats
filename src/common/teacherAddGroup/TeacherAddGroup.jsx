@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
+import Button from '@material-ui/core/Button/Button';
 import FilterStudentCard from './FilterFieldsCard.jsx';
 import DragAndDropStudents from './DragAndDropStudents';
 import { getAvailableStudents } from '../../commands/teacherCreateGroups';
@@ -45,7 +46,7 @@ class TeacherAddGroup extends React.Component {
     let filteredArray;
     if (availableStudentsList) {
       filteredArray = availableStudentsList.filter((element) => {
-        const fName = (element.firstName + ' ' + element.lastName).indexOf(this.state.filter.name) >= 0;
+        const fName = (`${element.firstName} ${element.lastName}`).indexOf(this.state.filter.name) >= 0;
         const fEmail = element.email.indexOf(this.state.filter.email) >= 0;
         const fUnivesity = element.university === this.state.filter.university || this.state.filter.university === '';
         const fYear = isNaN(element.graduateYear === this.state.filter.year || this.state.filter.year);
@@ -59,6 +60,7 @@ class TeacherAddGroup extends React.Component {
       <div className={classes.FlexContainerHorizontal}>
         <FilterStudentCard callback={this.handleFilterChanges} />
         {availableStudentsList ? <DragAndDropStudents studentsPool={filteredArray} /> : <Spinner /> }
+        <Button />
       </div>
     );
   }

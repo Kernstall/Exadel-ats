@@ -3,7 +3,6 @@ import './App.css';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import MuiThemeProvider from '@material-ui/core/es/styles/MuiThemeProvider';
-import createHistory from 'history/createBrowserHistory';
 import Header from './common/Header.jsx';
 import Footer from './common/Footer.jsx';
 import RegisterForm from './pages/registerFormPage/RegisterFormPage.jsx';
@@ -15,8 +14,6 @@ import createMuiTheme from './common/styles/MUIAppTheme';
 import StudentMainPage from './pages/studentMainPage/StudentMainPage.jsx';
 import AdminMainPage from './pages/adminMainPage/AdminMainPage.jsx';
 import TeacherMainPage from './pages/teacherMainPage/TeacherMainPage';
-import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent';
-import TeacherTasksList from './common/teacherTasksList/TeacherTasksList';
 import AttemptFiles from './common/studentMenuList/AttemptFiles';
 import TaskView from './common/taskView/TaskView';
 import TeacherTaskEdit from './common/teachetTaskEdit/TeacherTaskEdit';
@@ -47,8 +44,11 @@ class App extends Component {
               <PrivateRoute exact path="/student/id/:id" component={StudentMainPage} />
               <PrivateRoute exact path="/teacher/id/:id" component={TeacherMainPage} />
               <Route path="/admin" component={AdminMainPage} />
+
               <Route exact path="/:taskId/:attemptNumber" component={AttemptFiles} />
               <Route path="/teacher/task/edit" component={TeacherTaskEdit} />
+              <Route exact path="/:attemptNumber&&taskId" component={AttemptFiles} />
+              <Route path="/teacher/task/:id" component={TeacherTaskEdit} />
               <Route path="/teacher/tasks/:id" component={TaskView} />
             </div>
           </Router>
