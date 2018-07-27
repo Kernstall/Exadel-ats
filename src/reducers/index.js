@@ -5,6 +5,11 @@ import studentTasks from './studentTasks';
 import activities from './activities';
 import studentHistory from './studentHistory';
 import teacherCreateGroup from './teacherCreateGroup';
+import userLogin from './userLogin';
+import studentTests from './studentTests';
+import teacherQuestions from './teacherQuestions';
+import teacherTasks from './teacherTasks';
+import errorMessage from './errorMessage';
 
 export default combineReducers({
   students,
@@ -13,5 +18,9 @@ export default combineReducers({
   activities,
   studentHistory,
   teacherCreateGroup,
-
+  userLogin,
+  studentTests,
+  teacherQuestions,
+  teacherTasks,
+  errorMessage,
 });

@@ -33,7 +33,7 @@ const styles = theme => ({
   },
   questionsCountInner: {
     width: 'auto',
-    backgroundColor: 'rgb(14, 247, 130)',
+    backgroundColor: '#87CEFA',
     padding: '5px 12px 5px 10px',
     borderRadius: 5,
   },

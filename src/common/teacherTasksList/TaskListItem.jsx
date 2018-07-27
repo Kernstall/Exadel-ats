@@ -6,14 +6,16 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core/es';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
-    width: '92%',
+    width: '97%',
     margin: 5,
+    padding: '10px 5px 10px 5px !important',
   },
   taskinfo: {
     justify: 'center',
@@ -32,30 +34,28 @@ const styles = theme => ({
   },
   tags: {
     display: 'flex',
-    width: '35%',
+    width: '30%',
     alignContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     boxSizing: 'border-box',
   },
   tagsInner: {
     width: 'auto',
-    backgroundColor: '#77f6ff',
     padding: 10,
-    borderRadius: 20,
   },
   score: {
     display: 'flex',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '5%',
+    width: '10%',
   },
   scoreInner: {
     width: 'auto',
-    backgroundColor: 'rgb(14, 247, 130)',
     padding: '5px 12px 5px 10px',
     borderRadius: 5,
+    backgroundColor: '#E6E6FA',
   },
   button: {
     display: 'flex',
@@ -77,6 +77,10 @@ const styles = theme => ({
     width: '5%',
     boxSizing: 'border-box',
   },
+  mylink: {
+    textDecoration: 'none',
+    color: 'white',
+  },
 });
 
 class TaskListItem extends React.Component {
@@ -93,8 +97,10 @@ class TaskListItem extends React.Component {
 
   render() {
     const {
-      classes, taskName, tags, score,
+      classes, taskName, tags, score, taskId,
     } = this.props;
+    const link = `/teacher/tasks/${taskId}`;
+
     return (
       <div className="taskinfo">
         <Paper className={classes.root} elevation={1}>
@@ -118,7 +124,7 @@ class TaskListItem extends React.Component {
               <span className={classes.scoreInner}>{score}</span>
             </Typography>
             <Button variant="contained" color="primary" className={classes.button}>
-              Подробнее
+              <Link className={classes.mylink} to={link}>Подробнее</Link>
             </Button>
             <Checkbox
               className={classes.checkbox}

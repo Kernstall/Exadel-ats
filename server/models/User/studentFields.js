@@ -34,6 +34,7 @@ module.exports = {
       [{
         date: Date,
         number: Number,
+        mainFile: String,
         files: [String],
         result: Number,
         isPassed: Boolean,

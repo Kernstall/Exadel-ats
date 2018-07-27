@@ -12,7 +12,7 @@ function compareByDate(a, b) {
 
 exports.getStudentTasksByGroup = async (studentId, groupId) => {
   const tasks = await User.aggregate([
-    {$match: {'_id': mongoose.Types.ObjectId(studentId)}},
+    { $match: { '_id': mongoose.Types.ObjectId(studentId) } },
     {
       $project: {
         _id: 0,
@@ -20,7 +20,7 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
           $filter: {
             input: '$tasks',
             as: 'task',
-            cond: {$eq: ['$$task.groupId', mongoose.Types.ObjectId(groupId)]},
+            cond: { $eq: ['$$task.groupId', mongoose.Types.ObjectId(groupId)] },
           },
         },
       },
@@ -31,13 +31,14 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
         'taskArray.taskId': 1,
         'taskArray.isPassed': 1,
         'taskArray.bestResult': 1,
+        'taskArray.attempts': 1,
       },
     },
   ]);
 
   function getInfoByTaskID(taskId) {
     return Task.findById(taskId)
-      .populate('topicId', {'_id': 0, 'name': 1})
+      .populate('topicId', { '_id': 0, 'name': 1 })
       .select({
         '_id': 0,
         'topicId': 1,
@@ -79,11 +80,11 @@ exports.fieldFilter = (keysArray, objectsArray) => {
 exports.getTeachersGroups = (_teacherID) => {
   return Group.aggregate(
     [
-      {$match: {teacherId: mongoose.Types.ObjectId(_teacherID)}},
+      { $match: { teacherId: mongoose.Types.ObjectId(_teacherID) } },
       {
         $project: {
           groupName: 1,
-          studentCount: {$size: '$studentIdList'},
+          studentCount: { $size: '$studentIdList' },
         },
       },
     ],
@@ -92,28 +93,28 @@ exports.getTeachersGroups = (_teacherID) => {
 
 
 exports.addStudentsToGroup = (groupID, studentIDs) => Group.findByIdAndUpdate(groupID,
-  {$push: {studentIdList: studentIDs}},
-  {safe: true, upsert: true});
+  { $push: { studentIdList: studentIDs } },
+  { safe: true, upsert: true });
 
 exports.deleteStudentsToGroup = (groupID, studentIDs) => Group.findByIdAndUpdate(groupID,
-  {$pullAll: {studentIdList: studentIDs}},
-  {safe: true, upsert: true});
+  { $pullAll: { studentIdList: studentIDs } },
+  { safe: true, upsert: true });
 
 exports.getTopTenStudents = async () => {
   const result = {};
 
-  result.tasksTop = await User.find({status: 'student'}, {firstName: true, lastName: 1, mediumTaskScore: 1})
-    .sort({mediumTaskScore: -1}).limit(10);
+  result.tasksTop = await User.find({ status: 'student' }, { firstName: true, lastName: 1, mediumTaskScore: 1 })
+    .sort({ mediumTaskScore: -1 }).limit(10);
   const studentTaskFields = ['firstName', 'lastName', 'mediumTaskScore', '_id'];
   result.tasksTop = exports.fieldFilter(studentTaskFields, result.tasksTop);
 
-  result.testsTop = await User.find({status: 'student'}, {firstName: 1, lastName: 1, mediumTestScore: 1})
-    .sort({mediumTestScore: -1}).limit(10);
+  result.testsTop = await User.find({ status: 'student' }, { firstName: 1, lastName: 1, mediumTestScore: 1 })
+    .sort({ mediumTestScore: -1 }).limit(10);
   const studentTestFields = ['firstName', 'lastName', 'mediumTestScore', '_id'];
   result.testsTop = exports.fieldFilter(studentTestFields, result.testsTop);
 
   result.activitiesTop = await User.aggregate([
-    {$match: {status: 'student'}},
+    { $match: { status: 'student' } },
     {
       $project: {
         activity: {
@@ -123,7 +124,7 @@ exports.getTopTenStudents = async () => {
                 $reduce: {
                   input: '$tasks',
                   initialValue: 0,
-                  in: {$add: ['$$value', {$size: '$$this.attempts'}]},
+                  in: { $add: ['$$value', { $size: '$$this.attempts' }] },
                 },
               },
               testActivity: {
@@ -146,7 +147,7 @@ exports.getTopTenStudents = async () => {
                 },
               },
             }, // end of vars
-            in: {$add: ['$$taskActivity', '$$testActivity']},
+            in: { $add: ['$$taskActivity', '$$testActivity'] },
           },
         }, // end of activity field
         firstName: true,
@@ -154,7 +155,7 @@ exports.getTopTenStudents = async () => {
       },
     },
     {
-      $sort: {activity: -1},
+      $sort: { activity: -1 },
     },
     {
       $limit: 10,
@@ -162,7 +163,7 @@ exports.getTopTenStudents = async () => {
   ]).allowDiskUse(true);
 
   result.marksTop = await User.aggregate([
-    {$match: {status: 'student'}},
+    { $match: { status: 'student' } },
     {
       $project: {
         marks: {
@@ -178,9 +179,9 @@ exports.getTopTenStudents = async () => {
       },
     },
     {
-      $sort: {marks: -1},
+      $sort: { marks: -1 },
     },
-    {$limit: 10},
+    { $limit: 10 },
   ]);
 
   return result;
@@ -188,11 +189,11 @@ exports.getTopTenStudents = async () => {
 
 exports.getGroupInfo = async (groupID) => {
   const request = (await Group.aggregate([
-    {$match: {_id: mongoose.Types.ObjectId(groupID)}},
+    { $match: { _id: mongoose.Types.ObjectId(groupID) } },
     {
       $project: {
         groupName: true,
-        amountOfStudents: {$size: '$studentIdList'},
+        amountOfStudents: { $size: '$studentIdList' },
         studentIdList: true,
       },
     },
@@ -206,7 +207,7 @@ exports.getGroupInfo = async (groupID) => {
 
   function promiseCollector(student) {
     return User.aggregate([
-      {$match: {_id: student._id}},
+      { $match: { _id: student._id } },
       {
         $project: {
           firstName: true,
@@ -326,13 +327,13 @@ exports.getGroupInfo = async (groupID) => {
           mediumMark: {
             $cond: {
               if: {
-                $eq: [{$add: ['$amountOfTasks', '$amountOfTests']}, 0],
+                $eq: [{ $add: ['$amountOfTasks', '$amountOfTests'] }, 0],
               },
               then: 0,
               else: {
                 $divide: [
-                  {$add: ['$tasksMarkSum', '$testsMarkSum']},
-                  {$add: ['$amountOfTasks', '$amountOfTests']},
+                  { $add: ['$tasksMarkSum', '$testsMarkSum'] },
+                  { $add: ['$amountOfTasks', '$amountOfTests'] },
                 ],
               },
             },
@@ -358,8 +359,8 @@ exports.getGroupInfo = async (groupID) => {
 
 exports.getStudentHistoryByGroup = function (studentID, groupID) {
   const taskResult = User.findById(studentID)
-    .populate('tasks.taskId', {'_id': 0, 'name': 1, 'weight': 1,})
-    .where({'tasks.groupId': {$eq: groupID}})
+    .populate('tasks.taskId', { '_id': 0, 'name': 1 })
+    .where({ 'tasks.groupId': { $eq: groupID } })
     .select({
       '_id': 0,
       'tasks.groupId': 1,
@@ -369,7 +370,7 @@ exports.getStudentHistoryByGroup = function (studentID, groupID) {
     });
 
   const testResult = User.findById(studentID)
-    .populate('tests.topicsIds', {'_id': 0, 'name': 1})
+    .populate('tests.topicsIds', { '_id': 0, 'name': 1 })
     .select({
       '_id': 0,
       'tests.groupId': 1,
@@ -378,7 +379,7 @@ exports.getStudentHistoryByGroup = function (studentID, groupID) {
       'tests.result': 1,
       'tests.status': 1,
     })
-    .where({'tests.groupId': {$eq: groupID}});
+    .where({ 'tests.groupId': { $eq: groupID } });
   return Promise.all([taskResult, testResult]);
 };
 
@@ -408,7 +409,7 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
     });
     testArray.forEach((test) => {
       let status = test.status;
-      if (status !== 'passed'){
+      if (status !== 'passed') {
         status = false;
       } else {
         status = true;
@@ -429,7 +430,7 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
 };
 
 exports.getStudents = async () => {
-  const answer = await User.find({status: 'student'})
+  const answer = await User.find({ status: 'student' })
     .select({
       firstName: 1,
       lastName: 1,
@@ -461,8 +462,12 @@ exports.createGroup = async (groupName, teacherId) => {
       topicCourseIds: [],
     });
     let saveGroup = {};
+    try {
+      saveGroup = await group.save();
+    } catch (e) {
+      throw new Error('Duplicate key');
+    }
 
-    saveGroup = await group.save();
     return saveGroup;
   } catch (e) {
     throw e;
@@ -471,7 +476,7 @@ exports.createGroup = async (groupName, teacherId) => {
 
 exports.getUsersActivities = async (name, role, activityType) => {
   const tmp = await Activities.find({})
-    .populate('userId', {'_id': 0, 'lastName': 1, 'firstName': 1, 'fathersName': 1})
+    .populate('userId', { '_id': 0, 'lastName': 1, 'firstName': 1, 'fathersName': 1 })
     .select({
       '_id': 0,
       'date': 1,
@@ -489,7 +494,7 @@ exports.getUsersActivities = async (name, role, activityType) => {
       name = `${elem.userId._doc.lastName} ${elem.userId._doc.firstName}`;
     }
 
-    result.push({'name': name, 'type': elem.type.slice(3), 'userType': elem.userType, 'date': elem.date});
+    result.push({ 'name': name, 'type': elem.type.slice(3), 'userType': elem.userType, 'date': elem.date });
   });
 
   if (name) {
@@ -517,7 +522,7 @@ exports.getUsersActivities = async (name, role, activityType) => {
 };
 
 exports.getStudents = async () => {
-  const answer = await User.find({status: 'student'})
+  const answer = await User.find({ status: 'student' })
     .select({
       firstName: 1,
       lastName: 1,
@@ -530,8 +535,8 @@ exports.getStudents = async () => {
 };
 
 exports.getGroupStudentTests = async (studentId, groupId) => {
-  const result = await User.find({_id: mongoose.Types.ObjectId(studentId)})
-    .populate('tests.topicsIds', {_id: 0, name: 1})
+  const result = await User.find({ _id: mongoose.Types.ObjectId(studentId) })
+    .populate('tests.topicsIds', { _id: 0, name: 1 })
     .select({
       _id: 0,
       'tests.result': 1,

@@ -27,32 +27,6 @@ router.get('/universities', async (req, res) => {
     res.status(500).end();
   }
 });
-/*
-router.post('/login', (req, res, next) => {
-  if (!req.body.email || !req.body.password) {
-    res.status(400).send({ message: 'not all fields' });
-  }
-  passport.authenticate('local', (err, user) => {
-    if (user) {
-      return req.login(user, (err) => {
-        if (err) {
-          return res.status(401).end();
-        }
-        return res.send({ status: user.status, email: user.email, id: user._id });
-      });
-    }
-    return res.status(401).send({ message: err });
-  })(req, res, next);
-});
-*/
-/*
-router.post('/login', passport.authenticate('local', {
-  failureFlash: true,
-}), (req, res) => {
-  res.cookie('session_id', req.sessionID);
-  res.send('ok');
-});
-*/
 
 router.get('/logout', (req, res) => {
   req.session.destroy();
@@ -64,71 +38,83 @@ router.post('/signup', (req, res, next) => {
     || !req.body.lastName || !req.body.university) {
     return res.status(400).send({ err: 'not all fields are filled' });
   }
-  if (req.body.status === 'student') {
-    if (!req.body.course || !req.body.groupNumber || !req.body.faculty || !req.body.graduateYear) {
-      return res.status(400).send({ err: 'not all fields are filled' });
-    }
-    const salt = bcrypt.genSaltSync(10);
-    const newStudent = new User({
-      email: req.body.email,
-      passwordHash: bcrypt.hashSync(req.body.password, salt),
-      passwordSalt: salt,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      university: req.body.university,
-      faculty: req.body.faculty,
-      graduateYear: req.body.graduateYear,
-      course: req.body.course,
-      groupNumber: req.body.groupNumber,
-      status: req.body.status,
-    });
-    return newStudent.save((err) => {
-      if (err) {
-        return next(err);
-      }
-      return req.logIn(newStudent, (err2) => {
-        if (err2) {
-          return next(err2);
-        }
-        return res.send({ status: req.user.status, email: req.user.email, id: req.user._id });
-      });
-    });
+  if (req.body.status !== 'teacher' && req.body.status !== 'student') {
+    return res.status(400).send({ err: 'not right status' });
   }
-  if (req.body.status === 'teacher') {
-    if (!req.body.fathersName) {
-      return res.status(400).send({ err: 'not all fields are filled' });
+  return User.find({ email: req.body.email }, (err, user) => {
+    if (err) {
+      return res.status(500).end();
     }
-    const salt = bcrypt.genSaltSync(10);
-    const newTeacher = new User({
-      email: req.body.email,
-      passwordHash: bcrypt.hashSync(req.body.password, salt),
-      passwordSalt: salt,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      fathersName: req.body.fathersName,
-      university: req.body.university,
-      status: 'student',
-    });
-    return newTeacher.save((err, student) => {
-      if (err) return res.status(500).send(err);
-      const newRequest = new TeacherRequest({
-        studentId: student._id,
-        date: new Date(),
+    if (user.length > 0) {
+      return res.status(409).send({ err: 'this email already in use' });
+    }
+    if (req.body.status === 'student') {
+      if (!req.body.course || !req.body.groupNumber
+        || !req.body.faculty || !req.body.graduateYear) {
+        return res.status(400).send({ err: 'not all fields are filled' });
+      }
+      const salt = bcrypt.genSaltSync(10);
+      const newStudent = new User({
+        email: req.body.email,
+        passwordHash: bcrypt.hashSync(req.body.password, salt),
+        passwordSalt: salt,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        university: req.body.university,
+        faculty: req.body.faculty,
+        graduateYear: req.body.graduateYear,
+        course: req.body.course,
+        groupNumber: req.body.groupNumber,
+        status: req.body.status,
       });
-      return TeacherRequest.collection.insertOne(newRequest, (error) => {
-        if (error) {
-          return res.status(500).end();
+      return newStudent.save((err) => {
+        if (err) {
+          return next(err);
         }
-        return req.logIn(newTeacher, (err2) => {
+        return req.logIn(newStudent, (err2) => {
           if (err2) {
-            next(err2);
+            return next(err2);
           }
           return res.send({ status: req.user.status, email: req.user.email, id: req.user._id });
         });
       });
-    });
-  }
-  return res.status(400).end();
+    }
+    if (req.body.status === 'teacher') {
+      if (!req.body.fathersName) {
+        return res.status(400).send({ err: 'not all fields are filled' });
+      }
+      const salt = bcrypt.genSaltSync(10);
+      const newTeacher = new User({
+        email: req.body.email,
+        passwordHash: bcrypt.hashSync(req.body.password, salt),
+        passwordSalt: salt,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        fathersName: req.body.fathersName,
+        university: req.body.university,
+        status: 'student',
+      });
+      return newTeacher.save((err, student) => {
+        if (err) return res.status(500).send(err);
+        const newRequest = new TeacherRequest({
+          studentId: student._id,
+          date: new Date(),
+        });
+        return TeacherRequest.collection.insertOne(newRequest, (error) => {
+          if (error) {
+            return res.status(500).end();
+          }
+          return req.logIn(newTeacher, (err2) => {
+            if (err2) {
+              next(err2);
+            }
+            return res.send({ status: req.user.status, email: req.user.email, id: req.user._id });
+          });
+        });
+      });
+    }
+    return res.status(500).end();
+  });
 });
 
 module.exports = router;

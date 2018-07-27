@@ -28,8 +28,6 @@ const styles = theme => ({
   topicCount: {
     display: 'flex',
     fontSize: 17,
-    border: '2px #dbf4ff solid',
-    borderRadius: 20,
     padding: 7,
   },
 });
@@ -48,7 +46,7 @@ class TaskInTopic extends React.Component {
 
   objtoJSX = array => (
     array.map((element, index) => (
-      <TaskListItem button taskName={element.taskName} tags={element.tags} score={element.score} />
+      <TaskListItem button key={index} taskName={element.taskName} tags={element.tags} score={element.score} taskId={element.taskId} />
     ))
   );
 

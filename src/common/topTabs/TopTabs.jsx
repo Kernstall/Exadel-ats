@@ -7,6 +7,7 @@ import TabComponent from '../tabComponent/TabComponent.jsx';
 import TopStudents from '../top/TopStudents.jsx';
 import Common from '../styles/Common';
 import Spinner from '../shared/spinner/index';
+import localize from '../../localization/localization';
 
 const styles = ({
   ...Common,
@@ -57,7 +58,7 @@ class TopTabs extends Component {
     let tabs = <Grid><TabComponent tabHeaders={this.TabHeaders} /></Grid>;
     if (students) {
       this.TabHeaders = Object.keys(students).map(element => ({
-        tabName: element,
+        tabName: localize(element),
         component: <TopStudents topScoreStudentName={
           students[element].map(firstSecondName => (`${firstSecondName.firstName} ${firstSecondName.lastName}`))
         }

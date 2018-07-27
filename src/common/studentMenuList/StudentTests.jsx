@@ -41,7 +41,7 @@ class StudentTests extends React.Component {
               <ListItemText primary={test.name} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <ListItemText primary={test.result} />
+              <ListItemText primary={'Average score: ' + test.avgMark} />
             </Grid>
           </Grid>
 
@@ -49,7 +49,7 @@ class StudentTests extends React.Component {
         </ListItem>
         <Collapse in={this.state.open} timeout="auto" unmountOnExit className={classes.width}>
           <List component="div" disablePadding className={classes.width}>
-            <ListItem button className={classes.nested}>
+            <ListItem className={classes.nested}>
               <StudentTestsDropDown
                 testsInfo={test.info}
                 className={this.props.classes.fullWidth}
