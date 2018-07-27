@@ -37,16 +37,15 @@ class App extends Component {
       <MuiThemeProvider theme={createMuiTheme}>
         <ErrorDispatcher />
         <div className={classes.minHeight}>
-          <Header />
           <Router>
             <div className={classes.content}>
               <Header />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
               <Route path="/studentMenu" component={StudentMenu} />
-              {/*<Route exact path="/teacher/addGroup" component={TeacherAddGroup} />*/}
-              <PrivateRoute exact path="/student/:id" component={StudentMainPage} />
-              <PrivateRoute exact path="/teacher/:id" component={TeacherMainPage} />
+              <Route exact path="/teacher/addGroup" component={TeacherAddGroup} />
+              <PrivateRoute exact path="/student/id/:id" component={StudentMainPage} />
+              <PrivateRoute exact path="/teacher/id/:id" component={TeacherMainPage} />
               <Route path="/admin" component={AdminMainPage} />
               <Route exact path="/:attemptNumber&&taskId" component={AttemptFiles} />
               <Route path="/teacher/task/edit" component={TeacherTaskEdit} />

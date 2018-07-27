@@ -7,11 +7,8 @@ import TextField from '@material-ui/core/TextField';
 import { Typography } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Chip from '@material-ui/core/Chip';
-import Icon from '@material-ui/core/Icon';
-import DoneIcon from '@material-ui/icons/Done';
-import { connect } from 'react-redux';
-import Spinner from '../shared/spinner/index';
 import TestsBar from './TestsBar';
+import generateRandomId from '../../util/generateRandomId';
 
 const styles = theme => ({
   button: {
@@ -186,23 +183,16 @@ class TeacherTaskEdit extends React.Component {
         tagToAdd: this.input.value,
       });
     };
-  }
-
-  uuidv4 = function () {
-    return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
+  };
 
   handleClickAddTest = () => {
     const { tests } = this.state;
     const pushedTest = { input: '', output: '' };
     pushedTest.isNew = true;
-    pushedTest.testId = this.uuidv4();
+    pushedTest.testId = generateRandomId();
     tests.push(pushedTest);
     this.setState({ tests });
-  }
+  };
 
   render() {
     const { classes, match } = this.props;
@@ -246,7 +236,7 @@ class TeacherTaskEdit extends React.Component {
           </div>
           <TextField
             defaultValue={data}
-            multiline={true}
+            multiline
             rows={4}
             InputProps={{
               disableUnderline: true,
@@ -263,7 +253,7 @@ class TeacherTaskEdit extends React.Component {
           <div className={classes.infoUpload}>
             <Typography className={classes.infoUploadTitle} variant="subheading">Пример выходного файла</Typography>
             <input
-              accept="image/*"
+              accept="text/plane"
               className={classes.input}
               id="contained-button-file"
               multiple
@@ -277,7 +267,7 @@ class TeacherTaskEdit extends React.Component {
           </div>
           <TextField
             defaultValue={data}
-            multiline={true}
+            multiline
             rows={4}
             InputProps={{
               disableUnderline: true,
