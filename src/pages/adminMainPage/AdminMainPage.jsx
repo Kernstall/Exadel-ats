@@ -7,7 +7,7 @@ import Common from '../../common/styles/Common';
 import { getActivities } from '../../commands/activities';
 import SearchBox from '../../common/searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
-import Menue from './menue/Menue';
+import HeaderMenue from './headerMenue/HeaderMenue';
 
 const styles = {
   ...Common,
@@ -73,9 +73,9 @@ class AdminMainPage extends Component {
           flexDirection="row"
           className={[classes.centerScreen, classes.centerScreenMobile].join(' ')}
         >
+          <HeaderMenue />
           <Grid item className={classes.SearcBox}>
             <SearchBox handleHistoryFilter={this.handleHistoryFilter} />
-            <Menue className={classes.menue} />
           </Grid>
           <Grid
             item
