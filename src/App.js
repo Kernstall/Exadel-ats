@@ -24,9 +24,7 @@ import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 
 const styles = ({
   content: {
-    minHeight: 'calc(100vh - 40px)',
-  },
-  SpreadWrapper: {
+    minHeight: 'calc(100vh - 100px)',
   },
   ...Common,
 });
@@ -37,7 +35,7 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={createMuiTheme}>
         <ErrorDispatcher />
-        <div className={classes.SpreadWrapper}>
+        <div className={classes.minHeight}>
           <Header />
           <Router>
             <div className={classes.content}>
