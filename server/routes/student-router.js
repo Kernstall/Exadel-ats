@@ -79,7 +79,7 @@ router.get('/task/attempt', async (req, res) => {
   const attemptNumber = req.query.attemptNumber;
   try {
     const result = await dataFunctions.getAttemptsCodes(userId, taskId, attemptNumber);
-    res.s tatus(200).send(JSON.stringify(result));
+    res.status(200).send(JSON.stringify(result));
   } catch (e) {
     if (e.toString() === 'Error: not found') {
       res.status(404).send(e.toString());
