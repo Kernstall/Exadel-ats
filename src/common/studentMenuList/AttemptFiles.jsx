@@ -46,7 +46,7 @@ const codeInfo = [
 class AttemptFiles extends React.Component {
   componentDidMount() {
     this.props.getAttemptCode({
-      taskId: '5b45b16f75224332745f7595',
+      taskId: this.props.match.params.taskId,
       attemptNumber: this.props.match.params.attemptNumber,
     });
   }
