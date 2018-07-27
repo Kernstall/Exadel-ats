@@ -25,14 +25,9 @@ router.get('/group/tasks', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-  if (!req.query.id) {
-    res.status(400).end();
-    return;
-  }
-
   try {
-    const getStudentTask = User.findById(req.query.id);
-    const getGroupsTask = Group.find({ studentIdList: req.query.id });
+    const getStudentTask = User.findById(req.user._id);
+    const getGroupsTask = Group.find({ studentIdList: req.user._id });
     await Promise.all([getStudentTask, getGroupsTask]);
     const studentModel = await getStudentTask;
     let groups = await getGroupsTask;

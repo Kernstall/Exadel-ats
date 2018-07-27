@@ -6,8 +6,10 @@ export const getTeacherQuestions = () => (dispatch) => {
   fetch('/api/teacher/questions', {
     method: 'get',
     headers: {
-      'Content-type': 'application/json; charset=UTF-8',
+      'Content-type': 'application/json',
+      'Set-Cookie': 'true',
     },
+    credentials: 'include',
   })
     .then(response => response.json())
     .then(body => dispatch(Actions.getTeacherQuestionsSuccess(body)))

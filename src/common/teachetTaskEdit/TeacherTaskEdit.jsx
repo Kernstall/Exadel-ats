@@ -263,7 +263,7 @@ class TeacherTaskEdit extends React.Component {
           <div className={classes.infoUpload}>
             <Typography className={classes.infoUploadTitle} variant="subheading">Пример выходного файла</Typography>
             <input
-              accept="image/*"
+              accept="text/plane"
               className={classes.input}
               id="contained-button-file"
               multiple
