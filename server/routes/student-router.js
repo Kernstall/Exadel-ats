@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const User = require('../models/User');
 const dataFunctions = require('../dataFunctions');
 const mapping = require('../utils/mapping/student');
@@ -67,6 +68,9 @@ router.get('/group/tests', async (req, res) => {
   } catch (e) {
     res.status(400).send(e.toString());
   }
+});
+
+router.post('/task/attempt', async (req, res) => {
 
 });
 
