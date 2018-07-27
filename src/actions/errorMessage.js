@@ -1,4 +1,4 @@
-const messageRequested = message => ({
+export const messageRequested = message => ({
   type: 'Entity/ErrorMessage/Request',
   payload: message,
 });
