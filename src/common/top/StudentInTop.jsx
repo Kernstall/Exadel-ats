@@ -91,7 +91,6 @@ class StudentInTop extends Component {
     const animation = this.state.isOver ? ` ${classes.medalAnimationHandler}` : '';
     return (
       <ListItem
-        button
         className={classes.wrapper}
         onMouseEnter={this.handleAnimation}
         onMouseLeave={this.handleAnimation}

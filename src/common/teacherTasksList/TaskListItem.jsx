@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core/es';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -76,6 +77,10 @@ const styles = theme => ({
     width: '5%',
     boxSizing: 'border-box',
   },
+  mylink: {
+    textDecoration: 'none',
+    color: 'white',
+  },
 });
 
 class TaskListItem extends React.Component {
@@ -92,8 +97,10 @@ class TaskListItem extends React.Component {
 
   render() {
     const {
-      classes, taskName, tags, score,
+      classes, taskName, tags, score, taskId,
     } = this.props;
+    const link = `/teacher/tasks/${taskId}`;
+
     return (
       <div className="taskinfo">
         <Paper className={classes.root} elevation={1}>
@@ -117,7 +124,7 @@ class TaskListItem extends React.Component {
               <span className={classes.scoreInner}>{score}</span>
             </Typography>
             <Button variant="contained" color="primary" className={classes.button}>
-              Подробнее
+              <Link className={classes.mylink} to={link}>Подробнее</Link>
             </Button>
             <Checkbox
               className={classes.checkbox}

@@ -89,26 +89,3 @@
   }
 }
 
-@media screen and (min-width: 1378px) {
-  .container {
-    width: 300px;
-  }
-  .input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 15px;
-    background-color: 'red';
-
-  }
-  .text-panel {
-    padding-left: 0;
-  }
-  .login-button {
-    width: 200px;
-  }
-  .text-field {
-    margin-top: 0;
-    width: 200px
-  }
-}

@@ -5,6 +5,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
+const logger = require('morgan');
 
 const passportControl = require('./utils/passport-control');
 const sendMail = require('./mail');
@@ -33,6 +34,7 @@ async function connectDatabase() {
 
 connectDatabase();
 
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -55,16 +57,12 @@ app.use('/api/user/login', passportControl);
 
 app.use('/api/user', userRouter);
 
-
-/*
 app.use((req, res, next) => {
   if (!req.isAuthenticated()) {
     return res.status(401).end();
   }
   return next();
 });
-*/
-
 
 app.use('/api/admin', adminRouter);
 app.use('/api/student', studentRouter);
