@@ -20,8 +20,6 @@ const task = mongoose.Schema({
   tests:
     [
       {
-        inputFileAdress: String,
-        outputFileAdress: String,
         weight: {
           type: Number,
           min: 1,
