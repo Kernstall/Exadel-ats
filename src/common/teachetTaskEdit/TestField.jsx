@@ -11,6 +11,9 @@ const styles = theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  input: {
+    display: 'none',
+  },
   bootstrapInput: {
     boxSizing: 'border-box',
     display: 'flex',
@@ -47,12 +50,13 @@ const styles = theme => ({
   addButton: {
     margin: '0px 5px',
     color: 'blue',
-    fontSize: 26,
     cursor: 'pointer',
   },
   editButton: {
+    display: 'flex',
     color: 'blue',
     cursor: 'pointer',
+    fontSize: 26,
   },
   bootstrapInputOutput: {
     display: 'flex',
@@ -62,6 +66,7 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'row',
     marginLeft: 5,
+    alignItems: 'center',
   },
 });
 
@@ -71,26 +76,39 @@ class TestField extends React.Component {
     this.id = '';
     this.state = {
       editDisabled: true,
+      edit: true,
       upload: true,
     };
+    this.clicked = false;
   }
 
   handleClickEdit = () => {
-    this.setState({ editDisabled: false, upload: false });
-  }
-
-  handleClickUpload = () => {
     this.setState({ editDisabled: false });
   }
 
-  render() {
-    const { editDisabled, upload } = this.state;
-    const { classes, inputText, isNew } = this.props;
+  handleClickUpload = () => {
+    this.clicked = true;
+  }
 
+  value = (idName, inputText) => {
+    if (!this.clicked) {
+      return inputText;
+    }
+    if (document.getElementById(idName).files.length === 0) {
+      return inputText;
+    }
+    this.setState({ edit: false });
+    return document.getElementById(idName).files[0].name;
+  }
+
+  render() {
+    const { edit, editDisabled, upload } = this.state;
+    const { classes, inputText, isNew, id } = this.props;
+    const idName = `add-file-${id}`;
     return (
       <div className={classes.testItem}>
         <TextField
-          defaultValue={inputText}
+          value={this.value(idName, inputText)}
           rows={1}
           className={classes.bootstrapInputOutput}
           multiline
@@ -108,14 +126,28 @@ class TestField extends React.Component {
         />
         {isNew && (
           <div className={classes.editAndUpload}>
-            <Edit
-              className={classes.editButton}
-              onClick={() => this.handleClickEdit}
-            />
-            {upload && (
-              <CloudUploadIcon
-                className={classes.addButton}
+            {edit && (
+              <Edit
+                className={classes.editButton}
+                onClick={this.handleClickEdit}
               />)}
+            {upload && (
+              <input
+                accept="text/plain"
+                className={classes.input}
+                id={idName}
+                multiple
+                type="file"
+              />
+            )}
+            {upload && (
+              <label htmlFor={idName}>
+                <CloudUploadIcon
+                  className={classes.addButton}
+                  onClick={this.handleClickUpload}
+                />
+              </label>
+            )}
           </div>)}
       </div>
     );

@@ -21,8 +21,20 @@ const styles = {
 const TestSet = ({ classes, input, output, id, isNew = false, callback, handleClickEdit, handleClickUpload }) => (
 
   <div className={classes.test}>
-    <TestField inputText={input} isNew={isNew} handleClickEdit={handleClickEdit} handleClickUpload={handleClickUpload} />
-    <TestField inputText={output} isNew={isNew} handleClickEdit={handleClickEdit} handleClickUpload={handleClickUpload} />
+    <TestField
+      inputText={input}
+      isNew={isNew}
+      id={`${id}1`}
+      handleClickEdit={handleClickEdit}
+      handleClickUpload={handleClickUpload}
+    />
+    <TestField
+      inputText={output}
+      isNew={isNew}
+      id={`${id}2`}
+      handleClickEdit={handleClickEdit}
+      handleClickUpload={handleClickUpload}
+    />
     <Close
       className={classes.deleteButton}
       onClick={() => callback(id)}

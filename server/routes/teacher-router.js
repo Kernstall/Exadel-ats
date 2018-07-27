@@ -8,14 +8,12 @@ const dataFunctions = require('../dataFunctions');
 
 const router = express.Router();
 
-/*
 router.use((req, res, next) => {
   if (req.user.status !== 'teacher') {
     return res.status(403).end();
   }
   return next();
 });
-*/
 
 router.get('/tasks', (req, res) => {
   let hashSet = {};
