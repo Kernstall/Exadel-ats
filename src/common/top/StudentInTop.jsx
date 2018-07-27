@@ -73,18 +73,17 @@ class StudentInTop extends Component {
   }
 
   handleAnimation = () => {
-    console.log(this.state);
     this.setState({ isOver: !this.state.isOver });
-  }
+  };
 
   render() {
     const { classes, student, number } = this.props;
     let className;
-    if (number == 0) {
+    if (number === 0) {
       className = classes.firstPlace;
-    } else if (number == 1) {
+    } else if (number === 1) {
       className = classes.secondPlace;
-    } else if (number == 2) {
+    } else if (number === 2) {
       className = classes.thirdPlace;
     } else {
       className = classes.otherPlaces;

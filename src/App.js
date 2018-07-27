@@ -36,9 +36,9 @@ class App extends Component {
       <MuiThemeProvider theme={createMuiTheme}>
         <ErrorDispatcher />
         <div className={classes.SpreadWrapper}>
-          <Header />
           <Router>
             <div className={classes.content}>
+              <Header />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
               <Route path="/studentMenu" component={StudentMenu} />
