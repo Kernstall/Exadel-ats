@@ -1,5 +1,5 @@
 const cp = require('child_process');
-const fs = require('fs');
+const fs = require('fs.extra');
 const mongoose = require('mongoose');
 const Task = require('../models/Task');
 
@@ -20,7 +20,7 @@ exports.checkFileExistence = async function checkFileExistence(path) {
 
 exports.deleteBinFunc = async function deleteBinFunc(path) {
   return new Promise((resolve, reject) => {
-    cp.exec(`rmdir ${path} /s /q`, (error, stdout, stderr) => {
+    fs.rmdir(`${__dirname}/${path}`, (error) => {
       if (error) {
         reject(error);
         return;
@@ -32,13 +32,11 @@ exports.deleteBinFunc = async function deleteBinFunc(path) {
 
 exports.createBinFunc = async function createBinFunc(path) {
   return new Promise((resolve, reject) => {
-    cp.exec(`mkdir ${path}`, (error, stdout, stderr) => {
+    fs.mkdir(`${__dirname}/${path}`, (error) => {
       if (error) {
         reject(error);
         return;
       }
-      console.log(stdout);
-      console.log(stderr);
       resolve();
     });
   });
