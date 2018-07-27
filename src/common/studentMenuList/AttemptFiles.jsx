@@ -42,7 +42,6 @@ const codeInfo = [
   },
 ];
 
-const TabHeaders = [];
 
 class AttemptFiles extends React.Component {
   componentDidMount() {
@@ -54,6 +53,8 @@ class AttemptFiles extends React.Component {
 
   render() {
     const { classes, attemptCode } = this.props;
+    const TabHeaders = [];
+    console.log(this.props.match.params);
     return (
       <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
         {
