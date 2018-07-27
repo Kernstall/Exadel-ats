@@ -76,7 +76,7 @@ class TestField extends React.Component {
     this.id = '';
     this.state = {
       editDisabled: true,
-      edit: true,
+      edit: false,
       upload: true,
     };
     this.clicked = false;
