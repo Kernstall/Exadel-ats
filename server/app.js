@@ -56,7 +56,6 @@ app.use('/api/user/login', passportControl);
 app.use('/api/user', userRouter);
 
 app.use((req, res, next) => {
-  console.log(req.user);
   if (!req.isAuthenticated()) {
     return res.status(401).end();
   }
