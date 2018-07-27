@@ -17,6 +17,9 @@ import AdminMainPage from './pages/adminMainPage/AdminMainPage.jsx';
 import TeacherMainPage from './pages/teacherMainPage/TeacherMainPage';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent';
 import TeacherTasksList from './common/teacherTasksList/TeacherTasksList';
+import AttemptFiles from './common/studentMenuList/AttemptFiles';
+import TaskView from './common/taskView/TaskView';
+import TeacherTaskEdit from './common/teachetTaskEdit/TeacherTaskEdit';
 import { PrivateRoute } from './common/loginForm/PrivateRouter';
 import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 
@@ -40,10 +43,13 @@ class App extends Component {
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
               <Route path="/studentMenu" component={StudentMenu} />
-              {/*<Route exact path="/teacher/addGroup" component={TeacherAddGroup} />*/}
-              <PrivateRoute exact path="/student/:id" component={StudentMainPage} />
-              <PrivateRoute exact path="/teacher/:id" component={TeacherMainPage} />
+              <Route exact path="/teacher/addGroup" component={TeacherAddGroup} />
+              <PrivateRoute exact path="/student/id/:id" component={StudentMainPage} />
+              <PrivateRoute exact path="/teacher/id/:id" component={TeacherMainPage} />
               <Route path="/admin" component={AdminMainPage} />
+              <Route exact path="/:attemptNumber&&taskId" component={AttemptFiles} />
+              <Route path="/teacher/task/edit" component={TeacherTaskEdit} />
+              <Route path="/teacher/tasks/:id" component={TaskView} />
             </div>
           </Router>
           <Footer />

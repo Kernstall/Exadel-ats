@@ -5,6 +5,7 @@ const Group = require('./models/Group');
 const User = require('./models/User');
 const Topic = require('./models/Topic');
 const Activities = require('./models/Activity');
+const fs = require('fs');
 
 function compareByDate(a, b) {
   return new Date(b.date) - new Date(a.date);
@@ -585,5 +586,60 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
     info: notTrainingTests,
     avgMark: notTrSum / notTrCount,
   }];
+};
+
+function getExtension(fileName) {
+  const index = fileName.indexOf('.');
+  return fileName.slice(index);
 }
-;
+
+function readFile(path) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, 'utf8', (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+}
+
+exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
+  try {
+    const userInfo = await User.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(userId) } },
+      {
+        $project: {
+          taskInfo: {
+            $filter: {
+              input: '$tasks',
+              as: 'task',
+              cond: { $eq: ['$$task.taskId', mongoose.Types.ObjectId(taskId)] },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          'taskInfo.attempts': 1,
+        },
+      },
+    ]);
+    if (userInfo[0].taskInfo.length === 0 || !userInfo[0].taskInfo[0].attempts[attemptNumber - 1]) {
+      return [];
+    }
+    const attemptInfo = userInfo[0].taskInfo[0].attempts[attemptNumber - 1];
+    const answer = [];
+    for (let i = 0; i < attemptInfo.files.length; i++) {
+      answer.push({});
+      answer[i].name = attemptInfo.files[i];
+      answer[i].extension = getExtension(attemptInfo.files[i]);
+      answer[i].fileContents = await readFile(`dataFileStorage\\srcCodes\\${userId}\\${taskId}\\${attemptNumber}\\src\\${attemptInfo.files[i]}`);
+    }
+    return answer;
+  } catch (e) {
+    throw e;
+  }
+};

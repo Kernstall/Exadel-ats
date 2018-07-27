@@ -4,6 +4,7 @@ import './style.css';
 import MenuItem from '@material-ui/core/es/MenuItem/MenuItem';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Button from '@material-ui/core/es/Button/Button';
+import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import FormSelect from '../../../common/shared/select/index';
 
@@ -44,6 +45,7 @@ class StudentRegistration extends React.Component {
       course: undefined,
       groupNumber: undefined,
       graduateYear: 0,
+      isRedirected: false,
     };
   }
 
@@ -62,6 +64,7 @@ class StudentRegistration extends React.Component {
       },
     }).then(res => res.json())
       .then(res => console.log(`Success: ${res}`))
+      .then(() => this.setState({ isRedirected: true }))
       .catch(rej => console.log(`Rejected: ${rej}`));
   };
 
@@ -194,6 +197,7 @@ class StudentRegistration extends React.Component {
         <Button onClick={this.handleSubmit} className={classes.registerButton}>
           Register
         </Button>
+        {this.state.isRedirected && <Redirect to="/" />}
       </section>
     );
   }
