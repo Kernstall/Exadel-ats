@@ -38,7 +38,14 @@ class GroupsList extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/api/teacher/group?teacherID=${this.props.id}`)
+    fetch(`/api/teacher/group?teacherID=${this.props.id}`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    })
       .then(res => res.json())
       .then(res => {
         this.setState({
