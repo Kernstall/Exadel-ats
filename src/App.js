@@ -45,6 +45,9 @@ class App extends Component {
               <PrivateRoute exact path="/student/id/:id" component={StudentMainPage} />
               <PrivateRoute exact path="/teacher/id/:id" component={TeacherMainPage} />
               <Route path="/admin" component={AdminMainPage} />
+
+              <Route exact path="/:taskId/:attemptNumber" component={AttemptFiles} />
+              <Route path="/teacher/task/edit" component={TeacherTaskEdit} />
               <Route exact path="/:attemptNumber&&taskId" component={AttemptFiles} />
               <Route path="/teacher/task/:id" component={TeacherTaskEdit} />
               <Route path="/teacher/tasks/:id" component={TaskView} />
