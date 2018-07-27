@@ -75,16 +75,13 @@ router.post('/task/attempt', async (req, res) => {
 });
 
 router.get('/task/attempt', async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.query.studentId;
   const taskId = req.query.taskId;
   const attemptNumber = req.query.attemptNumber;
   try {
     const result = await dataFunctions.getAttemptsCodes(userId, taskId, attemptNumber);
     res.status(200).send(JSON.stringify(result));
   } catch (e) {
-    if (e.toString() === 'Error: not found') {
-      res.status(404).send(e.toString());
-    }
     res.status(400).send(e.toString());
   }
 });

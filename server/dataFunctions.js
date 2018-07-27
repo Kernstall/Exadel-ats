@@ -628,7 +628,7 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
       },
     ]);
     if (userInfo[0].taskInfo.length === 0 || !userInfo[0].taskInfo[0].attempts[attemptNumber - 1]) {
-      throw new Error('not found');
+      return [];
     }
     const attemptInfo = userInfo[0].taskInfo[0].attempts[attemptNumber - 1];
     const answer = [];
@@ -636,9 +636,8 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
       answer.push({});
       answer[i].name = attemptInfo.files[i];
       answer[i].extension = getExtension(attemptInfo.files[i]);
-      answer[i].fileContents = await readFile(`dataFileStorage\\srcCodes\\${userId}\\${taskId}\\${attemptNumber}\\${attemptInfo.files[i]}`);
+      answer[i].fileContents = await readFile(`dataFileStorage\\srcCodes\\${userId}\\${taskId}\\${attemptNumber}\\src\\${attemptInfo.files[i]}`);
     }
-
     return answer;
   } catch (e) {
     throw e;
