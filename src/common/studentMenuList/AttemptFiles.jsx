@@ -42,18 +42,19 @@ const codeInfo = [
   },
 ];
 
-const TabHeaders = [];
 
 class AttemptFiles extends React.Component {
   componentDidMount() {
     this.props.getAttemptCode({
-      taskId: '5b45b16f75224332745f7595',
+      taskId: this.props.match.params.taskId,
       attemptNumber: this.props.match.params.attemptNumber,
     });
   }
 
   render() {
     const { classes, attemptCode } = this.props;
+    const TabHeaders = [];
+    console.log(this.props.match.params);
     return (
       <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
         {
