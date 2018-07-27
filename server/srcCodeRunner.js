@@ -1,59 +1,21 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cp = require('child_process');
-const fs = require('fs');
+// const cp = require('child_process');
+// const fs = require('fs');
 const mongoose = require('mongoose');
 const multer = require('multer');
-const Task = require('./models/Task');
+const dataFunctions = require('./microserviceUtils/dataFunctions');
 // const got = require('got');
 
 const app = express();
 const dbName = 'TestingSystem';
 const connection = `mongodb://localhost:27017/${dbName}`;
 
-const commonSrcCodePath = 'dataFileStorage\\srcCodes';
-const commonTaskPath = 'dataFileStorage\\tasks';
+const commonSrcCodePath = 'dataFileStorageMicro\\srcCodes';
+const commonTaskPath = 'dataFileStorageMicro\\tasks';
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-async function checkFileExistence(path) {
-  return new Promise((resolve, reject) => {
-    fs.access(path, fs.constants.F_OK, (err) => {
-      if (err) {
-        resolve(false);
-      } else {
-        resolve(true);
-      }
-    });
-  });
-}
-
-async function deleteBinFunc(path) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`rmdir ${path} /s /q`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-  });
-}
-
-async function createBinFunc(path) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`mkdir ${path}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      console.log(stdout);
-      console.log(stderr);
-      resolve();
-    });
-  });
-}
 
 const storageText = multer.diskStorage({
   async destination(req, file, cb) {
@@ -65,12 +27,17 @@ const storageText = multer.diskStorage({
     } else {
       number = file.originalname.slice(0, index);
     }
+    const path = `${commonTaskPath}\\${req.query.taskId}\\${number}`;
 
-    if (!(await checkFileExistence(`tasks\\${req.query.taskId}\\${number}`))) {
-      await createBinFunc(`tasks\\${req.query.taskId}\\${number}`);
+    if (!(await dataFunctions.checkFileExistence(path))) {
+      try {
+        await dataFunctions.createBinFunc(path);
+      } catch (error) {
+        // Папка уже есть
+      }
     }
 
-    cb(null, `tasks\\${req.query.taskId}\\${number}`);
+    cb(null, path);
   },
   filename(req, file, cb) {
     let index = file.originalname.indexOf('input.txt');
@@ -87,10 +54,9 @@ const storageText = multer.diskStorage({
 
 const storageSrcCode = multer.diskStorage({
   async destination(req, file, cb) {
-    if (!(await checkFileExistence(`srcCodes\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`))) {
-      await createBinFunc(`srcCodes\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
-    }
-    cb(null, `srcCodes\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
+    const path = `${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`;
+
+    cb(null, path);
   },
   filename(req, file, cb) {
     cb(null, `${file.originalname}`);
@@ -101,7 +67,7 @@ const uploadText = multer({
   storage: storageText,
   fileFilter(req, file, cb) {
     try {
-      if (file.originalname.match(/^\d+input.txt$|^\d+output.txt$/)) {
+      if (file.originalname.match(/^[\da-f]+input.txt$|^\[\da-f]+output.txt$/)) {
         cb(null, true);
       } else {
         cb(null, false);
@@ -127,210 +93,6 @@ const uploadSrcCode = multer({
   },
 });
 
-async function javaBuildFunc(path) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`javac -d ${path}\\bin ${path}\\src\\*.java`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-  });
-}
-
-async function cppBuildFunc(path) {
-  return new Promise((resolve, reject) => {
-    // g++ ABS_LIB.cpp ABS_LIB.h structs.h structs.cpp main.cpp
-    cp.exec(`cd ${path}\\src &&  g++ *.cpp *.h -o ..\\bin\\main.exe`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-  });
-}
-
-async function javaRunFunc(path, mainFileName) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`cd ${path} && java ${mainFileName}`, { timeout: 30 * 1000 }, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      if (stdout) {
-        console.log(stdout);
-      }
-      if (stderr) {
-        console.log(stderr);
-      }
-      resolve();
-    });
-  });
-}
-
-async function cppRunFunc(path) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`cd ${path} && main.exe`, { timeout: 30 * 1000 }, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      if (stdout) {
-        console.log(stdout);
-      }
-      if (stderr) {
-        console.log(stderr);
-      }
-      resolve();
-    });
-  });
-}
-
-const builder = {
-  java: javaBuildFunc,
-  cpp: cppBuildFunc,
-};
-
-const runner = {
-  java: javaRunFunc,
-  cpp: cppRunFunc,
-};
-
-async function placeInputFile(inputFromFileWay, inputWhereFileWay) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`copy ${inputFromFileWay} ${inputWhereFileWay}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-    // copy ..\check\355ea642ea43112e\input.txt bin
-  });
-}
-
-async function placeOutputFile(outputWhereFileWay) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`echo. 2> ${outputWhereFileWay}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-    // echo. 2> bin\output.txt
-  });
-}
-
-async function removeInputFile(inputWhereFileWay) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`del /q ${inputWhereFileWay}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-  });
-}
-
-async function removeOutputFile(outputWhereFileWay) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`del /q ${outputWhereFileWay}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-    // del /q bin\input.txt
-  });
-}
-
-async function readFile(fileName) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(fileName, (error, data) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(data);
-      }
-    });
-  });
-}
-
-async function compareFiles(firstFileName, secondFileName) {
-  const firstContent = (await readFile(firstFileName)).toString();
-  const secondContent = (await readFile(secondFileName)).toString();
-  if (firstContent === secondContent) {
-    return true;
-  }
-  return false;
-}
-
-async function checkStudentAttempt(studentId, taskId, mainFileName, attemptNumber, lang) {
-  try {
-    const results = [];
-    let tests = await Task.aggregate([
-      { $match: { _id: mongoose.Types.ObjectId(taskId) } },
-      { $project: { tests: true } },
-    ]);
-    if (tests.length === 0) {
-      throw new Error('Incorrect task id');
-    }
-    if (await checkFileExistence(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`)) {
-      // Удаление папки bin, если таковая по какой-либо непредвиденной причине
-      // осталась в директории
-      await deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`);
-    }
-
-    // Создание папки bin
-    await createBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`); // Работает
-
-    // Компиляция файлов в папку bin
-    await builder[lang.toLowerCase()](`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}`);
-
-    tests = tests[0].tests;
-
-    // console.log(tests._id.toString());
-    for (let index = 0; index < tests.length; index++) {
-      // Копирование очередного входного файла в папку bin
-      await placeInputFile(`${commonTaskPath}\\${taskId}\\${tests[index]._id.toString()}\\input\\${tests[index].inputFileAdress}`,
-        `${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`);
-      // Создание файла для выходных данных
-      await placeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].outputFileAdress}`);
-      // Запуск скомпилированных файлов
-      await runner[lang.toLowerCase()](`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`, mainFileName);
-      // Удаление входного файла
-      await removeInputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].inputFileAdress}`);
-      // Сравнение выходного файла и ожидаемого результата
-      let isSuccessfull;
-      try {
-        isSuccessfull = await compareFiles(`${commonTaskPath}\\${taskId}\\${tests[index]._id.toString()}\\expextedOutput\\${tests[index].outputFileAdress}`,
-          `${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].outputFileAdress}`);
-      } catch (error) {
-        isSuccessfull = false;
-      }
-      results.push({
-        success: isSuccessfull,
-        weight: tests[index].weight,
-        _id: tests[index]._id.toString(),
-      });
-      // Удаление выходного файла
-      await removeOutputFile(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin\\${tests[index].outputFileAdress}`);
-    }
-    // Удаление папки bin
-    await deleteBinFunc(`${commonSrcCodePath}\\${studentId}\\${taskId}\\${attemptNumber}\\bin`);
-
-    return results;
-  } catch (error) {
-    // Тут что-то должно быть
-    throw error;
-  }
-}
-
 // deleteBinFunc();
 // runFunc('HelloWorld').catch(error => error.message);
 // createBinFunc().then(javaBuildFunc).then(() => runFunc('HelloWorld')).then(deleteBinFunc);
@@ -338,23 +100,55 @@ async function connectDatabase() {
   mongoose.connect(connection, { useNewUrlParser: true })
     .then(() => {
       console.log('Connected to database!!!');
-      // checkStudentAttempt('5b45b16575224332745f7587', '5b44fb2508a2b31ddcddab32', 'Process', 2, 'Java');
     })
     .catch((err) => {
       throw new Error(err);
     });
 }
 
-app.post('/server/textfiles', async (req, res, next) => {
+app.post('/server/textfiles', uploadText.array('files'), async (req, res, next) => {
+  res.status(200).send('Operation successful');
+});
+
+app.post('/server/running/srcfiles', async (req, res, next) => {
+  if (!(await dataFunctions.checkFileExistence(`${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`))) {
+    await dataFunctions.createBinFunc(`${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
+  } else {
+    await dataFunctions.deleteBinFunc(`${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
+    await dataFunctions.createBinFunc(`${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
+  }
   next();
 });
 
-app.post('/server/textfiles', uploadText.array('files'), async (req, res, next) => {
-  res.status(200).send('Files should have been downloaded');
+app.post('/server/running/srcfiles', async (req, res, next) => {
+  next();
 });
 
-app.post('/server/run', async (req, res) => {
+app.post('/server/running/srcfiles', uploadSrcCode.array('files'), async (req, res, next) => {
+  try {
+    const result = await dataFunctions.checkStudentAttempt(req.query.userId, req.query.taskId,
+      req.query.mainFileName, req.query.attemptNumber, req.query.lang);
+    await dataFunctions.deleteBinFunc(`${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
+    res.status(200).send(JSON.stringify(result));
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
 
+app.delete('/server/textfiles', async (req, res) => {
+  try {
+    const taskId = req.query.taskId;
+    const number = req.query.testId;
+    await dataFunctions.deleteBinFunc(`${commonTaskPath}\\${taskId}\\${number}`);
+    res.status(200).send('Operation successful');
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
+app.use(async (err, req, res, next) => {
+  console.log(err);
+  res.status(404).send(err.message);
 });
 
 const server = app.listen(3002, () => console.log(`Server is listening on port ${server.address().port}`));
