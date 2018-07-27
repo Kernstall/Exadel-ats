@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import TabComponent from '../tabComponent/TabComponent.jsx';
@@ -43,8 +43,9 @@ const codeInfo = [
 ];
 
 
-class AttemptFiles extends React.Component {
+class AttemptFiles extends Component {
   componentDidMount() {
+    console.log(this.props.match.params);
     this.props.getAttemptCode({
       taskId: this.props.match.params.taskId,
       attemptNumber: this.props.match.params.attemptNumber,
@@ -54,23 +55,26 @@ class AttemptFiles extends React.Component {
   render() {
     const { classes, attemptCode } = this.props;
     const TabHeaders = [];
-    console.log(this.props.match.params);
-    return (
-      <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
-        {
+    if (attemptCode) {
+      console.log(attemptCode);
+      return (
+        <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
+          {
 
-          attemptCode.forEach((code) => {
-            TabHeaders.push({
-              tabName: `${code.name}.${code.extension}`,
-              component: <AttemptCode codeString={code.code} lang={code.extension} />,
-            });
-          })
-         }
-        <TabComponent
-          tabHeaders={TabHeaders}
-        />
-      </div>
-    );
+            attemptCode.forEach((code) => {
+              TabHeaders.push({
+                tabName: `${code.name}.${code.extension}`,
+                component: <AttemptCode codeString={code.fileContents} lang={code.extension}/>,
+              });
+            })
+          }
+          <TabComponent
+            tabHeaders={TabHeaders}
+          />
+        </div>
+      );
+    }
+    return null;
   }
 }
 

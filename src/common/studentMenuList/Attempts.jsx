@@ -64,7 +64,7 @@ class Attempts extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Link to={`/${attempt.number}&&${taskId}`} className={classes.noUnderline}>
+        <Link to={`/${taskId}/${attempt.number}`} className={classes.noUnderline}>
           <ListItem open="false" button>
             <Grid container>
               <Grid item xs>
