@@ -18,14 +18,14 @@ import TeacherMainPage from './pages/teacherMainPage/TeacherMainPage';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent';
 import TeacherTasksList from './common/teacherTasksList/TeacherTasksList';
 import AttemptFiles from './common/studentMenuList/AttemptFiles';
+import TaskView from './common/taskView/TaskView';
+import TeacherTaskEdit from './common/teachetTaskEdit/TeacherTaskEdit';
 import { PrivateRoute } from './common/loginForm/PrivateRouter';
 import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 
 const styles = ({
   content: {
-    minHeight: 'calc(100vh - 40px)',
-  },
-  SpreadWrapper: {
+    minHeight: 'calc(100vh - 100px)',
   },
   ...Common,
 });
@@ -36,7 +36,7 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={createMuiTheme}>
         <ErrorDispatcher />
-        <div className={classes.SpreadWrapper}>
+        <div className={classes.minHeight}>
           <Header />
           <Router>
             <div className={classes.content}>
@@ -48,6 +48,8 @@ class App extends Component {
               <PrivateRoute exact path="/teacher/:id" component={TeacherMainPage} />
               <Route path="/admin" component={AdminMainPage} />
               <Route exact path="/:attemptNumber&&taskId" component={AttemptFiles} />
+              <Route path="/teacher/task/edit" component={TeacherTaskEdit} />
+              <Route path="/teacher/tasks/:id" component={TaskView} />
             </div>
           </Router>
           <Footer />
