@@ -75,7 +75,7 @@ router.post('/task/attempt', async (req, res) => {
 });
 
 router.get('/task/attempt', async (req, res) => {
-  const userId = req.query.studentId;
+  const userId = req.user.id;
   const taskId = req.query.taskId;
   const attemptNumber = req.query.attemptNumber;
   try {
