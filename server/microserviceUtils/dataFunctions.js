@@ -18,9 +18,9 @@ exports.checkFileExistence = async function checkFileExistence(path) {
   });
 };
 
-exports.deleteBinFunc = async function deleteBinFunc(path) {
+exports.deleteBinFunc = async function deleteBinFunc(path) { // удаляет конечную папку
   return new Promise((resolve, reject) => {
-    fs.rmdir(`${__dirname}/${path}`, (error) => {
+    fs.rmrf(`${__dirname}/${path}`, (error) => {
       if (error) {
         reject(error);
         return;
@@ -30,9 +30,9 @@ exports.deleteBinFunc = async function deleteBinFunc(path) {
   });
 };
 
-exports.createBinFunc = async function createBinFunc(path) {
+exports.createBinFunc = async function createBinFunc(path) { // создаёт полную папковую иерархию
   return new Promise((resolve, reject) => {
-    fs.mkdir(`${__dirname}/${path}`, (error) => {
+    fs.mkdirp(`${__dirname}/${path}`, (error) => {
       if (error) {
         reject(error);
         return;
@@ -113,54 +113,43 @@ exports.runner = {
   cpp: exports.cppRunFunc,
 };
 
-exports.placeInputFile = async function placeInputFile(inputFromFileWay, inputWhereFileWay) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`copy ${inputFromFileWay} ${inputWhereFileWay}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
+exports.placeInputFile = async function copy(extractionPath, destinationPath) { // замещает файл
+  return new Promise((resolve, reject) => { // если таковой есть
+    fs.copy(`${__dirname}/${extractionPath}`, `${__dirname}/${destinationPath}`, { replace: true }, (err) => {
+      if (err) {
+        reject(err);
       }
-      resolve();
-    });
-    // copy ..\check\355ea642ea43112e\input.txt bin
-  });
-};
-
-exports.placeOutputFile = async function placeOutputFile(outputWhereFileWay) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`echo. 2> ${outputWhereFileWay}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-    // echo. 2> bin\output.txt
-  });
-};
-
-exports.removeInputFile = async function removeInputFile(inputWhereFileWay) {
-  return new Promise((resolve, reject) => {
-    cp.exec(`del /q ${inputWhereFileWay}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
     });
   });
 };
 
-exports.removeOutputFile = async function removeOutputFile(outputWhereFileWay) {
+exports.placeOutputFile = async function createFile(path) { // создаёт пустой файл
   return new Promise((resolve, reject) => {
-    cp.exec(`del /q ${outputWhereFileWay}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
+    fs.createFile(`${__dirname}/${path}`, (err) => {
+      if (err) {
+        reject(err);
       }
-      resolve();
     });
-    // del /q bin\input.txt
+  });
+};
+
+exports.removeInputFile = async function removeFile(path) {
+  return new Promise((resolve, reject) => {
+    fs.unlink(`${__dirname}/${path}`, (err) => {
+      if (err) {
+        reject(err);
+      }
+    });
+  });
+};
+
+exports.removeOutputFile = async function removeFile(path) {
+  return new Promise((resolve, reject) => {
+    fs.unlink(`${__dirname}/${path}`, (err) => {
+      if (err) {
+        reject(err);
+      }
+    });
   });
 };
 
