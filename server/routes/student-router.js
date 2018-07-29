@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const User = require('../models/User');
 const dataFunctions = require('../dataFunctions');
-const mapping = require('../utils/mapping/student');
+const mapping = require('../utils/mapping/map');
 const Group = require('../models/Group');
 
 const router = express.Router();

@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
+import Chip from '@material-ui/core/Chip';
 import { Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import Spinner from '../shared/spinner/index';
-import TeacherTaskEdit from '../teachetTaskEdit/TeacherTaskEdit';
+import { getTaskInfo } from '../../commands/taskInfo';
 
 const styles = theme => ({
   root: {
@@ -30,6 +31,7 @@ const styles = theme => ({
     marginLeft: 10,
     fontWeight: 400,
     fontSize: 24,
+    color: 'grey',
     backgroundColor: '#E6E6FA',
   },
   button: {
@@ -65,22 +67,21 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   tag: {
-    borderRadius: 15,
     backgroundColor: '#e9f2f3',
     minWidth: 50,
-    textAlign: 'center',
-    padding: '5px 7px',
     margin: 5,
+    fontWeight: 400,
+    color: 'grey',
   },
   example: {
-    margin: '20px 0px',
+    margin: '15px 0px',
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   exampleInner: {
     display: 'flex',
-    padding: 10,
+    padding: '10px 10px 10px 0px',
     width: '45%',
     minWidth: '300px',
     flexDirection: 'column',
@@ -107,61 +108,68 @@ class TaskView extends React.Component {
   constructor() {
     super();
     this.id = '';
+    this.page = '';
   }
 
   componentDidMount() {
+    this.id = this.props.match.params.id;
+    this.props.getTaskInfo(this.id);
   }
 
   render() {
-    const { classes } = this.props;
-    this.id = this.props.match.params.id;
-    const text = 'Тот, кто писал эту программу, явно делал это в спешке.. На самом деле, нет: программа-то учебная, и этот кто-то нарочно запихнул туда лишние переменные, а те, что надо, не объявил. Исправляем ситуацию: лишние переменные закомментируем, а недостающие — объявим. И наступит тогда в программе всеобщая гармония.';
-    const tags = ['БГУ', 'Последовательность', 'Василенко', 'ФПМИ'];
-    const data = '1\n2\n3\n4\n2\n3\n4\n2\n3';
-    const taskName = 'Чистка кода';
-    const score = 6;
+    const { classes, taskInfo } = this.props;
+    let load;
     let a = localStorage.getItem('user');
     a = a.substring(1, a.length - 1);
     const pathBack = `/teacher/id/${a}`;
     const pathEdit = `/teacher/task/${this.id}`;
-
-
-    return (
-      <div className={classes.root}>
+    if (taskInfo) {
+      this.page = (
         <div className={classes.flex}>
           <div className={classes.taskTitle}>
-            <Typography variant="display1">{taskName}</Typography>
-            <Typography variant="h3" className={classes.score}>{score}</Typography>
+            <Typography variant="display1">{taskInfo.name}</Typography>
+            <Typography className={classes.score}>{taskInfo.weight}</Typography>
           </div>
-          <Typography variant="display1">Условие</Typography>
-          <Typography className={classes.taskInfo}>{text}</Typography>
+          <Typography variant="display1" className={classes.inAndOut}>Условие</Typography>
+          <Typography className={classes.taskInfo}>{taskInfo.description}</Typography>
           <div className={classes.example}>
             <div className={classes.exampleInner}>
               <Typography variant="display1" className={classes.inAndOut}>Входные данные</Typography>
               <div className={classes.overflowOption}>
-                {data.split('\n').map((element, index) => (<Typography key={index}>{element}</Typography>))}
+                {taskInfo.input.split('\n').map((element, index) => (<Typography key={index}>{element}</Typography>))}
               </div>
             </div>
             <div className={classes.exampleInner}>
               <Typography variant="display1" className={classes.inAndOut}>Выходные данные</Typography>
               <div className={classes.overflowOption}>
-                {data.split('\n').map((element, index) => (<Typography key={index}>{element}</Typography>))}
+                {taskInfo.output.split('\n').map((element, index) => (<Typography key={index}>{element}</Typography>))}
               </div>
             </div>
           </div>
-          <Typography variant="display1">Тэги</Typography>
-          <Typography className={classes.tags}>
-            {tags.map((element, index) => (<div key={index} className={classes.tag}>{element}</div>))}
-          </Typography>
+          <Typography variant="display1" className={classes.inAndOut}>Теги</Typography>
+          <div className={classes.tags}>
+            {taskInfo.tags.map((element, index) => (
+              <Chip key={index} label={element} className={classes.tag} />
+            ))}
+          </div>
           <div className={classes.buttonContainer}>
             <Button variant="contained" color="primary" className={classes.button}>
               <Link className={classes.mylink} to={pathEdit}>Редактировать</Link>
             </Button>
             <Button variant="contained" color="primary" className={classes.button}>
-              <Link className={classes.mylink} to={pathBack}>Назад к группе</Link>
+              <Link className={classes.mylink} to={pathBack}>Назад</Link>
             </Button>
           </div>
         </div>
+      );
+    } else {
+      load = (<Spinner />);
+    }
+
+    return (
+      <div className={classes.root}>
+        {this.page}
+        {load}
       </div>
     );
   }
@@ -170,8 +178,13 @@ class TaskView extends React.Component {
 TaskView.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-TaskView.contextTypes = {
-  router: PropTypes.object,
-};
 
-export default (withStyles(styles)(TaskView));
+const mapStateToProps = state => ({
+  taskInfo: state.taskInfo.taskInfo,
+});
+
+const mapCommandsToProps = dispatch => ({
+  getTaskInfo: param => dispatch(getTaskInfo(param)),
+});
+
+export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(TaskView));

@@ -1,9 +1,12 @@
 const express = require('express');
+const fs = require('fs');
 const Task = require('../models/Task');
 const Topic = require('../models/Topic');
 const Question = require('../models/Question');
-const mapping = require('../utils/mapping/student');
+const mapping = require('../utils/mapping/map');
 const User = require('../models/User');
+const commonTaskPath = '\\dataFileStorage\\tasks';
+
 const dataFunctions = require('../dataFunctions');
 
 const router = express.Router();
@@ -33,6 +36,20 @@ router.get('/tasks', (req, res) => {
     hashSet = Object.keys(hashSet).map(key => hashSet[key]);
     res.send(hashSet);
   });
+});
+
+router.get('/task', async (req, res) => {
+  try {
+    if (!req.query.id) {
+      return res.status(400).end();
+    }
+    const taskId = req.query.id;
+    const result = await dataFunctions.getTaskInfo(taskId);
+    return res.send(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
 });
 
 router.get('/questions', (req, res) => {
@@ -108,7 +125,6 @@ router.delete('/group/students', (req, res) => {
     });
 });
 
-// Возвращает группы, принадлежащие учителю с количеством людей в них
 router.get('/group', (req, res) => {
   dataFunctions.getTeachersGroups(req.user._id)
     .then((answer) => {

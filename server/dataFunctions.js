@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
+const fs = require('fs');
 const Task = require('./models/Task');
 const Question = require('./models/Question');
 const Group = require('./models/Group');
 const User = require('./models/User');
 const Topic = require('./models/Topic');
 const Activities = require('./models/Activity');
-const fs = require('fs');
+
+const mapping = require('./utils/mapping/map');
+const commonTaskPath = '\\dataFileStorage\\tasks';
 
 function compareByDate(a, b) {
   return new Date(b.date) - new Date(a.date);
@@ -641,6 +644,18 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
 
     }
     return answer;
+  } catch (e) {
+    throw e;
+  }
+};
+
+exports.getTaskInfo = async (taskId) => {
+  try {
+    const taskInfo = await Task.findById(taskId);
+    const input = await readFile(`${__dirname}\\${commonTaskPath}\\${taskId}\\${taskInfo.tests[0]._id}\\input.txt`);
+    const output = await readFile(`${__dirname}\\${commonTaskPath}\\${taskId}\\${taskInfo.tests[0]._id}\\output.txt`);
+    const result = mapping.mapTaskAndTestsToDto(taskInfo, input, output);
+    return result;
   } catch (e) {
     throw e;
   }
