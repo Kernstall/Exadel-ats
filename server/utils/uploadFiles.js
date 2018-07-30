@@ -2,7 +2,7 @@ const multer = require('multer');
 
 const fileSystemFunctions = require('./fileSystemFunctions');
 
-const commonTaskPath = 'dataFileStorage\\tasks';
+const commonTaskPath = 'dataFileStorage/tasks';
 
 const storageTests = multer.diskStorage({
   async destination(req, file, cb) {
@@ -14,7 +14,7 @@ const storageTests = multer.diskStorage({
     } else {
       number = file.originalname.slice(0, index);
     }
-    const path = `${commonTaskPath}\\${req.query.taskId}\\${number}`;
+    const path = `${commonTaskPath}/${req.query.taskId}/${number}`;
     await fileSystemFunctions.createDirFunc(path);
 
     cb(null, path);
