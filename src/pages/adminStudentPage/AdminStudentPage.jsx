@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Common from '../../common/styles/Common';
-import { getActivities } from '../../commands/activities';
-import SearchBox from './searchBox/SearchBox.jsx';
+import { getActivities } from '../../commands/admin';
+import SearchBox from './searchBox/SearchBox';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
 const styles = {
@@ -21,6 +21,21 @@ const styles = {
     margin: '10px',
   },
 };
+
+const mocks = [
+  {
+    name: 'Alexander Gusev Sergeevich',
+    universityInfo: 'БГУ ФПМИ 2020',
+    mediumTaskScore: '10',
+    mediumTestScore: '10',
+  },
+  {
+    name: 'Еремин Гульзар Десад',
+    universityInfo: 'БГУИР ФПМИ 2022',
+    mediumTaskScore: '8',
+    mediumTestScore: '8',
+  }
+];
 
 class AdminStudentPage extends Component {
   constructor(props) { // eslint-disable-line
@@ -73,7 +88,7 @@ class AdminStudentPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={activities} />
+              <ActivityListItems info={mocks} />
             </List>
           </Grid>
           <h1>Students</h1>

@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Common from '../../common/styles/Common';
-import { getActivities } from '../../commands/activities';
-import SearchBox from './searchBox/SearchBox.jsx';
+import { getActivities } from '../../commands/admin';
+import SearchBox from './searchBox/SearchBox';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
 const styles = {
@@ -66,7 +66,6 @@ class AdminTeacherPage extends Component {
 
   render() {
     const { classes, activities } = this.props;
-    console.log(activities);
     if (activities) {
       return (
         <Grid

@@ -18,7 +18,6 @@ const styles = {
 };
 
 const Hint = ({ classes, suggestion, mauseCoordinates }) => {
-  console.log(mauseCoordinates);
   const coords = {
     top: `${mauseCoordinates.y + 20}px`,
     left: `${mauseCoordinates.x}px`,

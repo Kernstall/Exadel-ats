@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/es';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { getActivities } from '../../commands/activities';
+import { getActivities } from '../../commands/admin';
 import HeaderMenue from './headerMenue/HeaderMenue';
 import AdminTeacherPage from '../adminTeacherPage/AdminTeacherPage';
 import AdminHistoryPage from '../adminHistoryPage/AdminHistoryPage';
@@ -23,6 +23,7 @@ class AdminMainPage extends Component {
     return (
       <div className={classes.root}>
         <HeaderMenue />
+        {/* <Route path="/" component={() => <Redirect to="/" />} /> */}
         <Route path="/admin/id/" component={() => <Redirect to="/admin/history" />} />
         <Route path="/admin/history" exact component={AdminHistoryPage} />
         <Route path="/admin/teachers" exact component={AdminTeacherPage} />
