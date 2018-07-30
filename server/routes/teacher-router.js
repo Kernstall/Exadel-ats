@@ -56,6 +56,20 @@ router.get('/task', async (req, res) => {
   }
 });
 
+router.get('/full/task', async (req, res) => {
+  try {
+    if (!req.query.id) {
+      return res.status(400).end();
+    }
+    const taskId = req.query.id;
+    const result = await dataFunctions.getFullTaskInfo(taskId);
+    return res.json(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
+});
+
 router.get('/questions', (req, res) => {
   let hashSet = {};
   Question.find().populate('topicId', 'name').exec((err, questions) => {
