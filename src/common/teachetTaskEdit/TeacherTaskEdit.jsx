@@ -160,10 +160,10 @@ const styles = theme => ({
 });
 
 class TeacherTaskEdit extends React.Component {
-  constructor() {
-    super();
-    this.id = '';
+  constructor(props) {
+    super(props);
     this.state = {
+      id: props.match.params.id,
       tags: ['БГУ', 'Последовательность', 'Василенко', 'ФПМИ'],
       tagToAdd: '',
       tests: [
@@ -183,7 +183,11 @@ class TeacherTaskEdit extends React.Component {
           testId: 'b3676a01f5204d27ae0330e39fa69cd4',
         },
       ],
+      weight: 0,
+      description: '',
+      name: '',
     };
+
     this.handleDelete = data => () => {
       this.setState((state) => {
         const tags = state.tags;
@@ -219,10 +223,32 @@ class TeacherTaskEdit extends React.Component {
     this.setState({ tests });
   };
 
+  /*componentDidMount() {
+    fetch(`/api/teacher/full/task?id=${this.props.match.params.id}`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/json',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          id: res.id,
+          tags: res.tags,
+          tests: res.tests,
+          weight: res.weight,
+          description: res.description,
+          name: res.name,
+        });
+      });
+  }*/
+
   render() {
-    const { classes, match } = this.props;
+    const { classes } = this.props;
     const { tests, tagToAdd, tags } = this.state;
-    this.id = match.params.id;
+    console.log(this.props.match.params.id);
     const text = 'Тот, кто писал эту программу, явно делал это в спешке.. На самом деле, нет: программа-то учебная, и этот кто-то нарочно запихнул туда лишние переменные, а те, что надо, не объявил. Исправляем ситуацию: лишние переменные закомментируем, а недостающие — объявим. И наступит тогда в программе всеобщая гармония.';
     const data = '1\n2\n3\n4\n2\n3\n4\n2\n3';
     return (

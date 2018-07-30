@@ -120,10 +120,11 @@ class TaskView extends React.Component {
   render() {
     const { classes, taskInfo } = this.props;
     let load;
+    console.log(this.state);
     let a = localStorage.getItem('user');
     a = a.substring(1, a.length - 1);
     const pathBack = `/teacher/id/${a}`;
-    const pathEdit = `/teacher/task/${this.state.id}`;
+    const pathEdit = `/teacher/task/edit/${this.state.id}`;
     if (taskInfo) {
       load = (
         <div className={classes.flex}>
