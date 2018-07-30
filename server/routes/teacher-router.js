@@ -8,19 +8,19 @@ const Topic = require('../models/Topic');
 const Question = require('../models/Question');
 const mapping = require('../utils/mapping/map');
 const User = require('../models/User');
-const dataFunctions = require('../dataFunctions');
+const dataFunctions = require('../utils/dataFunctions');
 const uploadFiles = require('../utils/uploadFiles.js');
 const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 
 const router = express.Router();
 
-router.use((req, res, next) => {
+/*router.use((req, res, next) => {
   if (req.user.status !== 'teacher') {
     return res.status(403).end();
   }
   return next();
-});
+});*/
 
 router.get('/tasks', (req, res) => {
   let hashSet = {};
@@ -50,6 +50,20 @@ router.get('/task', async (req, res) => {
     const taskId = req.query.id;
     const result = await dataFunctions.getTaskInfo(taskId);
     return res.send(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
+});
+
+router.get('/full/task', async (req, res) => {
+  try {
+    if (!req.query.id) {
+      return res.status(400).end();
+    }
+    const taskId = req.query.id;
+    const result = await dataFunctions.getFullTaskInfo(taskId);
+    return res.json(result);
   } catch (error) {
     console.log(error);
     return res.status(500).send(error);
@@ -160,12 +174,13 @@ router.get('/students', async (req, res) => {
 
 router.post('/group', async (req, res) => {
   const groupName = req.query.groupName;
-  const teacherId = req.user.teacherId;
+  const teacherId = req.query.teacherId;
   const studentArrayIds = req.body;
+  console.log(studentArrayIds);
   try {
     const saveGroup = await dataFunctions.createGroup(groupName, teacherId);
     const updateGroup = await dataFunctions.addStudentsToGroup(saveGroup.id, studentArrayIds);
-    res.status(200).send(JSON.stringify(updateGroup.id));
+    res.status(200).json({ id: updateGroup.id });
   } catch (err) {
     if (err.toString() === 'Error: Duplicate key') {
       res.status(409).send(err.toString());
