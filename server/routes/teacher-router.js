@@ -9,8 +9,8 @@ const Question = require('../models/Question');
 const mapping = require('../utils/mapping/student');
 const User = require('../models/User');
 const dataFunctions = require('../dataFunctions');
-const uploadFiles = require('../utils/uploadFiles');
-const fileSystemFunctions = require('../utils/fileSystemFunctions');
+const uploadFiles = require('../utils/uploadFiles.js');
+const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 
 const router = express.Router();
@@ -162,25 +162,27 @@ router.post('/group', async (req, res) => {
 });
 
 router.post('/task/tests', uploadFiles.uploadTests.array('tests'), async (req, res) => {
-  const count = req.files.length;
-  const form = new FormData();
+  if (req.files) {
+    const count = req.files.length;
+    const form = new FormData();
 
-  for (let i = 0; i < count; i++) {
-    await fileSystemFunctions.copyFile(`${req.files[i].destination}/${req.files[i].filename}`, `${req.files[i].destination}/${req.files[i].originalname}`);
-    form.append('tests', fs.createReadStream(`${req.files[i].destination}/${req.files[i].originalname}`));
-  }
-
-  (async () => {
-    try {
-      const answer = await got.post(`http://localhost:3002/someExample?taskId=${req.query.taskId}`, { body: form });
-      for (let i = 0; i < count; i++) {
-        await fileSystemFunctions.deleteFile(`${req.files[i].destination}/${req.files[i].originalname}`);
-      }
-      res.status(200).send(answer.body);
-    } catch (error) {
-      res.status(400).send(error.toString());
+    for (let i = 0; i < count; i++) {
+      await fileSystemFunctions.copyFile(`${req.files[i].destination}/${req.files[i].filename}`, `${req.files[i].destination}/${req.files[i].originalname}`);
+      form.append('tests', fs.createReadStream(`${req.files[i].destination}/${req.files[i].originalname}`));
     }
-  })();
+
+    (async () => {
+      try {
+        const answer = await got.post(`http://localhost:3002/someExample?taskId=${req.query.taskId}`, { body: form });
+        for (let i = 0; i < count; i++) {
+          await fileSystemFunctions.deleteFile(`${req.files[i].destination}/${req.files[i].originalname}`);
+        }
+        res.status(200).send(answer.body);
+      } catch (error) {
+        res.status(400).send(error.toString());
+      }
+    })();
+  }
 });
 
 module.exports = router;
