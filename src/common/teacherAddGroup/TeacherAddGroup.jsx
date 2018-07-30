@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button/Button';
 import FilterStudentCard from './FilterFieldsCard.jsx';
 import DragAndDropStudents from './DragAndDropStudents';
-import { getAvailableStudents } from '../../commands/teacherCreateGroups';
+import { getAvailableStudents, teacherCreateGroup } from '../../commands/teacherCreateGroups';
 import Spinner from '../shared/spinner';
 
 const styles = {
@@ -12,6 +12,25 @@ const styles = {
     display: 'flex',
     'flex-wrap': 'wrap',
     width: '100%',
+    marginTop: '10px',
+    height: '80%',
+  },
+  button: {
+    marginTop: '5px',
+    float: 'right',
+    backgroundColor: '#1a78c2',
+    width: '100%',
+    color: 'white',
+    '&:hover': {
+      color: 'black',
+    },
+  },
+  outerWrapper: {
+    width: 'fit-content',
+    margin: 'auto',
+    marginBottom: '15px',
+  },
+  dragAndDropWrapper: {
   },
 };
 
@@ -28,7 +47,12 @@ class TeacherAddGroup extends React.Component {
       },
     };
 
+    this.selectedStudents = [];
+    this.groupName = '';
+
     this.handleFilterChanges = this.handleFilterChanges.bind(this);
+    this.handleCreateGroup = this.handleCreateGroup.bind(this);
+    this.handleGroupNameChange = this.handleGroupNameChange.bind(this);
   }
 
   componentDidMount() {
@@ -39,6 +63,19 @@ class TeacherAddGroup extends React.Component {
     this.setState({
       filter: filterObject,
     });
+  }
+
+  handleGroupNameChange(newName) {
+    this.groupName = newName;
+  }
+
+  handleCreateGroup() {
+    const groupObject = {
+      studentsList: this.selectedStudents,
+      groupName: this.groupName,
+    };
+    console.log(groupObject.studentsList);
+    this.props.teacherCreateGroup(groupObject);
   }
 
   render() {
@@ -57,10 +94,25 @@ class TeacherAddGroup extends React.Component {
       filteredArray = [];
     }
     return (
-      <div className={classes.FlexContainerHorizontal}>
-        <FilterStudentCard callback={this.handleFilterChanges} />
-        {availableStudentsList ? <DragAndDropStudents studentsPool={filteredArray} /> : <Spinner /> }
-        <Button />
+      <div className={classes.outerWrapper}>
+        <div className={classes.FlexContainerHorizontal}>
+          <FilterStudentCard callback={this.handleFilterChanges} />
+
+          {availableStudentsList
+            ? (
+              <div className={classes.dragAndDropWrapper}>
+                <DragAndDropStudents studentsPool={filteredArray} selectedStudents={this.selectedStudents} nameChangedCallback={this.handleGroupNameChange} />
+                <Button
+                  className={classes.button}
+                  onClick={this.handleCreateGroup}
+                >
+                  Создать группу
+                </Button>
+              </div>
+            )
+            : <Spinner />
+          }
+        </div>
       </div>
     );
   }
@@ -75,6 +127,7 @@ const mapStateToProps = state => ({
 
 const mapCommandsToProps = dispatch => ({
   getAvailableStudents: param => dispatch(getAvailableStudents(param)),
+  teacherCreateGroup: param => dispatch(teacherCreateGroup(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(styledComponent);
