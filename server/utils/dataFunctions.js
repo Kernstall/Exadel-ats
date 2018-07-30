@@ -1,14 +1,20 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
-const Task = require('./models/Task');
-const Question = require('./models/Question');
-const Group = require('./models/Group');
-const User = require('./models/User');
-const Topic = require('./models/Topic');
-const Activities = require('./models/Activity');
+const Task = require('../models/Task');
+const Question = require('../models/Question');
+const Group = require('../models/Group');
+const User = require('../models/User');
+const Topic = require('../models/Topic');
+const Activities = require('../models/Activity');
 
-const mapping = require('./utils/mapping/map');
-const commonTaskPath = '\\dataFileStorage\\tasks';
+const mapping = require('./mapping/map');
+exports.commonSrcCodePath;
+exports.commonTaskPath;
+
+exports.initPaths = function initPaths(srcCodePath, taskPath) {
+  exports.commonSrcCodePath = srcCodePath;
+  exports.commonTaskPath = taskPath;
+};
 
 function compareByDate(a, b) {
   return new Date(b.date) - new Date(a.date);
@@ -16,7 +22,7 @@ function compareByDate(a, b) {
 
 exports.getStudentTasksByGroup = async (studentId, groupId) => {
   const tasks = await User.aggregate([
-    { $match: { '_id': mongoose.Types.ObjectId(studentId) } },
+    { $match: { _id: mongoose.Types.ObjectId(studentId) } },
     {
       $project: {
         _id: 0,
@@ -42,18 +48,18 @@ exports.getStudentTasksByGroup = async (studentId, groupId) => {
 
   function getInfoByTaskID(taskId) {
     return Task.findById(taskId)
-      .populate('topicId', { '_id': 0, 'name': 1 })
+      .populate('topicId', { _id: 0, name: 1 })
       .select({
-        '_id': 0,
-        'topicId': 1,
-        'name': 1,
-        'description': 1,
-        'weight': 1,
+        _id: 0,
+        topicId: 1,
+        name: 1,
+        description: 1,
+        weight: 1,
       });
   }
 
   const result = tasks[0].taskArray;
-  let promissArray = []
+  let promissArray = [];
   if (tasks.length !== 0) {
     for (let i = 0; i < result.length; i++) {
       promissArray.push(getInfoByTaskID(result[i].taskId));
@@ -361,12 +367,12 @@ exports.getGroupInfo = async (groupID) => {
   return result;
 };
 
-exports.getStudentHistoryByGroup = function (studentID, groupID) {
+exports.getStudentHistoryByGroup = function getStudentHistoryByGroup(studentID, groupID) {
   const taskResult = User.findById(studentID)
-    .populate('tasks.taskId', { '_id': 0, 'name': 1 })
+    .populate('tasks.taskId', { _id: 0, name: 1 })
     .where({ 'tasks.groupId': { $eq: groupID } })
     .select({
-      '_id': 0,
+      _id: 0,
       'tasks.groupId': 1,
       'tasks.taskId.name': 1,
       'tasks.attempts': 1,
@@ -374,9 +380,9 @@ exports.getStudentHistoryByGroup = function (studentID, groupID) {
     });
 
   const testResult = User.findById(studentID)
-    .populate('tests.topicsIds', { '_id': 0, 'name': 1 })
+    .populate('tests.topicsIds', { _id: 0, name: 1 })
     .select({
-      '_id': 0,
+      _id: 0,
       'tests.groupId': 1,
       'tests.topicsIds': 1,
       'tests.date': 1,
@@ -387,10 +393,10 @@ exports.getStudentHistoryByGroup = function (studentID, groupID) {
   return Promise.all([taskResult, testResult]);
 };
 
-exports.deleteOtherGroupInfo = function (array, groupId) {
+exports.deleteOtherGroupInfo = function deleteOtherGroupInfo(array, groupId) {
   let taskArray = [];
   let testArray = [];
-  let result = [];
+  const result = [];
   if (array[0] != null) {
     taskArray = array[0].tasks.filter((elem) => {
       return String(elem.groupId) === String(groupId);
@@ -398,11 +404,11 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
     taskArray.forEach((task) => {
       task.attempts.forEach((attempt) => {
         result.push({
-          'name': task.taskId.name,
-          //'taskWeight': task.taskId.weight,
-          'isPassed': attempt.isPassed,
-          'date': attempt.date,
-          //'result': attempt.result,
+          name: task.taskId.name,
+          // 'taskWeight': task.taskId.weight,
+          isPassed: attempt.isPassed,
+          date: attempt.date,
+          // 'result': attempt.result,
         });
       });
     });
@@ -419,10 +425,10 @@ exports.deleteOtherGroupInfo = function (array, groupId) {
         status = true;
       }
       result.push({
-        'name': '',
-        'status': status,
-        'date': test.date,
-        //'result': test.result,
+        name: '',
+        status,
+        date: test.date,
+        // 'result': test.result,
       });
 
       test.topicsIds.forEach((topic) => {
@@ -444,16 +450,16 @@ exports.getStudents = async () => {
       graduateYear: 1,
     });
   return answer;
-}
+};
 
 exports.createGroup = async (groupName, teacherId) => {
   try {
     const teacher = await User.findById(teacherId)
       .select({
-        '_id': 0,
-        'firstName': 1,
-        'lastName': 1,
-        'fathersName': 1,
+        _id: 0,
+        firstName: 1,
+        lastName: 1,
+        fathersName: 1,
       });
 
     const group = new Group({
@@ -461,7 +467,7 @@ exports.createGroup = async (groupName, teacherId) => {
       firstName: teacher.firstName,
       fathersName: teacher.lastName,
       lastName: teacher.lastName,
-      groupName: groupName,
+      groupName,
       studentIdList: [],
       topicCourseIds: [],
     });
@@ -480,12 +486,14 @@ exports.createGroup = async (groupName, teacherId) => {
 
 exports.getUsersActivities = async (name, role, activityType) => {
   const tmp = await Activities.find({})
-    .populate('userId', { '_id': 0, 'lastName': 1, 'firstName': 1, 'fathersName': 1 })
+    .populate('userId', {
+      _id: 0, lastName: 1, firstName: 1, fathersName: 1,
+    })
     .select({
-      '_id': 0,
-      'date': 1,
-      'userType': 1,
-      'type': 1,
+      _id: 0,
+      date: 1,
+      userType: 1,
+      type: 1,
     });
 
   let result = [];
@@ -498,7 +506,9 @@ exports.getUsersActivities = async (name, role, activityType) => {
       name = `${elem.userId._doc.lastName} ${elem.userId._doc.firstName}`;
     }
 
-    result.push({ 'name': name, 'type': elem.type.slice(3), 'userType': elem.userType, 'date': elem.date });
+    result.push({
+      name, type: elem.type.slice(3), userType: elem.userType, date: elem.date,
+    });
   });
 
   if (name) {
@@ -548,8 +558,8 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
       'tests.isTraining': 1,
       'tests.status': 1,
     });
-  let trainingTests = [];
-  let notTrainingTests = [];
+  const trainingTests = [];
+  const notTrainingTests = [];
   let trCount = 0;
   let notTrCount = 0;
   let trSum = 0;
@@ -640,8 +650,7 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
       answer[i].name = attemptInfo.files[i].slice(0, attemptInfo.files[i].indexOf('.'));
       answer[i].extension = getExtension(attemptInfo.files[i]);
 
-      answer[i].fileContents = await readFile(`${__dirname}/dataFileStorage/srcCodes/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
-
+      answer[i].fileContents = await readFile(`${exports.commonSrcCodePath}/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
     }
     return answer;
   } catch (e) {
@@ -652,8 +661,8 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
 exports.getTaskInfo = async (taskId) => {
   try {
     const taskInfo = await Task.findById(taskId);
-    const input = await readFile(`${__dirname}\\${commonTaskPath}\\${taskId}\\${taskInfo.tests[0]._id}\\input.txt`);
-    const output = await readFile(`${__dirname}\\${commonTaskPath}\\${taskId}\\${taskInfo.tests[0]._id}\\output.txt`);
+    const input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[0]._id}/input.txt`);
+    const output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[0]._id}/output.txt`);
     const result = mapping.mapTaskAndTestsToDto(taskInfo, input, output);
     return result;
   } catch (e) {

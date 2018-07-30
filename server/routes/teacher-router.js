@@ -8,7 +8,7 @@ const Topic = require('../models/Topic');
 const Question = require('../models/Question');
 const mapping = require('../utils/mapping/map');
 const User = require('../models/User');
-const dataFunctions = require('../dataFunctions');
+const dataFunctions = require('../utils/dataFunctions');
 const uploadFiles = require('../utils/uploadFiles.js');
 const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
