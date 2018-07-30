@@ -1,12 +1,16 @@
 const express = require('express');
+<<<<<<< HEAD
 const Excel = require('exceljs');
 const path = require('path');
 const dataFunctions = require('../dataFunctions');
+=======
+>>>>>>> 697ad2c876061a51cab0c87d937917309f7940f0
 const User = require('../models/User');
 const Group = require('../models/Group');
 const Task = require('../models/Task');
 const Question = require('../models/Question');
 const mapping = require('../utils/mapping/map');
+const dataFunctions = require('../utils/dataFunctions');
 
 const router = express.Router();
 
