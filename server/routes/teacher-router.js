@@ -15,12 +15,12 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 const router = express.Router();
 
-router.use((req, res, next) => {
+/*router.use((req, res, next) => {
   if (req.user.status !== 'teacher') {
     return res.status(403).end();
   }
   return next();
-});
+});*/
 
 router.get('/tasks', (req, res) => {
   let hashSet = {};
@@ -160,12 +160,13 @@ router.get('/students', async (req, res) => {
 
 router.post('/group', async (req, res) => {
   const groupName = req.query.groupName;
-  const teacherId = req.user.teacherId;
+  const teacherId = req.query.teacherId;
   const studentArrayIds = req.body;
+  console.log(studentArrayIds);
   try {
     const saveGroup = await dataFunctions.createGroup(groupName, teacherId);
     const updateGroup = await dataFunctions.addStudentsToGroup(saveGroup.id, studentArrayIds);
-    res.status(200).send(JSON.stringify(updateGroup.id));
+    res.status(200).json({ id: updateGroup.id });
   } catch (err) {
     if (err.toString() === 'Error: Duplicate key') {
       res.status(409).send(err.toString());

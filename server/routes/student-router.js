@@ -83,7 +83,18 @@ router.get('/task/attempt', async (req, res) => {
   }
 });
 
-router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), (req, res) => {
+router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, res) => {
+  const fileNamesArray = [];
+  const mainFile = req.query.mainFile;
+  const userId = req.query.userId;
+  const taskId = req.query.taskId;
+  const attemptNumber = req.query.attemptNumber;
+  req.files.forEach((elem) => {
+    fileNamesArray.push(elem.originalname);
+  });
+
+  await dataFunctions.saveAttemptInfo(userId, taskId, attemptNumber, mainFile);
+
   res.status(200).send('qwewret');
 });
 

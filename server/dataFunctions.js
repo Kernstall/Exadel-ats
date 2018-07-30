@@ -660,3 +660,9 @@ exports.getTaskInfo = async (taskId) => {
     throw e;
   }
 };
+
+exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile) => {
+  let obj = {};
+  obj.date = new Date();
+  obj.number = attemptNumber
+};
