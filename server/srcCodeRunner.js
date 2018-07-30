@@ -121,15 +121,16 @@ app.post('/server/running/srcfiles', async (req, res, next) => {
   next();
 });
 
-app.post('/server/running/srcfiles', async (req, res, next) => {
+app.post('/server/running/srcfiles', uploadText.array('tests'), async (req, res, next) => {
   next();
 });
 
-app.post('/server/running/srcfiles', uploadSrcCode.array('files'), async (req, res, next) => {
+app.post('/server/running/srcfiles', uploadSrcCode.array('src'), async (req, res, next) => {
   try {
     const result = await dataFunctions.checkStudentAttempt(req.query.userId, req.query.taskId,
       req.query.mainFileName, req.query.attemptNumber, req.query.lang);
     await dataFunctions.deleteBinFunc(`${commonSrcCodePath}/${req.query.userId}/${req.query.taskId}/${req.query.attemptNumber}/src`);
+    await dataFunctions.deleteBinFunc();
     res.status(200).json(result);
   } catch (error) {
     res.status(404).send(error.message);
