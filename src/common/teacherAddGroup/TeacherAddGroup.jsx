@@ -70,11 +70,11 @@ class TeacherAddGroup extends React.Component {
   }
 
   handleCreateGroup() {
+    const studentIdArray = this.selectedStudents.map(element => element._id);
     const groupObject = {
-      studentsList: this.selectedStudents,
+      studentsList: studentIdArray,
       groupName: this.groupName,
     };
-    console.log(groupObject.studentsList);
     this.props.teacherCreateGroup(groupObject);
   }
 

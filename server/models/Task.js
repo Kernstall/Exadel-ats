@@ -20,6 +20,7 @@ const task = mongoose.Schema({
   tests:
     [
       {
+        _id: mongoose.Schema.Types.ObjectId,
         weight: {
           type: Number,
           min: 1,

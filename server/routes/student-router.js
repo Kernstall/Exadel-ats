@@ -1,9 +1,11 @@
 const express = require('express');
 const multer = require('multer');
 const User = require('../models/User');
-const dataFunctions = require('../dataFunctions');
-const mapping = require('../utils/mapping/student');
+const dataFunctions = require('../utils/dataFunctions');
+const mapping = require('../utils/mapping/map');
 const Group = require('../models/Group');
+const uploadFiles = require('../utils/uploadFiles.js');
+const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 const router = express.Router();
 
@@ -79,6 +81,21 @@ router.get('/task/attempt', async (req, res) => {
   } catch (e) {
     res.status(400).send(e.toString());
   }
+});
+
+router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, res) => {
+  const fileNamesArray = [];
+  const mainFile = req.query.mainFile;
+  const userId = req.query.userId;
+  const taskId = req.query.taskId;
+  const attemptNumber = req.query.attemptNumber;
+  req.files.forEach((elem) => {
+    fileNamesArray.push(elem.originalname);
+  });
+
+  await dataFunctions.saveAttemptInfo(userId, taskId, attemptNumber, mainFile);
+
+  res.status(200).send('qwewret');
 });
 
 module.exports = router;
