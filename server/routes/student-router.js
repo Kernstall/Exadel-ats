@@ -88,12 +88,12 @@ router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, re
   const mainFile = req.query.mainFile;
   const userId = req.query.userId;
   const taskId = req.query.taskId;
-  const attemptNumber = req.query.attemptNumber;
+  const attemptNumber = await dataFunctions.getUsersTasksAttemptNumber(userId, taskId);
   req.files.forEach((elem) => {
     fileNamesArray.push(elem.originalname);
   });
 
-  await dataFunctions.saveAttemptInfo(userId, taskId, attemptNumber, mainFile);
+  await dataFunctions.saveAttemptInfo(userId, taskId, attemptNumber, mainFile, req.files);
 
   res.status(200).send('qwewret');
 });

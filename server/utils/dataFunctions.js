@@ -670,6 +670,26 @@ exports.getTaskInfo = async (taskId) => {
   }
 };
 
+exports.getUsersTasksAttemptNumber = async (userId, taskId) => {
+  //console.log(userId);
+  const result = await User.aggregate([
+    { $match: { _id: mongoose.Types.ObjectId(userId) } },
+    {
+      $project: {
+        _id: 0,
+        taskArray: {
+          $filter: {
+            input: '$tasks',
+            as: 'task',
+            cond: { $eq: ['$$task.taskId', mongoose.Types.ObjectId(taskId)] },
+          },
+        },
+      },
+    },
+  ]);
+  return result[0].taskArray[0].attempts.length;
+};
+
 exports.getFullTaskInfo = async (taskId) => {
   try {
     const taskInfo = await Task.findById(taskId)
@@ -711,8 +731,23 @@ exports.getFullTaskInfo = async (taskId) => {
   }
 };
 
-exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile) => {
+exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files) => {
   const obj = {};
   obj.date = new Date();
   obj.number = attemptNumber;
+  obj.mainFile = mainFile;
+  obj.result = 0;
+  obj.isPassed = false;
+  obj.files = [];
+  files.forEach((elem) => {
+    obj.files.push(elem.originalname);
+  });
+  try {
+    const result = await User.update(
+      { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
+      { $push: { 'tasks.$.attempts': obj } },
+    );
+  } catch (e) {
+    console.log(e.toString());
+  }
 };
