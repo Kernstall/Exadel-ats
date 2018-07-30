@@ -692,6 +692,49 @@ exports.getUsersTasksAttemptNumber = async (userId, taskId) => {
 
 exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files) => {
   const obj = {};
+exports.getFullTaskInfo = async (taskId) => {
+  try {
+    const taskInfo = await Task.findById(taskId)
+      .populate('topicId', { _id: 0, name: 1 })
+      .select({
+        _id: 0,
+        topicId: 1,
+        name: 1,
+        description: 1,
+        weight: 1,
+        tags: 1,
+        tests: 1,
+      });
+    if (taskInfo.topicId) {
+      taskInfo.topicName = taskInfo.topicId.name;
+    }
+
+    for (let index = 0; index < taskInfo.tests.length; index++) {
+      const buff = {};
+      buff._id = taskInfo.tests[index]._id;
+      buff.weight = taskInfo.tests[index].weight;
+      buff.files = {};
+      buff.files.input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
+      buff.files.output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
+      taskInfo.tests[index] = buff;
+    }
+    const result = {
+      name: taskInfo.name,
+      description: taskInfo.description,
+      weight: taskInfo.weight,
+      tags: taskInfo.tags,
+      tests: taskInfo.tests,
+      topicName: taskInfo.topicName,
+    };
+
+    return result;
+  } catch (e) {
+    throw e;
+  }
+};
+
+exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile) => {
+  const obj = {};
   obj.date = new Date();
   obj.number = attemptNumber;
   obj.mainFile = mainFile;
@@ -709,5 +752,4 @@ exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files)
   } catch (e) {
     console.log(e.toString());
   }
-  console.log(obj);
 };
