@@ -26,8 +26,22 @@ const mapTaskAndTestsToDto = (model, input, output) => ({
   input,
   output,
 });
+const mapTeachersToDto = model => ({
+  name: `${model.lastName} ${model.firstName} ${model.fathersName}`,
+  email: model.email,
+  university: model.university,
+  numberTestsToCheck: model.testsToCheck.length,
+});
+const mapStudentsToDto = model => ({
+  name: `${model.lastName} ${model.firstName}`,
+  universityInfo: `${model.university} ${model.faculty} ${model.graduateYear}`,
+  mediumTaskScore: model.mediumTaskScore,
+  mediumTestScore: model.mediumTestScore,
+});
 
 module.exports.mapStudentToDto = mapStudentToDto;
 module.exports.mapTaskToDto = mapTaskToDto;
 module.exports.mapGroupToDto = mapGroupToDto;
 module.exports.mapTaskAndTestsToDto = mapTaskAndTestsToDto;
+module.exports.mapTeachersToDto = mapTeachersToDto;
+module.exports.mapStudentsToDto = mapStudentsToDto;
