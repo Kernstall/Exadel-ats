@@ -4,7 +4,7 @@ const passport = require('passport');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const passportControl = require('../utils/passport-control');
-const dataFunctions = require('../dataFunctions');
+const dataFunctions = require('../utils/dataFunctions');
 const TeacherRequest = require('../models/TeacherRequest');
 const University = require('../models/University');
 

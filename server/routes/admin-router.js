@@ -1,5 +1,5 @@
 const express = require('express');
-const dataFunctions = require('../dataFunctions');
+const dataFunctions = require('../utils/dataFunctions');
 
 const router = express.Router();
 
