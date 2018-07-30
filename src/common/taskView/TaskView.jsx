@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import Spinner from '../shared/spinner/index';
+import TeacherTaskEdit from '../teachetTaskEdit/TeacherTaskEdit';
 
 const styles = theme => ({
   root: {
@@ -119,6 +120,11 @@ class TaskView extends React.Component {
     const data = '1\n2\n3\n4\n2\n3\n4\n2\n3';
     const taskName = 'Чистка кода';
     const score = 6;
+    let a = localStorage.getItem('user');
+    a = a.substring(1, a.length - 1);
+    const pathBack = `/teacher/id/${a}`;
+    const pathEdit = `/teacher/task/${this.id}`;
+
 
     return (
       <div className={classes.root}>
@@ -149,10 +155,10 @@ class TaskView extends React.Component {
           </Typography>
           <div className={classes.buttonContainer}>
             <Button variant="contained" color="primary" className={classes.button}>
-              <Link className={classes.mylink} to="/">Редактировать</Link>
+              <Link className={classes.mylink} to={pathEdit}>Редактировать</Link>
             </Button>
             <Button variant="contained" color="primary" className={classes.button}>
-              <Link className={classes.mylink} to="/teacher/group">Назад к группе</Link>
+              <Link className={classes.mylink} to={pathBack}>Назад к группе</Link>
             </Button>
           </div>
         </div>

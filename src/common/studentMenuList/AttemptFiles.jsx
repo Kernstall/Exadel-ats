@@ -45,7 +45,6 @@ const codeInfo = [
 
 class AttemptFiles extends Component {
   componentDidMount() {
-    console.log(this.props.match.params);
     this.props.getAttemptCode({
       taskId: this.props.match.params.taskId,
       attemptNumber: this.props.match.params.attemptNumber,
@@ -56,7 +55,6 @@ class AttemptFiles extends Component {
     const { classes, attemptCode } = this.props;
     const TabHeaders = [];
     if (attemptCode) {
-      console.log(attemptCode);
       return (
         <div className={[classes.flex, classes.centerScreen, classes.margin].join(' ')}>
           {
