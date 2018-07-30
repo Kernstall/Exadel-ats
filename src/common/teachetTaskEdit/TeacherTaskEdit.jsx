@@ -54,6 +54,7 @@ const styles = theme => ({
     marginTop: 20,
   },
   main: {
+    boxSizing: 'border-box',
     padding: '20px',
     width: '50%',
     display: 'flex',
@@ -145,6 +146,16 @@ const styles = theme => ({
     flexDirection: 'row',
     alignSelf: 'flex-end',
     marginTop: 10,
+  },
+  '@media (max-width: 1200px)': {
+    main: {
+      width: '70%',
+    },
+  },
+  '@media (max-width: 700px)': {
+    main: {
+      width: '95%',
+    },
   },
 });
 
