@@ -18,7 +18,16 @@ const mapGroupToDto = model => ({
   studentsCount: model.studentIdList.length,
   teacherFullName: `${model.lastName} ${model.firstName} ${model.fathersName}`,
 });
+const mapTaskAndTestsToDto = (model, input, output) => ({
+  name: model.name,
+  weight: model.weight,
+  description: model.description,
+  tags: model.tags,
+  input,
+  output,
+});
 
 module.exports.mapStudentToDto = mapStudentToDto;
 module.exports.mapTaskToDto = mapTaskToDto;
 module.exports.mapGroupToDto = mapGroupToDto;
+module.exports.mapTaskAndTestsToDto = mapTaskAndTestsToDto;
