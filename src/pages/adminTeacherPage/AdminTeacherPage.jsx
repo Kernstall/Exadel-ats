@@ -5,7 +5,7 @@ import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Common from '../../common/styles/Common';
 import { getActivities } from '../../commands/activities';
-import SearchBox from '../../common/searchBox/SearchBox.jsx';
+import SearchBox from './searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
 const styles = {
@@ -22,14 +22,28 @@ const styles = {
   },
 };
 
+const mocks = [
+  {
+    name: 'Побегайло Александр Павлович',
+    email: 'pobegos@bsu.by',
+    numberTestsToCheck: '13',
+    university: 'BSU',
+  },
+  {
+    name: 'Зенько Татьяна Алексеевна',
+    email: 'zenko@bsu.by',
+    numberTestsToCheck: '1',
+    university: 'BSU',
+  },
+];
+
 class AdminTeacherPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
       historyFilter: {
         name: '',
-        role: '',
-        activityType: '',
+        email: '',
       },
     };
   }
@@ -43,15 +57,16 @@ class AdminTeacherPage extends Component {
       || this.props.getActivities(this.state.historyFilter);
   }
 
-  handleHistoryFilter = (name, role, activityType) => {
+  handleHistoryFilter = (name, activityType) => {
     const newState = {
-      historyFilter: { name, role, activityType },
+      historyFilter: { name, activityType },
     };
     this.setState(newState);
   };
 
   render() {
     const { classes, activities } = this.props;
+    console.log(activities);
     if (activities) {
       return (
         <Grid
@@ -73,7 +88,7 @@ class AdminTeacherPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={activities} />
+              <ActivityListItems info={mocks} />
             </List>
           </Grid>
           <h1>Teacher</h1>

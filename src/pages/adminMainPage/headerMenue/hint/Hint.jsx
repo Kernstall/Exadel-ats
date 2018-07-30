@@ -6,7 +6,7 @@ const styles = {
   hint: {
     position: 'absolute',
     opacity: 0,
-    animation: '.2s 1s appearing forwards',
+    animation: '.2s .2s appearing forwards',
     background: '#eaf6ff',
     fontWeight: 300,
   },

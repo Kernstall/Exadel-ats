@@ -5,7 +5,7 @@ import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Common from '../../common/styles/Common';
 import { getActivities } from '../../commands/activities';
-import SearchBox from '../../common/searchBox/SearchBox.jsx';
+import SearchBox from './searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
 const styles = {
