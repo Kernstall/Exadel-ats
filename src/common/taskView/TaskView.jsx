@@ -107,13 +107,14 @@ const styles = theme => ({
 class TaskView extends React.Component {
   constructor() {
     super();
-    this.id = '';
-    this.page = '';
+    this.state = {
+      id: '',
+    };
   }
 
   componentDidMount() {
-    this.id = this.props.match.params.id;
-    this.props.getTaskInfo(this.id);
+    this.props.getTaskInfo(this.props.match.params.id);
+    this.setState({ id: this.props.match.params.id });
   }
 
   render() {
@@ -122,9 +123,9 @@ class TaskView extends React.Component {
     let a = localStorage.getItem('user');
     a = a.substring(1, a.length - 1);
     const pathBack = `/teacher/id/${a}`;
-    const pathEdit = `/teacher/task/${this.id}`;
+    const pathEdit = `/teacher/task/${this.state.id}`;
     if (taskInfo) {
-      this.page = (
+      load = (
         <div className={classes.flex}>
           <div className={classes.taskTitle}>
             <Typography variant="display1">{taskInfo.name}</Typography>
@@ -168,7 +169,6 @@ class TaskView extends React.Component {
 
     return (
       <div className={classes.root}>
-        {this.page}
         {load}
       </div>
     );
