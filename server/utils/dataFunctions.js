@@ -690,8 +690,6 @@ exports.getUsersTasksAttemptNumber = async (userId, taskId) => {
   return result[0].taskArray[0].attempts.length;
 };
 
-exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files) => {
-  const obj = {};
 exports.getFullTaskInfo = async (taskId) => {
   try {
     const taskInfo = await Task.findById(taskId)
@@ -733,7 +731,7 @@ exports.getFullTaskInfo = async (taskId) => {
   }
 };
 
-exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile) => {
+exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files) => {
   const obj = {};
   obj.date = new Date();
   obj.number = attemptNumber;
