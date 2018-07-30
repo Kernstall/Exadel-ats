@@ -1,5 +1,7 @@
 const express = require('express');
 const dataFunctions = require('../dataFunctions');
+const User = require('../models/User');
+const mapping = require('../utils/mapping/map');
 
 const router = express.Router();
 
@@ -21,6 +23,36 @@ router.get('/activities', async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
+  }
+});
+
+router.get('/teachers', async (req, res) => {
+  if (!req.query.skip) {
+    return res.status(400).end();
+  }
+  try {
+    const skip = parseInt(req.query.skip, 10);
+    let result = await User.find({ status: 'teacher' }).limit(15).skip(skip);
+    result = result.map(element => element = mapping.mapTeachersToDto(element));
+    return res.send(result);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).end();
+  }
+});
+
+router.get('/students', async (req, res) => {
+  if (!req.query.skip) {
+    return res.status(400).end();
+  }
+  try {
+    const skip = parseInt(req.query.skip, 10);
+    let result = await User.find({ status: 'student' }).limit(15).skip(skip);
+    result = result.map(element => element = mapping.mapStudentsToDto(element));
+    return res.send(result);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).end();
   }
 });
 
