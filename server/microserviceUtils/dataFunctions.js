@@ -1,5 +1,6 @@
 const cp = require('child_process');
-const os = require('os');
+const fileExtension = require('file-extension');
+const fsFull = require('fs-extra');
 const fs = require('fs.extra');
 const mongoose = require('mongoose');
 const Task = require('../models/Task');
@@ -12,8 +13,25 @@ exports.initPaths = function initPaths(srcCodePath, taskPath) {
   exports.commonTaskPath = taskPath;
 };
 
+exports.checkHFilesPresence = async function checkHFilesPresence(path) {
+  return new Promise((resolve) => {
+    fsFull.readdir(path, (err, files) => {
+      if (files.some((file) => {
+        if (fileExtension(file) === 'h') {
+          return true;
+        }
+        return false;
+      })) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  });
+};
+
 exports.checkFileExistence = async function checkFileExistence(path) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     fs.access(path, fs.constants.F_OK, (err) => {
       if (err) {
         resolve(false);
@@ -50,7 +68,7 @@ exports.createBinFunc = async function createBinFunc(path) { // создаёт �
 
 exports.javaBuildFunc = async function javaBuildFunc(path) {
   return new Promise((resolve, reject) => {
-    cp.exec(`javac -d ${path}/bin ${path}/src/*.java`, (error, stdout, stderr) => {
+    cp.exec(`javac -d ${path}/bin ${path}/src/*.java`, (error) => {
       if (error) {
         reject(error);
         return;
@@ -61,9 +79,10 @@ exports.javaBuildFunc = async function javaBuildFunc(path) {
 };
 
 exports.cppBuildFunc = async function cppBuildFunc(path) {
+  const areHFilesPresent = await exports.checkHFilesPresence(`${path}/src`);
   return new Promise((resolve, reject) => {
     // g++ ABS_LIB.cpp ABS_LIB.h structs.h structs.cpp main.cpp
-    cp.exec(`cd ${path}/src &&  g++ *.cpp *.h -o ../bin/main.exe`, (error, stdout, stderr) => {
+    cp.exec(`cd ${path}/src &&  g++ *.cpp${areHFilesPresent ? ' *.h' : ''} -o ../bin/main.exe`, (error) => {
       if (error) {
         reject(error);
         return;
@@ -189,7 +208,7 @@ exports.compareFiles = async function compareFiles(firstFileName, secondFileName
 };
 
 exports.checkStudentAttempt = async function checkStudentAttempt(studentId, taskId,
-  mainFileName, attemptNumber, lang) {
+  mainFileName, attemptNumber, lang, userNumber) {
   try {
     const results = [];
     let tests = await Task.aggregate([
@@ -199,37 +218,48 @@ exports.checkStudentAttempt = async function checkStudentAttempt(studentId, task
     if (tests.length === 0) {
       throw new Error('Incorrect task id');
     }
-    if (await exports.checkFileExistence(`${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin`)) {
+    if (await exports.checkFileExistence(`${exports.commonSrcCodePath}/${userNumber}/bin`)) {
       // Удаление папки bin, если таковая по какой-либо непредвиденной причине
       // осталась в директории
-      await exports.deleteBinFunc(`${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin`);
+      await exports.deleteBinFunc(`${exports.commonSrcCodePath}/${userNumber}/bin`);
     }
 
     // Создание папки bin
-    await exports.createBinFunc(`${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin`); // Работает
-
-    // Компиляция файлов в папку bin
-    await exports.builder[lang.toLowerCase()](`${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}`);
+    await exports.createBinFunc(`${exports.commonSrcCodePath}/${userNumber}/bin`); // Работает
 
     tests = tests[0].tests;
+
+    try {
+      // Компиляция файлов в папку bin
+      await exports.builder[lang.toLowerCase()](`${exports.commonSrcCodePath}/${userNumber}`);
+    } catch (error) {
+      for (let index = 0; index < tests.length; index++) {
+        results.push({
+          success: false,
+          weight: tests[index].weight,
+          _id: tests[index]._id.toString(),
+        });
+      }
+      return results;
+    }
 
     // console.log(tests._id.toString());
     for (let index = 0; index < tests.length; index++) {
       // Копирование очередного входного файла в папку bin
-      await exports.placeInputFile(`${exports.commonTaskPath}/${taskId}/${tests[index]._id.toString()}/input.txt`,
-        `${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin/input.txt`);
+      await exports.placeInputFile(`${exports.commonTaskPath}/${userNumber}/${tests[index]._id}/input.txt`,
+        `${exports.commonSrcCodePath}/${userNumber}/bin/input.txt`);
       // Создание файла для выходных данных
-      await exports.placeOutputFile(`${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin/output.txt`);
+      await exports.placeOutputFile(`${exports.commonSrcCodePath}/${userNumber}/bin/output.txt`);
       try {
         // Запуск скомпилированных файлов
-        await exports.runner[lang.toLowerCase()](`${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin`, mainFileName);
+        await exports.runner[lang.toLowerCase()](`${exports.commonSrcCodePath}/${userNumber}/bin`, mainFileName);
         // Удаление входного файла
-        await exports.removeInputFile(`${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin/input.txt`);
+        await exports.removeInputFile(`${exports.commonSrcCodePath}/${userNumber}/bin/input.txt`);
         // Сравнение выходного файла и ожидаемого результата
         let isSuccessfull;
         try {
-          isSuccessfull = await exports.compareFiles(`${exports.commonTaskPath}/${taskId}/${tests[index]._id.toString()}/output.txt`,
-            `${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin/output.txt`);
+          isSuccessfull = await exports.compareFiles(`${exports.commonTaskPath}/${userNumber}/${tests[index]._id}/output.txt`,
+            `${exports.commonSrcCodePath}/${userNumber}/bin/output.txt`);
         } catch (error) {
           isSuccessfull = false;
         }
@@ -244,16 +274,16 @@ exports.checkStudentAttempt = async function checkStudentAttempt(studentId, task
           weight: tests[index].weight,
           _id: tests[index]._id.toString(),
         });
-        await exports.removeInputFile(`${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin/input.txt`);
+        await exports.removeInputFile(`${exports.commonSrcCodePath}/${userNumber}/bin/input.txt`);
         // Сравнение выходного файла и ожидаемого результата
       }
-      if (await exports.checkFileExistence(`${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin/ouput.txt`)) {
+      if (await exports.checkFileExistence(`${exports.commonSrcCodePath}/${userNumber}/bin/ouput.txt`)) {
         // Удаление выходного файла
-        await exports.removeOutputFile(`${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin/ouput.txt`);
+        await exports.removeOutputFile(`${exports.commonSrcCodePath}/${userNumber}/bin/ouput.txt`);
       }
     }
     // Удаление папки bin
-    await exports.deleteBinFunc(`${exports.commonSrcCodePath}/${studentId}/${taskId}/${attemptNumber}/bin`);
+    await exports.deleteBinFunc(`${exports.commonSrcCodePath}/${userNumber}/bin`);
 
     return results;
   } catch (error) {
