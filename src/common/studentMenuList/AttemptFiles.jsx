@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
+import { Paper } from '@material-ui/core';
+import Spinner from '../shared/spinner/index';
 import Link from 'react-router-dom/es/Link';
 import TabComponent from '../tabComponent/TabComponent.jsx';
 import Common from '../styles/Common';
@@ -9,7 +11,7 @@ import AttemptCode from './AttemptCode';
 import { getAttemptCode } from '../../commands/attemptCode';
 
 
-const styles = theme => ({
+const styles = ({
   ...Common,
   fullWidth: {
     width: '100%',
@@ -99,7 +101,11 @@ class AttemptFiles extends Component {
         </div>
       );
     }
-    return null;
+    return (
+      <Paper className={[classes.flex, classes.heightToTop].join(' ')}>
+        <Spinner />
+      </Paper>
+    );
   }
 }
 
