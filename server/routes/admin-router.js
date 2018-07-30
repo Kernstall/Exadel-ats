@@ -1,7 +1,6 @@
 const express = require('express');
 const Excel = require('exceljs');
 const path = require('path');
-const dataFunctions = require('../dataFunctions');
 const User = require('../models/User');
 const Group = require('../models/Group');
 const Task = require('../models/Task');
