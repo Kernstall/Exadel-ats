@@ -669,3 +669,85 @@ exports.getTaskInfo = async (taskId) => {
     throw e;
   }
 };
+
+exports.getUsersTasksAttemptNumber = async (userId, taskId) => {
+  //console.log(userId);
+  const result = await User.aggregate([
+    { $match: { _id: mongoose.Types.ObjectId(userId) } },
+    {
+      $project: {
+        _id: 0,
+        taskArray: {
+          $filter: {
+            input: '$tasks',
+            as: 'task',
+            cond: { $eq: ['$$task.taskId', mongoose.Types.ObjectId(taskId)] },
+          },
+        },
+      },
+    },
+  ]);
+  return result[0].taskArray[0].attempts.length;
+};
+
+exports.getFullTaskInfo = async (taskId) => {
+  try {
+    const taskInfo = await Task.findById(taskId)
+      .populate('topicId', { _id: 0, name: 1 })
+      .select({
+        _id: 0,
+        topicId: 1,
+        name: 1,
+        description: 1,
+        weight: 1,
+        tags: 1,
+        tests: 1,
+      });
+    if (taskInfo.topicId) {
+      taskInfo.topicName = taskInfo.topicId.name;
+    }
+
+    for (let index = 0; index < taskInfo.tests.length; index++) {
+      const buff = {};
+      buff._id = taskInfo.tests[index]._id;
+      buff.weight = taskInfo.tests[index].weight;
+      buff.files = {};
+      buff.files.input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
+      buff.files.output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
+      taskInfo.tests[index] = buff;
+    }
+    const result = {
+      name: taskInfo.name,
+      description: taskInfo.description,
+      weight: taskInfo.weight,
+      tags: taskInfo.tags,
+      tests: taskInfo.tests,
+      topicName: taskInfo.topicName,
+    };
+
+    return result;
+  } catch (e) {
+    throw e;
+  }
+};
+
+exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files) => {
+  const obj = {};
+  obj.date = new Date();
+  obj.number = attemptNumber;
+  obj.mainFile = mainFile;
+  obj.result = 0;
+  obj.isPassed = false;
+  obj.files = [];
+  files.forEach((elem) => {
+    obj.files.push(elem.originalname);
+  });
+  try {
+    const result = await User.update(
+      { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
+      { $push: { 'tasks.$.attempts': obj } },
+    );
+  } catch (e) {
+    console.log(e.toString());
+  }
+};
