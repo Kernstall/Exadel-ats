@@ -6,7 +6,7 @@ const FormData = require('form-data');
 const Task = require('../models/Task');
 const Topic = require('../models/Topic');
 const Question = require('../models/Question');
-const mapping = require('../utils/mapping/student');
+const mapping = require('../utils/mapping/map');
 const User = require('../models/User');
 const dataFunctions = require('../dataFunctions');
 const uploadFiles = require('../utils/uploadFiles.js');
@@ -15,12 +15,12 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 const router = express.Router();
 
-/*router.use((req, res, next) => {
+router.use((req, res, next) => {
   if (req.user.status !== 'teacher') {
     return res.status(403).end();
   }
   return next();
-});*/
+});
 
 router.get('/tasks', (req, res) => {
   let hashSet = {};
@@ -40,6 +40,20 @@ router.get('/tasks', (req, res) => {
     hashSet = Object.keys(hashSet).map(key => hashSet[key]);
     res.send(hashSet);
   });
+});
+
+router.get('/task', async (req, res) => {
+  try {
+    if (!req.query.id) {
+      return res.status(400).end();
+    }
+    const taskId = req.query.id;
+    const result = await dataFunctions.getTaskInfo(taskId);
+    return res.send(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
 });
 
 router.get('/questions', (req, res) => {

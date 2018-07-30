@@ -11,8 +11,9 @@ const app = express();
 const dbName = 'TestingSystem';
 const connection = `mongodb://localhost:27017/${dbName}`;
 
-const commonSrcCodePath = 'dataFileStorageMicro\\srcCodes';
-const commonTaskPath = 'dataFileStorageMicro\\tasks';
+const commonSrcCodePath = `${__dirname}/dataFileStorageMicro/srcCodes`;
+const commonTaskPath = `${__dirname}/dataFileStorageMicro/tasks`;
+dataFunctions.initPaths(commonSrcCodePath, commonTaskPath);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,7 +28,7 @@ const storageText = multer.diskStorage({
     } else {
       number = file.originalname.slice(0, index);
     }
-    const path = `${commonTaskPath}\\${req.query.taskId}\\${number}`;
+    const path = `${commonTaskPath}/${req.query.taskId}/${number}`;
 
     if (!(await dataFunctions.checkFileExistence(path))) {
       try {
@@ -54,7 +55,7 @@ const storageText = multer.diskStorage({
 
 const storageSrcCode = multer.diskStorage({
   async destination(req, file, cb) {
-    const path = `${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`;
+    const path = `${commonSrcCodePath}/${req.query.userId}/${req.query.taskId}/${req.query.attemptNumber}/src`;
 
     cb(null, path);
   },
@@ -111,11 +112,11 @@ app.post('/server/textfiles', uploadText.array('files'), async (req, res, next) 
 });
 
 app.post('/server/running/srcfiles', async (req, res, next) => {
-  if (!(await dataFunctions.checkFileExistence(`${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`))) {
-    await dataFunctions.createBinFunc(`${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
+  if (!(await dataFunctions.checkFileExistence(`${commonSrcCodePath}/${req.query.userId}/${req.query.taskId}/${req.query.attemptNumber}/src`))) {
+    await dataFunctions.createBinFunc(`${commonSrcCodePath}/${req.query.userId}/${req.query.taskId}/${req.query.attemptNumber}/src`);
   } else {
-    await dataFunctions.deleteBinFunc(`${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
-    await dataFunctions.createBinFunc(`${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
+    await dataFunctions.deleteBinFunc(`${commonSrcCodePath}/${req.query.userId}/${req.query.taskId}/${req.query.attemptNumber}/src`);
+    await dataFunctions.createBinFunc(`${commonSrcCodePath}/${req.query.userId}/${req.query.taskId}/${req.query.attemptNumber}/src`);
   }
   next();
 });
@@ -128,8 +129,8 @@ app.post('/server/running/srcfiles', uploadSrcCode.array('files'), async (req, r
   try {
     const result = await dataFunctions.checkStudentAttempt(req.query.userId, req.query.taskId,
       req.query.mainFileName, req.query.attemptNumber, req.query.lang);
-    await dataFunctions.deleteBinFunc(`${commonSrcCodePath}\\${req.query.userId}\\${req.query.taskId}\\${req.query.attemptNumber}\\src`);
-    res.status(200).send(JSON.stringify(result));
+    await dataFunctions.deleteBinFunc(`${commonSrcCodePath}/${req.query.userId}/${req.query.taskId}/${req.query.attemptNumber}/src`);
+    res.status(200).json(result);
   } catch (error) {
     res.status(404).send(error.message);
   }
@@ -139,7 +140,7 @@ app.delete('/server/textfiles', async (req, res) => {
   try {
     const taskId = req.query.taskId;
     const number = req.query.testId;
-    await dataFunctions.deleteBinFunc(`${commonTaskPath}\\${taskId}\\${number}`);
+    await dataFunctions.deleteBinFunc(`${commonTaskPath}/${taskId}/${number}`);
     res.status(200).send('Operation successful');
   } catch (error) {
     res.status(404).send(error.message);

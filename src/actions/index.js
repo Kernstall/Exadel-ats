@@ -10,3 +10,4 @@ export { default as teacherQuestions } from './teacherQuestions';
 export { default as teacherTasks } from './teacherTasks';
 export { default as errorMessage } from './errorMessage';
 export { default as attemptCode } from './attemptCode';
+export { default as taskInfo } from './taskInfo';
