@@ -7,6 +7,7 @@ const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
 const logger = require('morgan');
 
+
 const passportControl = require('./utils/passport-control');
 const sendMail = require('./mail');
 const studentRouter = require('./routes/student-router');
@@ -15,8 +16,13 @@ const adminRouter = require('./routes/admin-router');
 const userRouter = require('./routes/user-router');
 const Activity = require('./models/Activity');
 const User = require('./models/User');
+const dataFunctions = require('./utils/dataFunctions');
 
 const app = express();
+
+const commonSrcCodePath = `${__dirname}/dataFileStorage/srcCodes`;
+const commonTaskPath = `${__dirname}/dataFileStorage/tasks`;
+dataFunctions.initPaths(commonSrcCodePath, commonTaskPath);
 
 const dbName = 'TestingSystem';
 const connection = `mongodb://localhost:27017/${dbName}`;

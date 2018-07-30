@@ -1,7 +1,7 @@
 const express = require('express');
-const dataFunctions = require('../dataFunctions');
 const User = require('../models/User');
 const mapping = require('../utils/mapping/map');
+const dataFunctions = require('../utils/dataFunctions');
 
 const router = express.Router();
 
