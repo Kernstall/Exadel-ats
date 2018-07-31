@@ -606,9 +606,9 @@ function getExtension(fileName) {
   return fileName.slice(index);
 }
 
-function readFile(path) {
+exports.readFile = async (path) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
+    fs.readFile(path, (err, data) => {
       if (err) {
         reject(err);
       } else {
