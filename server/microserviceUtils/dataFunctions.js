@@ -207,8 +207,8 @@ exports.compareFiles = async function compareFiles(firstFileName, secondFileName
   return false;
 };
 
-exports.checkStudentAttempt = async function checkStudentAttempt(studentId, taskId,
-  mainFileName, attemptNumber, lang, userNumber) {
+exports.checkStudentAttempt = async function checkStudentAttempt(taskId,
+  mainFileName, lang, userNumber) {
   try {
     const results = [];
     let tests = await Task.aggregate([
