@@ -1,9 +1,5 @@
 const express = require('express');
 const Excel = require('exceljs');
-const User = require('../models/User');
-const Group = require('../models/Group');
-const Task = require('../models/Task');
-const Question = require('../models/Question');
 const mapping = require('../utils/mapping/map');
 const dataFunctions = require('../utils/dataFunctions');
 
@@ -59,13 +55,13 @@ router.post('/students', async (req, res) => {
   }
 });
 
-router.get('/groups', async (req, res) => {
+router.post('/groups', async (req, res) => {
   if (!req.query.skip) {
     return res.status(400).end();
   }
   try {
     const skip = parseInt(req.query.skip, 10);
-    let result = await Group.find().limit(15).skip(skip);
+    let result = await dataFunctions.filterGroup(skip, 15, req.body);
     result = result.map(element => element = mapping.mapGroupsToDto(element));
     return res.send(result);
   } catch (err) {
@@ -74,13 +70,13 @@ router.get('/groups', async (req, res) => {
   }
 });
 
-router.get('/tasks', async (req, res) => {
+router.post('/tasks', async (req, res) => {
   if (!req.query.skip) {
     return res.status(400).end();
   }
   try {
     const skip = parseInt(req.query.skip, 10);
-    let result = await Task.find().limit(15).skip(skip);
+    let result = await dataFunctions.filterTask(skip, 15, req.body);
     result = result.map(element => element = mapping.mapTasksToDto(element));
     return res.send(result);
   } catch (err) {
@@ -89,13 +85,13 @@ router.get('/tasks', async (req, res) => {
   }
 });
 
-router.get('/questions', async (req, res) => {
+router.post('/questions', async (req, res) => {
   if (!req.query.skip) {
     return res.status(400).end();
   }
   try {
     const skip = parseInt(req.query.skip, 10);
-    let result = await Question.find().limit(15).skip(skip);
+    let result = await dataFunctions.filterQuestion(skip, 15, req.body);
     result = result.map(element => element = mapping.mapQuestionsToDto(element));
     return res.send(result);
   } catch (err) {
@@ -190,9 +186,9 @@ router.post('/statistics/students', async (req, res) => {
   }
 });
 
-router.get('/statistics/groups', async (req, res) => {
+router.post('/statistics/groups', async (req, res) => {
   try {
-    let result = await Group.find();
+    let result = await dataFunctions.filterGroup(0, 0, req.body);
     result = result.map(element => element = mapping.mapGroupsToDto(element));
     const options = {
       filename: 'server/routes/group-workbook.xlsx',
@@ -203,13 +199,13 @@ router.get('/statistics/groups', async (req, res) => {
     const worksheet = workbook.addWorksheet('Группы');
     worksheet.columns = [
       { header: 'Имя группы', key: 'groupName', width: 25 },
-      { header: 'Имя учителя', key: 'teacherName', width: 40 },
+      { header: 'ФИО учителя', key: 'teacherName', width: 40 },
       { header: 'Количество студентов', key: 'studentsCount', width: 25 },
     ];
     result.forEach((elem) => {
       worksheet.addRow({
         groupName: elem.groupName,
-        teacherName: elem.teacherName,
+        teacherName: `${elem.lastName} ${elem.firstName} ${elem.fathersName}`,
         studentsCount: elem.studentsCount,
       });
     });
@@ -227,9 +223,9 @@ router.get('/statistics/groups', async (req, res) => {
   }
 });
 
-router.get('/statistics/tasks', async (req, res) => {
+router.post('/statistics/tasks', async (req, res) => {
   try {
-    let result = await Task.find();
+    let result = await dataFunctions.filterTask(0, 0, req.body);
     result = result.map(element => element = mapping.mapTasksToDto(element));
 
     const options = {
@@ -265,11 +261,10 @@ router.get('/statistics/tasks', async (req, res) => {
   }
 });
 
-router.get('/statistics/questions', async (req, res) => {
+router.post('/statistics/questions', async (req, res) => {
   try {
-    let result = await Question.find();
+    let result = await dataFunctions.filterQuestion(0, 0, req.body);
     result = result.map(element => element = mapping.mapQuestionsToDto(element));
-
     const options = {
       filename: 'server/routes/question-workbook.xlsx',
       useStyles: true,
@@ -303,6 +298,7 @@ router.get('/statistics/questions', async (req, res) => {
     });
   } catch (err) {
     console.error(err);
+    return res.status(500).end();
   }
 });
 

@@ -760,6 +760,7 @@ exports.getTaskTests = async (taskId) => {
     });
   return answer;
 };
+
 exports.filterTeacher = async (skip, limit, body) => {
   const {
     firstName,
@@ -793,7 +794,6 @@ exports.filterTeacher = async (skip, limit, body) => {
   }
   return result;
 };
-
 exports.filterStudent = async (skip, limit, body) => {
   const {
     firstName,
@@ -828,6 +828,90 @@ exports.filterStudent = async (skip, limit, body) => {
     result = await User.find(filter).limit(limit).skip(skip);
   } else {
     result = await User.find(filter);
+  }
+  return result;
+};
+exports.filterGroup = async (skip, limit, body) => {
+  const {
+    groupName,
+    lastName,
+    firstName,
+    fathersName,
+  } = body;
+  const filter = {};
+  if (firstName) {
+    filter.firstName = firstName;
+  }
+  if (lastName) {
+    filter.lastName = lastName;
+  }
+  if (fathersName) {
+    filter.fathersName = fathersName;
+  }
+  if (groupName) {
+    filter.groupName = groupName;
+  }
+  let result;
+  if (limit > 0) {
+    result = await Group.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await Group.find(filter);
+  }
+  return result;
+};
+exports.filterTask = async (skip, limit, body) => {
+  const {
+    name,
+    score,
+    language,
+  } = body;
+  const filter = {};
+  if (name) {
+    filter.name = name;
+  }
+  if (score) {
+    filter.weight = score;
+  }
+  if (language) {
+    filter.language = language;
+  }
+  let result;
+  if (limit > 0) {
+    result = await Task.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await Task.find(filter);
+  }
+  return result;
+};
+exports.filterQuestion = async (skip, limit, body) => {
+  const {
+    kind,
+    difficultyRate,
+    isTraining,
+    correntAnswersCount,
+    wrongAnswersCount,
+  } = body;
+  const filter = {};
+  if (kind) {
+    filter.kind = kind;
+  }
+  if (difficultyRate) {
+    filter.difficultyRate = difficultyRate;
+  }
+  if (isTraining) {
+    filter.isTraining = isTraining;
+  }
+  if (correntAnswersCount) {
+    filter.correntAnswersCount = correntAnswersCount;
+  }
+  if (wrongAnswersCount) {
+    filter.wrongAnswersCount = wrongAnswersCount;
+  }
+  let result;
+  if (limit > 0) {
+    result = await Question.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await Question.find(filter);
   }
   return result;
 };
