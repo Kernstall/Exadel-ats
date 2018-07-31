@@ -38,6 +38,23 @@ const mapStudentsToDto = model => ({
   mediumTaskScore: model.mediumTaskScore,
   mediumTestScore: model.mediumTestScore,
 });
+const mapGroupsToDto = model => ({
+  groupName: model.groupName,
+  teacherName: `${model.lastName} ${model.firstName} ${model.fathersName}`,
+  studentsCount: model.studentIdList.length,
+});
+const mapTasksToDto = model => ({
+  name: model.name,
+  score: model.weight,
+  language: model.language,
+});
+const mapQuestionsToDto = model => ({
+  kind: model.kind,
+  difficultyRate: model.difficultyRate,
+  isTraining: model.isTraining,
+  correntAnswersCount: model.correntAnswersCount,
+  wrongAnswersCount: model.wrongAnswersCount,
+});
 
 module.exports.mapStudentToDto = mapStudentToDto;
 module.exports.mapTaskToDto = mapTaskToDto;
@@ -45,3 +62,6 @@ module.exports.mapGroupToDto = mapGroupToDto;
 module.exports.mapTaskAndTestsToDto = mapTaskAndTestsToDto;
 module.exports.mapTeachersToDto = mapTeachersToDto;
 module.exports.mapStudentsToDto = mapStudentsToDto;
+module.exports.mapGroupsToDto = mapGroupsToDto;
+module.exports.mapTasksToDto = mapTasksToDto;
+module.exports.mapQuestionsToDto = mapQuestionsToDto;

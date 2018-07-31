@@ -15,12 +15,13 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 const router = express.Router();
 
-/*router.use((req, res, next) => {
-  if (req.user.status !== 'teacher') {
-    return res.status(403).end();
+router.use((req, res, next) => {
+
+  if (req.user.status === 'teacher' || req.user.status === 'admin') {
+    return next();
   }
-  return next();
-});*/
+  return res.status(403).end();
+});
 
 router.get('/tasks', (req, res) => {
   let hashSet = {};
@@ -173,10 +174,11 @@ router.get('/students', async (req, res) => {
 });
 
 router.post('/group', async (req, res) => {
-  const groupName = req.query.groupName;
+  const groupName = req.body.groupName;
   const teacherId = req.user.id;
-  const studentArrayIds = req.body;
-  console.log(studentArrayIds);
+
+  const studentArrayIds = req.body.studentsList;
+
   try {
     const saveGroup = await dataFunctions.createGroup(groupName, teacherId);
     const updateGroup = await dataFunctions.addStudentsToGroup(saveGroup.id, studentArrayIds);

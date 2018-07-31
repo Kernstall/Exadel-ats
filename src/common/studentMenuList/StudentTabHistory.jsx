@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import { connect } from 'react-redux';
+import { Paper } from '@material-ui/core';
+import Spinner from '../shared/spinner/index';
 import StudentActivities from './StudentActivities.jsx';
 import { getStudentHistory } from '../../commands/studentHistory';
 
@@ -45,7 +47,11 @@ class StudentTabHistory extends Component {
         </div>
       );
     }
-    return null;
+    return (
+      <Paper className={[classes.flex, classes.heightToTop].join(' ')}>
+        <Spinner />
+      </Paper>
+    );
   }
 }
 
