@@ -91,9 +91,9 @@ async function connectDatabase() {
     });
 }
 
-/*app.post('/server/textfiles', uploadText.array('files'), async (req, res, next) => {
-  res.status(200).send('Operation successful');
-});*/
+// app.post('/server/textfiles', uploadText.array('files'), async (req, res, next) => {
+//   res.status(200).send('Operation successful');
+// });
 
 app.post('/server/running/srcfiles', async (req, res, next) => {
   let xindex = 0;
@@ -125,16 +125,16 @@ app.post('/server/running/srcfiles', upload.fields([{ name: 'tests' }, { name: '
   }
 });
 
-/*app.delete('/server/textfiles', async (req, res) => {
-  try {
-    const taskId = req.query.taskId;
-    const number = req.query.testId;
-    await dataFunctions.deleteBinFunc(`${commonTaskPath}/${req.xindex}/${taskId}/${number}`);
-    res.status(200).send('Operation successful');
-  } catch (error) {
-    res.status(404).send(error.message);
-  }
-});*/
+// app.delete('/server/textfiles', async (req, res) => {
+//   try {
+//     const taskId = req.query.taskId;
+//     const number = req.query.testId;
+//     await dataFunctions.deleteBinFunc(`${commonTaskPath}/${req.xindex}/${taskId}/${number}`);
+//     res.status(200).send('Operation successful');
+//   } catch (error) {
+//     res.status(404).send(error.message);
+//   }
+// });
 
 app.use(async (err, req, res, next) => {
   delete userController[req.xindex];
