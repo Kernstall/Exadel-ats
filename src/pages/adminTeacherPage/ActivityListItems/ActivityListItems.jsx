@@ -13,14 +13,17 @@ const styles = {
   fullWidth: {
     width: '100%',
   },
-  date: {
-    width: '15%',
+  zeroFilter: {
+    maxWidth: '1%',
   },
-  role: {
-    width: '20%',
+  firstFilter: {
+    maxWidth: '30%',
   },
-  userType: {
-    width: '30%',
+  secondFilter: {
+    maxWidth: '15%',
+  },
+  thirdFilter: {
+    maxWidth: '15%',
   },
   listItem: {
     marginBottom: 1,
@@ -28,19 +31,19 @@ const styles = {
   primary: {
     fontSize: '15px',
   },
-  names: {
-    width: '30%',
-  },
   root: {
     padding: 0,
     margin: 0,
+  },
+  container: {
+    margin: '0 20px',
   },
 };
 
 class ActivityListItems extends Component {
   constructor(props) {
     super(props);
-    this.sortBy = ['name', 'date', 'userType', 'type'];
+    this.sortBy = ['name', 'email', 'numberTestsToCheck', 'university'];
     this.state = {
       sortBy: this.sortBy[0],
       isDecreasing: true,
@@ -75,13 +78,6 @@ class ActivityListItems extends Component {
 
     const sortedInfo = this.sort(info, sortBy, isDecreasing);
 
-    const dateToString = (_date) => {
-      const date = new Date(Date.parse(_date));
-      const parsedTime = `${date.getDay()}.${date.getMonth()}.${date.getFullYear()}`;
-      const parsedData = `${date.getHours()}:${date.getMinutes()}`;
-      return `${parsedTime} ${parsedData}`;
-    };
-
     return (
       <div>
         <Paper className={classes.control} elevation={0}>
@@ -94,18 +90,18 @@ class ActivityListItems extends Component {
         {sortedInfo.map(element => (
           <Paper className={classes.listItem} elevation={1}>
             <ListItem button elevation={0}>
-              <Grid container className={classes.fullWidth}>
-                <Grid item className={classes.names}>
-                  <ListItemText classes={{ primary: classes.primary }} primary={`${localize(element.name)}`} />
+              <Grid container justify="space-between" wrap="nowrap" className={classes.container}>
+                <Grid item className={classes.zeroFilter}>
+                  <ListItemText classes={{ primary: classes.primary }} primary={`${element.name}`} />
                 </Grid>
-                <Grid item className={classes.date}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${dateToString(element.date)}`} />
+                <Grid item className={classes.firstFilter}>
+                  <ListItemText className={{ root: classes.root }} secondary={`${element.email}`} />
                 </Grid>
-                <Grid item className={classes.role}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${localize(element.userType)}`} />
+                <Grid item className={classes.secondFilter}>
+                  <ListItemText className={{ root: classes.root }} secondary={`${localize(element.numberTestsToCheck)}`} />
                 </Grid>
-                <Grid item className={classes.userType}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${localize(element.type)}`} />
+                <Grid item className={classes.thirdFilter}>
+                  <ListItemText className={{ root: classes.root }} secondary={`${localize(element.university)}`} />
                 </Grid>
               </Grid>
             </ListItem>

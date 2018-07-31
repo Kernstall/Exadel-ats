@@ -606,9 +606,9 @@ function getExtension(fileName) {
   return fileName.slice(index);
 }
 
-function readFile(path) {
+exports.readFile = async (path) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
+    fs.readFile(path, (err, data) => {
       if (err) {
         reject(err);
       } else {
@@ -785,4 +785,159 @@ exports.getTaskTests = async (taskId) => {
       language: 1,
     });
   return answer;
+};
+
+exports.filterTeacher = async (skip, limit, body) => {
+  const {
+    firstName,
+    lastName,
+    fathersName,
+    email,
+    university,
+  } = body;
+  const filter = {};
+  filter.status = 'teacher';
+  if (firstName) {
+    filter.firstName = firstName;
+  }
+  if (lastName) {
+    filter.lastName = lastName;
+  }
+  if (fathersName) {
+    filter.fathersName = fathersName;
+  }
+  if (email) {
+    filter.email = email;
+  }
+  if (university) {
+    filter.university = university;
+  }
+  let result;
+  if (limit > 0) {
+    result = await User.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await User.find(filter);
+  }
+  return result;
+};
+exports.filterStudent = async (skip, limit, body) => {
+  const {
+    firstName,
+    lastName,
+    university,
+    graduateYear,
+    mediumTaskScore,
+    mediumTestScore,
+  } = body;
+  let result;
+  const filter = {};
+  filter.status = 'student';
+  if (firstName) {
+    filter.firstName = firstName;
+  }
+  if (lastName) {
+    filter.lastName = lastName;
+  }
+  if (graduateYear) {
+    filter.graduateYear = graduateYear;
+  }
+  if (university) {
+    filter.university = university;
+  }
+  if (typeof mediumTaskScore !== 'undefined') {
+    filter.mediumTaskScore = mediumTaskScore;
+  }
+  if (typeof mediumTestScore !== 'undefined') {
+    filter.mediumTestScore = mediumTestScore;
+  }
+  if (limit > 0) {
+    result = await User.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await User.find(filter);
+  }
+  return result;
+};
+exports.filterGroup = async (skip, limit, body) => {
+  const {
+    groupName,
+    lastName,
+    firstName,
+    fathersName,
+  } = body;
+  const filter = {};
+  if (firstName) {
+    filter.firstName = firstName;
+  }
+  if (lastName) {
+    filter.lastName = lastName;
+  }
+  if (fathersName) {
+    filter.fathersName = fathersName;
+  }
+  if (groupName) {
+    filter.groupName = groupName;
+  }
+  let result;
+  if (limit > 0) {
+    result = await Group.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await Group.find(filter);
+  }
+  return result;
+};
+exports.filterTask = async (skip, limit, body) => {
+  const {
+    name,
+    score,
+    language,
+  } = body;
+  const filter = {};
+  if (name) {
+    filter.name = name;
+  }
+  if (score) {
+    filter.weight = score;
+  }
+  if (language) {
+    filter.language = language;
+  }
+  let result;
+  if (limit > 0) {
+    result = await Task.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await Task.find(filter);
+  }
+  return result;
+};
+exports.filterQuestion = async (skip, limit, body) => {
+  const {
+    kind,
+    difficultyRate,
+    isTraining,
+    correntAnswersCount,
+    wrongAnswersCount,
+  } = body;
+  const filter = {};
+  if (kind) {
+    filter.kind = kind;
+  }
+  if (difficultyRate) {
+    filter.difficultyRate = difficultyRate;
+  }
+  if (isTraining) {
+    filter.isTraining = isTraining;
+  }
+  if (correntAnswersCount) {
+    filter.correntAnswersCount = correntAnswersCount;
+  }
+  if (wrongAnswersCount) {
+    filter.wrongAnswersCount = wrongAnswersCount;
+  }
+  let result;
+  if (limit > 0) {
+    result = await Question.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await Question.find(filter);
+  }
+  return result;
 };

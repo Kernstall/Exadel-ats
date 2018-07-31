@@ -6,7 +6,7 @@ const styles = {
   hint: {
     position: 'absolute',
     opacity: 0,
-    animation: '.2s 1s appearing forwards',
+    animation: '.2s .2s appearing forwards',
     background: '#eaf6ff',
     fontWeight: 300,
   },
@@ -18,7 +18,6 @@ const styles = {
 };
 
 const Hint = ({ classes, suggestion, mauseCoordinates }) => {
-  console.log(mauseCoordinates);
   const coords = {
     top: `${mauseCoordinates.y + 20}px`,
     left: `${mauseCoordinates.x}px`,

@@ -14,13 +14,10 @@ const styles = {
     width: '100%',
   },
   date: {
-    width: '15%',
+    width: '40%',
   },
   role: {
-    width: '20%',
-  },
-  userType: {
-    width: '30%',
+    width: '1%',
   },
   listItem: {
     marginBottom: 1,
@@ -29,7 +26,7 @@ const styles = {
     fontSize: '15px',
   },
   names: {
-    width: '30%',
+    width: '50%',
   },
   root: {
     padding: 0,
@@ -40,7 +37,7 @@ const styles = {
 class ActivityListItems extends Component {
   constructor(props) {
     super(props);
-    this.sortBy = ['name', 'date', 'userType', 'type'];
+    this.sortBy = ['name', 'score', 'language'];
     this.state = {
       sortBy: this.sortBy[0],
       isDecreasing: true,
@@ -96,16 +93,13 @@ class ActivityListItems extends Component {
             <ListItem button elevation={0}>
               <Grid container className={classes.fullWidth}>
                 <Grid item className={classes.names}>
-                  <ListItemText classes={{ primary: classes.primary }} primary={`${localize(element.name)}`} />
+                  <ListItemText classes={{ primary: classes.primary }} primary={`${element.name}`} />
                 </Grid>
                 <Grid item className={classes.date}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${dateToString(element.date)}`} />
+                  <ListItemText className={{ root: classes.root }} secondary={`${element.score}`} />
                 </Grid>
                 <Grid item className={classes.role}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${localize(element.userType)}`} />
-                </Grid>
-                <Grid item className={classes.userType}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${localize(element.type)}`} />
+                  <ListItemText className={{ root: classes.root }} secondary={`${element.language}`} />
                 </Grid>
               </Grid>
             </ListItem>
