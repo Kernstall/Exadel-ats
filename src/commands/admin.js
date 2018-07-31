@@ -50,7 +50,7 @@ export const getAdminActivities = param => (dispatch) => {
 export const getAdminTeachers = param => (dispatch) => {
   console.log('param', param);
 
-  let query = `${startQuery}students?`;
+  let query = `${startQuery}/students`;
 
   // if (param.name && !isNullOrUndefined(param.name.match(/^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/ig))) {
   //   param.name = englishToRussian(param.name);

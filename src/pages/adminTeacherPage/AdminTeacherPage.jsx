@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/es/Button/Button';
 import Common from '../../common/styles/Common';
 import { getAdminTeachers } from '../../commands/admin';
 import SearchBox from './searchBox/SearchBox';
@@ -92,7 +91,6 @@ class AdminTeacherPage extends Component {
             </List>
           </Grid>
           <h1>Teacher</h1>
-          <Button onClick={this.handleOnClick}>CLICK</Button>
         </Grid>
       );
     }

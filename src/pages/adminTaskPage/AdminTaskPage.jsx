@@ -59,8 +59,8 @@ class AdminTaskPage extends Component {
   }
 
   downloadClickHandler = () => {
-    fetch('/api/admin/statistics', {
-      method: 'GET',
+    fetch('/api/admin/statistics/students', {
+      method: 'POST',
       headers: {
         'Content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Set-Cookie': 'true',
@@ -70,7 +70,7 @@ class AdminTaskPage extends Component {
       .then((data) => {
         return new Blob([data]);
       }).then((blob) => {
-        saveAs(blob, 'teacher-workbook.xlsx');
+        saveAs(blob, 'students-workbook.xlsx');
       })
       .catch(rej => console.log(`Rejected: ${rej}`));
   }
