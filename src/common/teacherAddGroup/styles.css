@@ -8,6 +8,9 @@
     margin: 0.5rem;
     padding: 0.25rem;
 }
+.studentContent{
+    font-size: 1.25rem;
+}
 .drag-and-drop-outer-wrapper {
     display: flex;
     min-width: fit-content;
@@ -32,7 +35,7 @@
 .students-container, .mentor-container {
     display: flex;
     flex-direction: column;
-    width: 250px;
+    width: 50%;
 }
 .students-container {
     border-right: gray 1px;
