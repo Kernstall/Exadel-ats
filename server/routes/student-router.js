@@ -1,5 +1,9 @@
 const express = require('express');
 const multer = require('multer');
+const FormData = require('form-data');
+const fs = require('fs');
+const got = require('got');
+
 const User = require('../models/User');
 const dataFunctions = require('../utils/dataFunctions');
 const mapping = require('../utils/mapping/map');
@@ -84,18 +88,54 @@ router.get('/task/attempt', async (req, res) => {
 });
 
 router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, res) => {
-  const fileNamesArray = [];
-  const mainFile = req.query.mainFile;
-  const userId = req.query.userId;
-  const taskId = req.query.taskId;
-  const attemptNumber = await dataFunctions.getUsersTasksAttemptNumber(userId, taskId);
-  req.files.forEach((elem) => {
-    fileNamesArray.push(elem.originalname);
-  });
+  try {
+    if (req.files) {
+      const fileNamesArray = [];
+      const mainFile = req.query.mainFile;
+      const userId = req.query.userId;
+      const taskId = req.query.taskId;
+      const attemptNumber = await dataFunctions.getUsersTasksAttemptNumber(userId, taskId);
+      req.files.forEach((elem) => {
+        fileNamesArray.push(elem.originalname);
+      });
 
-  await dataFunctions.saveAttemptInfo(userId, taskId, attemptNumber, mainFile, req.files);
+      await dataFunctions.saveAttemptInfo(userId, taskId, attemptNumber, mainFile, req.files);
 
-  res.status(200).send('qwewret');
+      const form = new FormData();
+
+      for (let i = 0; i < req.files.length; i++) {
+        form.append('src', fs.createReadStream(`${req.files[i].destination}/${req.files[i].originalname}`));
+      }
+
+      const taskTests = await dataFunctions.getTaskTests(taskId);
+      console.log(taskTests);
+
+      for (let i = 0; i < taskTests.tests.length; i++) {
+        await fileSystemFunctions.copyFile(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/output.txt`,
+          `${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/${String(taskTests.tests[i]._id)}output.txt`);
+        await fileSystemFunctions.copyFile(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/input.txt`,
+          `${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/${String(taskTests.tests[i]._id)}input.txt`);
+        form.append('tests', fs.createReadStream(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/${String(taskTests.tests[i]._id)}output.txt`));
+        form.append('tests', fs.createReadStream(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/${String(taskTests.tests[i]._id)}input.txt`));
+      }
+
+      (async () => {
+        try {
+          const answer = await got.post(`http://localhost:3002/server/running/srcfiles?taskId=${taskId}&&lang=${taskTests.language}&&mainFileName=${mainFile}`, { body: form });
+          for (let i = 0; i < taskTests.tests.length; i++) {
+            await fileSystemFunctions.deleteFile(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/${String(taskTests.tests[i]._id)}output.txt`);
+            await fileSystemFunctions.deleteFile(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/${String(taskTests.tests[i]._id)}input.txt`);
+          }
+          //res.status(200).send('qerwe');
+          res.status(200).send(answer.body);
+        } catch (error) {
+          res.status(400).send(error.toString());
+        }
+      })();
+    }
+  } catch (e) {
+    console.log(e.toString());
+  }
 });
 
 module.exports = router;
