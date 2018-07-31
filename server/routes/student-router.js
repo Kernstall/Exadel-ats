@@ -136,7 +136,7 @@ router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, re
       })();
     }
   } catch (e) {
-    console.log(e.toString());
+    res.status(400).send(error.toString());
   }
 });
 

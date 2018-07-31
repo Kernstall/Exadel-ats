@@ -786,15 +786,3 @@ exports.getTaskTests = async (taskId) => {
     });
   return answer;
 };
-
-/*exports.compileProcessing = async (answer, userId, taskId, index) => {
-  try {
-    const result = await User.update(
-      { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
-      { $push: { 'tasks.$.attempts': answer } },
-    );
-    console.log(result);
-  } catch (e) {
-    console.log(e.toString());
-  }
-};*/
