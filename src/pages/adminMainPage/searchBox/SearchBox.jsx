@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import { withStyles, Paper } from '@material-ui/core/es';
 import Input from '@material-ui/core/Input';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Common from '../styles/Common';
-import InputWithSuggestions from '../inputWithSuggestions/InputWithSuggestions';
 
 const styles = {
-  ...Common,
   parent: {
     maxWidth: '300px',
     padding: '0px 5px 10px',
-    marginBottom: '10px',
+    margin: '20px 20px 0 0',
   },
   caption: {
     fontSize: '0.7em',
@@ -40,29 +35,9 @@ const styles = {
   },
 };
 
-const currencies = [
-  {
-    value: 'student',
-    label: 'Ученик',
-  },
-  {
-    value: 'teacher',
-    label: 'Учитель',
-  },
-  {
-    value: 'administartor',
-    label: 'Администратор',
-  },
-  {
-    value: 'all',
-    label: 'Любая роль',
-  },
-];
-
 class SearchBox extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
-    this.state = { role: 'all' };
   }
 
   handleChange = name => (event) => {
@@ -86,7 +61,7 @@ class SearchBox extends Component {
     return (
       <Paper className={[classes.parent].join(' ')}>
         <div className={classes.caption}>
-          Search history by:
+          Search teacher by:
         </div>
         <Paper className={classes.child} elevation={0}>
           <Input
@@ -97,25 +72,12 @@ class SearchBox extends Component {
           />
         </Paper>
         <Paper className={classes.child} elevation={0}>
-          <TextField
-            id="select-role"
-            select
-            className={classes.textField}
-            value={this.state.role}
-            onChange={this.handleChange('role')}
-            InputProps={{
-              disableUnderline: true,
-            }}
-          >
-            {currencies.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Paper>
-        <Paper className={classes.child} elevation={0}>
-          <InputWithSuggestions onHandleChange={this.handleChangeChild} />
+          <Input
+            placeholder="Email ..."
+            className={classes.input}
+            disableUnderline
+            onChange={this.handleChange('email')}
+          />
         </Paper>
       </Paper>
     );

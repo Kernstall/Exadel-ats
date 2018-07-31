@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/es/Button/Button';
 import Common from '../../common/styles/Common';
-import { getActivities } from '../../commands/activities';
-import SearchBox from '../../common/searchBox/SearchBox.jsx';
+import { getAdminTeachers } from '../../commands/admin';
+import SearchBox from './searchBox/SearchBox';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
 const styles = {
@@ -23,52 +22,51 @@ const styles = {
   },
 };
 
+const mocks = [
+  {
+    name: 'Побегайло Александр Павлович',
+    email: 'pobegos@bsu.by',
+    numberTestsToCheck: '13',
+    university: 'BSU',
+  },
+  {
+    name: 'Зенько Татьяна Алексеевна',
+    email: 'zenko@bsu.by',
+    numberTestsToCheck: '1',
+    university: 'BSU',
+  },
+];
+
 class AdminTeacherPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
       historyFilter: {
         name: '',
-        role: '',
-        activityType: '',
+        email: '',
       },
     };
   }
 
   componentDidMount() { // eslint-disable-next-line
-    this.props.getActivities(this.state.historyFilter);
+    this.props.getAdminTeachers(this.state.historyFilter);
   }
 
-  handleOnClick = () => {
-    fetch('/api/admin/statistics/questions', {
-      method: 'GET',
-      headers: {
-        'Content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'Set-Cookie': 'true',
-      },
-      credentials: 'include',
-    }).then(res => res.blob())
-      .then((data) => {
-        const a = document.createElement('a');
-        const url = window.URL.createObjectURL(data);
-        a.href = url;
-        a.download = 'teacher-workbook.xlsx';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      })
-      .catch(rej => console.log(`Rejected: ${rej}`));
+  componentDidUpdate(prevProps, prevState) {
+    prevState.historyFilter == this.state.historyFilter
+      || this.props.getAdminTeachers(this.state.historyFilter);
   }
 
-  handleHistoryFilter = (name, role, activityType) => {
+  handleHistoryFilter = (name, activityType) => {
     const newState = {
-      historyFilter: { name, role, activityType },
+      historyFilter: { name, activityType },
     };
     this.setState(newState);
   };
 
   render() {
-    const { classes, activities } = this.props;
-    if (activities) {
+    const { classes, adminTeachers } = this.props;
+    if (adminTeachers) {
       return (
         <Grid
           alignItems="stretch"
@@ -89,11 +87,10 @@ class AdminTeacherPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={activities} />
+              <ActivityListItems info={mocks} />
             </List>
           </Grid>
           <h1>Teacher</h1>
-          <Button onClick={this.handleOnClick}>CLICK</Button>
         </Grid>
       );
     }
@@ -103,11 +100,11 @@ class AdminTeacherPage extends Component {
 
 
 const mapStateToProps = state => ({
-  activities: state.activities.activities,
+  adminTeachers: state.adminTeachers.adminTeachers,
 });
 
 const mapCommandsToProps = dispatch => ({
-  getActivities: param => dispatch(getActivities(param)),
+  getAdminTeachers: param => dispatch(getAdminTeachers(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminTeacherPage));

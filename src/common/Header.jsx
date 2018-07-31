@@ -5,6 +5,10 @@ import Grid from '@material-ui/core/Grid';
 import sharedStyles from './styles/Common';
 
 const styles = ({
+  defaultCursor: {
+    cursor: 'default',
+    userSelect: 'none',
+  },
   header: {
     height: '60px',
     background: '#2196f3',
@@ -22,17 +26,15 @@ function Header(props) {
   const { classes } = props;
   return (
     <div className={[classes.header, classes.flex].join(' ')}>
-      <div className={classes.center}>
-        <Link style={{ textDecoration: 'none', color: 'white' }} to="/">
-          <span className={classes.logoFontWhite}>
-            <span>
-              A
-            </span>
-            <span className={classes.logoFontBlue}>
-              TS
-            </span>
+      <div className={[classes.center, classes.defaultCursor].join(' ')}>
+        <span className={classes.logoFontWhite}>
+          <span>
+            A
           </span>
-        </Link>
+          <span className={classes.logoFontBlue}>
+            TS
+          </span>
+        </span>
         <Grid className={classes.anim} />
       </div>
     </div>

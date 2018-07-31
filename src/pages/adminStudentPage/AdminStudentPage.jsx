@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Common from '../../common/styles/Common';
-import { getActivities } from '../../commands/activities';
-import SearchBox from '../../common/searchBox/SearchBox.jsx';
+import { getAdminStudents } from '../../commands/admin';
+import SearchBox from './searchBox/SearchBox';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
 const styles = {
@@ -22,6 +22,21 @@ const styles = {
   },
 };
 
+const mocks = [
+  {
+    name: 'Alexander Gusev Sergeevich',
+    universityInfo: 'БГУ ФПМИ 2020',
+    mediumTaskScore: '10',
+    mediumTestScore: '10',
+  },
+  {
+    name: 'Еремин Гульзар Десад',
+    universityInfo: 'БГУИР ФПМИ 2022',
+    mediumTaskScore: '8',
+    mediumTestScore: '8',
+  },
+];
+
 class AdminStudentPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
@@ -35,12 +50,12 @@ class AdminStudentPage extends Component {
   }
 
   componentDidMount() { // eslint-disable-next-line
-    this.props.getActivities(this.state.historyFilter);
+    this.props.getAdminStudents(this.state.historyFilter);
   }
 
   componentDidUpdate(prevProps, prevState) {
     prevState.historyFilter == this.state.historyFilter
-      || this.props.getActivities(this.state.historyFilter);
+      || this.props.getAdminStudents(this.state.historyFilter);
   }
 
   handleHistoryFilter = (name, role, activityType) => {
@@ -51,8 +66,8 @@ class AdminStudentPage extends Component {
   };
 
   render() {
-    const { classes, activities } = this.props;
-    if (activities) {
+    const { classes, adminStudents } = this.props;
+    if (adminStudents) {
       return (
         <Grid
           alignItems="stretch"
@@ -73,7 +88,7 @@ class AdminStudentPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={activities} />
+              <ActivityListItems info={mocks} />
             </List>
           </Grid>
           <h1>Students</h1>
@@ -86,11 +101,11 @@ class AdminStudentPage extends Component {
 
 
 const mapStateToProps = state => ({
-  activities: state.activities.activities,
+  adminStudents: state.adminStudents.adminStudents,
 });
 
 const mapCommandsToProps = dispatch => ({
-  getActivities: param => dispatch(getActivities(param)),
+  getAdminStudents: param => dispatch(getAdminStudents(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminStudentPage));

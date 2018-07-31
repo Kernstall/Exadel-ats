@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import ListItemText from '@material-ui/core/ListItemText';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import ListItem from '@material-ui/core/ListItem';
-import localize from '../../../../localization/localization';
+import localize from '../../../localization';
 
 const styles = {
   captionText: {

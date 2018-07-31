@@ -8,12 +8,8 @@ import StudentImg from '../../../img/student.svg';
 import StatisticsImg from '../../../img/statistics.svg';
 import GroupsImg from '../../../img/groups.svg';
 import HistoryImg from '../../../img/history.svg';
+import QuestionsImg from '../../../img/questions.svg';
 import Hint from './hint/Hint';
-// import AdminMainPage from '../AdminMainPage';
-import AdminTeacherPage from '../../adminTeacherPage/AdminTeacherPage';
-// import AdminStudentPage from '../../adminTeacherPage/AdminTeacherPage';
-// import AdminTaskPage from '../../adminTeacherPage/AdminTeacherPage';
-// import AdminStatisticsPage from '../../adminTeacherPage/AdminTeacherPage';
 
 const styles = {
   img: {
@@ -54,9 +50,6 @@ class HeaderMenue extends Component {
   }
 
   handleMouseEnterSuggestions = suggestion => (event) => {
-    console.log('is', this.state.isHover);
-    // console.log('event', event);
-    // console.log('this', this);
     this.setState({
       isHover: !this.state.isHover,
       suggestion,
@@ -123,7 +116,7 @@ class HeaderMenue extends Component {
               className={classes.img}
               src={TasksImg}
               alt="tasks"
-              onMouseEnter={this.handleMouseEnterSuggestions('tasks & tests')}
+              onMouseEnter={this.handleMouseEnterSuggestions('tasks')}
               onMouseLeave={this.handleMouseEnterSuggestions('teacher')}
             />
           </div>
@@ -132,9 +125,9 @@ class HeaderMenue extends Component {
           <div className={classes.headerItem}>
             <img
               className={classes.img}
-              src={StatisticsImg}
+              src={QuestionsImg}
               alt="statistics"
-              onMouseEnter={this.handleMouseEnterSuggestions('statistics')}
+              onMouseEnter={this.handleMouseEnterSuggestions('questions')}
               onMouseLeave={this.handleMouseEnterSuggestions('teacher')}
             />
           </div>
