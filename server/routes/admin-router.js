@@ -1,6 +1,5 @@
 const express = require('express');
 const Excel = require('exceljs');
-const path = require('path');
 const User = require('../models/User');
 const Group = require('../models/Group');
 const Task = require('../models/Task');
@@ -30,13 +29,13 @@ router.get('/activities', async (req, res) => {
   }
 });
 
-router.get('/teachers', async (req, res) => {
+router.post('/teachers', async (req, res) => {
   if (!req.query.skip) {
     return res.status(400).end();
   }
   try {
     const skip = parseInt(req.query.skip, 10);
-    let result = await User.find({ status: 'teacher' }).limit(15).skip(skip);
+    let result = await dataFunctions.filterTeacher(skip, 15, req.body);
     result = result.map(element => element = mapping.mapTeachersToDto(element));
     return res.send(result);
   } catch (err) {
@@ -45,13 +44,13 @@ router.get('/teachers', async (req, res) => {
   }
 });
 
-router.get('/students', async (req, res) => {
+router.post('/students', async (req, res) => {
   if (!req.query.skip) {
     return res.status(400).end();
   }
   try {
     const skip = parseInt(req.query.skip, 10);
-    let result = await User.find({ status: 'student' }).limit(15).skip(skip);
+    let result = await dataFunctions.filterStudent(skip, 15, req.body);
     result = result.map(element => element = mapping.mapStudentsToDto(element));
     return res.send(result);
   } catch (err) {
@@ -105,11 +104,10 @@ router.get('/questions', async (req, res) => {
   }
 });
 
-router.get('/statistics', async (req, res) => {
+router.post('/statistics/teachers', async (req, res) => {
   try {
-    let result = await User.find({ status: 'teacher' });
+    let result = await dataFunctions.filterTeacher(0, 0, req.body);
     result = result.map(element => element = mapping.mapTeachersToDto(element));
-
     const options = {
       filename: 'server/routes/teacher-workbook.xlsx',
       useStyles: true,
@@ -118,25 +116,190 @@ router.get('/statistics', async (req, res) => {
     const workbook = new Excel.stream.xlsx.WorkbookWriter(options);
     const worksheet = workbook.addWorksheet('Учителя');
     worksheet.columns = [
-      { header: 'ФИО', key: 'name', width: 40 },
+      { header: 'Фамилия', key: 'lastName', width: 20 },
+      { header: 'Имя', key: 'firstName', width: 20 },
+      { header: 'Отчество', key: 'fathersName', width: 20 },
       { header: 'Почта', key: 'email', width: 30 },
       { header: 'Университет', key: 'university', width: 15 },
       { header: 'Количество ожидающих тестов', key: 'numberTestsToCheck', width: 30 },
     ];
     result.forEach((elem) => {
       worksheet.addRow({
-        name: elem.name,
+        lastName: elem.lastName,
+        firstName: elem.firstName,
+        fathersName: elem.fathersName,
         email: elem.email,
         university: elem.university,
         numberTestsToCheck: elem.numberTestsToCheck,
       });
     });
     await worksheet.commit();
+    const fileName = 'teacher-workbook.xlsx';
     return workbook.commit().then(async () => {
-      const fileName = 'teacher-workbook.xlsx';
-      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      const data = await dataFunctions.readFile(`${__dirname}/${fileName}`);
       res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
-      res.sendFile(path.join(__dirname, '../routes', fileName));
+      res.contentType('application/vnd.ms-excel');
+      return res.send(data);
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).end();
+  }
+});
+
+router.post('/statistics/students', async (req, res) => {
+  try {
+    let result = await dataFunctions.filterStudent(0, 0, req.body);
+    result = result.map(element => element = mapping.mapStudentsToDto(element));
+    const options = {
+      filename: 'server/routes/student-workbook.xlsx',
+      useStyles: true,
+      useSharedStrings: true,
+    };
+    const workbook = new Excel.stream.xlsx.WorkbookWriter(options);
+    const worksheet = workbook.addWorksheet('Студенты');
+    worksheet.columns = [
+      { header: 'Фамилия Имя', key: 'name', width: 25 },
+      { header: 'Университет', key: 'university', width: 20 },
+      { header: 'Факультет', key: 'faculty', width: 15 },
+      { header: 'Год окончание', key: 'graduateYear', width: 20 },
+      { header: 'Средний балл по задачам', key: 'mediumTaskScore', width: 30 },
+      { header: 'Средний балл по тестам', key: 'mediumTestScore', width: 30 },
+    ];
+    result.forEach((elem) => {
+      worksheet.addRow({
+        name: `${elem.lastName} ${elem.firstName}`,
+        university: elem.university,
+        faculty: elem.faculty,
+        graduateYear: elem.graduateYear,
+        mediumTaskScore: elem.mediumTaskScore,
+        mediumTestScore: elem.mediumTestScore,
+      });
+    });
+    await worksheet.commit();
+    const fileName = 'student-workbook.xlsx';
+    return workbook.commit().then(async () => {
+      const data = await dataFunctions.readFile(`${__dirname}/${fileName}`);
+      res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+      res.contentType('application/vnd.ms-excel');
+      return res.send(data);
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).end();
+  }
+});
+
+router.get('/statistics/groups', async (req, res) => {
+  try {
+    let result = await Group.find();
+    result = result.map(element => element = mapping.mapGroupsToDto(element));
+    const options = {
+      filename: 'server/routes/group-workbook.xlsx',
+      useStyles: true,
+      useSharedStrings: true,
+    };
+    const workbook = new Excel.stream.xlsx.WorkbookWriter(options);
+    const worksheet = workbook.addWorksheet('Группы');
+    worksheet.columns = [
+      { header: 'Имя группы', key: 'groupName', width: 25 },
+      { header: 'Имя учителя', key: 'teacherName', width: 40 },
+      { header: 'Количество студентов', key: 'studentsCount', width: 25 },
+    ];
+    result.forEach((elem) => {
+      worksheet.addRow({
+        groupName: elem.groupName,
+        teacherName: elem.teacherName,
+        studentsCount: elem.studentsCount,
+      });
+    });
+    await worksheet.commit();
+    const fileName = 'group-workbook.xlsx';
+    return workbook.commit().then(async () => {
+      const data = await dataFunctions.readFile(`${__dirname}/${fileName}`);
+      res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+      res.contentType('application/vnd.ms-excel');
+      return res.send(data);
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).end();
+  }
+});
+
+router.get('/statistics/tasks', async (req, res) => {
+  try {
+    let result = await Task.find();
+    result = result.map(element => element = mapping.mapTasksToDto(element));
+
+    const options = {
+      filename: 'server/routes/task-workbook.xlsx',
+      useStyles: true,
+      useSharedStrings: true,
+    };
+    const workbook = new Excel.stream.xlsx.WorkbookWriter(options);
+    const worksheet = workbook.addWorksheet('Задачи');
+    worksheet.columns = [
+      { header: 'Имя задачи', key: 'name', width: 40 },
+      { header: 'Оценка', key: 'score', width: 10 },
+      { header: 'Язык', key: 'language', width: 15 },
+    ];
+    result.forEach((elem) => {
+      worksheet.addRow({
+        name: elem.name,
+        score: elem.score,
+        language: elem.language,
+      });
+    });
+    await worksheet.commit();
+    const fileName = 'task-workbook.xlsx';
+    return workbook.commit().then(async () => {
+      const data = await dataFunctions.readFile(`${__dirname}/${fileName}`);
+      res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+      res.contentType('application/vnd.ms-excel');
+      return res.send(data);
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).end();
+  }
+});
+
+router.get('/statistics/questions', async (req, res) => {
+  try {
+    let result = await Question.find();
+    result = result.map(element => element = mapping.mapQuestionsToDto(element));
+
+    const options = {
+      filename: 'server/routes/question-workbook.xlsx',
+      useStyles: true,
+      useSharedStrings: true,
+    };
+    const workbook = new Excel.stream.xlsx.WorkbookWriter(options);
+    const worksheet = workbook.addWorksheet('Вопросы');
+    worksheet.columns = [
+      { header: 'Тип вопроса', key: 'kind', width: 40 },
+      { header: 'Сложность', key: 'difficultyRate', width: 15 },
+      { header: 'Тренировочный', key: 'isTraining', width: 15 },
+      { header: 'Количество правильных ответов', key: 'correntAnswersCount', width: 40 },
+      { header: 'Количество неправильных ответов', key: 'wrongAnswersCount', width: 40 },
+    ];
+    result.forEach((elem) => {
+      worksheet.addRow({
+        kind: elem.kind,
+        difficultyRate: elem.difficultyRate,
+        isTraining: (elem.isTraining ? 'да' : 'нет'),
+        correntAnswersCount: elem.correntAnswersCount,
+        wrongAnswersCount: elem.wrongAnswersCount,
+      });
+    });
+    await worksheet.commit();
+    const fileName = 'question-workbook.xlsx';
+    return workbook.commit().then(async () => {
+      const data = await dataFunctions.readFile(`${__dirname}/${fileName}`);
+      res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+      res.contentType('application/vnd.ms-excel');
+      return res.send(data);
     });
   } catch (err) {
     console.error(err);

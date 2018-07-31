@@ -606,9 +606,9 @@ function getExtension(fileName) {
   return fileName.slice(index);
 }
 
-function readFile(path) {
+exports.readFile = async (path) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
+    fs.readFile(path, (err, data) => {
       if (err) {
         reject(err);
       } else {
@@ -751,7 +751,6 @@ exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files)
     console.log(e.toString());
   }
 };
-
 exports.getTaskTests = async (taskId) => {
   const answer = await Task.findById(taskId)
     .select({
@@ -760,4 +759,75 @@ exports.getTaskTests = async (taskId) => {
       language: 1,
     });
   return answer;
+
+exports.filterTeacher = async (skip, limit, body) => {
+  const {
+    firstName,
+    lastName,
+    fathersName,
+    email,
+    university,
+  } = body;
+  const filter = {};
+  filter.status = 'teacher';
+  if (firstName) {
+    filter.firstName = firstName;
+  }
+  if (lastName) {
+    filter.lastName = lastName;
+  }
+  if (fathersName) {
+    filter.fathersName = fathersName;
+  }
+  if (email) {
+    filter.email = email;
+  }
+  if (university) {
+    filter.university = university;
+  }
+  let result;
+  if (limit > 0) {
+    result = await User.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await User.find(filter);
+  }
+  return result;
+};
+
+exports.filterStudent = async (skip, limit, body) => {
+  const {
+    firstName,
+    lastName,
+    university,
+    graduateYear,
+    mediumTaskScore,
+    mediumTestScore,
+  } = body;
+  let result;
+  const filter = {};
+  filter.status = 'student';
+  if (firstName) {
+    filter.firstName = firstName;
+  }
+  if (lastName) {
+    filter.lastName = lastName;
+  }
+  if (graduateYear) {
+    filter.graduateYear = graduateYear;
+  }
+  if (university) {
+    filter.university = university;
+  }
+  if (typeof mediumTaskScore !== 'undefined') {
+    filter.mediumTaskScore = mediumTaskScore;
+  }
+  if (typeof mediumTestScore !== 'undefined') {
+    filter.mediumTestScore = mediumTestScore;
+  }
+  if (limit > 0) {
+    result = await User.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await User.find(filter);
+  }
+  return result;
 };
