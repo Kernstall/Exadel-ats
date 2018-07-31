@@ -114,8 +114,8 @@ app.post('/server/running/srcfiles', async (req, res, next) => {
 
 app.post('/server/running/srcfiles', upload.fields([{ name: 'tests' }, { name: 'src' }]), async (req, res, next) => {
   try {
-    const result = await dataFunctions.checkStudentAttempt(req.query.userId, req.query.taskId,
-      req.query.mainFileName, req.query.attemptNumber, req.query.lang, req.xindex);
+    const result = await dataFunctions.checkStudentAttempt(req.query.taskId,
+      req.query.mainFileName, req.query.lang, req.xindex);
     await dataFunctions.deleteBinFunc(`${commonSrcCodePath}/${req.xindex}`);
     await dataFunctions.deleteBinFunc(`${commonTaskPath}/${req.xindex}`);
     res.status(200).json(result);
