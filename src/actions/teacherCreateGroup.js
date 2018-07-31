@@ -12,8 +12,29 @@ const getStudentsSuccess = availableStudentsList => ({
   payload: { availableStudentsList },
 });
 
+const createGroupError = error => ({
+  type: 'Entity/TeacherCreateGroup/Error',
+  payload: { error },
+});
+
+const createGroupRequest = (studentsList, groupName) => ({
+  type: 'Entity/TeacherCreateGroup/Request',
+  payload: {
+    studentsList,
+    groupName,
+  },
+});
+
+const createGroupSuccess = groupId => ({
+  type: 'Entity/TeacherCreateGroup/Success',
+  payload: groupId,
+});
+
 export default {
   getStudentsError,
   getStudentsRequest,
   getStudentsSuccess,
+  createGroupError,
+  createGroupRequest,
+  createGroupSuccess,
 };

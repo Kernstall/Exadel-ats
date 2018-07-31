@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
+import { Paper } from '@material-ui/core';
+import Spinner from '../shared/spinner/index';
 import StudentTasks from './StudentTasks.jsx';
 import { getStudentTasks } from '../../commands/studentTasks';
 
@@ -47,7 +49,11 @@ class StudentTabTasksList extends Component {
         </div>
       );
     }
-    return null;
+    return (
+      <Paper className={[classes.flex, classes.heightToTop].join(' ')}>
+        <Spinner />
+      </Paper>
+    );
   }
 }
 

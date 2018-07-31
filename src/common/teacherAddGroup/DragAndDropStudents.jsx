@@ -5,12 +5,12 @@ import TextField from '@material-ui/core/es/TextField/TextField';
 import Input from '@material-ui/core/es/Input/Input';
 
 export default class DragAndDropStudents extends React.Component {
-  constructor() {
+  constructor(props) {
     super();
     this.state = {
       changeFlag: true,
     };
-    this.selectedStudents = [];
+    this.selectedStudents = props.selectedStudents;
   }
 
   handleSingleLiClick(id) {
@@ -46,7 +46,16 @@ export default class DragAndDropStudents extends React.Component {
                   className="student"
                   key={student._id}
                   onClick={() => this.handleSingleLiClick(student._id)}
-                >{`${student.firstName} ${student.lastName}`}
+                >
+                  <div className="studentContent">
+                    {`${student.firstName} ${student.lastName}`}
+                  </div>
+                  <div className="studentContent">
+                    {`${student.email}`}
+                  </div>
+                  <div className="studentContent">
+                    {`${student.university}`}
+                  </div>
                 </li>
               ))}
             </ul>
@@ -58,6 +67,7 @@ export default class DragAndDropStudents extends React.Component {
             id="Student Email"
             placeholder="Введите имя"
             className="contentFit mentor-header"
+            onChange={event => this.props.nameChangedCallback(event.target.value)}
           />
           <div className="mentor-wrap">
             <ul className="students-liner draggable droppable" id="students">
@@ -66,7 +76,17 @@ export default class DragAndDropStudents extends React.Component {
                   className="student"
                   key={student._id}
                   onClick={() => this.handleSingleLiClick(student._id)}
-                >{`${student.firstName} ${student.lastName}`}
+                >
+                  <div className="studentContent">
+                    {`${student.firstName} ${student.lastName}`}
+                  </div>
+                  <div className="studentContent">
+                    {`${student.email}`}
+                  </div>
+                  <div className="studentContent">
+                    {`${student.university}`}
+                  </div>
+
                 </li>
               ))}
             </ul>
@@ -79,4 +99,6 @@ export default class DragAndDropStudents extends React.Component {
 
 DragAndDropStudents.propTypes = {
   studentsPool: PropTypes.array.isRequired,
+  nameChangedCallback: PropTypes.func.isRequired,
+  selectedStudents: PropTypes.array.isRequired,
 };

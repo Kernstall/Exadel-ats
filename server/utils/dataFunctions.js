@@ -751,6 +751,14 @@ exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files)
     console.log(e.toString());
   }
 };
+exports.getTaskTests = async (taskId) => {
+  const answer = await Task.findById(taskId)
+    .select({
+      _id: 0,
+      tests: 1,
+      language: 1,
+    });
+  return answer;
 
 exports.filterTeacher = async (skip, limit, body) => {
   const {
