@@ -5,9 +5,9 @@ import Button from '@material-ui/core/Button';
 import AddCircle from '@material-ui/icons/AddCircle';
 import TextField from '@material-ui/core/TextField';
 import { Typography } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Chip from '@material-ui/core/Chip';
+import { Link } from 'react-router-dom';
 import TestsBar from './TestsBar';
 import generateRandomId from '../../util/generateRandomId';
 
@@ -159,33 +159,22 @@ const styles = theme => ({
   },
 });
 
+let fileInputReader;
+let fileOutputReader;
+
 class TeacherTaskEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       id: props.match.params.id,
-      tags: ['БГУ', 'Последовательность', 'Василенко', 'ФПМИ'],
+      tags: [],
       tagToAdd: '',
-      tests: [
-        {
-          input: 'ПЕРВЫЙ ИН\n3\n3\n3',
-          output: 'ПЕРВЫЙ АУТ\n3\nkgkg',
-          testId: '2a8fb217bca14f2caf77245541ffb6e6',
-        },
-        {
-          input: 'ВТОРОЙ ИН\n3\n3\n3',
-          output: 'ВТОРОЙ АУТ\n3\nfdkgkg',
-          testId: 'e15e855cb06d433d90110b538b9246ee',
-        },
-        {
-          input: 'ТРЕТИЙ ИН\n3\nfdf3\n3',
-          output: 'ТРЕТИЙ АУТ\ndfdsf3\nkgkg',
-          testId: 'b3676a01f5204d27ae0330e39fa69cd4',
-        },
-      ],
+      tests: [],
       weight: 0,
       description: '',
       name: '',
+      inputExample: '',
+      outputExample: '',
     };
 
     this.handleDelete = data => () => {
@@ -196,34 +185,34 @@ class TeacherTaskEdit extends React.Component {
         return { tags };
       });
     };
-    this.handleClick = data => () => {
-      if (data.length < 3) {
-        return;
-      }
-      this.setState((state) => {
-        const tags = state.tags;
-        tags.push(data);
-        const tagToAdd = '';
-        return { tags, tagToAdd };
-      });
-    };
-    this.handleChange = () => () => {
-      this.setState({
-        tagToAdd: this.input.value,
-      });
-    };
   }
 
-  handleClickAddTest = () => {
+  handleClick = (data) => {
+    if (data.length < 3) {
+      return;
+    }
+    const tags = this.state.tags;
+    tags.push(data);
+    const tagToAdd = '';
+    this.setState({ tags, tagToAdd });
+  };
+
+  handleClickAddTest = (e) => {
     const { tests } = this.state;
-    const pushedTest = { input: '', output: '' };
+    const pushedTest = { input: 'null', output: 'null' };
     pushedTest.isNew = true;
-    pushedTest.testId = generateRandomId();
+    pushedTest._id = generateRandomId();
     tests.push(pushedTest);
     this.setState({ tests });
   };
 
-  /*componentDidMount() {
+  handleChange = name => (e) => {
+    this.setState({
+      [name]: e.target.value,
+    });
+  };
+
+  componentDidMount() {
     fetch(`/api/teacher/full/task?id=${this.props.match.params.id}`, {
       method: 'get',
       headers: {
@@ -233,31 +222,61 @@ class TeacherTaskEdit extends React.Component {
       credentials: 'include',
     })
       .then(res => res.json())
-      .then(res => {
+      .then((res) => {
         this.setState({
-          id: res.id,
           tags: res.tags,
           tests: res.tests,
           weight: res.weight,
           description: res.description,
           name: res.name,
+          inputExample: res.inputExample,
+          outputExample: res.outputExample,
         });
-      });
-  }*/
+        return res;
+      })
+      .then(console.log);
+  }
+
+  _handleInputReading = (e) => {
+    const content = fileInputReader.result;
+    this.setState({
+      inputExample: content,
+    });
+  };
+
+  handleInputFileRead = (file) => {
+    console.log('in', file);
+    fileInputReader = new FileReader();
+    fileInputReader.onloadend = this._handleInputReading;
+    fileInputReader.readAsText(file);
+  };
+
+  _handleOutputReading = (e) => {
+    const content = fileOutputReader.result;
+    this.setState({
+      outputExample: content,
+    });
+  };
+
+  handleOutputFileRead = (file) => {
+    console.log('out', file);
+    fileOutputReader = new FileReader();
+    fileOutputReader.onloadend = this._handleOutputReading;
+    fileOutputReader.readAsText(file);
+  };
 
   render() {
     const { classes } = this.props;
-    const { tests, tagToAdd, tags } = this.state;
-    console.log(this.props.match.params.id);
-    const text = 'Тот, кто писал эту программу, явно делал это в спешке.. На самом деле, нет: программа-то учебная, и этот кто-то нарочно запихнул туда лишние переменные, а те, что надо, не объявил. Исправляем ситуацию: лишние переменные закомментируем, а недостающие — объявим. И наступит тогда в программе всеобщая гармония.';
-    const data = '1\n2\n3\n4\n2\n3\n4\n2\n3';
+    const { tagToAdd } = this.state;
+    console.log(this);
     return (
       <div className={classes.root}>
         <div className={classes.main}>
           <TextField
-            defaultValue={text}
+            value={this.state.description}
             label="Условие"
             multiline
+            onChange={this.handleChange('description')}
             rows={4}
             InputProps={{
               disableUnderline: true,
@@ -278,6 +297,7 @@ class TeacherTaskEdit extends React.Component {
               id="contained-button-file"
               multiple
               type="file"
+              onChange={event => this.handleInputFileRead(event.target.files[0])}
             />
             <label htmlFor="contained-button-file">
               <Button variant="contained" component="span" color="default" className={classes.button}>
@@ -286,7 +306,7 @@ class TeacherTaskEdit extends React.Component {
             </label>
           </div>
           <TextField
-            defaultValue={data}
+            value={this.state.inputExample}
             multiline
             rows={4}
             InputProps={{
@@ -300,15 +320,16 @@ class TeacherTaskEdit extends React.Component {
               shrink: true,
               className: classes.bootstrapFormLabel,
             }}
+            onChange={this.handleChange('inputExample')}
           />
           <div className={classes.infoUpload}>
             <Typography className={classes.infoUploadTitle} variant="subheading">Пример выходного файла</Typography>
             <input
-              accept="text/plane"
               className={classes.input}
               id="contained-button-file"
               multiple
               type="file"
+              onChange={e => this.handleOutputFileRead(e.target.files[0])}
             />
             <label htmlFor="contained-button-file">
               <Button variant="contained" component="span" color="default" className={classes.button}>
@@ -317,7 +338,7 @@ class TeacherTaskEdit extends React.Component {
             </label>
           </div>
           <TextField
-            defaultValue={data}
+            value={this.state.outputExample}
             multiline
             rows={4}
             InputProps={{
@@ -331,27 +352,29 @@ class TeacherTaskEdit extends React.Component {
               shrink: true,
               className: classes.bootstrapFormLabel,
             }}
+            id="result-file-reading"
+            onChange={this.handleChange('outputExample')}
           />
           <div className={classes.tagsTitleAndInput}>
             <Typography variant="subheading" className={classes.tagsTitle}>Теги</Typography>
             <TextField
               placeholder="Новый тег"
               inputRef={el => this.input = el}
-              onChange={this.handleChange()}
+              onChange={this.handleChange('tagToAdd')}
               value={tagToAdd}
               InputProps={{
                 disableUnderline: true,
                 classes: { input: classes.bootstrapInputTag },
+                maxLength: 20,
               }}
-              inputProps={{ maxLength: 20 }}
             />
             <AddCircle
               className={classes.addButton}
-              onClick={this.handleClick(tagToAdd)}
+              onClick={() => this.handleClick(tagToAdd)}
             />
           </div>
           <div>
-            {tags.map((element, index) => (
+            {this.state.tags.map((element, index) => (
               <Chip
                 key={index}
                 label={element}
@@ -362,15 +385,17 @@ class TeacherTaskEdit extends React.Component {
           </div>
           <TestsBar
             handleClickAddTest={this.handleClickAddTest}
-            tests={tests}
+            tests={this.state.tests}
           />
           <div className={classes.buttonContainer}>
             <Button variant="contained" color="primary" className={classes.button}>
               Сохранить
             </Button>
-            <Button variant="contained" color="primary" className={classes.button}>
-              Отмена
-            </Button>
+            <Link to={`/teacher/tasks/${this.state.id}`}>
+              <Button variant="contained" color="primary" className={classes.button}>
+                Отмена
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

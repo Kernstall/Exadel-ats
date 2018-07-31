@@ -682,6 +682,8 @@ exports.getFullTaskInfo = async (taskId) => {
         weight: 1,
         tags: 1,
         tests: 1,
+        inputExample: 1,
+        outputExample: 1,
       });
     if (taskInfo.topicId) {
       taskInfo.topicName = taskInfo.topicId.name;
@@ -691,9 +693,8 @@ exports.getFullTaskInfo = async (taskId) => {
       const buff = {};
       buff._id = taskInfo.tests[index]._id;
       buff.weight = taskInfo.tests[index].weight;
-      buff.files = {};
-      buff.files.input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
-      buff.files.output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
+      buff.input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
+      buff.output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
       taskInfo.tests[index] = buff;
     }
     const result = {
@@ -703,6 +704,8 @@ exports.getFullTaskInfo = async (taskId) => {
       tags: taskInfo.tags,
       tests: taskInfo.tests,
       topicName: taskInfo.topicName,
+      inputExample: taskInfo.tests[0].input,
+      outputExample: taskInfo.tests[0].output,
     };
 
     return result;
