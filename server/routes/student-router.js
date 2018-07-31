@@ -99,8 +99,6 @@ router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, re
         fileNamesArray.push(elem.originalname);
       });
 
-      await dataFunctions.saveAttemptInfo(userId, taskId, attemptNumber, mainFile, req.files);
-
       const form = new FormData();
 
       for (let i = 0; i < req.files.length; i++) {
@@ -108,7 +106,6 @@ router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, re
       }
 
       const taskTests = await dataFunctions.getTaskTests(taskId);
-      console.log(taskTests);
 
       for (let i = 0; i < taskTests.tests.length; i++) {
         await fileSystemFunctions.copyFile(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/output.txt`,
@@ -126,8 +123,13 @@ router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, re
             await fileSystemFunctions.deleteFile(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/${String(taskTests.tests[i]._id)}output.txt`);
             await fileSystemFunctions.deleteFile(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/${String(taskTests.tests[i]._id)}input.txt`);
           }
-          //res.status(200).send('qerwe');
-          res.status(200).send(answer.body);
+          const result = await dataFunctions.saveAttemptInfo(userId, taskId,
+            attemptNumber, mainFile, req.files, JSON.parse(answer.body));
+          res.status(200).json({
+            result: result.result,
+            isPassed: result.isPassed,
+            tests: result.tests,
+          });
         } catch (error) {
           res.status(400).send(error.toString());
         }
