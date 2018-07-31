@@ -1,6 +1,23 @@
 import React, { Component } from 'react';
 import { withStyles, Paper } from '@material-ui/core/es';
 import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+
+const universities = [
+  {
+    value: 'all',
+    label: 'Любой университет',
+  },
+  {
+    value: 'BSU',
+    label: 'БГУ',
+  },
+  {
+    value: 'BSUIR',
+    label: 'БГУИР',
+  },
+];
 
 const styles = {
   parent: {
@@ -41,6 +58,7 @@ class SearchBox extends Component {
     this.state = {
       name: '',
       email: '',
+      university: 'all',
     };
   }
 
@@ -49,7 +67,7 @@ class SearchBox extends Component {
       [name]: event.target.value,
     });
     this.state[name] = event.target.value;
-    this.props.handleHistoryFilter(this.state.name, this.state.role, this.state.activityType);
+    this.props.handleHistoryFilter(this.state.name, this.state.university, this.state.activityType);
   };
 
   render() {
@@ -61,19 +79,29 @@ class SearchBox extends Component {
         </div>
         <Paper className={classes.child} elevation={0}>
           <Input
-            placeholder="Имя ..."
+            placeholder="Имя или почта ..."
             className={classes.input}
             disableUnderline
             onChange={this.handleChange('name')}
           />
         </Paper>
         <Paper className={classes.child} elevation={0}>
-          <Input
-            placeholder="Email ..."
-            className={classes.input}
-            disableUnderline
-            onChange={this.handleChange('email')}
-          />
+          <TextField
+            id="select-university"
+            select
+            className={classes.textField}
+            value={this.state.university}
+            onChange={this.handleChange('university')}
+            InputProps={{
+              disableUnderline: true,
+            }}
+          >
+            {universities.map(option => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </Paper>
       </Paper>
     );

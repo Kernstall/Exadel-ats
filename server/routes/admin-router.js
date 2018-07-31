@@ -140,7 +140,6 @@ router.get('/statistics', async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).end();
   }
 });
 

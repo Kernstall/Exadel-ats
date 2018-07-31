@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Common from '../../common/styles/Common';
-import { getActivities } from '../../commands/admin';
+import { getAdminGroups } from '../../commands/admin';
 import SearchBox from './searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
@@ -48,12 +48,12 @@ class AdminGroupPage extends Component {
   }
 
   componentDidMount() { // eslint-disable-next-line
-    this.props.getActivities(this.state.historyFilter);
+    this.props.getAdminGroups(this.state.historyFilter);
   }
 
   componentDidUpdate(prevProps, prevState) {
     prevState.historyFilter == this.state.historyFilter
-      || this.props.getActivities(this.state.historyFilter);
+      || this.props.getAdminGroups(this.state.historyFilter);
   }
 
   handleHistoryFilter = (name, role, activityType) => {
@@ -64,8 +64,8 @@ class AdminGroupPage extends Component {
   };
 
   render() {
-    const { classes, activities } = this.props;
-    if (activities) {
+    const { classes, adminGroups } = this.props;
+    if (adminGroups) {
       return (
         <Grid
           alignItems="stretch"
@@ -99,11 +99,11 @@ class AdminGroupPage extends Component {
 
 
 const mapStateToProps = state => ({
-  activities: state.activities.activities,
+  adminGroups: state.adminGroups.adminGroups,
 });
 
 const mapCommandsToProps = dispatch => ({
-  getActivities: param => dispatch(getActivities(param)),
+  getAdminGroups: param => dispatch(getAdminGroups(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminGroupPage));

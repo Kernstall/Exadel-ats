@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Common from '../../common/styles/Common';
-import { getActivities } from '../../commands/admin';
+import { getAdminStatistics } from '../../commands/admin';
 import SearchBox from './searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
@@ -35,12 +35,12 @@ class AdminStatisticsPage extends Component {
   }
 
   componentDidMount() { // eslint-disable-next-line
-    this.props.getActivities(this.state.historyFilter);
+    this.props.getAdminStatistics(this.state.historyFilter);
   }
 
   componentDidUpdate(prevProps, prevState) {
     prevState.historyFilter == this.state.historyFilter
-      || this.props.getActivities(this.state.historyFilter);
+      || this.props.getAdminStatistics(this.state.historyFilter);
   }
 
   handleHistoryFilter = (name, role, activityType) => {
@@ -51,8 +51,8 @@ class AdminStatisticsPage extends Component {
   };
 
   render() {
-    const { classes, activities } = this.props;
-    if (activities) {
+    const { classes, adminStatistics } = this.props;
+    if (adminStatistics) {
       return (
         <Grid
           alignItems="stretch"
@@ -73,7 +73,7 @@ class AdminStatisticsPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={activities} />
+              <ActivityListItems info={adminStatistics} />
             </List>
           </Grid>
           <h1>Stats</h1>
@@ -86,11 +86,11 @@ class AdminStatisticsPage extends Component {
 
 
 const mapStateToProps = state => ({
-  activities: state.activities.activities,
+  adminStatistics: state.adminStatistics.adminStatistics,
 });
 
 const mapCommandsToProps = dispatch => ({
-  getActivities: param => dispatch(getActivities(param)),
+  getAdminStatistics: param => dispatch(getAdminStatistics(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminStatisticsPage));

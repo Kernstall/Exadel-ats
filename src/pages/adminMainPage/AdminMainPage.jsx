@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/es';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { getActivities } from '../../commands/admin';
+import { Route, Redirect } from 'react-router-dom';
 import HeaderMenue from './headerMenue/HeaderMenue';
 import AdminTeacherPage from '../adminTeacherPage/AdminTeacherPage';
 import AdminHistoryPage from '../adminHistoryPage/AdminHistoryPage';
@@ -36,13 +34,4 @@ class AdminMainPage extends Component {
   }
 }
 
-
-const mapStateToProps = state => ({
-  activities: state.activities.activities,
-});
-
-const mapCommandsToProps = dispatch => ({
-  getActivities: param => dispatch(getActivities(param)),
-});
-
-export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminMainPage));
+export default withStyles(styles)(AdminMainPage);

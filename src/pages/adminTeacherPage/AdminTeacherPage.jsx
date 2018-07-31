@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Common from '../../common/styles/Common';
-import { getActivities } from '../../commands/admin';
+import { getAdminTeachers } from '../../commands/admin';
 import SearchBox from './searchBox/SearchBox';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
@@ -49,12 +49,12 @@ class AdminTeacherPage extends Component {
   }
 
   componentDidMount() { // eslint-disable-next-line
-    this.props.getActivities(this.state.historyFilter);
+    this.props.getAdminTeachers(this.state.historyFilter);
   }
 
   componentDidUpdate(prevProps, prevState) {
     prevState.historyFilter == this.state.historyFilter
-      || this.props.getActivities(this.state.historyFilter);
+      || this.props.getAdminTeachers(this.state.historyFilter);
   }
 
   handleHistoryFilter = (name, activityType) => {
@@ -65,8 +65,8 @@ class AdminTeacherPage extends Component {
   };
 
   render() {
-    const { classes, activities } = this.props;
-    if (activities) {
+    const { classes, adminTeachers } = this.props;
+    if (adminTeachers) {
       return (
         <Grid
           alignItems="stretch"
@@ -100,11 +100,11 @@ class AdminTeacherPage extends Component {
 
 
 const mapStateToProps = state => ({
-  activities: state.activities.activities,
+  adminTeachers: state.adminTeachers.adminTeachers,
 });
 
 const mapCommandsToProps = dispatch => ({
-  getActivities: param => dispatch(getActivities(param)),
+  getAdminTeachers: param => dispatch(getAdminTeachers(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminTeacherPage));

@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import { saveAs } from 'file-saver';
 import Common from '../../common/styles/Common';
-import { getActivities } from '../../commands/admin';
+import { getAdminTasks } from '../../commands/admin';
 import SearchBox from './searchBox/SearchBox';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
@@ -47,13 +49,30 @@ class AdminTaskPage extends Component {
     };
   }
 
-  componentDidMount() { // eslint-disable-next-line
-    this.props.getActivities(this.state.historyFilter);
+  componentDidMount() {
+
   }
 
   componentDidUpdate(prevProps, prevState) {
     prevState.historyFilter == this.state.historyFilter
-      || this.props.getActivities(this.state.historyFilter);
+      || this.props.getAdminTasks(this.state.historyFilter);
+  }
+
+  downloadClickHandler = () => {
+    fetch('/api/admin/statistics', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    }).then(res => res.blob())
+      .then((data) => {
+        return new Blob([data]);
+      }).then((blob) => {
+        saveAs(blob, 'teacher-workbook.xlsx');
+      })
+      .catch(rej => console.log(`Rejected: ${rej}`));
   }
 
   handleHistoryFilter = (name, role, activityType) => {
@@ -64,8 +83,16 @@ class AdminTaskPage extends Component {
   };
 
   render() {
-    const { classes, activities } = this.props;
-    if (activities) {
+    const { classes, adminTasks } = this.props;
+    if (!adminTasks) {
+      return (
+        <Button onClick={this.downloadClickHandler}>
+          123
+        </Button>
+      );
+    }
+
+    if (adminTasks) {
       return (
         <Grid
           alignItems="stretch"
@@ -99,11 +126,11 @@ class AdminTaskPage extends Component {
 
 
 const mapStateToProps = state => ({
-  activities: state.activities.activities,
+  adminTasks: state.adminTasks.adminTasks,
 });
 
 const mapCommandsToProps = dispatch => ({
-  getActivities: param => dispatch(getActivities(param)),
+  getAdminTasks: param => dispatch(getAdminTasks(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminTaskPage));

@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Common from '../../common/styles/Common';
-import { getActivities } from '../../commands/admin';
+import { getAdminActivities } from '../../commands/admin';
 import SearchBox from './searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
@@ -35,12 +35,12 @@ class AdminHistoryPage extends Component {
   }
 
   componentDidMount() { // eslint-disable-next-line
-    this.props.getActivities(this.state.historyFilter);
+    this.props.getAdminActivities(this.state.historyFilter);
   }
 
   componentDidUpdate(prevProps, prevState) {
     prevState.historyFilter == this.state.historyFilter
-      || this.props.getActivities(this.state.historyFilter);
+      || this.props.getAdminActivities(this.state.historyFilter);
   }
 
   handleHistoryFilter = (name, role, activityType) => {
@@ -51,8 +51,8 @@ class AdminHistoryPage extends Component {
   };
 
   render() {
-    const { classes, activities } = this.props;
-    if (activities) {
+    const { classes, adminActivities } = this.props;
+    if (adminActivities) {
       return (
         <Grid
           alignItems="stretch"
@@ -73,7 +73,7 @@ class AdminHistoryPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={activities} />
+              <ActivityListItems info={adminActivities} />
             </List>
           </Grid>
         </Grid>
@@ -85,11 +85,11 @@ class AdminHistoryPage extends Component {
 
 
 const mapStateToProps = state => ({
-  activities: state.activities.activities,
+  adminActivities: state.adminActivities.adminActivities,
 });
 
 const mapCommandsToProps = dispatch => ({
-  getActivities: param => dispatch(getActivities(param)),
+  getAdminActivities: param => dispatch(getAdminActivities(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminHistoryPage));
