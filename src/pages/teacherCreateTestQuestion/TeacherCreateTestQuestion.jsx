@@ -4,6 +4,7 @@ import FormControlLabel from '@material-ui/core/es/FormControlLabel/FormControlL
 import RadioGroup from '@material-ui/core/es/RadioGroup/RadioGroup';
 import Radio from '@material-ui/core/es/Radio/Radio';
 import Paper from '@material-ui/core/es/Paper/Paper';
+import CreateSingleAnswerTest from "./CreateSingleAnswerTest";
 
 const styles = theme => ({
   outerWrapper: {
@@ -19,9 +20,12 @@ const styles = theme => ({
   flexChildHorizontal: {
     width: 'fit-content',
   },
+  content: {
+    width: '100%',
+  },
 });
 
-class MainPage extends React.Component {
+class TeacherCreateTestQuestion extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -39,11 +43,29 @@ class MainPage extends React.Component {
 
   render() {
     const { classes } = this.props;
+    let renderingComponent;
+    switch (this.state.selectedTestType) {
+      case '1':
+        renderingComponent = (<CreateSingleAnswerTest />);
+        break;
+      case '2':
+        renderingComponent = 'Hello World 2';
+        break;
+      case '3':
+        renderingComponent = 'Hello World 3';
+        break;
+      case '4':
+        renderingComponent = 'Hello World 4';
+        break;
+      default:
+        renderingComponent = null;
+    }
+
     return (
       <Paper className={classes.outerWrapper}>
         <RadioGroup
           aria-label="Тип теста: "
-          name="gender2"
+          name="testType"
           className={classes.flexContainerHorizontal}
           value={this.state.selectedTestType}
           onChange={this.handleRadioBoxChange}
@@ -51,35 +73,38 @@ class MainPage extends React.Component {
           <FormControlLabel
             value="1"
             control={<Radio color="primary" />}
-            label="Option 1"
+            label="С выбором одного варианта"
             labelPlacement="start"
             className={classes.flexChildHorizontal}
           />
           <FormControlLabel
             value="2"
             control={<Radio color="primary" />}
-            label="Option 2"
+            label="Со множественным выбором"
             labelPlacement="start"
             className={classes.flexChildHorizontal}
           />
           <FormControlLabel
             value="3"
             control={<Radio color="primary" />}
-            label="Option 3"
+            label="Со словом - ответом"
             labelPlacement="start"
             className={classes.flexChildHorizontal}
           />
           <FormControlLabel
             value="4"
             control={<Radio color="primary" />}
-            label="Option 4"
+            label="С предложением - ответом"
             labelPlacement="start"
             className={classes.flexChildHorizontal}
           />
         </RadioGroup>
+        <div className={classes.content}>
+          {renderingComponent}
+        </div>
       </Paper>
     );
   }
 }
 
-export default withStyles(styles)(MainPage);
+export default withStyles(styles)(TeacherCreateTestQuestion);
