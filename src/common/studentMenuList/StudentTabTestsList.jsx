@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { Paper } from '@material-ui/core';
+import Spinner from '../shared/spinner/index';
 import List from '@material-ui/core/List';
 import StudentTests from './StudentTests.jsx';
 import { getStudentTests } from '../../commands/studentTests';
@@ -47,7 +49,11 @@ class StudentTabTestsList extends React.Component {
         </div>
       );
     }
-    return null;
+    return (
+      <Paper className={[classes.flex, classes.heightToTop].join(' ')}>
+        <Spinner />
+      </Paper>
+    );
   }
 }
 
