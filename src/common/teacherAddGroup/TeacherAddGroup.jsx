@@ -7,7 +7,7 @@ import DragAndDropStudents from './DragAndDropStudents';
 import { getAvailableStudents, teacherCreateGroup } from '../../commands/teacherCreateGroups';
 import Spinner from '../shared/spinner';
 
-const styles = {
+const styles = theme => ({
   FlexContainerHorizontal: {
     display: 'flex',
     'flex-wrap': 'wrap',
@@ -18,11 +18,11 @@ const styles = {
   button: {
     marginTop: '5px',
     float: 'right',
-    backgroundColor: '#1a78c2',
+    backgroundColor: theme.palette.custom.dark,
     width: '100%',
-    color: 'white',
+    color: theme.palette.custom.whiteText,
     '&:hover': {
-      color: 'black',
+      color: theme.palette.custom.blackText,
     },
   },
   outerWrapper: {
@@ -32,7 +32,7 @@ const styles = {
   },
   dragAndDropWrapper: {
   },
-};
+});
 
 class TeacherAddGroup extends React.Component {
   constructor() {

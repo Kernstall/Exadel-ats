@@ -18,7 +18,6 @@ const styles = {
     margin: 'auto',
     minWidth: '220px',
     minHeight: '150px',
-    backgroundColor: 'white',
     display: 'flex',
     'align-items': 'center',
     flexDirection: 'column',

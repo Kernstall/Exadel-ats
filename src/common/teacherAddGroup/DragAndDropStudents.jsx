@@ -1,10 +1,85 @@
 import React from 'react';
-import './styles.css';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/es/TextField/TextField';
 import Input from '@material-ui/core/es/Input/Input';
+import { withStyles } from '@material-ui/core/styles/index';
 
-export default class DragAndDropStudents extends React.Component {
+const styles = theme => ({
+  dragAndDropOuterWrapper: {
+    display: 'flex',
+    'min-width': 'fit-content',
+    height: '500px',
+    width: 'fit-content',
+    position: 'relative',
+  },
+  studentsContainer: {
+    display: 'flex',
+    'flex-direction': 'column',
+    width: '50%',
+    'border-right': `${theme.palette.custom.grayDivider} 1px`,
+  },
+  studentsHeader: {
+    'line-height': '55px',
+    background: theme.palette.custom.dark,
+    color: theme.palette.custom.whiteText,
+    padding: '0.25rem',
+    height: '55px',
+  },
+  contentFit: {
+    'font-size': '1em !important',
+    color: `${theme.palette.custom.whiteText} !important`,
+  },
+  studentsWrap: {
+    display: 'flex',
+    'flex-direction': 'column',
+    'flex-grow': 1,
+    'background-color': theme.palette.custom.background,
+  },
+  studentsLiner: {
+    display: 'flex',
+    'flex-direction': 'column',
+    flex: 1,
+    'flex-basis': 0,
+    padding: '0.5rem',
+    transition: 'all 0.15s ease-in-out',
+    overflow: 'auto',
+    '$::-webkit-scrollbar': {
+      width: '8px',
+    },
+    '$::-webkit-scrollbar-track': {
+      'background-color': 'rgba(255, 255, 255, .05)',
+      'border-radius': '0 0 2px',
+    },
+    '$::-webkit-scrollbar-thumb': {
+      'border-radius': '2px',
+      'background-color': 'rgba(0, 0, 0, .25)',
+      'margin-right': '2px',
+    },
+    '$::-webkit-scrollbar-corner': {
+      background: 'transparent',
+    },
+    '$::-webkit-scrollbar-button': {
+      width: 0,
+      height: 0,
+    },
+    '$::-webkit-scrollbar-thumb:active': {
+      background: 'rgba(0, 0, 0, 0.4)',
+    },
+  },
+  student: {
+    background: theme.palette.custom.primary,
+    padding: '0.75rem',
+    color: theme.palette.custom.whiteText,
+    cursor: 'pointer',
+    position: 'relative',
+    'list-style-type': 'none',
+    marginBottom: '0.5rem',
+  },
+  studentContent: {
+    fontSize: '1.25rem',
+  },
+});
+
+class DragAndDropStudents extends React.Component {
   constructor(props) {
     super();
     this.state = {
@@ -31,29 +106,31 @@ export default class DragAndDropStudents extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
+
     this.availableStudents = this.props.studentsPool.filter(
       element => this.selectedStudents.find(selElem => selElem._id === element._id) === undefined,
     );
 
     return (
-      <div className="drag-and-drop-outer-wrapper">
-        <div className="students-container">
-          <div className="students-header">Студенты</div>
-          <div className="students-wrap">
-            <ul className="students-liner draggable droppable" id="students">
+      <div className={classes.dragAndDropOuterWrapper}>
+        <div className={classes.studentsContainer}>
+          <div className={classes.studentsHeader}>Студенты</div>
+          <div className={classes.studentsWrap}>
+            <ul className={classes.studentsLiner} id="students">
               {this.availableStudents.map(student => (
                 <li
-                  className="student"
+                  className={classes.student}
                   key={student._id}
                   onClick={() => this.handleSingleLiClick(student._id)}
                 >
-                  <div className="studentContent">
+                  <div className={classes.studentContent}>
                     {`${student.firstName} ${student.lastName}`}
                   </div>
-                  <div className="studentContent">
+                  <div className={classes.studentContent}>
                     {`${student.email}`}
                   </div>
-                  <div className="studentContent">
+                  <div className={classes.studentContent}>
                     {`${student.university}`}
                   </div>
                 </li>
@@ -62,28 +139,28 @@ export default class DragAndDropStudents extends React.Component {
           </div>
         </div>
 
-        <div className="mentor-container">
+        <div className={classes.studentsContainer}>
           <Input
             id="Student Email"
             placeholder="Введите имя"
-            className="contentFit mentor-header"
+            className={`${classes.contentFit} ${classes.studentsHeader}`}
             onChange={event => this.props.nameChangedCallback(event.target.value)}
           />
-          <div className="mentor-wrap">
-            <ul className="students-liner draggable droppable" id="students">
+          <div className={classes.studentsWrap}>
+            <ul className={classes.studentsLiner} id="students">
               {this.selectedStudents.map(student => (
                 <li
-                  className="student"
+                  className={classes.student}
                   key={student._id}
                   onClick={() => this.handleSingleLiClick(student._id)}
                 >
-                  <div className="studentContent">
+                  <div className={classes.studentContent}>
                     {`${student.firstName} ${student.lastName}`}
                   </div>
-                  <div className="studentContent">
+                  <div className={classes.studentContent}>
                     {`${student.email}`}
                   </div>
-                  <div className="studentContent">
+                  <div className={classes.studentContent}>
                     {`${student.university}`}
                   </div>
 
@@ -102,3 +179,5 @@ DragAndDropStudents.propTypes = {
   nameChangedCallback: PropTypes.func.isRequired,
   selectedStudents: PropTypes.array.isRequired,
 };
+
+export default withStyles(styles)(DragAndDropStudents);
