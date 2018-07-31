@@ -731,14 +731,37 @@ exports.getFullTaskInfo = async (taskId) => {
   }
 };
 
-exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files) => {
+const compileProcessing = (testsResult) => {
+  let mark = 0;
+  let isPassedFlag = false;
+  const isPassedValue = 0.4;
+  let maxValue = 0;
+  let currentValue = 0;
+
+  testsResult.forEach((elem) => {
+    maxValue += elem.weight;
+    if (elem.success) {
+      currentValue += elem.weight;
+    }
+  });
+
+  mark = currentValue / maxValue;
+  if (mark >= 0.4) {
+    isPassedFlag = true;
+  }
+  return { isPassed: isPassedFlag, result: mark };
+};
+
+exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files, testsResult) => {
+  const result = compileProcessing(testsResult);
   const obj = {};
   obj.date = new Date();
-  obj.number = attemptNumber;
+  obj.number = attemptNumber + 1;
   obj.mainFile = mainFile;
-  obj.result = 0;
-  obj.isPassed = false;
+  obj.result = result.result;
+  obj.isPassed = result.isPassed;
   obj.files = [];
+  obj.tests = testsResult;
   files.forEach((elem) => {
     obj.files.push(elem.originalname);
   });
@@ -750,7 +773,10 @@ exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files)
   } catch (e) {
     console.log(e.toString());
   }
+  return obj;
 };
+
+
 exports.getTaskTests = async (taskId) => {
   const answer = await Task.findById(taskId)
     .select({
