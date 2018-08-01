@@ -173,8 +173,6 @@ class TeacherTaskEdit extends React.Component {
       weight: 0,
       description: '',
       name: '',
-      inputExample: '',
-      outputExample: '',
     };
 
     this.handleDelete = data => () => {
@@ -229,8 +227,6 @@ class TeacherTaskEdit extends React.Component {
           weight: res.weight,
           description: res.description,
           name: res.name,
-          inputExample: res.inputExample,
-          outputExample: res.outputExample,
         });
         return res;
       })
@@ -239,22 +235,29 @@ class TeacherTaskEdit extends React.Component {
 
   _handleInputReading = (e) => {
     const content = fileInputReader.result;
+    const { tests } = this.state;
+    tests[0].input = content;
     this.setState({
-      inputExample: content,
+      tests,
     });
   };
 
   handleInputFileRead = (file) => {
     console.log('in', file);
     fileInputReader = new FileReader();
+    const formData = new FormData();
+    formData.append('tests', file, `${[]}`);
+    console.log(formData.get('tests'));
     fileInputReader.onloadend = this._handleInputReading;
     fileInputReader.readAsText(file);
   };
 
   _handleOutputReading = (e) => {
     const content = fileOutputReader.result;
+    const { tests } = this.state;
+    tests[0].output = content;
     this.setState({
-      outputExample: content,
+      tests,
     });
   };
 
@@ -269,6 +272,8 @@ class TeacherTaskEdit extends React.Component {
     const { classes } = this.props;
     const { tagToAdd } = this.state;
     console.log(this);
+    const inputExample = (typeof this.state.tests[0] === 'undefined') ? 'val' : this.state.tests[0].input;
+    const outputExample = (typeof this.state.tests[0] === 'undefined') ? 'val' : this.state.tests[0].output;
     return (
       <div className={classes.root}>
         <div className={classes.main}>
@@ -290,23 +295,23 @@ class TeacherTaskEdit extends React.Component {
               className: classes.bootstrapFormLabel,
             }}
           />
-          <div className={classes.infoUpload}>
+          <form className={classes.infoUpload}>
             <Typography className={classes.infoUploadTitle} variant="subheading">Пример входного файла</Typography>
             <input
               className={classes.input}
-              id="contained-button-file"
+              id="contained-button-input-file"
               multiple
               type="file"
               onChange={event => this.handleInputFileRead(event.target.files[0])}
             />
-            <label htmlFor="contained-button-file">
+            <label htmlFor="contained-button-input-file">
               <Button variant="contained" component="span" color="default" className={classes.button}>
                 Загрузить<CloudUploadIcon className={classes.rightIcon} />
               </Button>
             </label>
-          </div>
+          </form>
           <TextField
-            value={this.state.inputExample}
+            value={inputExample}
             multiline
             rows={4}
             InputProps={{
@@ -326,19 +331,19 @@ class TeacherTaskEdit extends React.Component {
             <Typography className={classes.infoUploadTitle} variant="subheading">Пример выходного файла</Typography>
             <input
               className={classes.input}
-              id="contained-button-file"
+              id="contained-button-output-file"
               multiple
               type="file"
               onChange={e => this.handleOutputFileRead(e.target.files[0])}
             />
-            <label htmlFor="contained-button-file">
+            <label htmlFor="contained-button-output-file">
               <Button variant="contained" component="span" color="default" className={classes.button}>
                 Загрузить<CloudUploadIcon className={classes.rightIcon} />
               </Button>
             </label>
           </div>
           <TextField
-            value={this.state.outputExample}
+            value={outputExample}
             multiline
             rows={4}
             InputProps={{
