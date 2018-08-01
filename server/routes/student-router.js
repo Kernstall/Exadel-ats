@@ -107,6 +107,10 @@ router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, re
 
       const taskTests = await dataFunctions.getTaskTests(taskId);
 
+      const studentTaskInfo = await dataFunctions.getstudentTaskInfo(userId, taskId);
+
+      const bestResult = studentTaskInfo[0].taskArray[0].bestResult;
+
       for (let i = 0; i < taskTests.tests.length; i++) {
         await fileSystemFunctions.copyFile(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/output.txt`,
           `${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/${String(taskTests.tests[i]._id)}output.txt`);
@@ -124,7 +128,7 @@ router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, re
             await fileSystemFunctions.deleteFile(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/${String(taskTests.tests[i]._id)}input.txt`);
           }
           const result = await dataFunctions.saveAttemptInfo(userId, taskId,
-            attemptNumber, mainFile, req.files, JSON.parse(answer.body));
+            attemptNumber, mainFile, req.files, JSON.parse(answer.body), bestResult, taskTests.weight);
           res.status(200).json({
             result: result.result,
             isPassed: result.isPassed,
@@ -134,9 +138,11 @@ router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, re
           res.status(400).send(error.toString());
         }
       })();
+    } else {
+      res.status(200).json('');
     }
   } catch (e) {
-    res.status(400).send(error.toString());
+    res.status(400).send(e.toString());
   }
 });
 
