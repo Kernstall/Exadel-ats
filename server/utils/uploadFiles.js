@@ -3,8 +3,13 @@ const multer = require('multer');
 const fileSystemFunctions = require('./fileSystemFunctions');
 const dataFunctions = require('./dataFunctions');
 
-const commonTaskPath = 'dataFileStorage/tasks';
-const commonSrcCodePath = 'dataFileStorage/srcCodes';
+exports.commonSrcCodePath;
+exports.commonTaskPath;
+
+exports.initPaths = function initPaths(srcCodePath, taskPath) {
+  exports.commonSrcCodePath = srcCodePath;
+  exports.commonTaskPath = taskPath;
+};
 
 const storageTests = multer.diskStorage({
   async destination(req, file, cb) {
@@ -16,7 +21,7 @@ const storageTests = multer.diskStorage({
     } else {
       number = file.originalname.slice(0, index);
     }
-    const path = `${commonTaskPath}/${req.query.taskId}/${number}`;
+    const path = `${exports.commonTaskPath}/${req.query.id}/${number}`;
     await fileSystemFunctions.createDirFunc(path);
 
     cb(null, path);
@@ -38,10 +43,10 @@ exports.uploadTests = multer({
   storage: storageTests,
   fileFilter(req, file, cb) {
     try {
-      if (file.originalname.match(/^[\da-f]+input.txt$|^\[\da-f]+output.txt$/)) {
+      if (file.originalname.match(/^[\da-f]+input.txt$|^[\da-f]+output.txt$/)) {
         cb(null, true);
       } else {
-        cb(null, false);
+        cb(new Error('Invalid format of some files'));
       }
     } catch (error) {
       cb(error);
@@ -54,7 +59,7 @@ const storageSrcCode = multer.diskStorage({
     const userId = req.query.userId;
     const taskId = req.query.taskId;
     const result = await dataFunctions.getUsersTasksAttemptNumber(userId, taskId);
-    const path = `${commonSrcCodePath}/${req.query.userId}/${req.query.taskId}/${result + 1}/src`;
+    const path = `${exports.commonSrcCodePath}/${req.query.userId}/${req.query.taskId}/${result + 1}/src`;
     await fileSystemFunctions.createDirFunc(path);
     cb(null, path);
   },
