@@ -91,7 +91,34 @@ class TaskListItem extends React.Component {
     };
   }
 
-  handleChange = name => event => {
+  getTags = (tags) => {
+    let result;
+    switch (tags.length) {
+      case 0:
+        result = 'Нет тегов';
+        break;
+      case 1:
+        result = `Теги: ${tags[0]}`;
+        break;
+      case 2:
+        if (tags[0].length > 15) {
+          result = `Теги: ${tags[0]}, ..`;
+        } else {
+          result = `Теги: ${tags[0]}, ${tags[1]}`;
+        }
+        break;
+      default:
+        if (tags[0].length > 15 || tags[1].length > 15) {
+          result = `Теги: ${tags[0]}, ..`;
+        } else {
+          result = `Теги: ${tags[0]}, ${tags[1]}, ..`;
+        }
+        break;
+    }
+    return result;
+  }
+
+  handleChange = name => (event) => {
     this.setState({ [name]: event.target.checked });
   };
 
@@ -100,6 +127,7 @@ class TaskListItem extends React.Component {
       classes, taskName, tags, score, taskId,
     } = this.props;
     const link = `/teacher/tasks/${taskId}`;
+    const tagsText = this.getTags(tags);
 
     return (
       <div className="taskinfo">
@@ -109,16 +137,7 @@ class TaskListItem extends React.Component {
               {taskName}
             </Typography>
             <Typography component="p" className={classes.tags}>
-              <span className={classes.tagsInner}> {(tags.length === 0)
-                ? 'Нет тэгов'
-                : ((tags.length > 0 && tags[0].length > 10)
-                  ? ('тэги: ' + tags[0])
-                  : ((tags.length === 2 && tags[1].length > 10)
-                    ? ('тэги: ' + tags[0])
-                    : ((tags.length === 2)
-                      ? ('тэги: ' + tags[0] + ', ' + tags[1])
-                      : ('тэги: ' + tags[0] + ', ' + tags[1] + '..'))))}
-              </span>
+              <span className={classes.tagsInner}>{tagsText}</span>
             </Typography>
             <Typography className={classes.score}>
               <span className={classes.scoreInner}>{score}</span>
