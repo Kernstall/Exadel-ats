@@ -71,6 +71,14 @@ router.get('/full/task', async (req, res) => {
   }
 });
 
+router.post('/task/tests', uploadFiles.uploadTests.array('tests'), async (err, req, res, next) => {
+  if (err) {
+    res.status(404).send(err.message);
+    return;
+  }
+  res.status(200).send('Operation successful');
+});
+
 router.get('/questions', (req, res) => {
   let hashSet = {};
   Question.find().populate('topicId', 'name').exec((err, questions) => {

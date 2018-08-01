@@ -16,7 +16,7 @@ const storageTests = multer.diskStorage({
     } else {
       number = file.originalname.slice(0, index);
     }
-    const path = `${commonTaskPath}/${req.query.taskId}/${number}`;
+    const path = `${commonTaskPath}/${req.query.id}/${number}`;
     await fileSystemFunctions.createDirFunc(path);
 
     cb(null, path);
