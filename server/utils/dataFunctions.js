@@ -731,7 +731,7 @@ exports.getFullTaskInfo = async (taskId) => {
   }
 };
 
-const compileProcessing = (testsResult) => {
+const compileProcessing = (testsResult, taskWeight) => {
   let mark = 0;
   let isPassedFlag = false;
   const isPassedValue = 0.4;
@@ -745,37 +745,63 @@ const compileProcessing = (testsResult) => {
     }
   });
 
-  mark = currentValue / maxValue;
+  mark = (currentValue / maxValue) * taskWeight;
   if (mark >= 0.4) {
     isPassedFlag = true;
   }
   return { isPassed: isPassedFlag, result: mark };
 };
 
-exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files, testsResult) => {
-  const result = compileProcessing(testsResult);
-  const obj = {};
-  obj.date = new Date();
-  obj.number = attemptNumber + 1;
-  obj.mainFile = mainFile;
-  obj.result = result.result;
-  obj.isPassed = result.isPassed;
-  obj.files = [];
-  obj.tests = testsResult;
-  files.forEach((elem) => {
-    obj.files.push(elem.originalname);
-  });
+exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files, testsResult, bestResult, taskWeight) => {
   try {
-    const result = await User.update(
+    const result = compileProcessing(testsResult, taskWeight);
+    result.result = 8;
+    if (result.result > bestResult) {
+      await User.update(
+        { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
+        { $set: { 'tasks.$.bestResult': result.result } },
+      );
+    }
+    const obj = {};
+    obj.date = new Date();
+    obj.number = attemptNumber + 1;
+    obj.mainFile = mainFile;
+    obj.result = result.result;
+    obj.isPassed = result.isPassed;
+    obj.files = [];
+    obj.tests = testsResult;
+    files.forEach((elem) => {
+      obj.files.push(elem.originalname);
+    });
+
+    const answer = await User.update(
       { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
       { $push: { 'tasks.$.attempts': obj } },
     );
+    return obj;
   } catch (e) {
     console.log(e.toString());
   }
-  return obj;
 };
 
+exports.getstudentTaskInfo = async (userId, taskId) => {
+  const task = await User.aggregate([
+    { $match: { _id: mongoose.Types.ObjectId(userId) } },
+    {
+      $project: {
+        _id: 0,
+        taskArray: {
+          $filter: {
+            input: '$tasks',
+            as: 'task',
+            cond: { $eq: ['$$task.taskId', mongoose.Types.ObjectId(taskId)] },
+          },
+        },
+      },
+    },
+  ]);
+  return task;
+};
 
 exports.getTaskTests = async (taskId) => {
   const answer = await Task.findById(taskId)
@@ -783,6 +809,7 @@ exports.getTaskTests = async (taskId) => {
       _id: 0,
       tests: 1,
       language: 1,
+      weight: 1,
     });
   return answer;
 };
