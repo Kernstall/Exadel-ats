@@ -39,13 +39,8 @@ class TaskInTopic extends React.Component {
     super();
     this.state = {
       open: false,
-      checked: false,
     };
   }
-
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
-  };
 
   handleClick = () => {
     this.setState(state => ({ open: !state.open }));
@@ -53,12 +48,20 @@ class TaskInTopic extends React.Component {
 
   objtoJSX = array => (
     array.map((element, index) => (
-      <QuestionTypeItem button type={element.type} count={element.count} />
+      <QuestionTypeItem button key={index} type={element.type} count={element.count} />
     ))
   );
 
   render() {
-    const { classes, topicName, count, questions } = this.props;
+    const {
+      classes,
+      topicName,
+      count,
+      questions,
+      handleClick,
+      check,
+      topicId,
+    } = this.props;
     return (
       <div>
         <ListItem button onClick={this.handleClick}>
@@ -68,8 +71,8 @@ class TaskInTopic extends React.Component {
           </Grid>
           <Checkbox
             className={classes.checkbox}
-            checked={this.state.checked}
-            onChange={this.handleChange('checked')}
+            checked={check}
+            onChange={() => handleClick(topicId)}
             value="checked"
             color="primary"
           />
