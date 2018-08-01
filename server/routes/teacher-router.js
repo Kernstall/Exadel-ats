@@ -78,6 +78,7 @@ router.get('/questions', (req, res) => {
     questions.forEach((question) => {
       if (!hashSet[question.topicId.name]) {
         hashSet[question.topicId.name] = {
+          topicId: question.topicId._id,
           topicName: question.topicId.name,
           questions: {},
           count: 0,
