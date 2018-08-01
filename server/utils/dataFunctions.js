@@ -976,3 +976,58 @@ exports.getAllTopics = async () => {
     });
   return answer;
 };
+
+const checkQuestion = (reqBody) => {
+  const commonFields = ['topicId', 'tags', 'description', 'kind', 'isTraining', 'difficultyRate'];
+  let flag = true;
+  commonFields.forEach((elem) => {
+    if (!reqBody[elem]) {
+      flag = false;
+    }
+  });
+  if (!flag) {
+    return false;
+  }
+  const type1_2 = ['correctAnswersIndexes', 'answersVariants'];
+  const type3 = ['answersVariants'];
+  if (reqBody.kind === 'one answer' || reqBody.kind === 'multiple answers') {
+    type1_2.forEach((elem) => {
+      if (!reqBody[elem]) {
+        flag = false;
+      }
+    });
+  }
+  if (!flag) {
+    return false;
+  }
+  if (reqBody.kind === 'without answer option') {
+    type3.forEach((elem) => {
+      if (!reqBody[elem]) {
+        flag = false;
+      }
+    });
+  }
+  if (!flag) {
+    return false;
+  }
+  return true;
+};
+
+exports.createQuestion = async (creatorId, reqBody) => {
+  try {
+    if (checkQuestion(reqBody)) {
+      reqBody.creatorId = mongoose.Types.ObjectId(creatorId);
+      reqBody.correntAnswersCount = 0;
+      reqBody.wrongAnswersCount = 0;
+      reqBody.isBlocked = false;
+      reqBody.haveCheckedReport = false;
+      const record = new Question(reqBody);
+
+      await record.save();
+    } else {
+      throw new Error('Missing field');
+    }
+  } catch (e) {
+    throw e;
+  }
+};
