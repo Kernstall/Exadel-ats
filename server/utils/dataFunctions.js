@@ -968,3 +968,11 @@ exports.filterQuestion = async (skip, limit, body) => {
   }
   return result;
 };
+exports.getAllTopics = async () => {
+  const answer = await Topic.find({})
+    .select({
+      _id: 1,
+      name: 1,
+    });
+  return answer;
+};
