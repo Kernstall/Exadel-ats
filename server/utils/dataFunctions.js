@@ -606,9 +606,9 @@ function getExtension(fileName) {
   return fileName.slice(index);
 }
 
-function readFile(path) {
+exports.readFile = async (path) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
+    fs.readFile(path, (err, data) => {
       if (err) {
         reject(err);
       } else {
@@ -711,9 +711,8 @@ exports.getFullTaskInfo = async (taskId) => {
       const buff = {};
       buff._id = taskInfo.tests[index]._id;
       buff.weight = taskInfo.tests[index].weight;
-      buff.files = {};
-      buff.files.input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
-      buff.files.output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
+      buff.input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
+      buff.output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
       taskInfo.tests[index] = buff;
     }
     const result = {
@@ -731,25 +730,76 @@ exports.getFullTaskInfo = async (taskId) => {
   }
 };
 
-exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files) => {
-  const obj = {};
-  obj.date = new Date();
-  obj.number = attemptNumber;
-  obj.mainFile = mainFile;
-  obj.result = 0;
-  obj.isPassed = false;
-  obj.files = [];
-  files.forEach((elem) => {
-    obj.files.push(elem.originalname);
+const compileProcessing = (testsResult, taskWeight) => {
+  let mark = 0;
+  let isPassedFlag = false;
+  const isPassedValue = 0.4;
+  let maxValue = 0;
+  let currentValue = 0;
+
+  testsResult.forEach((elem) => {
+    maxValue += elem.weight;
+    if (elem.success) {
+      currentValue += elem.weight;
+    }
   });
+
+  mark = (currentValue / maxValue) * taskWeight;
+  if (mark >= 0.4) {
+    isPassedFlag = true;
+  }
+  return { isPassed: isPassedFlag, result: mark };
+};
+
+exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files, testsResult, bestResult, taskWeight) => {
   try {
-    const result = await User.update(
+    const result = compileProcessing(testsResult, taskWeight);
+    result.result = 8;
+    if (result.result > bestResult) {
+      await User.update(
+        { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
+        { $set: { 'tasks.$.bestResult': result.result } },
+      );
+    }
+    const obj = {};
+    obj.date = new Date();
+    obj.number = attemptNumber + 1;
+    obj.mainFile = mainFile;
+    obj.result = result.result;
+    obj.isPassed = result.isPassed;
+    obj.files = [];
+    obj.tests = testsResult;
+    files.forEach((elem) => {
+      obj.files.push(elem.originalname);
+    });
+
+    const answer = await User.update(
       { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
       { $push: { 'tasks.$.attempts': obj } },
     );
+    return obj;
   } catch (e) {
     console.log(e.toString());
   }
+};
+
+exports.getstudentTaskInfo = async (userId, taskId) => {
+  const task = await User.aggregate([
+    { $match: { _id: mongoose.Types.ObjectId(userId) } },
+    {
+      $project: {
+        _id: 0,
+        taskArray: {
+          $filter: {
+            input: '$tasks',
+            as: 'task',
+            cond: { $eq: ['$$task.taskId', mongoose.Types.ObjectId(taskId)] },
+          },
+        },
+      },
+    },
+  ]);
+  return task;
 };
 
 exports.getTaskTests = async (taskId) => {
@@ -758,6 +808,225 @@ exports.getTaskTests = async (taskId) => {
       _id: 0,
       tests: 1,
       language: 1,
+      weight: 1,
     });
   return answer;
+};
+
+exports.filterTeacher = async (skip, limit, body) => {
+  const {
+    firstName,
+    lastName,
+    fathersName,
+    email,
+    university,
+  } = body;
+  const filter = {};
+  filter.status = 'teacher';
+  if (firstName) {
+    filter.firstName = firstName;
+  }
+  if (lastName) {
+    filter.lastName = lastName;
+  }
+  if (fathersName) {
+    filter.fathersName = fathersName;
+  }
+  if (email) {
+    filter.email = email;
+  }
+  if (university) {
+    filter.university = university;
+  }
+  let result;
+  if (limit > 0) {
+    result = await User.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await User.find(filter);
+  }
+  return result;
+};
+exports.filterStudent = async (skip, limit, body) => {
+  const {
+    firstName,
+    lastName,
+    university,
+    graduateYear,
+    mediumTaskScore,
+    mediumTestScore,
+  } = body;
+  let result;
+  const filter = {};
+  filter.status = 'student';
+  if (firstName) {
+    filter.firstName = firstName;
+  }
+  if (lastName) {
+    filter.lastName = lastName;
+  }
+  if (graduateYear) {
+    filter.graduateYear = graduateYear;
+  }
+  if (university) {
+    filter.university = university;
+  }
+  if (typeof mediumTaskScore !== 'undefined') {
+    filter.mediumTaskScore = mediumTaskScore;
+  }
+  if (typeof mediumTestScore !== 'undefined') {
+    filter.mediumTestScore = mediumTestScore;
+  }
+  if (limit > 0) {
+    result = await User.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await User.find(filter);
+  }
+  return result;
+};
+exports.filterGroup = async (skip, limit, body) => {
+  const {
+    groupName,
+    lastName,
+    firstName,
+    fathersName,
+  } = body;
+  const filter = {};
+  if (firstName) {
+    filter.firstName = firstName;
+  }
+  if (lastName) {
+    filter.lastName = lastName;
+  }
+  if (fathersName) {
+    filter.fathersName = fathersName;
+  }
+  if (groupName) {
+    filter.groupName = groupName;
+  }
+  let result;
+  if (limit > 0) {
+    result = await Group.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await Group.find(filter);
+  }
+  return result;
+};
+exports.filterTask = async (skip, limit, body) => {
+  const {
+    name,
+    score,
+    language,
+  } = body;
+  const filter = {};
+  if (name) {
+    filter.name = name;
+  }
+  if (score) {
+    filter.weight = score;
+  }
+  if (language) {
+    filter.language = language;
+  }
+  let result;
+  if (limit > 0) {
+    result = await Task.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await Task.find(filter);
+  }
+  return result;
+};
+exports.filterQuestion = async (skip, limit, body) => {
+  const {
+    kind,
+    difficultyRate,
+    isTraining,
+    correntAnswersCount,
+    wrongAnswersCount,
+  } = body;
+  const filter = {};
+  if (kind) {
+    filter.kind = kind;
+  }
+  if (difficultyRate) {
+    filter.difficultyRate = difficultyRate;
+  }
+  if (isTraining) {
+    filter.isTraining = isTraining;
+  }
+  if (correntAnswersCount) {
+    filter.correntAnswersCount = correntAnswersCount;
+  }
+  if (wrongAnswersCount) {
+    filter.wrongAnswersCount = wrongAnswersCount;
+  }
+  let result;
+  if (limit > 0) {
+    result = await Question.find(filter).limit(limit).skip(skip);
+  } else {
+    result = await Question.find(filter);
+  }
+  return result;
+};
+exports.getAllTopics = async () => {
+  const answer = await Topic.find({})
+    .select({
+      _id: 1,
+      name: 1,
+    });
+  return answer;
+};
+
+const checkQuestion = (reqBody) => {
+  const commonFields = ['topicId', 'tags', 'description', 'kind', 'isTraining', 'difficultyRate'];
+  let flag = true;
+  commonFields.forEach((elem) => {
+    if (!reqBody[elem]) {
+      flag = false;
+    }
+  });
+  if (!flag) {
+    return false;
+  }
+  const type1_2 = ['correctAnswersIndexes', 'answersVariants'];
+  const type3 = ['answersVariants'];
+  if (reqBody.kind === 'one answer' || reqBody.kind === 'multiple answers') {
+    type1_2.forEach((elem) => {
+      if (!reqBody[elem]) {
+        flag = false;
+      }
+    });
+  }
+  if (!flag) {
+    return false;
+  }
+  if (reqBody.kind === 'without answer option') {
+    type3.forEach((elem) => {
+      if (!reqBody[elem]) {
+        flag = false;
+      }
+    });
+  }
+  if (!flag) {
+    return false;
+  }
+  return true;
+};
+
+exports.createQuestion = async (creatorId, reqBody) => {
+  try {
+    if (checkQuestion(reqBody)) {
+      reqBody.creatorId = mongoose.Types.ObjectId(creatorId);
+      reqBody.correntAnswersCount = 0;
+      reqBody.wrongAnswersCount = 0;
+      reqBody.isBlocked = false;
+      reqBody.haveCheckedReport = false;
+      const record = new Question(reqBody);
+
+      await record.save();
+    } else {
+      throw new Error('Missing field');
+    }
+  } catch (e) {
+    throw e;
+  }
 };

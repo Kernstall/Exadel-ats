@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import ListItemText from '@material-ui/core/ListItemText';
 import { withStyles } from '@material-ui/core/styles';
 import Common from '../../../common/styles/Common';
-import localize from '../../../localization/localization';
+import localize from '../../localization';
 import Caption from '../caption/Caption';
 
 const styles = {

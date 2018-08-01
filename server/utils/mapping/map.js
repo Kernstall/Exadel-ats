@@ -27,20 +27,27 @@ const mapTaskAndTestsToDto = (model, input, output) => ({
   output,
 });
 const mapTeachersToDto = model => ({
-  name: `${model.lastName} ${model.firstName} ${model.fathersName}`,
+  lastName: model.lastName,
+  firstName: model.firstName,
+  fathersName: model.fathersName,
   email: model.email,
   university: model.university,
   numberTestsToCheck: model.testsToCheck.length,
 });
 const mapStudentsToDto = model => ({
-  name: `${model.lastName} ${model.firstName}`,
-  universityInfo: `${model.university} ${model.faculty} ${model.graduateYear}`,
+  lastName: model.lastName,
+  firstName: model.firstName,
+  university: model.university,
+  faculty: model.faculty,
+  graduateYear: model.graduateYear,
   mediumTaskScore: model.mediumTaskScore,
   mediumTestScore: model.mediumTestScore,
 });
 const mapGroupsToDto = model => ({
   groupName: model.groupName,
-  teacherName: `${model.lastName} ${model.firstName} ${model.fathersName}`,
+  lastName: model.lastName,
+  firstName: model.firstName,
+  fathersName: model.fathersName,
   studentsCount: model.studentIdList.length,
 });
 const mapTasksToDto = model => ({

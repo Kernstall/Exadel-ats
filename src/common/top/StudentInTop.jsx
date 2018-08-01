@@ -55,8 +55,8 @@ const styles = {
       height: `${medalSize}px`,
     },
     '70%': {
-      width: `${medalSize * 2}px`,
-      height: `${medalSize * 2}px`,
+      width: `${medalSize * 1.2}px`,
+      height: `${medalSize * 1.2}px`,
 
     },
     '100%': {

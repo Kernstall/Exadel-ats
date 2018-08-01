@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Common from '../../common/styles/Common';
-import { getActivities } from '../../commands/activities';
-import SearchBox from '../../common/searchBox/SearchBox.jsx';
+import { getAdminGroups } from '../../commands/admin';
+import SearchBox from './searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
 const styles = {
@@ -22,6 +22,19 @@ const styles = {
   },
 };
 
+const mocks = [
+  {
+    groupName: 'Dima2018Summer',
+    teacherName: 'Dmitriy Dmirievich Kotusev',
+    studentsCount: '777',
+  },
+  {
+    groupName: 'Dima2018Winter',
+    teacherName: 'Dmitriy Dmirievich Kotusev',
+    studentsCount: '776',
+  },
+];
+
 class AdminGroupPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
@@ -35,12 +48,12 @@ class AdminGroupPage extends Component {
   }
 
   componentDidMount() { // eslint-disable-next-line
-    this.props.getActivities(this.state.historyFilter);
+    this.props.getAdminGroups(this.state.historyFilter);
   }
 
   componentDidUpdate(prevProps, prevState) {
     prevState.historyFilter == this.state.historyFilter
-      || this.props.getActivities(this.state.historyFilter);
+      || this.props.getAdminGroups(this.state.historyFilter);
   }
 
   handleHistoryFilter = (name, role, activityType) => {
@@ -51,8 +64,8 @@ class AdminGroupPage extends Component {
   };
 
   render() {
-    const { classes, activities } = this.props;
-    if (activities) {
+    const { classes, adminGroups } = this.props;
+    if (adminGroups) {
       return (
         <Grid
           alignItems="stretch"
@@ -73,7 +86,7 @@ class AdminGroupPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={activities} />
+              <ActivityListItems info={mocks} />
             </List>
           </Grid>
           <h1>Groups</h1>
@@ -86,11 +99,11 @@ class AdminGroupPage extends Component {
 
 
 const mapStateToProps = state => ({
-  activities: state.activities.activities,
+  adminGroups: state.adminGroups.adminGroups,
 });
 
 const mapCommandsToProps = dispatch => ({
-  getActivities: param => dispatch(getActivities(param)),
+  getAdminGroups: param => dispatch(getAdminGroups(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminGroupPage));

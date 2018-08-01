@@ -13,14 +13,17 @@ const styles = {
   fullWidth: {
     width: '100%',
   },
-  date: {
-    width: '15%',
-  },
-  role: {
+  names: {
     width: '20%',
   },
-  userType: {
+  date: {
+    width: '40%',
+  },
+  role: {
     width: '30%',
+  },
+  userType: {
+    width: '1%',
   },
   listItem: {
     marginBottom: 1,
@@ -28,9 +31,7 @@ const styles = {
   primary: {
     fontSize: '15px',
   },
-  names: {
-    width: '30%',
-  },
+
   root: {
     padding: 0,
     margin: 0,
@@ -40,7 +41,7 @@ const styles = {
 class ActivityListItems extends Component {
   constructor(props) {
     super(props);
-    this.sortBy = ['name', 'date', 'userType', 'type'];
+    this.sortBy = ['name', 'universityInfo', 'mediumTaskScore', 'mediumTestScore'];
     this.state = {
       sortBy: this.sortBy[0],
       isDecreasing: true,
@@ -75,13 +76,6 @@ class ActivityListItems extends Component {
 
     const sortedInfo = this.sort(info, sortBy, isDecreasing);
 
-    const dateToString = (_date) => {
-      const date = new Date(Date.parse(_date));
-      const parsedTime = `${date.getDay()}.${date.getMonth()}.${date.getFullYear()}`;
-      const parsedData = `${date.getHours()}:${date.getMinutes()}`;
-      return `${parsedTime} ${parsedData}`;
-    };
-
     return (
       <div>
         <Paper className={classes.control} elevation={0}>
@@ -96,16 +90,16 @@ class ActivityListItems extends Component {
             <ListItem button elevation={0}>
               <Grid container className={classes.fullWidth}>
                 <Grid item className={classes.names}>
-                  <ListItemText classes={{ primary: classes.primary }} primary={`${localize(element.name)}`} />
+                  <ListItemText classes={{ primary: classes.primary }} primary={`${element.name}`} />
                 </Grid>
                 <Grid item className={classes.date}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${dateToString(element.date)}`} />
+                  <ListItemText className={{ root: classes.root }} secondary={`${element.universityInfo}`} />
                 </Grid>
                 <Grid item className={classes.role}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${localize(element.userType)}`} />
+                  <ListItemText className={{ root: classes.root }} secondary={`${element.mediumTaskScore}`} />
                 </Grid>
                 <Grid item className={classes.userType}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${localize(element.type)}`} />
+                  <ListItemText className={{ root: classes.root }} secondary={`${element.mediumTestScore}`} />
                 </Grid>
               </Grid>
             </ListItem>
