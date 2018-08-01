@@ -225,4 +225,13 @@ router.get('/all/topics', async (req, res) => {
   }
 });
 
+router.post('/new/question', async (req, res) => {
+  try {
+    await dataFunctions.createQuestion(req.user.id, req.body);
+    res.status(200).send();
+  } catch (e) {
+    res.status(400).send(e.toString());
+  }
+});
+
 module.exports = router;
