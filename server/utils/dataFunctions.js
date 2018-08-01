@@ -616,7 +616,7 @@ exports.readFile = async (path) => {
       }
     });
   });
-}
+};
 
 exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
   try {
@@ -650,7 +650,7 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
       answer[i].name = attemptInfo.files[i].slice(0, attemptInfo.files[i].indexOf('.'));
       answer[i].extension = getExtension(attemptInfo.files[i]);
 
-      answer[i].fileContents = await readFile(`${exports.commonSrcCodePath}/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
+      answer[i].fileContents = await exports.readFile(`${exports.commonSrcCodePath}/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
     }
     return answer;
   } catch (e) {
@@ -661,8 +661,8 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
 exports.getTaskInfo = async (taskId) => {
   try {
     const taskInfo = await Task.findById(taskId);
-    const input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[0]._id}/input.txt`);
-    const output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[0]._id}/output.txt`);
+    const input = await exports.readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[0]._id}/input.txt`);
+    const output = await exports.readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[0]._id}/output.txt`);
     const result = mapping.mapTaskAndTestsToDto(taskInfo, input, output);
     return result;
   } catch (e) {
@@ -671,7 +671,7 @@ exports.getTaskInfo = async (taskId) => {
 };
 
 exports.getUsersTasksAttemptNumber = async (userId, taskId) => {
-  //console.log(userId);
+  // console.log(userId);
   const result = await User.aggregate([
     { $match: { _id: mongoose.Types.ObjectId(userId) } },
     {
@@ -693,7 +693,7 @@ exports.getUsersTasksAttemptNumber = async (userId, taskId) => {
 exports.getFullTaskInfo = async (taskId) => {
   try {
     const taskInfo = await Task.findById(taskId)
-      .populate('topicId', { _id: 0, name: 1 })
+      .populate('topicId', { name: 1 })
       .select({
         _id: 0,
         topicId: 1,
@@ -705,14 +705,16 @@ exports.getFullTaskInfo = async (taskId) => {
       });
     if (taskInfo.topicId) {
       taskInfo.topicName = taskInfo.topicId.name;
+      taskInfo.topId = taskInfo.topicId.id;
     }
 
     for (let index = 0; index < taskInfo.tests.length; index++) {
       const buff = {};
       buff._id = taskInfo.tests[index]._id;
       buff.weight = taskInfo.tests[index].weight;
-      buff.input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
-      buff.output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
+      buff.files = {};
+      buff.files.input = await exports.readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
+      buff.files.output = await exports.readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
       taskInfo.tests[index] = buff;
     }
     const result = {
@@ -722,6 +724,7 @@ exports.getFullTaskInfo = async (taskId) => {
       tags: taskInfo.tags,
       tests: taskInfo.tests,
       topicName: taskInfo.topicName,
+      topicId: taskInfo.topId,
     };
 
     return result;
