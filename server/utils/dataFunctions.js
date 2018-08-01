@@ -693,7 +693,7 @@ exports.getUsersTasksAttemptNumber = async (userId, taskId) => {
 exports.getFullTaskInfo = async (taskId) => {
   try {
     const taskInfo = await Task.findById(taskId)
-      .populate('topicId', { _id: 0, name: 1 })
+      .populate('topicId', { name: 1 })
       .select({
         _id: 0,
         topicId: 1,
@@ -705,6 +705,7 @@ exports.getFullTaskInfo = async (taskId) => {
       });
     if (taskInfo.topicId) {
       taskInfo.topicName = taskInfo.topicId.name;
+      taskInfo.topId = taskInfo.topicId.id;
     }
 
     for (let index = 0; index < taskInfo.tests.length; index++) {
@@ -723,6 +724,7 @@ exports.getFullTaskInfo = async (taskId) => {
       tags: taskInfo.tags,
       tests: taskInfo.tests,
       topicName: taskInfo.topicName,
+      topicId: taskInfo.topId,
     };
 
     return result;
