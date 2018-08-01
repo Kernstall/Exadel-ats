@@ -216,4 +216,13 @@ router.post('/task/tests', uploadFiles.uploadTests.array('tests'), async (req, r
   }
 });
 
+router.get('/all/topics', async (req, res) => {
+  try {
+    const result = await dataFunctions.getAllTopics();
+    res.status(200).json(result);
+  } catch (e) {
+    res.status(400).send(e.toString());
+  }
+});
+
 module.exports = router;
