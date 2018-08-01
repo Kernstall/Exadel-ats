@@ -5,9 +5,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/es/Button/Button';
+import { Link } from 'react-router-dom';
 import TeacherSelectedGroupComponent from '../teacherSelectedGroupComponent/TeacherSelectedGroupComponent.jsx';
-import { Link } from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -70,7 +69,7 @@ class TeacherGroupComponent extends React.Component {
       credentials: 'include',
     })
       .then(res => res.json())
-      .then(res => {
+      .then((res) => {
         this.setState({
           groupName: res.groupName,
           amountOfStudents: res.amountOfStudents,
@@ -108,12 +107,14 @@ class TeacherGroupComponent extends React.Component {
             </Link>
           </Tabs>
           {value === 0
-            && <TabContainer>
+            && (
+            <TabContainer>
               <TeacherSelectedGroupComponent
                 groupName={groupName}
                 groupMembers={studentList}
               />
             </TabContainer>
+            )
           }
           {value === 1 && <TabContainer>Tests</TabContainer>}
           {value === 2 && <TabContainer>Tasks</TabContainer>}

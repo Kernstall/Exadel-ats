@@ -3,7 +3,6 @@ import { withStyles } from '@material-ui/core/styles';
 import LoginForm from '../../common/loginForm/LoginForm.jsx';
 import Common from '../../common/styles/Common';
 import TopTabs from '../../common/topTabs/TopTabs.jsx';
-import {Redirect} from "react-router-dom";
 
 const styles = ({
   ...Common,

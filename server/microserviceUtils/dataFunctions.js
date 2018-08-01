@@ -277,9 +277,9 @@ exports.checkStudentAttempt = async function checkStudentAttempt(taskId,
         await exports.removeInputFile(`${exports.commonSrcCodePath}/${userNumber}/bin/input.txt`);
         // Сравнение выходного файла и ожидаемого результата
       }
-      if (await exports.checkFileExistence(`${exports.commonSrcCodePath}/${userNumber}/bin/ouput.txt`)) {
+      if ((await exports.checkFileExistence(`${exports.commonSrcCodePath}/${userNumber}/bin/output.txt`))) {
         // Удаление выходного файла
-        await exports.removeOutputFile(`${exports.commonSrcCodePath}/${userNumber}/bin/ouput.txt`);
+        await exports.removeOutputFile(`${exports.commonSrcCodePath}/${userNumber}/bin/output.txt`);
       }
     }
     // Удаление папки bin
