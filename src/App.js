@@ -21,6 +21,8 @@ import { PrivateRoute } from './common/loginForm/PrivateRouter';
 import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 import GroupsList from './pages/teacherMainPage/groupsList/GroupsList';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent.jsx';
+import PassingTest from './common/passingTest/StudentPassingTest.jsx';
+
 const styles = ({
   content: {
     minHeight: 'calc(100vh - 40px)',
@@ -49,6 +51,7 @@ class App extends Component {
               <Route path="/teacher/task/edit" component={TeacherTaskEdit} />
               <Route path="/teacher/tasks/:id" component={TaskView} />
               <Route path="/teacher/groups/:id" component={TeacherGroupComponent} />
+              <Route path="/student/passingTest" component={PassingTest} />
             </div>
           </Router>
           <Footer />
