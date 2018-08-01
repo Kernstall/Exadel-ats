@@ -16,7 +16,6 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 const router = express.Router();
 
 router.use((req, res, next) => {
-
   if (req.user.status === 'teacher' || req.user.status === 'admin') {
     return next();
   }
@@ -71,12 +70,24 @@ router.get('/full/task', async (req, res) => {
   }
 });
 
-router.post('/task/tests', uploadFiles.uploadTests.array('tests'), async (err, req, res, next) => {
-  if (err) {
-    res.status(404).send(err.message);
-    return;
+router.post('/task/tests', async (req, res, next) => {
+  if (!(await Task.findById(req.query.id))) {
+    res.status(400).send('Invalid task id, there is no such task id in the data base');
+  } else {
+    next();
   }
+});
+
+router.post('/task/tests', uploadFiles.uploadTests.array('tests'), async (req, res) => {
   res.status(200).send('Operation successful');
+});
+
+router.use(async (err, req, res, next) => {
+  if (err.message === 'Invalid format of some files') {
+    res.status(400).send(err.message);
+  } else {
+    throw (err);
+  }
 });
 
 router.get('/questions', (req, res) => {
@@ -222,6 +233,10 @@ router.post('/task/tests', uploadFiles.uploadTests.array('tests'), async (req, r
       }
     })();
   }
+});
+
+router.use(async (err, req, res, next) => {
+  res.status(500).send(err.message);
 });
 
 module.exports = router;
