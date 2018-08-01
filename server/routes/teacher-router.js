@@ -1,5 +1,6 @@
 const express = require('express');
 const got = require('got');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const FormData = require('form-data');
 
@@ -90,6 +91,15 @@ router.use(async (err, req, res, next) => {
   }
 });
 
+router.post('/task', (req, res, next) => {
+  req.body.id = new mongoose.Types.ObjectId();
+  next();
+});
+
+router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) => {
+
+});
+
 router.get('/questions', (req, res) => {
   let hashSet = {};
   Question.find().populate('topicId', 'name').exec((err, questions) => {
@@ -121,16 +131,6 @@ router.get('/questions', (req, res) => {
     });
     res.send(hashSet);
   });
-});
-
-router.post('/task', (req, res) => {
-  dataFunctions.addTask(req.body)
-    .then((response) => {
-      res.status(200).send(response);
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
 });
 
 router.post('/question', (req, res) => {
@@ -208,30 +208,6 @@ router.post('/group', async (req, res) => {
     } else {
       res.status(400).send(err.toString());
     }
-  }
-});
-
-router.post('/task/tests', uploadFiles.uploadTests.array('tests'), async (req, res) => {
-  if (req.files) {
-    const count = req.files.length;
-    const form = new FormData();
-
-    for (let i = 0; i < count; i++) {
-      await fileSystemFunctions.copyFile(`${req.files[i].destination}/${req.files[i].filename}`, `${req.files[i].destination}/${req.files[i].originalname}`);
-      form.append('tests', fs.createReadStream(`${req.files[i].destination}/${req.files[i].originalname}`));
-    }
-
-    (async () => {
-      try {
-        const answer = await got.post(`http://localhost:3002/someExample?taskId=${req.query.taskId}`, { body: form });
-        for (let i = 0; i < count; i++) {
-          await fileSystemFunctions.deleteFile(`${req.files[i].destination}/${req.files[i].originalname}`);
-        }
-        res.status(200).send(answer.body);
-      } catch (error) {
-        res.status(400).send(error.toString());
-      }
-    })();
   }
 });
 
