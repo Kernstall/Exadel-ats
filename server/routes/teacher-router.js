@@ -215,4 +215,22 @@ router.use(async (err, req, res, next) => {
   res.status(500).send(err.message);
 });
 
+router.get('/all/topics', async (req, res) => {
+  try {
+    const result = await dataFunctions.getAllTopics();
+    res.status(200).json(result);
+  } catch (e) {
+    res.status(400).send(e.toString());
+  }
+});
+
+router.post('/new/question', async (req, res) => {
+  try {
+    await dataFunctions.createQuestion(req.user.id, req.body);
+    res.status(200).send();
+  } catch (e) {
+    res.status(400).send(e.toString());
+  }
+});
+
 module.exports = router;

@@ -45,7 +45,9 @@ const mapStudentsToDto = model => ({
 });
 const mapGroupsToDto = model => ({
   groupName: model.groupName,
-  teacherName: `${model.lastName} ${model.firstName} ${model.fathersName}`,
+  lastName: model.lastName,
+  firstName: model.firstName,
+  fathersName: model.fathersName,
   studentsCount: model.studentIdList.length,
 });
 const mapTasksToDto = model => ({
