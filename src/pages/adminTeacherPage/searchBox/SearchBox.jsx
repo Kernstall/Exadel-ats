@@ -3,6 +3,7 @@ import { withStyles, Paper } from '@material-ui/core/es';
 import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import localize from '../../../localization/localization';
 
 const universities = [
   {
@@ -10,11 +11,11 @@ const universities = [
     label: 'Любой университет',
   },
   {
-    value: 'BSU',
+    value: 'БГУ',
     label: 'БГУ',
   },
   {
-    value: 'BSUIR',
+    value: 'БГУИР',
     label: 'БГУИР',
   },
 ];
@@ -56,18 +57,53 @@ class SearchBox extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
-      name: '',
+      firstName: '',
+      lastName: '',
+      fathersName: '',
       email: '',
       university: 'all',
     };
   }
 
-  handleChange = name => (event) => {
-    this.setState({
-      [name]: event.target.value,
+  inputParser = (textToParse) => {
+    const result = {
+      firstName: '',
+      lastName: '',
+      fathersName: '',
+      email: '',
+    };
+    const words = textToParse.split(' ');
+    words.forEach((word, index, array) => {
+      if (word.search(/@/i) !== -1) {
+        result.email = word;
+      } else if (index === 0) {
+        result.lastName = word;
+      } else if (index === 1) {
+        result.firstName = word;
+      } else if (index === 2) {
+        result.fathersName = word;
+      }
     });
-    this.state[name] = event.target.value;
-    this.props.handleHistoryFilter(this.state.name, this.state.university, this.state.activityType);
+    return result;
+  }
+
+  handleChange = input => (event) => {
+    let changesState = {};
+    if (input === 'emailOrName') {
+      changesState = this.inputParser(event.target.value);
+    } else {
+      changesState = {
+        [input]: event.target.value,
+      };
+    }
+
+    const newState = {
+      ...this.state,
+      ...changesState,
+    };
+
+    this.setState(newState);
+    this.props.handleHistoryFilter(newState);
   };
 
   render() {
@@ -79,10 +115,10 @@ class SearchBox extends Component {
         </div>
         <Paper className={classes.child} elevation={0}>
           <Input
-            placeholder="Имя или почта ..."
+            placeholder={`${localize('nameOrEmail')}`}
             className={classes.input}
             disableUnderline
-            onChange={this.handleChange('name')}
+            onChange={this.handleChange('emailOrName')}
           />
         </Paper>
         <Paper className={classes.child} elevation={0}>

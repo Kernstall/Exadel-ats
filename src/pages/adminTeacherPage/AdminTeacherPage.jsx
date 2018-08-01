@@ -22,29 +22,11 @@ const styles = {
   },
 };
 
-const mocks = [
-  {
-    name: 'Побегайло Александр Павлович',
-    email: 'pobegos@bsu.by',
-    numberTestsToCheck: '13',
-    university: 'BSU',
-  },
-  {
-    name: 'Зенько Татьяна Алексеевна',
-    email: 'zenko@bsu.by',
-    numberTestsToCheck: '1',
-    university: 'BSU',
-  },
-];
-
 class AdminTeacherPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
-      historyFilter: {
-        name: '',
-        email: '',
-      },
+      historyFilter: {},
     };
   }
 
@@ -57,15 +39,16 @@ class AdminTeacherPage extends Component {
       || this.props.getAdminTeachers(this.state.historyFilter);
   }
 
-  handleHistoryFilter = (name, activityType) => {
+  handleHistoryFilter = (params) => {
     const newState = {
-      historyFilter: { name, activityType },
+      historyFilter: params,
     };
     this.setState(newState);
   };
 
   render() {
     const { classes, adminTeachers } = this.props;
+    console.log('adminTeachers', adminTeachers);
     if (adminTeachers) {
       return (
         <Grid
@@ -87,7 +70,7 @@ class AdminTeacherPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={mocks} />
+              <ActivityListItems info={adminTeachers} />
             </List>
           </Grid>
           <h1>Teacher</h1>

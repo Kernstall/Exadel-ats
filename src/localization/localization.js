@@ -33,6 +33,12 @@ const localize = (keyWord) => {
     testsTop: 'Лучшие по тестам',
     activitiesTop: 'Лучшие по активности',
     marksTop: 'Лучшие по оценкам',
+    email: 'Почта',
+    numberTestsToCheck: 'Тесты для проверки',
+    university: 'ВУЗ',
+    nameOrEmail: 'Имя или почта ...',
+    email4: '',
+
   };
 
   const dictionaries = {

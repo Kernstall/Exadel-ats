@@ -41,11 +41,7 @@ class AdminStudentPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
-      historyFilter: {
-        name: '',
-        role: '',
-        activityType: '',
-      },
+      historyFilter: {},
     };
   }
 
@@ -54,20 +50,27 @@ class AdminStudentPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    prevState.historyFilter == this.state.historyFilter
+    prevState.historyFilter === this.state.historyFilter
       || this.props.getAdminStudents(this.state.historyFilter);
   }
 
-  handleHistoryFilter = (name, role, activityType) => {
+  handleHistoryFilter = (props) => {
     const newState = {
-      historyFilter: { name, role, activityType },
+      historyFilter: { ...props },
     };
+    console.log('newState', newState);
     this.setState(newState);
   };
 
   render() {
     const { classes, adminStudents } = this.props;
     if (adminStudents) {
+      const newAdminStudents = adminStudents.map(element => ({
+        name: `${element.lastName} ${element.firstName}`,
+        universityInfo: `${element.university} ${element.faculty} ${element.graduateYear}`,
+        mediumTaskScore: element.mediumTaskScore,
+        mediumTestScore: element.mediumTestScore,
+      }));
       return (
         <Grid
           alignItems="stretch"
@@ -88,7 +91,7 @@ class AdminStudentPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={mocks} />
+              <ActivityListItems info={newAdminStudents} />
             </List>
           </Grid>
           <h1>Students</h1>

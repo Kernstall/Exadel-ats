@@ -24,33 +24,16 @@ const styles = {
   },
 };
 
-const mocks = [
-  {
-    name: 'История Беларуси',
-    score: '10',
-    language: 'С#',
-  },
-  {
-    name: 'История Беларуси 2',
-    score: '20',
-    language: 'С#',
-  },
-];
-
 class AdminTaskPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
-      historyFilter: {
-        name: '',
-        role: '',
-        activityType: '',
-      },
+      historyFilter: {},
     };
   }
 
   componentDidMount() {
-
+    this.props.getAdminTasks(this.state.historyFilter);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -75,22 +58,23 @@ class AdminTaskPage extends Component {
       .catch(rej => console.log(`Rejected: ${rej}`));
   }
 
-  handleHistoryFilter = (name, role, activityType) => {
+  handleHistoryFilter = (props) => {
     const newState = {
-      historyFilter: { name, role, activityType },
+      historyFilter: { ...props },
     };
+    console.log('newState', newState);
     this.setState(newState);
   };
 
   render() {
     const { classes, adminTasks } = this.props;
-    if (!adminTasks) {
-      return (
-        <Button onClick={this.downloadClickHandler}>
-          123
-        </Button>
-      );
-    }
+    // if (!adminTasks) {
+    //   return (
+    //     <Button onClick={this.downloadClickHandler}>
+    //       123
+    //     </Button>
+    //   );
+    // }
 
     if (adminTasks) {
       return (
@@ -113,7 +97,7 @@ class AdminTaskPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={mocks} />
+              <ActivityListItems info={adminTasks} />
             </List>
           </Grid>
           <h1>Tasks</h1>

@@ -39,11 +39,7 @@ class AdminGroupPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
-      historyFilter: {
-        name: '',
-        role: '',
-        activityType: '',
-      },
+      historyFilter: {},
     };
   }
 
@@ -52,20 +48,26 @@ class AdminGroupPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    prevState.historyFilter == this.state.historyFilter
+    prevState.historyFilter === this.state.historyFilter
       || this.props.getAdminGroups(this.state.historyFilter);
   }
 
-  handleHistoryFilter = (name, role, activityType) => {
+  handleHistoryFilter = (props) => {
     const newState = {
-      historyFilter: { name, role, activityType },
+      historyFilter: { ...props },
     };
+    console.log('newState', newState);
     this.setState(newState);
   };
 
   render() {
     const { classes, adminGroups } = this.props;
     if (adminGroups) {
+      const newAdminGroups = adminGroups.map(element => ({
+        groupName: `${element.groupName}`,
+        teacherName: `${element.lastName} ${element.firstName} ${element.fathersName}`,
+        studentsCount: element.studentsCount,
+      }));
       return (
         <Grid
           alignItems="stretch"
@@ -86,7 +88,7 @@ class AdminGroupPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={mocks} />
+              <ActivityListItems info={newAdminGroups} />
             </List>
           </Grid>
           <h1>Groups</h1>
