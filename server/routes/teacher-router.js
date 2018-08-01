@@ -79,7 +79,38 @@ router.post('/task/tests', async (req, res, next) => {
   }
 });
 
+// {
+//   topicId: String;
+//   tags: [String];
+//   description: String;
+//   name: String;
+//   weight: Number;
+//   language: String;
+//   tests: [{
+//     _id: String;
+//     weight: Number;
+//   }];
+//   passResult: Number;
+// }
 router.post('/task/tests', uploadFiles.uploadTests.array('tests'), async (req, res) => {
+  const dataBaseEdit = {};
+  const editObj = JSON.parse(req.body.taskInfo);
+  if (editObj.topicId) {
+    if ((await Topic.findById(editObj.topicId))) {
+      dataBaseEdit.topicId = editObj.topicId;
+    } else {
+      res.status(400).send('At least one invalid argument: topicId');
+      return;
+    }
+  }
+  if (editObj.name) {
+    if (!(await Task.findOne({ name: editObj.name }))) {
+      dataBaseEdit.name = editObj.name;
+    } else {
+      res.status(400).send('At least one invalid argument: new name is not unique or the same as the previos one');
+      return;
+    }
+  }
   res.status(200).send('Operation successful');
 });
 
