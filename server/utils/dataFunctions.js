@@ -711,9 +711,8 @@ exports.getFullTaskInfo = async (taskId) => {
       const buff = {};
       buff._id = taskInfo.tests[index]._id;
       buff.weight = taskInfo.tests[index].weight;
-      buff.files = {};
-      buff.files.input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
-      buff.files.output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
+      buff.input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
+      buff.output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
       taskInfo.tests[index] = buff;
     }
     const result = {
