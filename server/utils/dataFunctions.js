@@ -6,6 +6,7 @@ const Group = require('../models/Group');
 const User = require('../models/User');
 const Topic = require('../models/Topic');
 const Activities = require('../models/Activity');
+const Language = require('../models/Language');
 
 const mapping = require('./mapping/map');
 exports.commonSrcCodePath;
@@ -1032,4 +1033,106 @@ exports.createQuestion = async (creatorId, reqBody) => {
   } catch (e) {
     throw e;
   }
+};
+
+exports.checkTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) => {
+  if (editObj.tags) {
+    dataBaseEdit.tags = editObj.tags;
+  }
+  if (editObj.description) {
+    dataBaseEdit.description = editObj.description;
+  }
+  if (editObj.topicId) {
+    if ((await Topic.findById(editObj.topicId))) {
+      dataBaseEdit.topicId = editObj.topicId;
+    } else {
+      throw new Error('At least one invalid argument: topicId');
+    }
+  }
+  if (editObj.name) {
+    if ((await Task.findById(req.query.id)).name !== editObj.name) {
+      if (!(await Task.findOne({ name: editObj.name }))) {
+        dataBaseEdit.name = editObj.name;
+      } else {
+        throw new Error('At least one invalid argument: new name is not unique or the same as the previos one');
+      }
+    }
+  }
+  if (editObj.weight) {
+    if (editObj.weight >= 1 && editObj.weight <= 10) {
+      dataBaseEdit.weight = editObj.weight;
+      if (!editObj.passResult) {
+        if ((await Task.findById(req.query.id)).passResult > dataBaseEdit.weight) {
+          dataBaseEdit.passResult = dataBaseEdit.weight;
+        }
+      }
+    } else {
+      throw new Error('At least one invalid argument: weight should be greater or equal to 1 and less or equal to 10');
+    }
+  }
+  if (editObj.language) {
+    if (await Language.findOne({ language: editObj.language.toLowerCase() })) {
+      dataBaseEdit.language = editObj.language.toLowerCase();
+    } else {
+      throw new Error('At least one invalid argument: new language is not present in the data base');
+    }
+  }
+  if (editObj.passResult) {
+    if (editObj.weight) {
+      if (editObj.passResult >= 1 && editObj.passResult <= editObj.weight) {
+        dataBaseEdit.passResult = editObj.passResult;
+      } else {
+        throw new Error('At least one invalid argument: pass result should be greater or equal to 1 and less or equal to weight');
+      }
+    } else {
+      const weight = (await Task.findById(req.query.id)).weight;
+      if (editObj.passResult >= 1 && editObj.passResult <= weight) {
+        dataBaseEdit.passResult = editObj.passResult;
+      } else {
+        throw new Error('At least one invalid argument: pass result should be greater or equal to 1 and less or equal to weight');
+      }
+    }
+  }
+  if (editObj.tests) {
+    if (req.files.lenght === 0) {
+      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
+    }
+    const set = new Set();
+    req.files.forEach((file) => {
+      set.add(file.id);
+    });
+    for (let index = 0; index < editObj.tests.length; index++) {
+      if (set.has(editObj.tests[index].id)) {
+        if (editObj.tests[index].weight) {
+          if (editObj.tests[index].weight >= 1 && editObj.tests[index].weight <= 10) {
+            testsEdit.push({ id: editObj.tests[index].id, weight: editObj.tests[index].weight });
+            set.delete(editObj.tests[index].id);
+          } else {
+            throw new Error('At least one invalid argument: test weight should be greater or equal to 1 and less or equal to 10');
+          }
+        } else {
+          throw new Error('At least one invalid argument: test weight should be present');
+        }
+      }
+    }
+    if (set.size !== 0) {
+      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
+    }
+  } else {
+    if (req.files.length !== 0) {
+      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
+    }
+  }
+};
+
+exports.deleteTaskFolderFunc = async function deleteTaskFolderFunc(path) { // удаляет конечную папку
+  return new Promise((resolve, reject) => {
+    fs.rmrf(`${exports.commonTaskPath}/${path}`, (error) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve();
+    });
+  });
 };

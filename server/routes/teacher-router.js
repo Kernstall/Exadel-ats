@@ -97,111 +97,22 @@ router.post('/task/editing', uploadFiles.uploadTests.array('tests'), async (req,
   const dataBaseEdit = {};
   const testsEdit = [];
   const editObj = JSON.parse(req.body.taskInfo);
-  if (editObj.tags) {
-    dataBaseEdit.tags = editObj.tags;
+  try {
+    dataFunctions.checkTaskDataFunc(dataBaseEdit, testsEdit, editObj, req);
+  } catch (error) {
+    res.status(400).send(error.message);
+    return;
   }
-  if (editObj.description) {
-    dataBaseEdit.description = editObj.description;
-  }
-  if (editObj.topicId) {
-    if ((await Topic.findById(editObj.topicId))) {
-      dataBaseEdit.topicId = editObj.topicId;
-    } else {
-      res.status(400).send('At least one invalid argument: topicId');
-      return;
+  try {
+    await Task.findByIdAndUpdate(req.query.id, dataBaseEdit);
+    for (let index = 0; index < testsEdit.length; index++) {
+      await Task.updateOne({ _id: mongoose.Types.ObjectId(req.query.id), 'tests._id': mongoose.Types.ObjectId(testsEdit[index].id) }, {
+        $set: { 'tests.$.weight': testsEdit[index].weight },
+      });
+      await Task.findByIdAndUpdate(req.query.id, { $addToSet: { tests: { _id: mongoose.Types.ObjectId(testsEdit[index].id), weight: testsEdit[index].weight } } });
     }
-  }
-  if (editObj.name) {
-    if ((await Task.findById(req.query.id)).name !== editObj.name) {
-      if (!(await Task.findOne({ name: editObj.name }))) {
-        dataBaseEdit.name = editObj.name;
-      } else {
-        res.status(400).send('At least one invalid argument: new name is not unique or the same as the previos one');
-        return;
-      }
-    }
-  }
-  if (editObj.weight) {
-    if (editObj.weight >= 1 && editObj.weight <= 10) {
-      dataBaseEdit.weight = editObj.weight;
-      if (!editObj.passResult) {
-        if ((await Task.findById(req.query.id)).passResult > dataBaseEdit.weight) {
-          dataBaseEdit.passResult = dataBaseEdit.weight;
-        }
-      }
-    } else {
-      res.status(400).send('At least one invalid argument: weight should be greater or equal to 1 and less or equal to 10');
-      return;
-    }
-  }
-  if (editObj.language) {
-    if (await Language.findOne({ language: editObj.language.toLowerCase() })) {
-      dataBaseEdit.language = editObj.language.toLowerCase();
-    } else {
-      res.status(400).send('At least one invalid argument: new language is not present in the data base');
-      return;
-    }
-  }
-  if (editObj.passResult) {
-    if (editObj.weight) {
-      if (editObj.passResult >= 1 && editObj.passResult <= editObj.weight) {
-        dataBaseEdit.passResult = editObj.passResult;
-      } else {
-        res.status(400).send('At least one invalid argument: pass result should be greater or equal to 1 and less or equal to weight');
-        return;
-      }
-    } else {
-      const weight = (await Task.findById(req.query.id)).weight;
-      if (editObj.passResult >= 1 && editObj.passResult <= weight) {
-        dataBaseEdit.passResult = editObj.passResult;
-      } else {
-        res.status(400).send('At least one invalid argument: pass result should be greater or equal to 1 and less or equal to weight');
-        return;
-      }
-    }
-  }
-  if (editObj.tests) {
-    if (req.files.lenght === 0) {
-      res.status(400).send('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
-      return;
-    }
-    const set = new Set();
-    req.files.forEach((file) => {
-      set.add(file.id);
-    });
-    for (let index = 0; index < editObj.tests.length; index++) {
-      if (set.has(editObj.tests[index].id)) {
-        console.log(editObj.tests[index].weight);
-        if (editObj.tests[index].weight) {
-          if (editObj.tests[index].weight >= 1 && editObj.tests[index].weight <= 10) {
-            testsEdit.push({ id: editObj.tests[index].id, weight: editObj.tests[index].weight });
-            set.delete(editObj.tests[index].id);
-          } else {
-            res.status(400).send('At least one invalid argument: test weight should be greater or equal to 1 and less or equal to 10');
-            return;
-          }
-        } else {
-          res.status(400).send('At least one invalid argument: test weight should be present');
-          return;
-        }
-      }
-    }
-    if (set.size !== 0) {
-      res.status(400).send('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
-      return;
-    }
-  } else {
-    if (req.files.length !== 0) {
-      res.status(400).send('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
-      return;
-    }
-  }
-  await Task.findByIdAndUpdate(req.query.id, dataBaseEdit);
-  for (let index = 0; index < testsEdit.length; index++) {
-    await Task.updateOne({ _id: mongoose.Types.ObjectId(req.query.id), 'tests._id': mongoose.Types.ObjectId(testsEdit[index].id) }, {
-      $set: { 'tests.$.weight': testsEdit[index].weight },
-    });
-    await Task.findByIdAndUpdate(req.query.id, { $addToSet: { tests: { _id: mongoose.Types.ObjectId(testsEdit[index].id), weight: testsEdit[index].weight } } });
+  } catch (error) {
+    res.status(500).send('Critical saving error, some data might have not been saved into the data base');
   }
   res.status(200).send('Operation successful');
 });
