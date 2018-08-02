@@ -12,7 +12,6 @@ import GroupsList from './groupsList/GroupsList.jsx';
 import TeacherTasksList from '../../common/teacherTasksList/TeacherTasksList';
 import TeacherQuestionList from '../../common/teacherQuestionList/TeacherQuestionList';
 import { logout } from '../../commands/userLogin';
-import { Link } from "react-router-dom";
 
 const styles = theme => ({
   root: {
