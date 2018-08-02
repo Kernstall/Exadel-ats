@@ -8,7 +8,6 @@ import {
   adminGroups as groupsActions,
   adminQuestions as questionsActions,
   adminTasks as tasksActions,
-  adminStatistics as statisticsActions,
 } from '../actions';
 
 const startQuery = '/api/admin/';
@@ -88,7 +87,7 @@ export const getAdminStudents = param => (dispatch) => {
   const IsStringVoidOrAll = string => string === '' || string === 'all';
 
   deleteKeysWithCondition(param, IsStringVoidOrAll);
-
+  console.log('param', param, 'query', query);
   dispatch(studentsActions.adminStudentsRequest());
   fetch(query,
     {
@@ -162,39 +161,29 @@ export const getAdminTasks = param => (dispatch) => {
 };
 
 export const getAdminQuestions = param => (dispatch) => {
-  let pagination = 0;
-  const query = `${startQuery}/questions?skip=${pagination}`;
-  pagination += 15;
+  let query = `${startQuery}questions?`;
+  query += 'skip=0';
+
+  console.log('a\'m a dispatcher before', param);
+
+  const IsStringVoidOrAll = string => string === '' || string === 'all';
+
+  deleteKeysWithCondition(param, IsStringVoidOrAll);
+
+  console.log('a\'m a dispatcher after', param);
 
   dispatch(questionsActions.adminQuestionsRequest());
   fetch(query,
     {
+      method: 'POST',
       headers: {
         'Content-type': 'application/json',
         'Set-Cookie': 'true',
       },
       credentials: 'include',
+      body: JSON.stringify(param),
     })
     .then(response => response.json())
     .then(body => dispatch(questionsActions.adminQuestionsSuccess(body)))
-    .catch(err => dispatch(questionsActions.adminQuestionsRequest(err)));
-};
-
-export const getAdminStatistics = param => (dispatch) => {
-  let pagination = 0;
-  const query = `${startQuery}/satistics?skip=${pagination}`;
-  pagination += 15;
-
-  dispatch(statisticsActions.adminStatisticsRequest());
-  fetch(query,
-    {
-      headers: {
-        'Content-type': 'application/json',
-        'Set-Cookie': 'true',
-      },
-      credentials: 'include',
-    })
-    .then(response => response.json())
-    .then(body => dispatch(statisticsActions.adminStatisticsSuccess(body)))
-    .catch(err => dispatch(statisticsActions.adminStatisticsRequest(err)));
+    .catch(err => dispatch(questionsActions.adminQuestionsError(err)));
 };

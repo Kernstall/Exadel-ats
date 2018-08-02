@@ -5,7 +5,7 @@ import HeaderMenue from './headerMenue/HeaderMenue';
 import AdminTeacherPage from '../adminTeacherPage/AdminTeacherPage';
 import AdminHistoryPage from '../adminHistoryPage/AdminHistoryPage';
 import AdminGroupPage from '../adminGroupPage/AdminGroupPage';
-import AdminStatisticsPage from '../adminStatisticsPage/AdminStatisticsPage';
+import AdminQuestionPage from '../adminQuestionPage/AdminQuestionPage';
 import AdminStudentPage from '../adminStudentPage/AdminStudentPage';
 import AdminTaskPage from '../adminTaskPage/AdminTaskPage';
 
@@ -27,7 +27,7 @@ class AdminMainPage extends Component {
         <Route path="/admin/teachers" exact component={AdminTeacherPage} />
         <Route path="/admin/students" exact component={AdminStudentPage} />
         <Route path="/admin/groups" exact component={AdminGroupPage} />
-        <Route path="/admin/statistics" exact component={AdminStatisticsPage} />
+        <Route path="/admin/questions" exact component={AdminQuestionPage} />
         <Route path="/admin/tasks" exact component={AdminTaskPage} />
       </div>
     );

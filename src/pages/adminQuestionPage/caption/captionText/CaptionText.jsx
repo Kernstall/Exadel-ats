@@ -21,6 +21,8 @@ const styles = {
     '&:hover': {
       background: 'transparent',
     },
+    padding: '0',
+    margin: '0',
   },
   iconWrapper: {
     minWidth: '25px',

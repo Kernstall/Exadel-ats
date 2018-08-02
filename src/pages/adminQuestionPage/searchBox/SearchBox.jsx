@@ -1,22 +1,44 @@
 import React, { Component } from 'react';
 import { withStyles, Paper } from '@material-ui/core/es';
-import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import localize from '../../../localization/localization';
 
-const universities = [
+const kind = [
+  'without answer option',
+  'without answer with verification',
+  'one answer',
+  'multiple answers',
+].map(element => ({
+  label: localize(element),
+  value: element,
+}));
+kind.unshift({
+  label: 'Варианты ответа',
+  value: 'all',
+});
+
+const difficultyRate = [1, 2, 3, 4].map(element => ({
+  label: element,
+  value: element,
+}));
+difficultyRate.unshift({
+  label: 'Сложность',
+  value: 'all',
+});
+
+const isTraining = [
   {
+    label: 'Тип',
     value: 'all',
-    label: 'Любой университет',
   },
   {
-    value: 'БГУ',
-    label: 'БГУ',
+    label: 'Тренировочный',
+    value: true,
   },
   {
-    value: 'БГУИР',
-    label: 'БГУИР',
+    label: 'Контрольный',
+    value: false,
   },
 ];
 
@@ -57,49 +79,16 @@ class SearchBox extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
-      firstName: '',
-      lastName: '',
-      fathersName: '',
-      email: '',
-      university: 'all',
+      kind: 'all',
+      difficultyRate: 'all',
+      isTraining: 'all',
     };
-  }
-
-  inputParser = (textToParse) => {
-    const result = {
-      firstName: '',
-      lastName: '',
-      fathersName: '',
-      email: '',
-    };
-    const words = textToParse.split(' ');
-    words.forEach((word, index, array) => {
-      if (word.search(/@/i) !== -1) {
-        result.email = word;
-      } else if (index === 0) {
-        result.lastName = word;
-      } else if (index === 1) {
-        result.firstName = word;
-      } else if (index === 2) {
-        result.fathersName = word;
-      }
-    });
-    return result;
   }
 
   handleChange = input => (event) => {
-    let changesState = {};
-    if (input === 'emailOrName') {
-      changesState = this.inputParser(event.target.value);
-    } else {
-      changesState = {
-        [input]: event.target.value,
-      };
-    }
-
     const newState = {
       ...this.state,
-      ...changesState,
+      [input]: event.target.value,
     };
 
     this.setState(newState);
@@ -114,25 +103,17 @@ class SearchBox extends Component {
           Search teacher by:
         </div>
         <Paper className={classes.child} elevation={0}>
-          <Input
-            placeholder={`${localize('nameOrEmail')}`}
-            className={classes.input}
-            disableUnderline
-            onChange={this.handleChange('emailOrName')}
-          />
-        </Paper>
-        <Paper className={classes.child} elevation={0}>
           <TextField
             id="select-university"
             select
             className={classes.textField}
-            value={this.state.university}
-            onChange={this.handleChange('university')}
+            value={this.state.kind}
+            onChange={this.handleChange('kind')}
             InputProps={{
               disableUnderline: true,
             }}
           >
-            {universities.map(option => (
+            {kind.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -144,13 +125,31 @@ class SearchBox extends Component {
             id="select-university"
             select
             className={classes.textField}
-            value={this.state.university}
-            onChange={this.handleChange('university')}
+            value={this.state.difficultyRate}
+            onChange={this.handleChange('difficultyRate')}
             InputProps={{
               disableUnderline: true,
             }}
           >
-            {universities.map(option => (
+            {difficultyRate.map(option => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Paper>
+        <Paper className={classes.child} elevation={0}>
+          <TextField
+            id="select-university"
+            select
+            className={classes.textField}
+            value={this.state.isTraining}
+            onChange={this.handleChange('isTraining')}
+            InputProps={{
+              disableUnderline: true,
+            }}
+          >
+            {isTraining.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>

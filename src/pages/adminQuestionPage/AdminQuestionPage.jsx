@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Common from '../../common/styles/Common';
-import { getAdminStatistics } from '../../commands/admin';
+import { getAdminQuestions } from '../../commands/admin';
 import SearchBox from './searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 
@@ -22,37 +22,39 @@ const styles = {
   },
 };
 
-class AdminStatisticsPage extends Component {
+class AdminQuestionPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
-      historyFilter: {
-        name: '',
-        role: '',
-        activityType: '',
-      },
+      historyFilter: {},
     };
   }
 
   componentDidMount() { // eslint-disable-next-line
-    this.props.getAdminStatistics(this.state.historyFilter);
+    this.props.getAdminQuestions(this.state.historyFilter);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    prevState.historyFilter == this.state.historyFilter
-      || this.props.getAdminStatistics(this.state.historyFilter);
+    prevState.historyFilter === this.state.historyFilter
+      || this.props.getAdminQuestions(this.state.historyFilter);
   }
 
-  handleHistoryFilter = (name, role, activityType) => {
+  handleHistoryFilter = (props) => {
     const newState = {
-      historyFilter: { name, role, activityType },
+      historyFilter: { ...props },
     };
     this.setState(newState);
   };
 
   render() {
-    const { classes, adminStatistics } = this.props;
-    if (adminStatistics) {
+    const { classes, adminQuestions } = this.props;
+    if (adminQuestions) {
+      const newAdminQuestions = adminQuestions.map(element => ({
+        kind: `${element.kind}`,
+        isTraining: `${element.isTraining ? 'тренировочный' : 'тестовый'}`,
+        difficultyRate: `${element.difficultyRate}`,
+        correctPrecent: `${Math.round((element.correntAnswersCount / element.wrongAnswersCount) * 100)}%`,
+      }));
       return (
         <Grid
           alignItems="stretch"
@@ -73,7 +75,7 @@ class AdminStatisticsPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={adminStatistics} />
+              <ActivityListItems info={newAdminQuestions} />
             </List>
           </Grid>
           <h1>Stats</h1>
@@ -86,11 +88,11 @@ class AdminStatisticsPage extends Component {
 
 
 const mapStateToProps = state => ({
-  adminStatistics: state.adminStatistics.adminStatistics,
+  adminQuestions: state.adminQuestions.adminQuestions,
 });
 
 const mapCommandsToProps = dispatch => ({
-  getAdminStatistics: param => dispatch(getAdminStatistics(param)),
+  getAdminQuestions: param => dispatch(getAdminQuestions(param)),
 });
 
-export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminStatisticsPage));
+export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminQuestionPage));

@@ -37,8 +37,14 @@ const localize = (keyWord) => {
     numberTestsToCheck: 'Тесты для проверки',
     university: 'ВУЗ',
     nameOrEmail: 'Имя или почта ...',
-    email4: '',
-
+    'without answer option': 'Без вариантов ответа',
+    'without answer with verification': 'С ручной проверкой',
+    'one answer': 'Один ответ',
+    'multiple answers': 'Несколько ответов',
+    kind: 'Вариант ответа',
+    isTraining: 'Тип',
+    difficultyRate: 'Сложность',
+    correctPrecent: 'Правильные ответы',
   };
 
   const dictionaries = {

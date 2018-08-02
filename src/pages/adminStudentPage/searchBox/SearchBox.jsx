@@ -87,7 +87,7 @@ class SearchBox extends Component {
       firstName: '',
       lastName: '',
       university: 'all',
-      graduateYears: 'all',
+      graduateYear: 'all',
       mediumTaskScore: 'all',
       mediumTestScore: 'all',
     };
@@ -165,8 +165,8 @@ class SearchBox extends Component {
             id="select-university"
             select
             className={classes.textField}
-            value={this.state.graduateYears}
-            onChange={this.handleChange('graduateYears')}
+            value={this.state.graduateYear}
+            onChange={this.handleChange('graduateYear')}
             InputProps={{
               disableUnderline: true,
             }}

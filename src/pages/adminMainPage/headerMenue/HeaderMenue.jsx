@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import TeacherImg from '../../../img/teacher.svg';
 import TasksImg from '../../../img/tasks.svg';
 import StudentImg from '../../../img/student.svg';
-import StatisticsImg from '../../../img/statistics.svg';
 import GroupsImg from '../../../img/groups.svg';
 import HistoryImg from '../../../img/history.svg';
 import QuestionsImg from '../../../img/questions.svg';
@@ -121,12 +120,12 @@ class HeaderMenue extends Component {
             />
           </div>
         </Link>
-        <Link to="/admin/statistics">
+        <Link to="/admin/questions">
           <div className={classes.headerItem}>
             <img
               className={classes.img}
               src={QuestionsImg}
-              alt="statistics"
+              alt="questions"
               onMouseEnter={this.handleMouseEnterSuggestions('questions')}
               onMouseLeave={this.handleMouseEnterSuggestions('teacher')}
             />
