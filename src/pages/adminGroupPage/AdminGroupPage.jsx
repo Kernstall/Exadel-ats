@@ -3,10 +3,13 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
+import CloudDownload from '@material-ui/icons/CloudDownload';
+import Button from '@material-ui/core/Button';
 import Common from '../../common/styles/Common';
 import { getAdminGroups } from '../../commands/admin';
 import SearchBox from './searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
+import Spinner from '../../common/shared/spinner';
 
 const styles = {
   ...Common,
@@ -20,20 +23,32 @@ const styles = {
   menue: {
     margin: '10px',
   },
+  absoluteCenter: {
+    position: 'fixed',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    left: 0,
+    top: 0,
+  },
+  center: {
+    margin: 'auto',
+  },
+  icon: {
+    opacity: '0.3',
+    marginLeft: 10,
+  },
+  button: {
+    background: '#2196f350',
+    '&:hover': {
+      background: '#2196f3',
+    },
+    transition: '.4s',
+    marginTop: '10px',
+    width: 280,
+    fontWeight: 300,
+  },
 };
-
-const mocks = [
-  {
-    groupName: 'Dima2018Summer',
-    teacherName: 'Dmitriy Dmirievich Kotusev',
-    studentsCount: '777',
-  },
-  {
-    groupName: 'Dima2018Winter',
-    teacherName: 'Dmitriy Dmirievich Kotusev',
-    studentsCount: '776',
-  },
-];
 
 class AdminGroupPage extends Component {
   constructor(props) { // eslint-disable-line
@@ -50,6 +65,10 @@ class AdminGroupPage extends Component {
   componentDidUpdate(prevProps, prevState) {
     prevState.historyFilter === this.state.historyFilter
       || this.props.getAdminGroups(this.state.historyFilter);
+  }
+
+  handleDownload = () => {
+    this.props.getAdminGroups(this.state.historyFilter, true);
   }
 
   handleHistoryFilter = (props) => {
@@ -78,6 +97,10 @@ class AdminGroupPage extends Component {
         >
           <Grid item className={classes.SearcBox}>
             <SearchBox handleHistoryFilter={this.handleHistoryFilter} />
+            <Button className={classes.button} onClick={this.handleDownload}>
+              Загрузить excel
+              <CloudDownload className={classes.icon} />
+            </Button>
           </Grid>
           <Grid
             item
@@ -91,11 +114,14 @@ class AdminGroupPage extends Component {
               <ActivityListItems info={newAdminGroups} />
             </List>
           </Grid>
-          <h1>Groups</h1>
         </Grid>
       );
     }
-    return null;
+    return (
+      <div className={classes.absoluteCenter}>
+        <Spinner className={classes.center} />
+      </div>
+    );
   }
 }
 
@@ -105,7 +131,7 @@ const mapStateToProps = state => ({
 });
 
 const mapCommandsToProps = dispatch => ({
-  getAdminGroups: param => dispatch(getAdminGroups(param)),
+  getAdminGroups: (param, isFile) => dispatch(getAdminGroups(param, isFile)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminGroupPage));

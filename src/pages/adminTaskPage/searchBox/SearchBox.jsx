@@ -41,11 +41,11 @@ class SearchBox extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
-      score: 'all',
+      weight: 'all',
       language: 'all',
       name: '',
     };
-    this.score.unshift({
+    this.weight.unshift({
       value: 'all',
       label: 'Любая сложность ...',
     });
@@ -55,7 +55,7 @@ class SearchBox extends Component {
     });
   }
 
-  score = [4, 6, 8, 10].map(element => ({
+  weight = [4, 6, 8, 10].map(element => ({
     value: element,
     label: element,
   }));
@@ -95,13 +95,13 @@ class SearchBox extends Component {
             id="select-university"
             select
             className={classes.textField}
-            value={this.state.score}
-            onChange={this.handleChange('score')}
+            value={this.state.weight}
+            onChange={this.handleChange('weight')}
             InputProps={{
               disableUnderline: true,
             }}
           >
-            {this.score.map(option => (
+            {this.weight.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
