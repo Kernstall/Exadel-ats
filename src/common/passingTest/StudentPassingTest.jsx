@@ -3,14 +3,23 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
+import Paper from '@material-ui/core/Paper';
 import Questions from './Questions';
 import Spinner from '../shared/spinner/index';
+import Common from '../styles/Common';
 
 
 const styles = theme => ({
+  ...Common,
   root: {
     width: '100%',
     backgroundColor: theme.palette.background.paper,
+  },
+  paper: {
+    width: '70%',
+    margin: '20px 15%',
+    display: 'flex',
+    justifyContent: 'center',
   },
 });
 
@@ -50,10 +59,11 @@ class PassingTest extends Component {
     if (testQuestions) {
       return (
         <div className={classes.root}>
-          <List
-            component="nav"
-          >
-            {
+          <Paper className={classes.paper} elevation={3}>
+            <List
+              component="nav"
+            >
+              {
               testQuestions.map(
                 (question, index) => (
                   <Questions
@@ -63,7 +73,8 @@ class PassingTest extends Component {
                 ),
               )
             }
-          </List>
+            </List>
+          </Paper>
         </div>
       );
     }
