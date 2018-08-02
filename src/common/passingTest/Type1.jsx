@@ -20,9 +20,12 @@ const styles = theme => ({
 });
 
 class Type1 extends React.Component {
-  state = {
-    value: 'answer',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 'answer',
+    };
+  }
 
   handleChange = (event) => {
     this.setState({ value: event.target.value });
