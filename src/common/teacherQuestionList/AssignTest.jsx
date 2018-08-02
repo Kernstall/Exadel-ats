@@ -51,6 +51,12 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'row',
   },
+  error: {
+    margin: 2,
+    padding: 5,
+    border: '1px red solid',
+    borderRadius: 5,
+  },
 });
 
 function getDataTextField(type, label, classname, defaultThing, onChangeThing) {
@@ -101,8 +107,8 @@ class AssingTest extends React.Component {
       .catch(err => console.log(err));
   }
 
-  getErrorJSX = (name) => {
-    return name ? (<div className="error">Выберите {name}</div>) : '';
+  getErrorJSX = (name, errorClass) => {
+    return name ? (<div className={errorClass}>{name}</div>) : '';
   }
 
   handleChange = name => (event) => {
@@ -141,19 +147,19 @@ class AssingTest extends React.Component {
       deadline,
     } = this.state;
     if (!flag) {
-      this.setState({ error: 'группу или студента' });
+      this.setState({ error: 'Выберите группу или студента' });
       return;
     }
     if (!count) {
-      this.setState({ error: 'количество вопросов' });
+      this.setState({ error: 'Выберите количество вопросов' });
       return;
     }
     if (this.isInvalid(deadline) || this.isInvalid(start)) {
-      this.setState({ error: 'дату' });
+      this.setState({ error: 'Выберите правильно дату' });
       return;
     }
     if (deadline - start < 0) {
-      this.setState({ error: 'правильный дедлайн' });
+      this.setState({ error: 'Дедлайн раньше старта' });
       return;
     }
     const myBody = {};
@@ -174,10 +180,12 @@ class AssingTest extends React.Component {
     })
       .then(response => response.json())
       .then((body) => {
-        console.log(body);
         handle();
       })
-      .catch(err => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        this.setState({ error: err });
+      });
   }
 
   handleChangeData = (type) => {
@@ -186,9 +194,9 @@ class AssingTest extends React.Component {
 
   render() {
     const { classes, handleClose, questionsCount } = this.props;
-    const { groups, students } = this.state;
+    const { groups, students, error } = this.state;
     const questionCount = ['10', '15', '20', '25', '30', '35', '40'].filter(el => parseInt(el, 10) <= questionsCount);
-    const errorCode = this.getErrorJSX(this.state.error);
+    const errorCode = this.getErrorJSX(error, classes.error);
     return (
       <div className={classes.flex}>
         {groups && (

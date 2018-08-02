@@ -1032,6 +1032,10 @@ exports.getRandomTest = async (topicId, count) => {
   const typeThree = Question.find({ topicId, kind: 'without answer option' }).select({ _id: 1 });
   const typeFour = Question.find({ topicId, kind: 'without answer with verification' }).select({ _id: 1 });
   const result = await Promise.all([typeOne, typeTwo, typeThree, typeFour]);
+  if (result[0].length === 0 || result[1].length === 0 || result[2].length === 0
+    || result[3].length === 0) {
+    throw new Error('Недостаточно вопросов');
+  }
   const firstQuestions = [result[0][random(result[0].length)], result[1][random(result[1]
     .length)], result[2][random(result[2].length)], result[2][random(result[2].length)]];
   const notSearch = firstQuestions.map(el => el = el._id);
