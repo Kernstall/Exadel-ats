@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import Questions from './Questions';
 import Spinner from '../shared/spinner/index';
 import Common from '../styles/Common';
-import Typography from '@material-ui/core/Typography';
 
 
 const styles = theme => ({
@@ -21,6 +22,17 @@ const styles = theme => ({
     margin: '20px 15%',
     display: 'flex',
     justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  button: {
+    margin: theme.spacing.unit,
+    maxWidth: '30px',
+    color: '#fff',
+    backgroundColor: '#2196f3',
+    '&:hover': {
+      backgroundColor: '#1b77c5',
+    },
   },
 });
 
@@ -45,7 +57,7 @@ const testQuestions = [
   },
 ];
 
-const testTheme = 'Test theme 1';
+// const testTheme = 'Test theme 1';
 
 
 class PassingTest extends Component {
@@ -63,9 +75,9 @@ class PassingTest extends Component {
       return (
         <div className={classes.root}>
           <Paper className={classes.paper} elevation={3}>
-            {/*<Typography variant="headline" component="h4">*/}
-              {/*{testTheme}*/}
-            {/*</Typography>*/}
+            {/* <Typography variant="headline" component="h4"> */}
+            {/* {testTheme} */}
+            {/* </Typography> */}
             <List
               component="nav"
             >
@@ -80,6 +92,9 @@ class PassingTest extends Component {
               )
             }
             </List>
+            <Button variant="contained" color="primary" className={classes.button}>
+              Submit
+            </Button>
           </Paper>
         </div>
       );
