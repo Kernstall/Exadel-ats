@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
-import CloudDownload from '@material-ui/icons/CloudDownload';
-import Button from '@material-ui/core/Button';
 import Common from '../../common/styles/Common';
 import { getAdminActivities } from '../../commands/admin';
 import SearchBox from './searchBox/SearchBox.jsx';
@@ -95,10 +93,6 @@ class AdminHistoryPage extends Component {
         >
           <Grid item className={classes.SearcBox}>
             <SearchBox handleHistoryFilter={this.handleHistoryFilter} />
-            <Button className={classes.button} onClick={this.handleDownload}>
-              Загрузить excel
-              <CloudDownload className={classes.icon} />
-            </Button>
           </Grid>
           <Grid
             item

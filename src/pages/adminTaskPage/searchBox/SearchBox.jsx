@@ -3,6 +3,7 @@ import { withStyles, Paper } from '@material-ui/core/es';
 import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import localize from '../../../localization/localization';
 
 const styles = {
   parent: {
@@ -80,7 +81,7 @@ class SearchBox extends Component {
     return (
       <Paper className={[classes.parent].join(' ')}>
         <div className={classes.caption}>
-          Search tasks by:
+          {localize('Search tasks by:')}
         </div>
         <Paper className={classes.child} elevation={0}>
           <Input

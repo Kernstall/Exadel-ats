@@ -64,7 +64,7 @@ function propsToQuery(body, params) {
 
 export const getAdminActivities = (param, isFile) => (dispatch) => {
   let query = /* isFile ? `${startQuery}/statistics/activities?` :  */`${startQuery}activities?`;
-  query += 'skip=0';
+  // query += 'skip=0';
   if (param.role == 'all') {
     param.role = '';
   }
@@ -72,10 +72,16 @@ export const getAdminActivities = (param, isFile) => (dispatch) => {
     param.name = englishToRussian(param.name);
   }
   param.name = firstLetterToUpperCase(param.name);
-
+  query = propsToQuery(query, param);
   dispatch(activitiesActions.adminActivitiesRequest());
-  (isFile ? fileFetch(query, param, 'activities-workbook') : objectFetch(query, param))
-    .then(response => response.json())
+  fetch(query,
+    {
+      headers: {
+        'Content-type': 'application/json',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    }).then(response => response.json())
     .then(body => dispatch(activitiesActions.adminActivitiesSuccess(body)))
     .catch(err => dispatch(activitiesActions.adminActivitiesError(err)));
 };

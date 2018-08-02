@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/es';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, Link } from 'react-router-dom';
 import HeaderMenue from './headerMenue/HeaderMenue';
 import AdminTeacherPage from '../adminTeacherPage/AdminTeacherPage';
 import AdminHistoryPage from '../adminHistoryPage/AdminHistoryPage';

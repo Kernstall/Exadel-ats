@@ -45,6 +45,21 @@ const localize = (keyWord) => {
     isTraining: 'Тип',
     difficultyRate: 'Сложность',
     correctPrecent: 'Правильные ответы',
+    'Search history by:': 'Искать историю по:',
+    'Search groups by:': 'Искать группы по:',
+    'Search teachers by:': 'Искать учителей по:',
+    'Search students by:': 'Искать студентов по:',
+    'Search questions by:': 'Искать вопросы по:',
+    'Search tasks by:': 'Искать задачи по:',
+    lastName: 'Имя',
+    universityInfo: 'Группа',
+    mediumTaskScore: 'Средняя оценка по задачам',
+    mediumTestScore: 'Средняя оценка по тестам',
+    groupName: 'Имя группы',
+    teacherName: 'Имя учителя',
+    studentsCount: 'Студентов в группе',
+    score: 'Сложность задачи',
+    language: 'Язык программирования',
   };
 
   const dictionaries = {

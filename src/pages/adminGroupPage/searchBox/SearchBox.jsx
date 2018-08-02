@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles, Paper } from '@material-ui/core/es';
 import Input from '@material-ui/core/Input';
+import localize from '../../../localization/localization';
 
 const styles = {
   parent: {
@@ -85,7 +86,7 @@ class SearchBox extends Component {
     return (
       <Paper className={[classes.parent].join(' ')}>
         <div className={classes.caption}>
-          Search groups by:
+          {localize('Search groups by:')}
         </div>
         <Paper className={classes.child} elevation={0}>
           <Input

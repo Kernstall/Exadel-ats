@@ -111,7 +111,7 @@ class SearchBox extends Component {
     return (
       <Paper className={[classes.parent].join(' ')}>
         <div className={classes.caption}>
-          Search teacher by:
+          {localize('Search teachers by:')}
         </div>
         <Paper className={classes.child} elevation={0}>
           <Input
