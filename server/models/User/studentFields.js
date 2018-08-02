@@ -37,7 +37,11 @@ module.exports = {
         files: [String],
         result: Number,
         isPassed: Boolean,
-        tests: [Boolean],
+        tests: [{
+          _id: mongoose.Schema.Types.ObjectId,
+          success: Boolean,
+          weight: Number,
+        }],
         comments: [{
           teacherId: {
             type: mongoose.Schema.Types.ObjectId,

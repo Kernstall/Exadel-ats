@@ -9,7 +9,7 @@ class ErrorDispatcher extends React.Component {
     this.errorWindowOnCLick = this.errorWindowOnCLick.bind(this);
   }
 
-  /*  componentDidMount() {
+  /* componentDidMount() {
     this.props.requestErrorMessage('test1');
     this.props.requestErrorMessage('test2');
     this.props.requestErrorMessage('test3');
