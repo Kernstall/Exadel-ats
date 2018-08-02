@@ -27,7 +27,7 @@ const styles = {
     left: 0,
     top: 0,
     width: 'fit-content',
-  },
+  }, 
   headerItem: {
     width: 50,
     height: 60,
