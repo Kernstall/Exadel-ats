@@ -98,6 +98,7 @@ class TestsBar extends React.Component {
           </div>
           {propsTests.map(element => (
             <TestSet
+              handleTestsUpload={this.props.handleTestsUpload}
               input={element.input}
               output={element.output}
               callback={this.handleClickDeleteTest}

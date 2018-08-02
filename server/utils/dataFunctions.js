@@ -6,8 +6,9 @@ const Group = require('../models/Group');
 const User = require('../models/User');
 const Topic = require('../models/Topic');
 const Activities = require('../models/Activity');
-
+const TopicCourse = require('../models/TopicCourse');
 const mapping = require('./mapping/map');
+
 exports.commonSrcCodePath;
 exports.commonTaskPath;
 
@@ -548,57 +549,119 @@ exports.getStudents = async () => {
   return answer;
 };
 
-exports.getGroupStudentTests = async (studentId, groupId) => {
-  const result = await User.find({ _id: mongoose.Types.ObjectId(studentId) })
-    .populate('tests.topicsIds', { _id: 0, name: 1 })
-    .select({
-      _id: 0,
-      'tests.result': 1,
-      'tests.groupId': 1,
-      'tests.isTraining': 1,
-      'tests.status': 1,
-    });
-  const trainingTests = [];
-  const notTrainingTests = [];
-  let trCount = 0;
-  let notTrCount = 0;
-  let trSum = 0;
-  let notTrSum = 0;
+const isValidByQuestionsTypes = async (elem) => {
+  const typeOne = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'one answer' });
+  const typeTwo = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'multiple answers' });
+  const typeThree = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'multiple answers' });
+  const typeFour = Question.find({
+    topicId: mongoose.Types.ObjectId(elem.id),
+    kind: 'without answer with verification',
+  });
+  const result = await Promise.all([typeOne, typeTwo, typeThree, typeFour]);
+  if (result[0].length === 0 || result[1].length === 0 || result[2].length === 0 || result[3].length === 0) {
+    return { isValid: false, id: elem.id, name: elem.name };
+  }
+  return { isValid: true, id: elem.id, name: elem.name };
+};
 
-  if (result.length !== 0) {
-    for (let i = 0; i < result[0].tests.length; i++) {
-      console.log(result[0].tests[i].isTraining);
-      if (String(result[0].tests[i].groupId) === String(groupId)) {
-        if (result[0].tests[i].isTraining) {
-          trCount += 1;
-          trSum += result[0].tests[i].result;
-          trainingTests.push({
-            topicsNames: result[0].tests[i].topicsIds,
-            status: result[0].tests[i].status,
-            result: result[0].tests[i].result,
-          });
-        } else {
-          notTrCount += 1;
-          notTrSum += result[0].tests[i].result;
-          notTrainingTests.push({
-            topicsNames: result[0].tests[i].topicsIds,
-            status: result[0].tests[i].status,
-            result: result[0].tests[i].result,
-          });
+exports.getGroupStudentTests = async (studentId, groupId) => {
+  try {
+    const result = await User.find({ _id: mongoose.Types.ObjectId(studentId) })
+      .populate('tests.topicsIds', { _id: 1, name: 1 })
+      .select({
+        _id: 0,
+        'tests.result': 1,
+        'tests.groupId': 1,
+        'tests.isTraining': 1,
+        'tests.status': 1,
+      });
+    const trainingTests = [];
+    const notTrainingTests = [];
+    let trCount = 0;
+    let notTrCount = 0;
+    let trSum = 0;
+    let notTrSum = 0;
+    const invalidTopicsIds = [];
+
+    if (result.length !== 0) {
+      for (let i = 0; i < result[0].tests.length; i++) {
+        console.log(result[0].tests[i].isTraining);
+        if (String(result[0].tests[i].groupId) === String(groupId)) {
+          if (result[0].tests[i].isTraining) {
+            trCount += 1;
+            invalidTopicsIds.push(String(result[0].tests[i].topicsIds[0]._id));
+            trSum += result[0].tests[i].result;
+            trainingTests.push({
+              topicsNames: result[0].tests[i].topicsIds,
+              status: result[0].tests[i].status,
+              result: result[0].tests[i].result,
+            });
+          } else {
+            notTrCount += 1;
+            notTrSum += result[0].tests[i].result;
+            notTrainingTests.push({
+              topicsNames: result[0].tests[i].topicsIds,
+              status: result[0].tests[i].status,
+              result: result[0].tests[i].result,
+            });
+          }
         }
       }
     }
+
+    const topicCourseId = await Group.findById(groupId)
+      .select({
+        _id: 0,
+        topicCourseIds: 1,
+      });
+
+    const groupTopicsIds1 = (await TopicCourse.findById(topicCourseId.topicCourseIds)
+      .populate('topicsIds', { _id: 1, name: 1 })
+      .select({
+        _id: 0,
+        name: 0,
+        __v: 0,
+      })).topicsIds;
+
+    const topicsFilter1 = [];
+
+    groupTopicsIds1.forEach((elem) => {
+      const index = invalidTopicsIds.indexOf(String(elem.id));
+      if (index === -1) {
+        topicsFilter1.push(elem);
+      }
+    });
+
+    const promiseArr = [];
+
+    topicsFilter1.forEach((elem) => {
+      promiseArr.push(isValidByQuestionsTypes(elem));
+    });
+
+    const resultQuestionTypeCheck = await Promise.all(promiseArr);
+
+    const topicsFilter2 = [];
+
+    resultQuestionTypeCheck.forEach((elem) => {
+      if (elem.isValid === true) {
+        topicsFilter2.push({ id: elem.id, name: elem.name });
+      }
+    });
+
+    return [{
+      name: 'Training tests',
+      info: trainingTests,
+      avgMark: trSum / trCount,
+      availableTopics: topicsFilter2,
+    }, {
+      name: 'Examination tests',
+      info: notTrainingTests,
+      avgMark: notTrSum / notTrCount,
+    }];
+  } catch (e) {
+    console.log(e.toString());
   }
 
-  return [{
-    name: 'Training tests',
-    info: trainingTests,
-    avgMark: trSum / trCount,
-  }, {
-    name: 'Examination tests',
-    info: notTrainingTests,
-    avgMark: notTrSum / notTrCount,
-  }];
 };
 
 function getExtension(fileName) {
@@ -723,9 +786,8 @@ exports.getFullTaskInfo = async (taskId) => {
       const buff = {};
       buff._id = taskInfo.tests[index]._id;
       buff.weight = taskInfo.tests[index].weight;
-      buff.files = {};
-      buff.files.input = await exports.readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
-      buff.files.output = await exports.readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
+      buff.input = await exports.readFileUTF(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
+      buff.output = await exports.readFileUTF(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
       taskInfo.tests[index] = buff;
     }
     const result = {
