@@ -21,7 +21,7 @@ const styles = theme => ({
 
 class Type1 extends React.Component {
   state = {
-    value: 'female',
+    value: 'answer',
   };
 
   handleChange = (event) => {

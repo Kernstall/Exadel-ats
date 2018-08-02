@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Questions from './Questions';
 import Spinner from '../shared/spinner/index';
 import Common from '../styles/Common';
+import Typography from '@material-ui/core/Typography';
 
 
 const styles = theme => ({
@@ -44,6 +45,8 @@ const testQuestions = [
   },
 ];
 
+const testTheme = 'Test theme 1';
+
 
 class PassingTest extends Component {
   // componentDidMount() {
@@ -60,6 +63,9 @@ class PassingTest extends Component {
       return (
         <div className={classes.root}>
           <Paper className={classes.paper} elevation={3}>
+            {/*<Typography variant="headline" component="h4">*/}
+              {/*{testTheme}*/}
+            {/*</Typography>*/}
             <List
               component="nav"
             >
