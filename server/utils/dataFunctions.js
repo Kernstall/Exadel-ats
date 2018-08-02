@@ -939,3 +939,44 @@ exports.createQuestion = async (creatorId, reqBody) => {
     throw e;
   }
 };
+
+exports.getGroupsAndStudents = async (teacherId) => {
+  try {
+    let groups = await Group.find({ teacherId }).populate('studentIdList', ['_id', 'firstName', 'lastName']);
+    let students = [];
+    groups.forEach(el => el.studentIdList.forEach(stud => students.push({
+      studentInfo: `${stud._id.toString()}_${el._id}`,
+      studentName: `${stud.lastName} ${stud.firstName} (${el.groupName})`,
+    })));
+    groups = groups.map(el => el = mapping.mapGroupForChooseToDto(el));
+    return { groups, students };
+  } catch (err) {
+    return err;
+  }
+};
+
+function random(num) {
+  return Math.floor(Math.random() * num);
+}
+function arrRandom(arr, count) {
+  let a = arr.slice();
+  while (a.length > count) a.splice(random(a.length - 1), 1);
+  return a;
+}
+
+exports.getRandomTest = async (topicId, count) => {
+  const typeOne = Question.find({ topicId, kind: 'one answer' }).select({ _id: 1 });
+  const typeTwo = Question.find({ topicId, kind: 'multiple answers' }).select({ _id: 1 });
+  const typeThree = Question.find({ topicId, kind: 'without answer option' }).select({ _id: 1 });
+  const typeFour = Question.find({ topicId, kind: 'without answer with verification' }).select({ _id: 1 });
+  const result = await Promise.all([typeOne, typeTwo, typeThree, typeFour]);
+  const firstQuestions = [result[0][random(result[0].length)], result[1][random(result[1]
+    .length)], result[2][random(result[2].length)], result[2][random(result[2].length)]];
+  const notSearch = firstQuestions.map(el => el = el._id);
+  const all = await Question.find({
+    topicId,
+    _id: { $nin: notSearch },
+  }).select({ _id: 1 });
+  const test = [...firstQuestions, ...arrRandom(all, count - 4)];
+  return test;
+};
