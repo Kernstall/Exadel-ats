@@ -60,23 +60,28 @@ const styles = theme => ({
 class TestsBar extends React.Component {
   constructor(props) {
     super(props);
-    this.id = '';
     this.state = {
       propsTests: props.tests,
     };
   }
 
+  componentWillReceiveProps(props) {
+    this.setState({
+      propsTests: props.tests,
+    });
+  }
+
   handleClickDeleteTest = (key) => {
     const { propsTests } = this.state;
-    const deleteId = propsTests.findIndex(element => element.testId === key);
+    const deleteId = propsTests.findIndex(element => element._id === key);
     propsTests.splice(deleteId, 1);
     this.setState({ propsTests });
-  }
+  };
 
   render() {
     const { classes, handleClickAddTest } = this.props;
     const { propsTests } = this.state;
-
+    console.log(this.state);
     return (
       <div className={classes.root}>
         <div className={classes.testsTitleAndAdd}>
@@ -96,8 +101,8 @@ class TestsBar extends React.Component {
               input={element.input}
               output={element.output}
               callback={this.handleClickDeleteTest}
-              id={element.testId}
-              key={element.testId}
+              id={element._id}
+              key={element._id}
               isNew={element.isNew}
             />
           ))}
