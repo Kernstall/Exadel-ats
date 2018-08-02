@@ -102,9 +102,7 @@ class AttemptFiles extends Component {
       );
     }
     return (
-      <Paper className={[classes.flex, classes.heightToTop].join(' ')}>
         <Spinner />
-      </Paper>
     );
   }
 }

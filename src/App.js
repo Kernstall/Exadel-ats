@@ -20,6 +20,8 @@ import TeacherTaskEdit from './common/teachetTaskEdit/TeacherTaskEdit';
 import { PrivateRoute } from './common/loginForm/PrivateRouter';
 import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent.jsx';
+import PassingTest from './common/passingTest/StudentPassingTest.jsx';
+
 import TeacherCreateTestQuestion from './pages/teacherCreateTestQuestion/TeacherCreateTestQuestion';
 
 const styles = ({
@@ -47,10 +49,11 @@ class App extends Component {
               <PrivateRoute exact path="/teacher/id/:id" component={TeacherMainPage} />
               <Route path="/admin" component={AdminMainPage} />
               <Route exact path="/task/attempt/:taskId/:attemptNumber" component={AttemptFiles} />
-              <Route path="/teacher/task/edit" component={TeacherTaskEdit} />
+              <Route path="/teacher/task/edit/:id" component={TeacherTaskEdit} />
               <Route path="/teacher/tasks/:id" component={TaskView} />
               <Route path="/teacher/groups/:id" component={TeacherGroupComponent} />
               <Route path="/teacher/task/add" component={TeacherCreateTestQuestion} />
+              <Route path="/student/passingTest" component={PassingTest} />
             </div>
           </Router>
           <Footer />

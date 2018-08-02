@@ -72,7 +72,7 @@ class GroupsList extends React.Component {
         ))}
         <Link className={classes.buttonContainer} to="/teacher/addGroup">
           <Button className={classes.createNewGroupButton} variant="contained">
-            Create new group
+            Создать группу
           </Button>
         </Link>
       </List>

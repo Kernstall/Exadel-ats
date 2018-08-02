@@ -19,7 +19,7 @@ const styles = theme => ({
     color: 'whitesmoke',
     height: 'fit-content',
     backgroundColor: theme.palette.background.paper,
-    width: 700,
+    width: '60%',
   },
   groupTemplate: {
     display: 'flex',
@@ -82,29 +82,29 @@ class TeacherMainPage extends React.Component {
             indicatorColor="primary"
             centered
           >
-            <Tab label="Groups" />
-            <Tab label="Tests" />
-            <Tab label="Tasks" />
+            <Tab label="Группы" />
+            <Tab label="Тесты" />
+            <Tab label="Задачи" />
           </Tabs>
           {value === 0
             && (
-            <TabContainer>
-              <GroupsList id={this.props.match.params.id} />
-            </TabContainer>
+              <TabContainer>
+                <GroupsList id={this.props.match.params.id} />
+              </TabContainer>
             )
-            }
+          }
           {value === 1
             && (
-            <TabContainer>
-              <TeacherQuestionList />
-            </TabContainer>
+              <TabContainer>
+                <TeacherQuestionList />
+              </TabContainer>
             )
           }
           {value === 2
             && (
-            <TabContainer>
-              <TeacherTasksList />
-            </TabContainer>
+              <TabContainer>
+                <TeacherTasksList />
+              </TabContainer>
             )
           }
         </AppBar>

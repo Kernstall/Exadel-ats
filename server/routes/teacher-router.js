@@ -1,5 +1,6 @@
 const express = require('express');
 const got = require('got');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const FormData = require('form-data');
 
@@ -16,7 +17,6 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 const router = express.Router();
 
 router.use((req, res, next) => {
-
   if (req.user.status === 'teacher' || req.user.status === 'admin') {
     return next();
   }
@@ -71,6 +71,35 @@ router.get('/full/task', async (req, res) => {
   }
 });
 
+router.post('/task/tests', async (req, res, next) => {
+  if (!(await Task.findById(req.query.id))) {
+    res.status(400).send('Invalid task id, there is no such task id in the data base');
+  } else {
+    next();
+  }
+});
+
+router.post('/task/tests', uploadFiles.uploadTests.array('tests'), async (req, res) => {
+  res.status(200).send('Operation successful');
+});
+
+router.use(async (err, req, res, next) => {
+  if (err.message === 'Invalid format of some files') {
+    res.status(400).send(err.message);
+  } else {
+    throw (err);
+  }
+});
+
+router.post('/task', (req, res, next) => {
+  req.body.id = new mongoose.Types.ObjectId();
+  next();
+});
+
+router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) => {
+
+});
+
 router.get('/questions', (req, res) => {
   let hashSet = {};
   Question.find().populate('topicId', 'name').exec((err, questions) => {
@@ -78,6 +107,7 @@ router.get('/questions', (req, res) => {
     questions.forEach((question) => {
       if (!hashSet[question.topicId.name]) {
         hashSet[question.topicId.name] = {
+          topicId: question.topicId._id,
           topicName: question.topicId.name,
           questions: {},
           count: 0,
@@ -102,16 +132,6 @@ router.get('/questions', (req, res) => {
     });
     res.send(hashSet);
   });
-});
-
-router.post('/task', (req, res) => {
-  dataFunctions.addTask(req.body)
-    .then((response) => {
-      res.status(200).send(response);
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
 });
 
 router.post('/question', (req, res) => {
@@ -192,28 +212,8 @@ router.post('/group', async (req, res) => {
   }
 });
 
-router.post('/task/tests', uploadFiles.uploadTests.array('tests'), async (req, res) => {
-  if (req.files) {
-    const count = req.files.length;
-    const form = new FormData();
-
-    for (let i = 0; i < count; i++) {
-      await fileSystemFunctions.copyFile(`${req.files[i].destination}/${req.files[i].filename}`, `${req.files[i].destination}/${req.files[i].originalname}`);
-      form.append('tests', fs.createReadStream(`${req.files[i].destination}/${req.files[i].originalname}`));
-    }
-
-    (async () => {
-      try {
-        const answer = await got.post(`http://localhost:3002/someExample?taskId=${req.query.taskId}`, { body: form });
-        for (let i = 0; i < count; i++) {
-          await fileSystemFunctions.deleteFile(`${req.files[i].destination}/${req.files[i].originalname}`);
-        }
-        res.status(200).send(answer.body);
-      } catch (error) {
-        res.status(400).send(error.toString());
-      }
-    })();
-  }
+router.use(async (err, req, res, next) => {
+  res.status(500).send(err.message);
 });
 
 router.get('/all/topics', async (req, res) => {

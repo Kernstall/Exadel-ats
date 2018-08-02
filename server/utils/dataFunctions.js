@@ -616,7 +616,18 @@ exports.readFile = async (path) => {
       }
     });
   });
-}
+};
+exports.readFileUTF = async (path) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, 'utf8', (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
 
 exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
   try {
@@ -650,7 +661,7 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
       answer[i].name = attemptInfo.files[i].slice(0, attemptInfo.files[i].indexOf('.'));
       answer[i].extension = getExtension(attemptInfo.files[i]);
 
-      answer[i].fileContents = await readFile(`${exports.commonSrcCodePath}/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
+      answer[i].fileContents = await exports.readFile(`${exports.commonSrcCodePath}/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
     }
     return answer;
   } catch (e) {
@@ -661,8 +672,8 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
 exports.getTaskInfo = async (taskId) => {
   try {
     const taskInfo = await Task.findById(taskId);
-    const input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[0]._id}/input.txt`);
-    const output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[0]._id}/output.txt`);
+    const input = await exports.readFileUTF(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[0]._id}/input.txt`);
+    const output = await exports.readFileUTF(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[0]._id}/output.txt`);
     const result = mapping.mapTaskAndTestsToDto(taskInfo, input, output);
     return result;
   } catch (e) {
@@ -671,7 +682,7 @@ exports.getTaskInfo = async (taskId) => {
 };
 
 exports.getUsersTasksAttemptNumber = async (userId, taskId) => {
-  //console.log(userId);
+  // console.log(userId);
   const result = await User.aggregate([
     { $match: { _id: mongoose.Types.ObjectId(userId) } },
     {
@@ -693,7 +704,7 @@ exports.getUsersTasksAttemptNumber = async (userId, taskId) => {
 exports.getFullTaskInfo = async (taskId) => {
   try {
     const taskInfo = await Task.findById(taskId)
-      .populate('topicId', { _id: 0, name: 1 })
+      .populate('topicId', { name: 1 })
       .select({
         _id: 0,
         topicId: 1,
@@ -705,15 +716,15 @@ exports.getFullTaskInfo = async (taskId) => {
       });
     if (taskInfo.topicId) {
       taskInfo.topicName = taskInfo.topicId.name;
+      taskInfo.topId = taskInfo.topicId.id;
     }
 
     for (let index = 0; index < taskInfo.tests.length; index++) {
       const buff = {};
       buff._id = taskInfo.tests[index]._id;
       buff.weight = taskInfo.tests[index].weight;
-      buff.files = {};
-      buff.files.input = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
-      buff.files.output = await readFile(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
+      buff.input = await exports.readFileUTF(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/input.txt`);
+      buff.output = await exports.readFileUTF(`${exports.commonTaskPath}/${taskId}/${taskInfo.tests[index]._id}/output.txt`);
       taskInfo.tests[index] = buff;
     }
     const result = {
@@ -723,6 +734,7 @@ exports.getFullTaskInfo = async (taskId) => {
       tags: taskInfo.tags,
       tests: taskInfo.tests,
       topicName: taskInfo.topicName,
+      topicId: taskInfo.topId,
     };
 
     return result;
@@ -815,30 +827,8 @@ exports.getTaskTests = async (taskId) => {
 };
 
 exports.filterTeacher = async (skip, limit, body) => {
-  const {
-    firstName,
-    lastName,
-    fathersName,
-    email,
-    university,
-  } = body;
-  const filter = {};
+  const filter = body;
   filter.status = 'teacher';
-  if (firstName) {
-    filter.firstName = firstName;
-  }
-  if (lastName) {
-    filter.lastName = lastName;
-  }
-  if (fathersName) {
-    filter.fathersName = fathersName;
-  }
-  if (email) {
-    filter.email = email;
-  }
-  if (university) {
-    filter.university = university;
-  }
   let result;
   if (limit > 0) {
     result = await User.find(filter).limit(limit).skip(skip);
@@ -848,35 +838,9 @@ exports.filterTeacher = async (skip, limit, body) => {
   return result;
 };
 exports.filterStudent = async (skip, limit, body) => {
-  const {
-    firstName,
-    lastName,
-    university,
-    graduateYear,
-    mediumTaskScore,
-    mediumTestScore,
-  } = body;
   let result;
-  const filter = {};
+  const filter = body;
   filter.status = 'student';
-  if (firstName) {
-    filter.firstName = firstName;
-  }
-  if (lastName) {
-    filter.lastName = lastName;
-  }
-  if (graduateYear) {
-    filter.graduateYear = graduateYear;
-  }
-  if (university) {
-    filter.university = university;
-  }
-  if (typeof mediumTaskScore !== 'undefined') {
-    filter.mediumTaskScore = mediumTaskScore;
-  }
-  if (typeof mediumTestScore !== 'undefined') {
-    filter.mediumTestScore = mediumTestScore;
-  }
   if (limit > 0) {
     result = await User.find(filter).limit(limit).skip(skip);
   } else {
@@ -885,86 +849,29 @@ exports.filterStudent = async (skip, limit, body) => {
   return result;
 };
 exports.filterGroup = async (skip, limit, body) => {
-  const {
-    groupName,
-    lastName,
-    firstName,
-    fathersName,
-  } = body;
-  const filter = {};
-  if (firstName) {
-    filter.firstName = firstName;
-  }
-  if (lastName) {
-    filter.lastName = lastName;
-  }
-  if (fathersName) {
-    filter.fathersName = fathersName;
-  }
-  if (groupName) {
-    filter.groupName = groupName;
-  }
   let result;
   if (limit > 0) {
-    result = await Group.find(filter).limit(limit).skip(skip);
+    result = await Group.find(body).limit(limit).skip(skip);
   } else {
-    result = await Group.find(filter);
+    result = await Group.find(body);
   }
   return result;
 };
 exports.filterTask = async (skip, limit, body) => {
-  const {
-    name,
-    score,
-    language,
-  } = body;
-  const filter = {};
-  if (name) {
-    filter.name = name;
-  }
-  if (score) {
-    filter.weight = score;
-  }
-  if (language) {
-    filter.language = language;
-  }
   let result;
   if (limit > 0) {
-    result = await Task.find(filter).limit(limit).skip(skip);
+    result = await Task.find(body).limit(limit).skip(skip);
   } else {
-    result = await Task.find(filter);
+    result = await Task.find(body);
   }
   return result;
 };
 exports.filterQuestion = async (skip, limit, body) => {
-  const {
-    kind,
-    difficultyRate,
-    isTraining,
-    correntAnswersCount,
-    wrongAnswersCount,
-  } = body;
-  const filter = {};
-  if (kind) {
-    filter.kind = kind;
-  }
-  if (difficultyRate) {
-    filter.difficultyRate = difficultyRate;
-  }
-  if (isTraining) {
-    filter.isTraining = isTraining;
-  }
-  if (correntAnswersCount) {
-    filter.correntAnswersCount = correntAnswersCount;
-  }
-  if (wrongAnswersCount) {
-    filter.wrongAnswersCount = wrongAnswersCount;
-  }
   let result;
   if (limit > 0) {
-    result = await Question.find(filter).limit(limit).skip(skip);
+    result = await Question.find(body).limit(limit).skip(skip);
   } else {
-    result = await Question.find(filter);
+    result = await Question.find(body);
   }
   return result;
 };

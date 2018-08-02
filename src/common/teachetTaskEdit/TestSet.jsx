@@ -18,10 +18,11 @@ const styles = {
   },
 };
 
-const TestSet = ({ classes, input, output, id, isNew = false, callback, handleClickEdit, handleClickUpload }) => (
+const TestSet = ({ classes, input, output, id, isNew = false, callback, handleClickEdit, handleClickUpload, handleTestsUpload }) => (
 
   <div className={classes.test}>
     <TestField
+      handleTestsUpload={handleTestsUpload}
       inputText={input}
       isNew={isNew}
       id={`${id}1`}
