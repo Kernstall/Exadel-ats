@@ -139,24 +139,6 @@ class SearchBox extends Component {
             ))}
           </TextField>
         </Paper>
-        <Paper className={classes.child} elevation={0}>
-          <TextField
-            id="select-university"
-            select
-            className={classes.textField}
-            value={this.state.university}
-            onChange={this.handleChange('university')}
-            InputProps={{
-              disableUnderline: true,
-            }}
-          >
-            {universities.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Paper>
       </Paper>
     );
   }

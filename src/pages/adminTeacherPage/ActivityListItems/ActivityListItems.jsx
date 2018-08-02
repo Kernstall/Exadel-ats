@@ -43,10 +43,10 @@ const styles = {
 class ActivityListItems extends Component {
   constructor(props) {
     super(props);
-    this.sortBy = ['name', 'email', 'numberTestsToCheck', 'university'];
+    this.sortBy = ['lastName', 'email', 'numberTestsToCheck', 'university'];
     this.state = {
       sortBy: this.sortBy[0],
-      isDecreasing: true,
+      isDecreasing: false,
     };
   }
 
