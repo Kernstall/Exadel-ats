@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import DirectionsRun from '@material-ui/icons/DirectionsRun';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/es/Button/Button';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import GroupsList from './groupsList/GroupsList.jsx';
@@ -40,6 +40,21 @@ const styles = theme => ({
     width: 200,
     color: '#fff',
     backgroundColor: '#2196f3',
+  },
+  position: {
+    position: 'absolute',
+    right: 10,
+    top: 10,
+    color: 'black',
+  },
+  icon: {
+    width: 38,
+    height: 38,
+    transition: '.3s',
+    opacity: 0.3,
+    '&:hover': {
+      opacity: 0.8,
+    },
   },
 });
 
@@ -109,9 +124,7 @@ class TeacherMainPage extends React.Component {
           }
         </AppBar>
         <Link to="/">
-          <Button onClick={this._logout} className={classes.createNewGroupButton} variant="contained">
-            LOG OUT
-          </Button>
+        <Link onClick={this._logout} className={classes.position} to="/"><DirectionsRun className={classes.icon} /></Link>
         </Link>
       </div>
     );

@@ -13,5 +13,5 @@ export const getStudentTests = ({studentId, groupId}) => (dispatch) => {
   })
     .then(response => response.json())
     .then(body => dispatch(Actions.testsSuccess(body)))
-    .catch(err => dispatch(Actions.testsRequest(err)));
+    .catch(err => dispatch(Actions.testsError(err)));
 };

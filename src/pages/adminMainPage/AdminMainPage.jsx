@@ -8,6 +8,7 @@ import AdminGroupPage from '../adminGroupPage/AdminGroupPage';
 import AdminQuestionPage from '../adminQuestionPage/AdminQuestionPage';
 import AdminStudentPage from '../adminStudentPage/AdminStudentPage';
 import AdminTaskPage from '../adminTaskPage/AdminTaskPage';
+import MainPage from '../mainPage/MainPage';
 
 const styles = {
   root: {
@@ -21,7 +22,7 @@ class AdminMainPage extends Component {
     return (
       <div className={classes.root}>
         <HeaderMenue />
-        {/* <Route path="/" component={() => <Redirect to="/" />} /> */}
+        <Route path="/" exact component={MainPage} />
         <Route path="/admin/id/" component={() => <Redirect to="/admin/history" />} />
         <Route path="/admin/history" exact component={AdminHistoryPage} />
         <Route path="/admin/teachers" exact component={AdminTeacherPage} />

@@ -59,9 +59,9 @@ class TeacherTaskList extends React.Component {
           {this.Tasks}
           {load}
         </List>
-        <Button variant="contained" color="primary" className={classes.button}>
+        {/* <Button variant="contained" color="primary" className={classes.button}>
           Назначить
-        </Button>
+        </Button> */}
       </div>
     );
   }

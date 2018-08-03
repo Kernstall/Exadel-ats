@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import DirectionsRun from '@material-ui/icons/DirectionsRun';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import TeacherImg from '../../../img/teacher.svg';
 import TasksImg from '../../../img/tasks.svg';
 import StudentImg from '../../../img/student.svg';
@@ -10,6 +11,7 @@ import GroupsImg from '../../../img/groups.svg';
 import HistoryImg from '../../../img/history.svg';
 import QuestionsImg from '../../../img/questions.svg';
 import Hint from './hint/Hint';
+import { logout } from '../../../commands/userLogin';
 
 const styles = {
   img: {
@@ -27,7 +29,7 @@ const styles = {
     left: 0,
     top: 0,
     width: 'fit-content',
-  }, 
+  },
   headerItem: {
     width: 50,
     height: 60,
@@ -75,6 +77,10 @@ class HeaderMenue extends Component {
       },
     });
   }
+
+  _logout = () => {
+    this.props.logout();
+  };
 
   render() {
     const { classes } = this.props;
@@ -150,9 +156,20 @@ class HeaderMenue extends Component {
             </div>
           </Link>
         </Grid>
-        <Link className={classes.position} to="/"><DirectionsRun className={classes.icon} /></Link>
+        <Link onClick={this._logout} className={classes.position} to="/"><DirectionsRun className={classes.icon} /></Link>
       </div>
     );
   }
 }
-export default withStyles(styles)(HeaderMenue);
+
+const styledComponent = withStyles(styles)(HeaderMenue);
+
+const mapStateToProps = state => ({
+  response: state.userLogin.response,
+});
+
+const mapCommandsToProps = dispatch => ({
+  logout: param => dispatch(logout(param)),
+});
+
+export default connect(mapStateToProps, mapCommandsToProps)(styledComponent);

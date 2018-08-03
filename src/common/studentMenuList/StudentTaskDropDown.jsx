@@ -52,9 +52,9 @@ class StudentTaskDropDown extends React.Component {
           <Button onClick={this.handleShowAttempts} variant="contained" color="primary" className={classes.button}>
             Show attempts
           </Button>
-          <Button variant="contained" color="primary" className={classes.button}>
+          {/* <Button variant="contained" color="primary" className={classes.button}>
             Upload solution
-          </Button>
+          </Button> */}
           {
             this.state.isShowAttempts
               && (
