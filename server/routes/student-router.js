@@ -22,7 +22,7 @@ router.use((req, res, next) => {
 
 router.get('/group/tasks', async (req, res) => {
   try {
-    const result = await dataFunctions.getStudentTasksByGroup(req.query.studentId, req.query.groupId);
+    const result = await dataFunctions.getStudentTasksByGroup(req.user.id, req.query.groupId);
     res.send(JSON.stringify(result));
   }
   catch (err) {
@@ -49,10 +49,8 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/group/history', (res, req) => {
-  const studentId = res.query.studentId;
-  console.log(studentId);
+  const studentId = res.user.id;
   const groupId = res.query.groupId;
-  console.log(groupId);
   dataFunctions.getStudentHistoryByGroup(studentId, groupId)
     .then((answer) => {
       req.send(JSON.stringify(dataFunctions.deleteOtherGroupInfo(answer, groupId)));

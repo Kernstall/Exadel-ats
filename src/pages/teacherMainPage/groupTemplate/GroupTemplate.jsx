@@ -3,6 +3,13 @@ import Grid from '@material-ui/core/es/Grid/Grid';
 import { withRouter } from 'react-router-dom';
 
 class GroupTemplate extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      groupId: '',
+    };
+  }
+
   render() {
     return (
       <Grid container>
