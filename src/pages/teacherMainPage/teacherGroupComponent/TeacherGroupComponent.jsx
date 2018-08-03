@@ -13,7 +13,6 @@ const styles = theme => ({
     margin: 'auto',
     color: 'whitesmoke',
     height: 'fit-content',
-    backgroundColor: theme.palette.background.paper,
     width: 700,
   },
   addStudentButton: {
@@ -61,7 +60,7 @@ class TeacherGroupComponent extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/api/teacher/group/info?groupID=${this.props.match.params.id}`, {
+    fetch(`/api/teacher/group/info?groupID=${this.props.id}`, {
       headers: {
         'Content-type': 'application/json',
         'Set-Cookie': 'true',
@@ -86,39 +85,12 @@ class TeacherGroupComponent extends React.Component {
   render() {
     const { groupName, studentList } = this.state;
     const { classes } = this.props;
-    const { value } = this.state;
     return (
       <div className={classes.root}>
-        <AppBar position="static" color="default">
-          <Tabs
-            value={value}
-            onChange={this.handleChange}
-            indicatorColor="primary"
-            centered
-          >
-            <Link className={classes.noUnderline} to="/teacher">
-              <Tab label="Groups" />
-            </Link>
-            <Link className={classes.noUnderline} to="/teacher">
-              <Tab label="Tests" />
-            </Link>
-            <Link className={classes.noUnderline} to="/teacher">
-              <Tab label="Tasks" />
-            </Link>
-          </Tabs>
-          {value === 0
-            && (
-            <TabContainer>
-              <TeacherSelectedGroupComponent
-                groupName={groupName}
-                groupMembers={studentList}
-              />
-            </TabContainer>
-            )
-          }
-          {value === 1 && <TabContainer>Tests</TabContainer>}
-          {value === 2 && <TabContainer>Tasks</TabContainer>}
-        </AppBar>
+        <TeacherSelectedGroupComponent
+          groupName={groupName}
+          groupMembers={studentList}
+        />
       </div>
     );
   }
