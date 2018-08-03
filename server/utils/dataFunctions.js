@@ -552,7 +552,7 @@ exports.getStudents = async () => {
 const isValidByQuestionsTypes = async (elem) => {
   const typeOne = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'one answer' });
   const typeTwo = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'multiple answers' });
-  const typeThree = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'multiple answers' });
+  const typeThree = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'without answer option' });
   const typeFour = Question.find({
     topicId: mongoose.Types.ObjectId(elem.id),
     kind: 'without answer with verification',
@@ -566,7 +566,6 @@ const isValidByQuestionsTypes = async (elem) => {
 
 exports.getGroupStudentTests = async (studentId, groupId) => {
   try {
-    console.log('123');
     const result = await User.find({ _id: mongoose.Types.ObjectId(studentId) })
       .populate('tests.topicsIds', { _id: 1, name: 1 })
       .select({
@@ -584,6 +583,8 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
     let trSum = 0;
     let notTrSum = 0;
     const invalidTopicsIds = [];
+
+    console.log(result);
 
     if (result.length !== 0) {
       for (let i = 0; i < result[0].tests.length; i++) {
@@ -610,6 +611,8 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
         }
       }
     }
+    console.log(trainingTests);
+    console.log(notTrainingTests);
 
     const topicCourseId = await Group.findById(groupId)
       .select({
@@ -726,7 +729,7 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
       answer[i].name = attemptInfo.files[i].slice(0, attemptInfo.files[i].indexOf('.'));
       answer[i].extension = getExtension(attemptInfo.files[i]);
 
-      answer[i].fileContents = await exports.readFile(`${exports.commonSrcCodePath}/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
+      answer[i].fileContents = await exports.readFileUTF(`${exports.commonSrcCodePath}/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
     }
     return answer;
   } catch (e) {
