@@ -16,12 +16,12 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 const router = express.Router();
 
-router.use((req, res, next) => {
+/*router.use((req, res, next) => {
   if (req.user.status === 'teacher' || req.user.status === 'admin') {
     return next();
   }
   return res.status(403).end();
-});
+});*/
 
 router.get('/tasks', (req, res) => {
   let hashSet = {};

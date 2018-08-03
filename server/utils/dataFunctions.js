@@ -453,7 +453,7 @@ exports.getStudents = async () => {
   return answer;
 };
 
-exports.createGroup = async (groupName, teacherId) => {
+exports.createGroup = async (_groupName, teacherId) => {
   try {
     const teacher = await User.findById(teacherId)
       .select({
@@ -468,9 +468,9 @@ exports.createGroup = async (groupName, teacherId) => {
       firstName: teacher.firstName,
       fathersName: teacher.lastName,
       lastName: teacher.lastName,
-      groupName,
+      groupName: _groupName,
       studentIdList: [],
-      topicCourseIds: [],
+      topicCourseIds: null,
     });
     let saveGroup = {};
     try {
