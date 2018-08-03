@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  teachers: null,
+  adminTeachers: null,
   error: null,
   isLoading: false,
 };

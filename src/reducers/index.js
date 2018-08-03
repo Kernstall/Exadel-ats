@@ -4,11 +4,10 @@ import studentGroups from './studentGroups';
 import studentTasks from './studentTasks';
 import adminActivities from './adminActivities';
 import adminGroups from './adminGroups';
-import adminStatistics from './adminStatistics';
 import adminStudents from './adminStudents';
 import adminTasks from './adminTasks';
 import adminTeachers from './adminTeachers';
-import adminTests from './adminTests';
+import adminQuestions from './adminQuestions';
 import studentHistory from './studentHistory';
 import teacherCreateGroup from './teacherCreateGroup';
 import userLogin from './userLogin';
@@ -26,11 +25,10 @@ export default combineReducers({
   studentTasks,
   adminActivities,
   adminGroups,
-  adminStatistics,
   adminStudents,
   adminTasks,
   adminTeachers,
-  adminTests,
+  adminQuestions,
   studentHistory,
   teacherCreateGroup,
   userLogin,
