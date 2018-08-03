@@ -73,13 +73,10 @@ class TestField extends React.Component {
     };
   }
 
-  handleClickUpload = () => {
-    console.log('fdghdfgdfgdfg');
-  };
-
   render() {
     const { isUploaded } = this.state;
     const { classes, inputText, isNew, id } = this.props;
+    console.log(id);
     const inputId = `add-file-${id}`;
     return (
       <div className={classes.testItem}>

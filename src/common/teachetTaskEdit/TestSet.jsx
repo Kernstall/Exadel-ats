@@ -18,29 +18,49 @@ const styles = {
   },
 };
 
-const TestSet = ({ classes, input, output, id, isNew = false, callback, handleClickEdit, handleClickUpload, handleTestsUpload }) => (
+class TestSet extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: props.id,
+    };
+  }
 
-  <div className={classes.test}>
-    <TestField
-      handleTestsUpload={handleTestsUpload}
-      inputText={input}
-      isNew={isNew}
-      id={`${id}1`}
-      handleClickEdit={handleClickEdit}
-      handleClickUpload={handleClickUpload}
-    />
-    <TestField
-      inputText={output}
-      isNew={isNew}
-      id={`${id}2`}
-      handleClickEdit={handleClickEdit}
-      handleClickUpload={handleClickUpload}
-    />
-    <Close
-      className={classes.deleteButton}
-      onClick={() => callback(id)}
-    />
-  </div>
-);
+  render() {
+    const {
+      classes,
+      input,
+      output,
+      isNew = false,
+      callback,
+      handleClickEdit,
+      handleClickUpload,
+      handleTestsUpload,
+    } = this.props;
+    return (
+      <div className={classes.test}>
+        <TestField
+          handleTestsUpload={handleTestsUpload}
+          inputText={input}
+          isNew={isNew}
+          id={`${this.state.id}1`}
+          handleClickEdit={handleClickEdit}
+          handleClickUpload={handleClickUpload}
+        />
+        <TestField
+          inputText={output}
+          isNew={isNew}
+          id={`${this.state.id}2`}
+          handleClickEdit={handleClickEdit}
+          handleClickUpload={handleClickUpload}
+        />
+        <Close
+          className={classes.deleteButton}
+          onClick={() => callback(this.state.id)}
+        />
+      </div>
+    );
+  }
+}
 
 export default withStyles(styles)(TestSet);

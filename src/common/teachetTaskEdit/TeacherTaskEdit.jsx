@@ -10,6 +10,7 @@ import Chip from '@material-ui/core/Chip';
 import { Link } from 'react-router-dom';
 import TestsBar from './TestsBar';
 import generateRandomId from '../../util/generateRandomId';
+import TestSet from "./TestSet";
 
 const styles = theme => ({
   button: {
@@ -51,6 +52,7 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'column',
     marginTop: 20,
   },
   main: {
@@ -98,6 +100,51 @@ const styles = theme => ({
   },
   bootstrapFormLabel: {
     fontSize: 18,
+  },
+  testsTitle: {
+    display: 'flex',
+    color: 'grey',
+  },
+  testsTitleAndAdd: {
+    margin: '10px 0px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  tests: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  uploadFile: {
+    color: 'blue',
+    marginLeft: 10,
+    fontSize: 28,
+    cursor: 'pointer',
+  },
+  addButtonTests: {
+    marginLeft: 5,
+    color: 'blue',
+    fontSize: 26,
+    cursor: 'pointer',
+  },
+  inputOutputTitle: {
+    display: 'flex',
+    width: '50%',
+  },
+  testsInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    boxSizing: 'border-box',
+    justifyContent: 'space-around',
+  },
+  bootstrapInputOutput: {
+    display: 'flex',
+    width: '85%',
   },
   input: {
     display: 'none',
@@ -278,7 +325,8 @@ class TeacherTaskEdit extends React.Component {
   handleTestsUpload(e) {
     const selectedFile = e.target.files[0];
     const { file } = this.state;
-    file.append('test', file, );
+    file.append('tests', selectedFile, 'in.txt');
+    this.setState({ file });
   }
 
   render() {
@@ -401,11 +449,32 @@ class TeacherTaskEdit extends React.Component {
               />
             ))}
           </div>
-          <TestsBar
-            handleTestsUpload={this.handleTestsUpload}
-            handleClickAddTest={this.handleClickAddTest}
-            tests={this.state.tests}
-          />
+          <div className={classes.root}>
+            <div className={classes.testsTitleAndAdd}>
+              <Typography variant="subheading" className={classes.testsTitle}>Тесты</Typography>
+              <AddCircle
+                className={classes.addButtonTests}
+                onClick={this.handleClickAddTest}
+              />
+            </div>
+            <div className={classes.tests}>
+              <div className={classes.testsInfo}>
+                <Typography variant="body2" className={classes.inputOutputTitle}>Input</Typography>
+                <Typography variant="body2" className={classes.inputOutputTitle}>Output</Typography>
+              </div>
+              {this.state.tests.map(element => (
+                <TestSet
+                  handleTestsUpload={this.props.handleTestsUpload}
+                  input={element.input}
+                  output={element.output}
+                  callback={this.handleClickDeleteTest}
+                  id={element._id}
+                  key={element._id}
+                  isNew={element.isNew}
+                />
+              ))}
+            </div>
+          </div>
           <div className={classes.buttonContainer}>
             <Button variant="contained" color="primary" className={classes.button}>
               Сохранить
