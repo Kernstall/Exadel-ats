@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
+import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Spinner from '../shared/spinner/index';
@@ -37,30 +38,42 @@ const styles = theme => ({
   },
   textField: {
     marginRight: theme.spacing.unit,
-    width: '60%',
-    margin: 20,
-    display: 'flex',
-  },
-  textFieldTime: {
-    marginLeft: theme.spacing.unit,
-    width: '40%',
+    width: '90%',
     margin: 20,
     display: 'flex',
   },
   select: {
     width: '80%',
     margin: 10,
+    maxHeight: 200,
   },
   buttonContainer: {
     display: 'flex',
     flexDirection: 'row',
   },
-  dataContainer: {
-    width: '90%',
-    display: 'flex',
-    flexDirection: 'row',
+  error: {
+    margin: 2,
+    padding: 5,
+    border: '1px red solid',
+    borderRadius: 5,
   },
 });
+
+function getDataTextField(type, label, classname, defaultThing, onChangeThing) {
+  return (
+    <TextField
+      id={`datetime-${type}`}
+      label={label}
+      type="datetime-local"
+      defaultValue={defaultThing}
+      className={classname}
+      onChange={() => onChangeThing(type)}
+      InputLabelProps={{
+        shrink: true,
+      }}
+    />
+  );
+}
 
 class AssingTest extends React.Component {
   constructor() {
@@ -71,18 +84,31 @@ class AssingTest extends React.Component {
       flag: '',
       count: '',
       error: '',
-      datestart: '2018-01-01',
-      datedeadline: '',
-      timestart: '00:00',
-      timedeadline: '23:59',
+      start: new Date('2018-08-01T00:00'),
+      deadline: new Date(''),
+      groups: '',
+      students: '',
     };
   }
 
   componentDidMount() {
+    fetch('/api/teacher/group/students', {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/json',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    })
+      .then(response => response.json())
+      .then((body) => {
+        this.setState({ groups: body.groups, students: body.students });
+      })
+      .catch(err => console.log(err));
   }
 
-  getErrorJSX = (name) => {
-    return name ? (<div className="error">Выберите {name}</div>) : '';
+  getErrorJSX = (name, errorClass) => {
+    return name ? (<div className={errorClass}>{name}</div>) : '';
   }
 
   handleChange = name => (event) => {
@@ -99,8 +125,6 @@ class AssingTest extends React.Component {
         group: '',
         flag: 'student',
         error: '',
-        start: '',
-        deadline: '',
       });
     }
   };
@@ -112,175 +136,144 @@ class AssingTest extends React.Component {
   }
 
   isInvalid = (data) => {
-    console.log('data:', data);
     return data.toString() === 'Invalid Date' || data === '';
-    // return data === 'Invalid Date' || data === '';
   }
 
   handleClickAdd = (handle) => {
     const {
       flag,
       count,
-      datestart,
-      datedeadline,
-      timestart,
-      timedeadline,
+      start,
+      deadline,
     } = this.state;
     if (!flag) {
-      this.setState({ error: 'группу или студента' });
+      this.setState({ error: 'Выберите группу или студента' });
       return;
     }
     if (!count) {
-      this.setState({ error: 'количество вопросов' });
+      this.setState({ error: 'Выберите количество вопросов' });
       return;
     }
-    if (this.isInvalid(datedeadline) || this.isInvalid(datestart)) {
-      this.setState({ error: 'дату' });
+    if (this.isInvalid(deadline) || this.isInvalid(start)) {
+      this.setState({ error: 'Выберите правильно дату' });
       return;
     }
-    let [timeStart, timeDeadline] = [timedeadline, timestart];
-    if (this.isInvalid(timeStart)) {
-      timeStart = '00:00';
+    if (deadline - start < 0) {
+      this.setState({ error: 'Дедлайн раньше старта' });
+      return;
     }
-    if (this.isInvalid(timeDeadline)) {
-      timeDeadline = '23:59';
-    }
-    const body = {};
-    const [dateStart, dateDeadline] = [new Date(datestart), new Date(datedeadline)];
-    body[flag] = this.state[flag];
-    body.count = count;
-    body.startDate = `${dateStart.getFullYear()}-${dateStart.getMonth()}-${dateStart.getDate()}T${timeStart}`;
-    body.finishDate = `${dateDeadline.getFullYear()}-${dateDeadline.getMonth()}-${dateDeadline.getDate()}T${timeDeadline}`;
-    console.log(body);
+    const myBody = {};
+    myBody[flag] = this.state[flag];
+    myBody.questionAmount = count;
+    myBody.topicId = this.props.topicId;
+    myBody.startDate = start;
+    myBody.finishDate = deadline;
+
+    fetch('/api/teacher/test', {
+      method: 'post',
+      headers: {
+        'Content-type': 'application/json',
+        'Set-Cookie': 'true',
+      },
+      body: JSON.stringify(myBody),
+      credentials: 'include',
+    })
+      .then(response => response.json())
+      .then((body) => {
+        handle();
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ error: err });
+      });
   }
 
-  handleChangeData = (type, name) => {
-    console.log(document.getElementById(`${type}-${name}`).value);
-    console.log(new Date(document.getElementById(`${type}-${name}`).value));
-    this.setState({ [`${type}${name}`]: new Date(document.getElementById(`${type}-${name}`).value), error: '' });
+  handleChangeData = (type) => {
+    this.setState({ [type]: new Date(document.getElementById(`datetime-${type}`).value), error: '' });
   }
 
   render() {
-    const { classes, handleClose } = this.props;
-    const groups = ['Dima2018', 'JAVA EE'];
-    const students = ['Anna Sikolo', 'Mark Vindomr'];
-    const questionCount = ['10', '15', '20', '25', '30', '35', '40'];
-    const errorCode = this.getErrorJSX(this.state.error);
+    const { classes, handleClose, questionsCount } = this.props;
+    const { groups, students, error } = this.state;
+    const questionCount = ['10', '15', '20', '25', '30', '35', '40'].filter(el => parseInt(el, 10) <= questionsCount);
+    const errorCode = this.getErrorJSX(error, classes.error);
     return (
       <div className={classes.flex}>
-        <Paper className={classes.root}>
-          <form className={classes.container} noValidate>
-            <div className={classes.dataContainer}>
-              <TextField
-                id="date-start"
-                label="Дата старта"
-                type="date"
-                defaultValue="2018-01-01"
-                onChange={() => this.handleChangeData('date', 'start')}
-                className={classes.textField}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <TextField
-                id="time-start"
-                label="Время"
-                type="time"
-                defaultValue="00:00"
-                onChange={() => this.handleChangeData('time', 'start')}
-                className={classes.textFieldTime}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+        {groups && (
+          <Paper className={classes.root}>
+            <form className={classes.container} noValidate>
+              {getDataTextField('start', 'Дата и время старта', classes.textField, '2018-08-01T00:00', this.handleChangeData)}
+              {getDataTextField('deadline', 'Дата и время дедлайна', classes.textField, '', this.handleChangeData)}
+              <FormSelect
+                id="count-placeholder"
+                label="Количество вопросов"
+                value={this.state.count}
                 inputProps={{
-                  step: 300, // 5 min
+                  university: 'Count',
+                  id: '0',
                 }}
-              />
-            </div>
-            <div className={classes.dataContainer}>
-              <TextField
-                id="date-deadline"
-                label="Дата дедлайна"
-                type="date"
-                onChange={() => this.handleChangeData('date', 'deadline')}
-                defaultValue="2018-12-30"
-                className={classes.textField}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                onChange={this.handleChangeCount()}
+                options={questionCount}
+                className={classes.select}
               />
               <TextField
-                id="time-deadline"
-                label="Время"
-                type="time"
-                onChange={() => this.handleChangeData('time', 'deadline')}
-                defaultValue="23:59"
-                className={classes.textFieldTime}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                id="groups-placeholder"
+                select
+                label="Группе"
+                value={this.state.group}
                 inputProps={{
-                  step: 300, // 5 min
+                  university: 'Group',
+                  id: '0',
                 }}
-              />
+                onChange={this.handleChange('group')}
+                className={classes.select}
+              >
+                {groups.map(option => (
+                  <MenuItem key={option.groupId} value={option.groupId}>
+                    {option.groupName}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                id="students-placeholder"
+                select
+                label="Студенту"
+                value={this.state.student}
+                inputProps={{
+                  university: 'Student',
+                  id: '1',
+                }}
+                onChange={this.handleChange('student')}
+                className={classes.select}
+              >
+                {students.map(option => (
+                  <MenuItem key={option.studentInfo} value={option.studentInfo}>
+                    {option.studentName}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </form>
+            {errorCode}
+            <div className={classes.buttonContainer}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => this.handleClickAdd(handleClose)}
+              >
+                Готово!
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleClose}
+              >
+                Отмена
+              </Button>
             </div>
-            <FormSelect
-              id="count-placeholder"
-              label="Количество вопросов"
-              value={this.state.count}
-              inputProps={{
-                university: 'Count',
-                id: '0',
-              }}
-              onChange={this.handleChangeCount()}
-              options={questionCount}
-              className={classes.select}
-            />
-            <FormSelect
-              id="groups-placeholder"
-              label="Группе"
-              value={this.state.group}
-              inputProps={{
-                university: 'Group',
-                id: '0',
-              }}
-              onChange={this.handleChange('group')}
-              options={groups}
-              className={classes.select}
-            />
-            <FormSelect
-              id="students-placeholder"
-              label="Студенту"
-              value={this.state.student}
-              inputProps={{
-                university: 'Student',
-                id: '0',
-              }}
-              onChange={this.handleChange('student')}
-              options={students}
-              className={classes.select}
-            />
-          </form>
-          {errorCode}
-          <div className={classes.buttonContainer}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => this.handleClickAdd(handleClose)}
-            >
-              Готово!
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={handleClose}
-            >
-              Отмена
-            </Button>
-          </div>
-        </Paper>
+          </Paper>
+        )}
       </div>
     );
   }

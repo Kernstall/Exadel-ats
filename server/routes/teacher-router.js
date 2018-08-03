@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const FormData = require('form-data');
 
+const Group = require('../models/Group');
 const Task = require('../models/Task');
 const Topic = require('../models/Topic');
 const Question = require('../models/Question');
@@ -231,6 +232,60 @@ router.post('/new/question', async (req, res) => {
     res.status(200).send();
   } catch (e) {
     res.status(400).send(e.toString());
+  }
+});
+
+router.get('/group/students', async (req, res) => {
+  try {
+    const result = await dataFunctions.getGroupsAndStudents(req.user._id);
+    res.send(result);
+  } catch (err) {
+    res.send(500).end();
+  }
+});
+
+router.post('/test', async (req, res) => {
+  if (!req.body.questionAmount || !req.body.startDate || !req.body.finishDate ||
+    !(req.body.student || req.body.group)) {
+    return res.status(400).end();
+  }
+  try {
+    const newTest = {};
+    newTest.questionAmount = req.body.questionAmount;
+    newTest.startDate = new Date(req.body.startDate);
+    newTest.finishDate = new Date(req.body.finishDate);
+    newTest.isTraining = false;
+    newTest.status = 'notSent';
+    newTest.topicsIds = [mongoose.Types.ObjectId(req.body.topicId)];
+    newTest.questions = await dataFunctions.getRandomTest(req.body.topicId, req.body.questionAmount);
+    let studentId;
+    if (req.body.student) {
+      [studentId, newTest.groupId] = req.body.student.split('_');
+    } else {
+      newTest.groupId = req.body.group;
+    }
+    if (studentId) {
+      const resultStudent = await User.findByIdAndUpdate(
+        studentId,
+        { $push: { tests: newTest } },
+        { safe: true, new: true },
+      );
+      return res.send(resultStudent);
+    }
+    const group = await Group.findById(newTest.groupId);
+    const studentIds = group.studentIdList;
+    console.log(group.studentIdList.length);
+    const resultGroup = await User.update(
+      {
+        _id: { $in: studentIds },
+      },
+      { $push: { tests: newTest } },
+      { safe: true, new: true, multi: true },
+    );
+    return res.send(resultGroup);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send(err);
   }
 });
 
