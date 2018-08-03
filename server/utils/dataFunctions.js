@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
+const fs = require('fs.extra');
 const Task = require('../models/Task');
 const Question = require('../models/Question');
 const Group = require('../models/Group');
@@ -1036,10 +1036,27 @@ exports.createQuestion = async (creatorId, reqBody) => {
 };
 
 exports.checkTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) => {
+  if (editObj.testsIdsToDelete) {
+    const task = await Task.findById(req.query.id);
+    const testsSet = new Set();
+    const deleteSet = new Set(editObj.testsIdsToDelete);
+    task.tests.forEach((test) => {
+      testsSet.add(test.id);
+    });
+    editObj.tests.forEach((test) => {
+      testsSet.add(test.id);
+    });
+    if (deleteSet.size >= testsSet.size) {
+      throw new Error('Task sholud have at least one test left');
+    }
+  }
   if (editObj.tags) {
     dataBaseEdit.tags = editObj.tags;
   }
   if (editObj.description) {
+    if (editObj.description === '') {
+      throw new Error('At least one invalid argument: description should not be empty string');
+    }
     dataBaseEdit.description = editObj.description;
   }
   if (editObj.topicId) {
@@ -1054,7 +1071,7 @@ exports.checkTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) => {
       if (!(await Task.findOne({ name: editObj.name }))) {
         dataBaseEdit.name = editObj.name;
       } else {
-        throw new Error('At least one invalid argument: new name is not unique or the same as the previos one');
+        throw new Error('At least one invalid argument: new name is not unique');
       }
     }
   }
