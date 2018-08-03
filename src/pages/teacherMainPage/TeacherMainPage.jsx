@@ -12,6 +12,7 @@ import GroupsList from './groupsList/GroupsList.jsx';
 import TeacherTasksList from '../../common/teacherTasksList/TeacherTasksList';
 import TeacherQuestionList from '../../common/teacherQuestionList/TeacherQuestionList';
 import { logout } from '../../commands/userLogin';
+import TeacherGroupComponent from './teacherGroupComponent/TeacherGroupComponent';
 
 const styles = theme => ({
   root: {
@@ -58,7 +59,9 @@ class TeacherMainPage extends React.Component {
     super();
     this.state = {
       value: 0,
+      groupId: '',
     };
+    this.getGroupId = this.getGroupId.bind(this);
   }
 
   handleChange = (e, value) => {
@@ -67,6 +70,18 @@ class TeacherMainPage extends React.Component {
 
   _logout = () => {
     this.props.logout();
+  };
+
+  getGroupId(id) {
+    this.setState({
+      groupId: id,
+    });
+  }
+
+  removeId = () => {
+    this.setState({
+      groupId: '',
+    })
   };
 
   render() {
@@ -82,14 +97,17 @@ class TeacherMainPage extends React.Component {
             indicatorColor="primary"
             centered
           >
-            <Tab label="Группы" />
+            <Tab onClick={this.removeId} label="Группы" />
             <Tab label="Тесты" />
             <Tab label="Задачи" />
           </Tabs>
           {value === 0
             && (
               <TabContainer>
-                <GroupsList id={this.props.match.params.id} />
+                {this.state.groupId
+                  ? <TeacherGroupComponent id={this.state.groupId} />
+                  : <GroupsList getGroupId={this.getGroupId} id={this.props.match.params.id} />
+                }
               </TabContainer>
             )
           }
