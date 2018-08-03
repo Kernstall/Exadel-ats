@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom';
 import TestsBar from './TestsBar';
 import generateRandomId from '../../util/generateRandomId';
 import TestSet from "./TestSet";
+import TestField from "./TestField";
+import Close from '@material-ui/icons/Close';
 
 const styles = theme => ({
   button: {
@@ -329,6 +331,13 @@ class TeacherTaskEdit extends React.Component {
     this.setState({ file });
   }
 
+  handleClickDeleteTest = (key) => {
+    const { tests } = this.state;
+    const deleteId = tests.findIndex(element => element._id === key);
+    tests.splice(deleteId, 1);
+    this.setState({ tests });
+  };
+
   render() {
     const { classes } = this.props;
     const { tagToAdd } = this.state;
@@ -462,7 +471,7 @@ class TeacherTaskEdit extends React.Component {
                 <Typography variant="body2" className={classes.inputOutputTitle}>Input</Typography>
                 <Typography variant="body2" className={classes.inputOutputTitle}>Output</Typography>
               </div>
-              {this.state.tests.map(element => (
+              {/*{this.state.tests.map(element => (
                 <TestSet
                   handleTestsUpload={this.props.handleTestsUpload}
                   input={element.input}
@@ -472,6 +481,25 @@ class TeacherTaskEdit extends React.Component {
                   key={element._id}
                   isNew={element.isNew}
                 />
+              ))}*/}
+              {this.state.tests.map(element => (
+                <div className={classes.test}>
+                  <TestField
+                    handleTestsUpload={this.handleTestsUpload}
+                    inputText={element.input}
+                    isNew={element.isNew}
+                    id={`${element._id}1`}
+                  />
+                  <TestField
+                    inputText={element.output}
+                    isNew={element.isNew}
+                    id={`${element._id}2`}
+                  />
+                  <Close
+                    className={classes.deleteButton}
+                    onClick={() => this.handleClickDeleteTest(this.state.id)}
+                  />
+                </div>
               ))}
             </div>
           </div>
