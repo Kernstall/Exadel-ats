@@ -93,12 +93,12 @@ router.post('/task/editing', async (req, res, next) => {
 //   }];
 //   passResult: Number;
 // }
-router.post('/task/editing', uploadFiles.uploadTests.array('tests'), async (req, res) => {
+router.put('/task/editing', uploadFiles.uploadTests.array('tests'), async (req, res) => {
   const dataBaseEdit = {};
   const testsEdit = [];
   const editObj = JSON.parse(req.body.taskInfo);
   try {
-    await dataFunctions.checkTaskDataFunc(dataBaseEdit, testsEdit, editObj, req);
+    await dataFunctions.checkEditTaskDataFunc(dataBaseEdit, testsEdit, editObj, req);
   } catch (error) {
     res.status(400).send(error.message);
     return;
@@ -144,7 +144,21 @@ router.post('/task', (req, res, next) => {
 });
 
 router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) => {
-
+  const dataBaseAdd = {};
+  const addObj = JSON.parse(req.body.taskInfo);
+  try {
+    await dataFunctions.checkAddTaskDataFunc(dataBaseAdd, addObj, req);
+  } catch (error) {
+    res.status(400).send(error.message);
+    return;
+  }
+  try {
+    const newTask = new Task(dataBaseAdd);
+    await newTask.save();
+    res.status(200).send('Operation successful');
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 router.get('/questions', (req, res) => {

@@ -1035,7 +1035,7 @@ exports.createQuestion = async (creatorId, reqBody) => {
   }
 };
 
-exports.checkTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) => {
+exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) => {
   if (editObj.testsIdsToDelete) {
     const task = await Task.findById(req.query.id);
     const testsSet = new Set();
@@ -1047,7 +1047,7 @@ exports.checkTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) => {
       testsSet.add(test.id);
     });
     if (deleteSet.size >= testsSet.size) {
-      throw new Error('Task sholud have at least one test left');
+      throw new Error('Task should have at least one test left');
     }
   }
   if (editObj.tags) {
@@ -1124,6 +1124,96 @@ exports.checkTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) => {
           if (editObj.tests[index].weight >= 1 && editObj.tests[index].weight <= 10) {
             testsEdit.push({ id: editObj.tests[index].id, weight: editObj.tests[index].weight });
             set.delete(editObj.tests[index].id);
+          } else {
+            throw new Error('At least one invalid argument: test weight should be greater or equal to 1 and less or equal to 10');
+          }
+        } else {
+          throw new Error('At least one invalid argument: test weight should be present');
+        }
+      }
+    }
+    if (set.size !== 0) {
+      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
+    }
+  } else {
+    if (req.files.length !== 0) {
+      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
+    }
+  }
+};
+
+exports.checkAddTaskDataFunc = async (dataBaseAdd, addObj, req) => {
+  if (addObj.tags) {
+    dataBaseAdd.tags = addObj.tags;
+  } else {
+    dataBaseAdd.tags = [];
+  }
+  if (addObj.description) {
+    if (addObj.description === '') {
+      throw new Error('At least one invalid argument: description should not be empty string');
+    }
+    dataBaseAdd.description = addObj.description;
+  } else {
+    throw new Error('At least one invalid argument: missing description');
+  }
+  if (addObj.topicId) {
+    if ((await Topic.findById(addObj.topicId))) {
+      dataBaseAdd.topicId = addObj.topicId;
+    } else {
+      throw new Error('At least one invalid argument: topicId');
+    }
+  } else {
+    throw new Error('At least one invalid argument: missing topic\'s id');
+  }
+  if (addObj.name) {
+    if (!(await Task.findOne({ name: addObj.name }))) {
+      dataBaseAdd.name = addObj.name;
+    } else {
+      throw new Error('At least one invalid argument: new name is not unique');
+    }
+  } else {
+    throw new Error('At least one invalid argument: missing name');
+  }
+  if (addObj.weight) {
+    if (addObj.weight >= 1 && addObj.weight <= 10) {
+      dataBaseAdd.weight = addObj.weight;
+    } else {
+      throw new Error('At least one invalid argument: weight should be greater or equal to 1 and less or equal to 10');
+    }
+  } else {
+    throw new Error('At least one invalid argument: missing weight');
+  }
+  if (addObj.language) {
+    if (await Language.findOne({ language: addObj.language.toLowerCase() })) {
+      dataBaseAdd.language = addObj.language.toLowerCase();
+    } else {
+      throw new Error('At least one invalid argument: new language is not present in the data base');
+    }
+  } else {
+    throw new Error('At least one invalid argument: missing language');
+  }
+  if (addObj.passResult) {
+    if (addObj.passResult >= 1 && addObj.passResult <= addObj.weight) {
+      dataBaseAdd.passResult = addObj.passResult;
+    } else {
+      throw new Error('At least one invalid argument: pass result should be greater or equal to 1 and less or equal to weight');
+    }
+  } else {
+    throw new Error('At least one invalid argument: missing pass result');
+  }
+  if (addObj.tests) {
+    if (req.files.lenght === 0) {
+      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
+    }
+    const set = new Set();
+    req.files.forEach((file) => {
+      set.add(file.id);
+    });
+    for (let index = 0; index < addObj.tests.length; index++) {
+      if (set.has(addObj.tests[index].id)) {
+        if (addObj.tests[index].weight) {
+          if (addObj.tests[index].weight >= 1 && addObj.tests[index].weight <= 10) {
+            set.delete(addObj.tests[index].id);
           } else {
             throw new Error('At least one invalid argument: test weight should be greater or equal to 1 and less or equal to 10');
           }
