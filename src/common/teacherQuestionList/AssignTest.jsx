@@ -84,11 +84,12 @@ class AssingTest extends React.Component {
       flag: '',
       count: '',
       error: '',
-      start: new Date('2018-08-01T00:00'),
-      deadline: new Date(''),
+      start: new Date(),
+      deadline: new Date(Date.now() + 432e6),
       groups: '',
       students: '',
     };
+    this.startDefault;
   }
 
   componentDidMount() {
@@ -111,6 +112,30 @@ class AssingTest extends React.Component {
     return name ? (<div className={errorClass}>{name}</div>) : '';
   }
 
+  getInputDate = (plus = 0) => {
+    const hoy = new Date();
+    let [d, m, h, mi] = [hoy.getDate() + plus, hoy.getMonth(), hoy.getHours(), hoy.getMinutes()];
+    const y = hoy.getFullYear();
+    if (d < 10) {
+      d = `0${d}`;
+    }
+    if (m < 10) {
+      m = `0${m}`;
+    }
+    if (h < 10) {
+      h = `0${h}`;
+    }
+    if (mi < 10) {
+      mi = `o${mi}`;
+    }
+    const data = `${y}-${m}-${d}T${h}:${mi}`;
+    return data;
+  }
+
+  isInvalid = (data) => {
+    return data.toString() === 'Invalid Date' || data === '';
+  }
+
   handleChange = name => (event) => {
     if (name === 'group') {
       this.setState({
@@ -127,16 +152,6 @@ class AssingTest extends React.Component {
         error: '',
       });
     }
-  };
-
-  handleChangeCount = () => (event) => {
-    this.setState({
-      count: event.target.value,
-    });
-  }
-
-  isInvalid = (data) => {
-    return data.toString() === 'Invalid Date' || data === '';
   }
 
   handleClickAdd = (handle) => {
@@ -158,6 +173,10 @@ class AssingTest extends React.Component {
       this.setState({ error: 'Выберите правильно дату' });
       return;
     }
+    if (start - this.startDefault < 0) {
+      this.setState({ error: 'Старт раньше чем сейчас' });
+      return;
+    }
     if (deadline - start < 0) {
       this.setState({ error: 'Дедлайн раньше старта' });
       return;
@@ -169,7 +188,7 @@ class AssingTest extends React.Component {
     myBody.startDate = start;
     myBody.finishDate = deadline;
 
-    fetch('/api/teacher/test', {
+    fetch('/api/teacher/test/assignment', {
       method: 'post',
       headers: {
         'Content-type': 'application/json',
@@ -188,6 +207,12 @@ class AssingTest extends React.Component {
       });
   }
 
+  handleChangeCount = () => (event) => {
+    this.setState({
+      count: event.target.value,
+    });
+  }
+
   handleChangeData = (type) => {
     this.setState({ [type]: new Date(document.getElementById(`datetime-${type}`).value), error: '' });
   }
@@ -197,13 +222,17 @@ class AssingTest extends React.Component {
     const { groups, students, error } = this.state;
     const questionCount = ['10', '15', '20', '25', '30', '35', '40'].filter(el => parseInt(el, 10) <= questionsCount);
     const errorCode = this.getErrorJSX(error, classes.error);
+    const dvs = this.getInputDate();
+    const dvd = this.getInputDate(5);
+    this.startDefault = new Date(dvs);
+
     return (
       <div className={classes.flex}>
         {groups && (
           <Paper className={classes.root}>
             <form className={classes.container} noValidate>
-              {getDataTextField('start', 'Дата и время старта', classes.textField, '2018-08-01T00:00', this.handleChangeData)}
-              {getDataTextField('deadline', 'Дата и время дедлайна', classes.textField, '', this.handleChangeData)}
+              {getDataTextField('start', 'Дата и время старта', classes.textField, dvs, this.handleChangeData)}
+              {getDataTextField('deadline', 'Дата и время дедлайна', classes.textField, dvd, this.handleChangeData)}
               <FormSelect
                 id="count-placeholder"
                 label="Количество вопросов"

@@ -60,13 +60,13 @@ class StudentTemplate extends React.Component {
           {this.props.name}
         </Grid>
         <Grid item xs>
-          {`Tasks complete: ${this.props.tasksComplete}`}
+          {`Сдано задач: ${this.props.tasksComplete}`}
         </Grid>
         <Grid item xs>
-          {`Tests complete: ${this.props.testsComplete}`}
+          {`Пройдено тестов: ${this.props.testsComplete}`}
         </Grid>
         <Grid item xs>
-          {`Score: ${this.props.score}`}
+          {`Балл: ${this.props.score}`}
         </Grid>
         <Grid item xs>
           <FormControlLabel

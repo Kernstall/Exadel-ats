@@ -661,7 +661,6 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
   } catch (e) {
     console.log(e.toString());
   }
-
 };
 
 function getExtension(fileName) {
@@ -724,7 +723,7 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
       answer[i].name = attemptInfo.files[i].slice(0, attemptInfo.files[i].indexOf('.'));
       answer[i].extension = getExtension(attemptInfo.files[i]);
 
-      answer[i].fileContents = await exports.readFile(`${exports.commonSrcCodePath}/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
+      answer[i].fileContents = await exports.readFileUTF(`${exports.commonSrcCodePath}/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
     }
     return answer;
   } catch (e) {
@@ -1043,6 +1042,6 @@ exports.getRandomTest = async (topicId, count) => {
     topicId,
     _id: { $nin: notSearch },
   }).select({ _id: 1 });
-  const test = [...firstQuestions, ...arrRandom(all, count - 4)];
+  const test = [...firstQuestions, ...arrRandom(all, count - 4)].map((el) => { return { questionId: el._id }; });
   return test;
 };

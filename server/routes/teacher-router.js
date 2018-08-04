@@ -14,7 +14,6 @@ const dataFunctions = require('../utils/dataFunctions');
 const uploadFiles = require('../utils/uploadFiles.js');
 const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
-
 const router = express.Router();
 
 router.use((req, res, next) => {
@@ -244,7 +243,7 @@ router.get('/group/students', async (req, res) => {
   }
 });
 
-router.post('/test', async (req, res) => {
+router.post('/test/assignment', async (req, res) => {
   if (!req.body.questionAmount || !req.body.startDate || !req.body.finishDate ||
     !(req.body.student || req.body.group)) {
     return res.status(400).end();

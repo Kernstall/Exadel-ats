@@ -44,7 +44,7 @@ class StudentActivities extends React.Component {
               <ListItemText primary={activity.name} />
             </Grid>
             <Grid item xs>
-              <ListItemText primary={activity.isPassed || activity.status ? 'Passed' : 'Not passed'} />
+              <ListItemText primary={activity.isPassed || activity.status ? 'Пройдено' : 'Не пройдено'} />
             </Grid>
           </Grid>
         </ListItem>
