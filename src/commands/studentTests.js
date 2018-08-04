@@ -4,7 +4,7 @@ import { studentTests as Actions } from '../actions';
 export const getStudentTests = ({studentId, groupId}) => (dispatch) => {
 
   dispatch(Actions.testsRequest());
-  fetch(`/api/student/group/tests?studentId=${studentId}&&groupId=${groupId}`, {
+  fetch(`/api/student/group/tests?groupId=${groupId}`, {
     headers: {
       'Content-type': 'application/json',
       'Set-Cookie': 'true',

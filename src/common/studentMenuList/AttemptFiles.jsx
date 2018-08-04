@@ -11,7 +11,7 @@ import AttemptCode from './AttemptCode';
 import { getAttemptCode } from '../../commands/attemptCode';
 
 
-const styles = ({
+const styles = theme => ({
   ...Common,
   fullWidth: {
     width: '100%',

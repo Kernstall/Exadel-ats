@@ -52,6 +52,7 @@ class StudentTests extends React.Component {
             <ListItem className={classes.nested}>
               <StudentTestsDropDown
                 testsInfo={test.info}
+                testsAvailable={test.availableTopics}
                 className={this.props.classes.fullWidth}
               />
             </ListItem>
