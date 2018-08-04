@@ -14,16 +14,16 @@ const styles = {
     width: '100%',
   },
   zeroFilter: {
-    maxWidth: '1%',
+    width: '40%',
   },
   firstFilter: {
-    maxWidth: '30%',
+    width: '40%',
   },
   secondFilter: {
-    maxWidth: '15%',
+    width: '15%',
   },
   thirdFilter: {
-    maxWidth: '15%',
+    width: '1%',
   },
   listItem: {
     marginBottom: 1,
@@ -43,10 +43,10 @@ const styles = {
 class ActivityListItems extends Component {
   constructor(props) {
     super(props);
-    this.sortBy = ['name', 'email', 'numberTestsToCheck', 'university'];
+    this.sortBy = ['lastName', 'email', 'numberTestsToCheck', 'university'];
     this.state = {
       sortBy: this.sortBy[0],
-      isDecreasing: true,
+      isDecreasing: false,
     };
   }
 
@@ -90,15 +90,15 @@ class ActivityListItems extends Component {
         {sortedInfo.map(element => (
           <Paper className={classes.listItem} elevation={1}>
             <ListItem button elevation={0}>
-              <Grid container justify="space-between" wrap="nowrap" className={classes.container}>
+              <Grid container className={classes.container}>
                 <Grid item className={classes.zeroFilter}>
-                  <ListItemText classes={{ primary: classes.primary }} primary={`${element.name}`} />
+                  <ListItemText classes={{ primary: classes.primary }} primary={`${element.lastName} ${element.firstName} ${element.fathersName}`} />
                 </Grid>
                 <Grid item className={classes.firstFilter}>
                   <ListItemText className={{ root: classes.root }} secondary={`${element.email}`} />
                 </Grid>
                 <Grid item className={classes.secondFilter}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${localize(element.numberTestsToCheck)}`} />
+                  <ListItemText className={{ root: classes.root }} secondary={`${element.numberTestsToCheck}`} />
                 </Grid>
                 <Grid item className={classes.thirdFilter}>
                   <ListItemText className={{ root: classes.root }} secondary={`${localize(element.university)}`} />

@@ -4,6 +4,7 @@ import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputWithSuggestions from '../inputWithSuggestions/InputWithSuggestions';
+import localize from '../../../localization/localization';
 
 const styles = {
   parent: {
@@ -84,7 +85,7 @@ class SearchBox extends Component {
     return (
       <Paper className={[classes.parent].join(' ')}>
         <div className={classes.caption}>
-          Search history by:
+          {localize('Search history by:')}
         </div>
         <Paper className={classes.child} elevation={0}>
           <Input

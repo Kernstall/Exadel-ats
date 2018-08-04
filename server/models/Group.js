@@ -13,10 +13,10 @@ const GroupSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }],
-  topicCourseIds: [{
+  topicCourseIds: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'TopicCourse',
-  }],
+  },
 });
 
 module.exports = mongoose.model('Group', GroupSchema);

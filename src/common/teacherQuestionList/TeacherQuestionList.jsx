@@ -54,11 +54,15 @@ class TeacherQuestionList extends React.Component {
   handleClickAdd = () => {
     const { clickedType } = this.state;
     if (clickedType) {
+      const { teacherQuestions } = this.props;
+      const questions = teacherQuestions.find(el => el.topicId === clickedType);
+      const questionsCount = questions.count;
       this.setState({
         assign: (
           <AssignTest
             handleClose={this.handleClose}
             topicId={clickedType}
+            questionsCount={questionsCount}
           />
         ),
       });
@@ -95,14 +99,15 @@ class TeacherQuestionList extends React.Component {
           {load}
         </List>
         {this.state.assign}
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={this.handleClickAdd}
-        >
-          Назначить
-        </Button>
+        {teacherQuestions && (
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={this.handleClickAdd}
+          >
+            Назначить
+          </Button>)}
       </div>
     );
   }

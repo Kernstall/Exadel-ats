@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  adminTests: null,
+  adminQuestions: null,
   error: null,
   isLoading: false,
 };
@@ -7,22 +7,22 @@ const INITIAL_STATE = {
 const reducer = (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'Entity/adminTests/Error':
+    case 'Entity/adminQuestions/Error':
       return {
         ...state,
         error: payload.error,
         isLoading: false,
       };
 
-    case 'Entity/adminTests/Request':
+    case 'Entity/adminQuestions/Request':
       return {
         ...state,
         isLoading: true,
       };
 
-    case 'Entity/adminTests/Success':
+    case 'Entity/adminQuestions/Success':
       return {
-        adminTests: payload.adminTests,
+        adminQuestions: payload.adminQuestions,
         error: null,
         isLoading: false,
       };

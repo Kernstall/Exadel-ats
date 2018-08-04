@@ -6,8 +6,9 @@ const Group = require('../models/Group');
 const User = require('../models/User');
 const Topic = require('../models/Topic');
 const Activities = require('../models/Activity');
-
+const TopicCourse = require('../models/TopicCourse');
 const mapping = require('./mapping/map');
+
 exports.commonSrcCodePath;
 exports.commonTaskPath;
 
@@ -452,7 +453,7 @@ exports.getStudents = async () => {
   return answer;
 };
 
-exports.createGroup = async (groupName, teacherId) => {
+exports.createGroup = async (_groupName, teacherId) => {
   try {
     const teacher = await User.findById(teacherId)
       .select({
@@ -467,9 +468,9 @@ exports.createGroup = async (groupName, teacherId) => {
       firstName: teacher.firstName,
       fathersName: teacher.lastName,
       lastName: teacher.lastName,
-      groupName,
+      groupName: _groupName,
       studentIdList: [],
-      topicCourseIds: [],
+      topicCourseIds: null,
     });
     let saveGroup = {};
     try {
@@ -548,57 +549,124 @@ exports.getStudents = async () => {
   return answer;
 };
 
-exports.getGroupStudentTests = async (studentId, groupId) => {
-  const result = await User.find({ _id: mongoose.Types.ObjectId(studentId) })
-    .populate('tests.topicsIds', { _id: 0, name: 1 })
-    .select({
-      _id: 0,
-      'tests.result': 1,
-      'tests.groupId': 1,
-      'tests.isTraining': 1,
-      'tests.status': 1,
-    });
-  const trainingTests = [];
-  const notTrainingTests = [];
-  let trCount = 0;
-  let notTrCount = 0;
-  let trSum = 0;
-  let notTrSum = 0;
+const isValidByQuestionsTypes = async (elem) => {
+  const typeOne = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'one answer' });
+  const typeTwo = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'multiple answers' });
+  const typeThree = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'without answer option' });
+  const typeFour = Question.find({
+    topicId: mongoose.Types.ObjectId(elem.id),
+    kind: 'without answer with verification',
+  });
+  const result = await Promise.all([typeOne, typeTwo, typeThree, typeFour]);
+  if (result[0].length === 0 || result[1].length === 0 || result[2].length === 0 || result[3].length === 0) {
+    return { isValid: false, id: elem.id, name: elem.name };
+  }
+  return { isValid: true, id: elem.id, name: elem.name };
+};
 
-  if (result.length !== 0) {
-    for (let i = 0; i < result[0].tests.length; i++) {
-      console.log(result[0].tests[i].isTraining);
-      if (String(result[0].tests[i].groupId) === String(groupId)) {
-        if (result[0].tests[i].isTraining) {
-          trCount += 1;
-          trSum += result[0].tests[i].result;
-          trainingTests.push({
-            topicsNames: result[0].tests[i].topicsIds,
-            status: result[0].tests[i].status,
-            result: result[0].tests[i].result,
-          });
-        } else {
-          notTrCount += 1;
-          notTrSum += result[0].tests[i].result;
-          notTrainingTests.push({
-            topicsNames: result[0].tests[i].topicsIds,
-            status: result[0].tests[i].status,
-            result: result[0].tests[i].result,
-          });
+exports.getGroupStudentTests = async (studentId, groupId) => {
+  try {
+    console.log(studentId);
+    const result = await User.find({ _id: mongoose.Types.ObjectId(studentId) })
+      .populate('tests.topicsIds', { _id: 1, name: 1 })
+      .select({
+        _id: 0,
+        'tests.result': 1,
+        'tests.groupId': 1,
+        'tests.isTraining': 1,
+        'tests.status': 1,
+      });
+    const trainingTests = [];
+    const notTrainingTests = [];
+    let trCount = 0;
+    let notTrCount = 0;
+    let trSum = 0;
+    let notTrSum = 0;
+    const invalidTopicsIds = [];
+
+    console.log(result);
+
+    if (result.length !== 0) {
+      for (let i = 0; i < result[0].tests.length; i++) {
+        console.log(result[0].tests[i].isTraining);
+        if (String(result[0].tests[i].groupId) === String(groupId)) {
+          if (result[0].tests[i].isTraining) {
+            trCount += 1;
+            invalidTopicsIds.push(String(result[0].tests[i].topicsIds[0]._id));
+            trSum += result[0].tests[i].result;
+            trainingTests.push({
+              topicsNames: result[0].tests[i].topicsIds,
+              status: result[0].tests[i].status,
+              result: result[0].tests[i].result,
+            });
+          } else {
+            notTrCount += 1;
+            notTrSum += result[0].tests[i].result;
+            notTrainingTests.push({
+              topicsNames: result[0].tests[i].topicsIds,
+              status: result[0].tests[i].status,
+              result: result[0].tests[i].result,
+            });
+          }
         }
       }
     }
+    console.log(trainingTests);
+    console.log(notTrainingTests);
+
+    const topicCourseId = await Group.findById(groupId)
+      .select({
+        _id: 0,
+        topicCourseIds: 1,
+      });
+
+    const groupTopicsIds1 = (await TopicCourse.findById(topicCourseId.topicCourseIds)
+      .populate('topicsIds', { _id: 1, name: 1 })
+      .select({
+        _id: 0,
+        name: 0,
+        __v: 0,
+      })).topicsIds;
+
+    const topicsFilter1 = [];
+
+    groupTopicsIds1.forEach((elem) => {
+      const index = invalidTopicsIds.indexOf(String(elem.id));
+      if (index === -1) {
+        topicsFilter1.push(elem);
+      }
+    });
+
+    const promiseArr = [];
+
+    topicsFilter1.forEach((elem) => {
+      promiseArr.push(isValidByQuestionsTypes(elem));
+    });
+
+    const resultQuestionTypeCheck = await Promise.all(promiseArr);
+
+    const topicsFilter2 = [];
+
+    resultQuestionTypeCheck.forEach((elem) => {
+      if (elem.isValid === true) {
+        topicsFilter2.push({ id: elem.id, name: elem.name });
+      }
+    });
+
+    return [{
+      name: 'Training tests',
+      info: trainingTests,
+      avgMark: trSum / trCount,
+      availableTopics: topicsFilter2,
+    }, {
+      name: 'Examination tests',
+      info: notTrainingTests,
+      avgMark: notTrSum / notTrCount,
+    }];
+  } catch (e) {
+    console.log(e.toString());
   }
 
-  return [{
-    name: 'Training tests',
-    info: trainingTests,
-    avgMark: trSum / trCount,
-  }, {
-    name: 'Examination tests',
-    info: notTrainingTests,
-    avgMark: notTrSum / notTrCount,
-  }];
 };
 
 function getExtension(fileName) {
@@ -661,7 +729,7 @@ exports.getAttemptsCodes = async (userId, taskId, attemptNumber) => {
       answer[i].name = attemptInfo.files[i].slice(0, attemptInfo.files[i].indexOf('.'));
       answer[i].extension = getExtension(attemptInfo.files[i]);
 
-      answer[i].fileContents = await exports.readFile(`${exports.commonSrcCodePath}/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
+      answer[i].fileContents = await exports.readFileUTF(`${exports.commonSrcCodePath}/${userId}/${taskId}/${attemptNumber}/src/${attemptInfo.files[i]}`);
     }
     return answer;
   } catch (e) {
@@ -937,4 +1005,49 @@ exports.createQuestion = async (creatorId, reqBody) => {
   } catch (e) {
     throw e;
   }
+};
+
+exports.getGroupsAndStudents = async (teacherId) => {
+  try {
+    let groups = await Group.find({ teacherId }).populate('studentIdList', ['_id', 'firstName', 'lastName']);
+    let students = [];
+    groups.forEach(el => el.studentIdList.forEach(stud => students.push({
+      studentInfo: `${stud._id.toString()}_${el._id}`,
+      studentName: `${stud.lastName} ${stud.firstName} (${el.groupName})`,
+    })));
+    groups = groups.map(el => el = mapping.mapGroupForChooseToDto(el));
+    return { groups, students };
+  } catch (err) {
+    return err;
+  }
+};
+
+function random(num) {
+  return Math.floor(Math.random() * num);
+}
+function arrRandom(arr, count) {
+  let a = arr.slice();
+  while (a.length > count) a.splice(random(a.length - 1), 1);
+  return a;
+}
+
+exports.getRandomTest = async (topicId, count) => {
+  const typeOne = Question.find({ topicId, kind: 'one answer' }).select({ _id: 1 });
+  const typeTwo = Question.find({ topicId, kind: 'multiple answers' }).select({ _id: 1 });
+  const typeThree = Question.find({ topicId, kind: 'without answer option' }).select({ _id: 1 });
+  const typeFour = Question.find({ topicId, kind: 'without answer with verification' }).select({ _id: 1 });
+  const result = await Promise.all([typeOne, typeTwo, typeThree, typeFour]);
+  if (result[0].length === 0 || result[1].length === 0 || result[2].length === 0
+    || result[3].length === 0) {
+    throw new Error('Недостаточно вопросов');
+  }
+  const firstQuestions = [result[0][random(result[0].length)], result[1][random(result[1]
+    .length)], result[2][random(result[2].length)], result[2][random(result[2].length)]];
+  const notSearch = firstQuestions.map(el => el = el._id);
+  const all = await Question.find({
+    topicId,
+    _id: { $nin: notSearch },
+  }).select({ _id: 1 });
+  const test = [...firstQuestions, ...arrRandom(all, count - 4)];
+  return test;
 };
