@@ -71,27 +71,27 @@ class TeacherRegistration extends React.Component {
       <section className="student-container">
         <TextField
           id="name-placeholder"
-          label="First name"
+          label="Имя"
           value={this.state.firstName}
           onChange={this.handleChange('firstName')}
-          placeholder="Input your name..."
+          placeholder="Введите ваше имя..."
           className="text-field first-name"
         />
         <TextField
           id="lastname-placeholder"
-          label="Last name"
+          label="Фамилия"
           value={this.state.lastName}
           onChange={this.handleChange('lastName')}
-          placeholder="Input your last name..."
+          placeholder="Введите вашу фамилию..."
           className="text-field surname"
           margin="normal"
         />
         <TextField
           id="fathername-placeholder"
-          label="Father name"
+          label="Отчество"
           value={this.state.fathersName}
           onChange={this.handleChange('fathersName')}
-          placeholder="Input your father name..."
+          placeholder="Введите ваше отчество..."
           className="text-field surname"
           margin="normal"
         />
@@ -100,20 +100,20 @@ class TeacherRegistration extends React.Component {
         >
           <TextValidator
             id="email-placeholder"
-            label="Email"
+            label="Почта"
             name="email"
             value={this.state.email}
             onChange={this.handleChange('email')}
             validators={['required', 'isEmail']}
-            errorMessages={['this field is required', 'email is not valid']}
-            placeholder="Input your email..."
+            errorMessages={['this field is required', 'почта не валидна']}
+            placeholder="Введите вашу почту..."
             className="text-field email"
             margin="normal"
           />
         </ValidatorForm>
         <TextField
           id="password-placeholder"
-          label="Password"
+          label="Пароль"
           className="text-field"
           value={this.state.password}
           onChange={this.handleChange('password')}
@@ -123,7 +123,7 @@ class TeacherRegistration extends React.Component {
         />
         <FormSelect
           id="university-placeholder"
-          label="University"
+          label="Университет"
           value={this.state.university}
           inputProps={{
             university: 'University',
@@ -134,7 +134,7 @@ class TeacherRegistration extends React.Component {
           options={universitiesArr}
         />
         <Button onClick={this.handleSubmit} className={classes.registerButton}>
-          Register
+          Зарегистрироваться
         </Button>
         {this.state.isRedirected && <Redirect to="/" />}
       </section>

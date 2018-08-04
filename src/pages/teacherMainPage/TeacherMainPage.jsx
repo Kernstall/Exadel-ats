@@ -12,6 +12,7 @@ import GroupsList from './groupsList/GroupsList.jsx';
 import TeacherTasksList from '../../common/teacherTasksList/TeacherTasksList';
 import TeacherQuestionList from '../../common/teacherQuestionList/TeacherQuestionList';
 import { logout } from '../../commands/userLogin';
+import TeacherGroupComponent from './teacherGroupComponent/TeacherGroupComponent';
 
 const styles = theme => ({
   root: {
@@ -19,7 +20,7 @@ const styles = theme => ({
     color: 'whitesmoke',
     height: 'fit-content',
     backgroundColor: theme.palette.background.paper,
-    width: 700,
+    width: '60%',
   },
   groupTemplate: {
     display: 'flex',
@@ -58,7 +59,9 @@ class TeacherMainPage extends React.Component {
     super();
     this.state = {
       value: 0,
+      groupId: '',
     };
+    this.getGroupId = this.getGroupId.bind(this);
   }
 
   handleChange = (e, value) => {
@@ -67,6 +70,18 @@ class TeacherMainPage extends React.Component {
 
   _logout = () => {
     this.props.logout();
+  };
+
+  getGroupId(id) {
+    this.setState({
+      groupId: id,
+    });
+  }
+
+  removeId = () => {
+    this.setState({
+      groupId: '',
+    })
   };
 
   render() {
@@ -82,29 +97,32 @@ class TeacherMainPage extends React.Component {
             indicatorColor="primary"
             centered
           >
-            <Tab label="Groups" />
-            <Tab label="Tests" />
-            <Tab label="Tasks" />
+            <Tab onClick={this.removeId} label="Группы" />
+            <Tab label="Тесты" />
+            <Tab label="Задачи" />
           </Tabs>
           {value === 0
             && (
-            <TabContainer>
-              <GroupsList id={this.props.match.params.id} />
-            </TabContainer>
+              <TabContainer>
+                {this.state.groupId
+                  ? <TeacherGroupComponent id={this.state.groupId} />
+                  : <GroupsList getGroupId={this.getGroupId} id={this.props.match.params.id} />
+                }
+              </TabContainer>
             )
-            }
+          }
           {value === 1
             && (
-            <TabContainer>
-              <TeacherQuestionList />
-            </TabContainer>
+              <TabContainer>
+                <TeacherQuestionList />
+              </TabContainer>
             )
           }
           {value === 2
             && (
-            <TabContainer>
-              <TeacherTasksList />
-            </TabContainer>
+              <TabContainer>
+                <TeacherTasksList />
+              </TabContainer>
             )
           }
         </AppBar>

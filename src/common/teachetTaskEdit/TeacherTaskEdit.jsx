@@ -173,7 +173,10 @@ class TeacherTaskEdit extends React.Component {
       weight: 0,
       description: '',
       name: '',
+      file: new FormData(),
     };
+
+    this.handleTestsUpload = this.handleTestsUpload.bind(this);
 
     this.handleDelete = data => () => {
       this.setState((state) => {
@@ -183,6 +186,10 @@ class TeacherTaskEdit extends React.Component {
         return { tags };
       });
     };
+  }
+
+  componentDidUpdate() {
+    console.log(this.state);
   }
 
   handleClick = (data) => {
@@ -267,6 +274,12 @@ class TeacherTaskEdit extends React.Component {
     fileOutputReader.onloadend = this._handleOutputReading;
     fileOutputReader.readAsText(file);
   };
+
+  handleTestsUpload(e) {
+    const selectedFile = e.target.files[0];
+    const { file } = this.state;
+    file.append('test', file, );
+  }
 
   render() {
     const { classes } = this.props;
@@ -389,6 +402,7 @@ class TeacherTaskEdit extends React.Component {
             ))}
           </div>
           <TestsBar
+            handleTestsUpload={this.handleTestsUpload}
             handleClickAddTest={this.handleClickAddTest}
             tests={this.state.tests}
           />

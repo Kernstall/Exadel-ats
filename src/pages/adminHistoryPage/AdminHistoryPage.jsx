@@ -7,6 +7,7 @@ import Common from '../../common/styles/Common';
 import { getAdminActivities } from '../../commands/admin';
 import SearchBox from './searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
+import Spinner from '../../common/shared/spinner';
 
 const styles = {
   ...Common,
@@ -19,6 +20,31 @@ const styles = {
   },
   menue: {
     margin: '10px',
+  },
+  absoluteCenter: {
+    position: 'fixed',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    left: 0,
+    top: 0,
+  },
+  center: {
+    margin: 'auto',
+  },
+  icon: {
+    opacity: '0.3',
+    marginLeft: 10,
+  },
+  button: {
+    background: '#2196f350',
+    '&:hover': {
+      background: '#2196f3',
+    },
+    transition: '.4s',
+    marginTop: '10px',
+    width: 280,
+    fontWeight: 300,
   },
 };
 
@@ -41,6 +67,10 @@ class AdminHistoryPage extends Component {
   componentDidUpdate(prevProps, prevState) {
     prevState.historyFilter == this.state.historyFilter
       || this.props.getAdminActivities(this.state.historyFilter);
+  }
+
+  handleDownload = () => {
+    this.props.getAdminActivities(this.state.historyFilter, true);
   }
 
   handleHistoryFilter = (name, role, activityType) => {
@@ -79,7 +109,11 @@ class AdminHistoryPage extends Component {
         </Grid>
       );
     }
-    return null;
+    return (
+      <div className={classes.absoluteCenter}>
+        <Spinner className={classes.center} />
+      </div>
+    );
   }
 }
 
@@ -89,7 +123,7 @@ const mapStateToProps = state => ({
 });
 
 const mapCommandsToProps = dispatch => ({
-  getAdminActivities: param => dispatch(getAdminActivities(param)),
+  getAdminActivities: (param, isFile) => dispatch(getAdminActivities(param, isFile)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminHistoryPage));

@@ -133,7 +133,6 @@ router.post('/statistics/teachers', async (req, res) => {
     const fileName = 'teacher-workbook.xlsx';
     return workbook.commit().then(async () => {
       const data = await dataFunctions.readFile(`${__dirname}/${fileName}`);
-      res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
       res.contentType('application/vnd.ms-excel');
       return res.send(data);
     });
@@ -176,7 +175,6 @@ router.post('/statistics/students', async (req, res) => {
     const fileName = 'student-workbook.xlsx';
     return workbook.commit().then(async () => {
       const data = await dataFunctions.readFile(`${__dirname}/${fileName}`);
-      res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
       res.contentType('application/vnd.ms-excel');
       return res.send(data);
     });
@@ -213,7 +211,6 @@ router.post('/statistics/groups', async (req, res) => {
     const fileName = 'group-workbook.xlsx';
     return workbook.commit().then(async () => {
       const data = await dataFunctions.readFile(`${__dirname}/${fileName}`);
-      res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
       res.contentType('application/vnd.ms-excel');
       return res.send(data);
     });
@@ -251,7 +248,6 @@ router.post('/statistics/tasks', async (req, res) => {
     const fileName = 'task-workbook.xlsx';
     return workbook.commit().then(async () => {
       const data = await dataFunctions.readFile(`${__dirname}/${fileName}`);
-      res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
       res.contentType('application/vnd.ms-excel');
       return res.send(data);
     });
@@ -292,7 +288,6 @@ router.post('/statistics/questions', async (req, res) => {
     const fileName = 'question-workbook.xlsx';
     return workbook.commit().then(async () => {
       const data = await dataFunctions.readFile(`${__dirname}/${fileName}`);
-      res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
       res.contentType('application/vnd.ms-excel');
       return res.send(data);
     });

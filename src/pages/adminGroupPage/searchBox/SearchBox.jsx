@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles, Paper } from '@material-ui/core/es';
 import Input from '@material-ui/core/Input';
+import localize from '../../../localization/localization';
 
 const styles = {
   parent: {
@@ -40,20 +41,44 @@ class SearchBox extends Component {
     super(props);
   }
 
-  handleChange = name => (event) => {
-    this.setState({
-      [name]: event.target.value,
+  inputParser = (textToParse) => {
+    const result = {
+      firstName: '',
+      lastName: '',
+      fathersName: '',
+      groupName: '',
+    };
+    const words = textToParse.split(' ');
+    words.forEach((word, index) => {
+      if (word.search(/[A-z]/i) !== -1) {
+        result.groupName = word;
+      } else if (index === 0) {
+        result.lastName = word;
+      } else if (index === 1) {
+        result.firstName = word;
+      } else if (index === 2) {
+        result.fathersName = word;
+      }
     });
-    this.state[name] = event.target.value;
-    this.props.handleHistoryFilter(this.state.name, this.state.role, this.state.activityType);
-  };
+    return result;
+  }
 
-  handleChangeChild = (name, value) => {
-    this.setState({
-      [name]: value,
-    });
-    this.state[name] = value;
-    this.props.handleHistoryFilter(this.state.name, this.state.role, this.state.activityType);
+  handleChange = input => (event) => {
+    let changesState = {};
+    if (input === 'name') {
+      changesState = this.inputParser(event.target.value);
+    } else {
+      changesState = {
+        [input]: event.target.value,
+      };
+    }
+    const newState = {
+      ...this.state,
+      ...changesState,
+    };
+    console.log(newState);
+    this.setState(newState);
+    this.props.handleHistoryFilter(newState);
   };
 
   render() {
@@ -61,22 +86,14 @@ class SearchBox extends Component {
     return (
       <Paper className={[classes.parent].join(' ')}>
         <div className={classes.caption}>
-          Search groups by:
+          {localize('Search groups by:')}
         </div>
         <Paper className={classes.child} elevation={0}>
           <Input
-            placeholder="Имя ..."
+            placeholder="Группа или учитель ..."
             className={classes.input}
             disableUnderline
             onChange={this.handleChange('name')}
-          />
-        </Paper>
-        <Paper className={classes.child} elevation={0}>
-          <Input
-            placeholder="Email ..."
-            className={classes.input}
-            disableUnderline
-            onChange={this.handleChange('email')}
           />
         </Paper>
       </Paper>

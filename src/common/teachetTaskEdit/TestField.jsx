@@ -65,13 +65,17 @@ const styles = theme => ({
 });
 
 class TestField extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.id = '';
     this.state = {
       isUploaded: false,
     };
   }
+
+  handleClickUpload = () => {
+    console.log('fdghdfgdfgdfg');
+  };
 
   render() {
     const { isUploaded } = this.state;
@@ -104,11 +108,11 @@ class TestField extends React.Component {
               id={inputId}
               multiple
               type="file"
+              onChange={this.props.handleTestsUpload}
             />
             <label htmlFor={inputId}>
               <CloudUploadIcon
                 className={classes.addButton}
-                onClick={this.handleClickUpload}
               />
             </label>
           </div>)}

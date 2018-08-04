@@ -95,16 +95,14 @@ class AttemptFiles extends Component {
           </div>
           <Link to="/studentMenu" className={classes.noUnderline}>
             <Button variant="contained" color="primary" className={[classes.flex, classes.buttonBack].join(' ')}>
-            Back
+            Назад
             </Button>
           </Link>
         </div>
       );
     }
     return (
-      <Paper className={[classes.flex, classes.heightToTop].join(' ')}>
         <Spinner />
-      </Paper>
     );
   }
 }

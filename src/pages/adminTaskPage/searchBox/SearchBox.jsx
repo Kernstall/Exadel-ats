@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { withStyles, Paper } from '@material-ui/core/es';
 import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import localize from '../../../localization/localization';
 
 const styles = {
   parent: {
@@ -38,22 +41,39 @@ const styles = {
 class SearchBox extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
+    this.state = {
+      weight: 'all',
+      language: 'all',
+      name: '',
+    };
+    this.weight.unshift({
+      value: 'all',
+      label: 'Любая сложность ...',
+    });
+    this.language.unshift({
+      value: 'all',
+      label: 'Любые языки ...',
+    });
   }
 
-  handleChange = name => (event) => {
-    this.setState({
-      [name]: event.target.value,
-    });
-    this.state[name] = event.target.value;
-    this.props.handleHistoryFilter(this.state.name, this.state.role, this.state.activityType);
-  };
+  weight = [4, 6, 8, 10].map(element => ({
+    value: element,
+    label: element,
+  }));
 
-  handleChangeChild = (name, value) => {
-    this.setState({
-      [name]: value,
-    });
-    this.state[name] = value;
-    this.props.handleHistoryFilter(this.state.name, this.state.role, this.state.activityType);
+  language = ['Java', 'C++'].map(element => ({
+    value: element,
+    label: element,
+  }))
+
+  handleChange = input => (event) => {
+    const newState = {
+      ...this.state,
+      [input]: event.target.value,
+    };
+    console.log(newState);
+    this.setState(newState);
+    this.props.handleHistoryFilter(newState);
   };
 
   render() {
@@ -61,23 +81,51 @@ class SearchBox extends Component {
     return (
       <Paper className={[classes.parent].join(' ')}>
         <div className={classes.caption}>
-          Search tasks & tests by:
+          {localize('Search tasks by:')}
         </div>
         <Paper className={classes.child} elevation={0}>
           <Input
-            placeholder="Имя ..."
+            placeholder="Название задачи ..."
             className={classes.input}
             disableUnderline
             onChange={this.handleChange('name')}
           />
         </Paper>
         <Paper className={classes.child} elevation={0}>
-          <Input
-            placeholder="Email ..."
-            className={classes.input}
-            disableUnderline
-            onChange={this.handleChange('email')}
-          />
+          <TextField
+            id="select-university"
+            select
+            className={classes.textField}
+            value={this.state.weight}
+            onChange={this.handleChange('weight')}
+            InputProps={{
+              disableUnderline: true,
+            }}
+          >
+            {this.weight.map(option => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Paper>
+        <Paper className={classes.child} elevation={0}>
+          <TextField
+            id="select-university"
+            select
+            className={classes.textField}
+            value={this.state.language}
+            onChange={this.handleChange('language')}
+            InputProps={{
+              disableUnderline: true,
+            }}
+          >
+            {this.language.map(option => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </Paper>
       </Paper>
     );

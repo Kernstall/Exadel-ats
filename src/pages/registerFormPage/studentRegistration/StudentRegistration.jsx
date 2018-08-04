@@ -78,18 +78,18 @@ class StudentRegistration extends React.Component {
       <section className="student-container">
         <TextField
           id="name-placeholder"
-          label="First name"
+          label="Имя"
           value={this.state.firstName}
           onChange={this.handleChange('firstName')}
-          placeholder="Input your name..."
+          placeholder="Введите ваше имя..."
           className="text-field first-name"
         />
         <TextField
           id="lastname-placeholder"
-          label="Last name"
+          label="Фамилия"
           value={this.state.lastName}
           onChange={this.handleChange('lastName')}
-          placeholder="Input your last name..."
+          placeholder="Введите вашу фамилию..."
           className="text-field surname"
           margin="normal"
         />
@@ -98,20 +98,20 @@ class StudentRegistration extends React.Component {
         >
           <TextValidator
             id="email-placeholder"
-            label="Email"
+            label="Почта"
             name="email"
             value={this.state.email}
             onChange={this.handleChange('email')}
             validators={['required', 'isEmail']}
             errorMessages={['this field is required', 'email is not valid']}
-            placeholder="Input your email..."
+            placeholder="Введите вашу почту..."
             className="text-field email"
             margin="normal"
           />
         </ValidatorForm>
         <TextField
           id="password-placeholder"
-          label="Password"
+          label="Пароль"
           className="text-field"
           value={this.state.password}
           onChange={this.handleChange('password')}
@@ -121,7 +121,7 @@ class StudentRegistration extends React.Component {
         />
         <FormSelect
           id="university-placeholder"
-          label="University"
+          label="Университет"
           value={this.state.university}
           inputProps={{
             university: 'University',
@@ -134,7 +134,7 @@ class StudentRegistration extends React.Component {
         {facultiesArr && (
         <FormSelect
           id="faculty-placeholder"
-          label="Faculty"
+          label="Факультут"
           value={this.state.faculty}
           inputProps={{
             university: 'Faculty',
@@ -147,11 +147,11 @@ class StudentRegistration extends React.Component {
         )}
         <TextField
           id="group-placeholder"
-          label="Group number"
+          label="Номер группы"
           value={this.state.groupNumber}
           onChange={this.handleChange('groupNumber')}
           type="number"
-          placeholder="Input your group number..."
+          placeholder="Введите номер вашей группы..."
           className="text-field"
           InputLabelProps={{
             shrink: true,
@@ -160,11 +160,11 @@ class StudentRegistration extends React.Component {
         />
         <TextField
           id="course-placeholder"
-          label="Course"
+          label="Курс"
           value={this.state.course}
           onChange={this.handleChange('course')}
           type="number"
-          placeholder="Input your course..."
+          placeholder="Введите номер вашего курса.."
           className="text-field"
           InputLabelProps={{
             shrink: true,
@@ -174,7 +174,7 @@ class StudentRegistration extends React.Component {
         <TextField
           id="graduateYear-placeholder"
           select
-          label="Graduation year"
+          label="Год выпуска"
           className="text-field"
           value={this.state.graduateYear}
           onChange={this.handleChange('graduateYear')}
@@ -185,7 +185,7 @@ class StudentRegistration extends React.Component {
               },
             },
           }}
-          helperText="Please select your graduation year"
+          helperText="Выберите ваш год выпуска"
           margin="normal"
         >
           {gradYears.map((item, index) => (
@@ -195,7 +195,7 @@ class StudentRegistration extends React.Component {
           ))}
         </TextField>
         <Button onClick={this.handleSubmit} className={classes.registerButton}>
-          Register
+          Зарегистрироваться
         </Button>
         {this.state.isRedirected && <Redirect to="/" />}
       </section>
