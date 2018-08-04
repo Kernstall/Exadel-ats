@@ -6,8 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import CloudDownload from '@material-ui/icons/CloudDownload';
 import Button from '@material-ui/core/Button';
 import Common from '../../common/styles/Common';
-import { getAdminStudents } from '../../commands/admin';
-import SearchBox from './searchBox/SearchBox';
+import { getAdminQuestions } from '../../commands/admin';
+import SearchBox from './searchBox/SearchBox.jsx';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
 import Spinner from '../../common/shared/spinner';
 
@@ -50,7 +50,7 @@ const styles = {
   },
 };
 
-class AdminStudentPage extends Component {
+class AdminQuestionPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
@@ -59,34 +59,33 @@ class AdminStudentPage extends Component {
   }
 
   componentDidMount() { // eslint-disable-next-line
-    this.props.getAdminStudents(this.state.historyFilter);
+    this.props.getAdminQuestions(this.state.historyFilter);
   }
 
   componentDidUpdate(prevProps, prevState) {
     prevState.historyFilter === this.state.historyFilter
-      || this.props.getAdminStudents(this.state.historyFilter);
+      || this.props.getAdminQuestions(this.state.historyFilter);
   }
 
   handleDownload = () => {
-    this.props.getAdminStudents(this.state.historyFilter, true);
+    this.props.getAdminQuestions(this.state.historyFilter, true);
   }
 
   handleHistoryFilter = (props) => {
     const newState = {
       historyFilter: { ...props },
     };
-    console.log('newState', newState);
     this.setState(newState);
   };
 
   render() {
-    const { classes, adminStudents } = this.props;
-    if (adminStudents) {
-      const newAdminStudents = adminStudents.map(element => ({
-        name: `${element.lastName} ${element.firstName}`,
-        universityInfo: `${element.university} ${element.faculty} ${element.graduateYear}`,
-        mediumTaskScore: element.mediumTaskScore,
-        mediumTestScore: element.mediumTestScore,
+    const { classes, adminQuestions } = this.props;
+    if (adminQuestions) {
+      const newAdminQuestions = adminQuestions.map(element => ({
+        kind: `${element.kind}`,
+        isTraining: `${element.isTraining ? 'тренировочный' : 'тестовый'}`,
+        difficultyRate: `${element.difficultyRate}`,
+        correctPrecent: `${Math.round((element.correntAnswersCount / element.wrongAnswersCount) * 100)}%`,
       }));
       return (
         <Grid
@@ -112,7 +111,7 @@ class AdminStudentPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={newAdminStudents} />
+              <ActivityListItems info={newAdminQuestions} />
             </List>
           </Grid>
         </Grid>
@@ -128,11 +127,11 @@ class AdminStudentPage extends Component {
 
 
 const mapStateToProps = state => ({
-  adminStudents: state.adminStudents.adminStudents,
+  adminQuestions: state.adminQuestions.adminQuestions,
 });
 
 const mapCommandsToProps = dispatch => ({
-  getAdminStudents: (param, isFile) => dispatch(getAdminStudents(param, isFile)),
+  getAdminQuestions: (param, isFile) => dispatch(getAdminQuestions(param, isFile)),
 });
 
-export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminStudentPage));
+export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminQuestionPage));

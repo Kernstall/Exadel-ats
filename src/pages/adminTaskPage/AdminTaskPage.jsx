@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/es';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
+import CloudDownload from '@material-ui/icons/CloudDownload';
 import Button from '@material-ui/core/Button';
-import { saveAs } from 'file-saver';
 import Common from '../../common/styles/Common';
 import { getAdminTasks } from '../../commands/admin';
 import SearchBox from './searchBox/SearchBox';
 import ActivityListItems from './ActivityListItems/ActivityListItems';
+import Spinner from '../../common/shared/spinner';
 
 const styles = {
   ...Common,
@@ -22,35 +23,43 @@ const styles = {
   menue: {
     margin: '10px',
   },
+  absoluteCenter: {
+    position: 'fixed',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    left: 0,
+    top: 0,
+  },
+  center: {
+    margin: 'auto',
+  },
+  icon: {
+    opacity: '0.3',
+    marginLeft: 10,
+  },
+  button: {
+    background: '#2196f350',
+    '&:hover': {
+      background: '#2196f3',
+    },
+    transition: '.4s',
+    marginTop: '10px',
+    width: 280,
+    fontWeight: 300,
+  },
 };
-
-const mocks = [
-  {
-    name: 'История Беларуси',
-    score: '10',
-    language: 'С#',
-  },
-  {
-    name: 'История Беларуси 2',
-    score: '20',
-    language: 'С#',
-  },
-];
 
 class AdminTaskPage extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
-      historyFilter: {
-        name: '',
-        role: '',
-        activityType: '',
-      },
+      historyFilter: {},
     };
   }
 
   componentDidMount() {
-
+    this.props.getAdminTasks(this.state.historyFilter, false);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -58,40 +67,20 @@ class AdminTaskPage extends Component {
       || this.props.getAdminTasks(this.state.historyFilter);
   }
 
-  downloadClickHandler = () => {
-    fetch('/api/admin/statistics/students', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'Set-Cookie': 'true',
-      },
-      credentials: 'include',
-    }).then(res => res.blob())
-      .then((data) => {
-        return new Blob([data]);
-      }).then((blob) => {
-        saveAs(blob, 'students-workbook.xlsx');
-      })
-      .catch(rej => console.log(`Rejected: ${rej}`));
+  handleDownload = () => {
+    this.props.getAdminTasks(this.state.historyFilter, true);
   }
 
-  handleHistoryFilter = (name, role, activityType) => {
+  handleHistoryFilter = (props) => {
     const newState = {
-      historyFilter: { name, role, activityType },
+      historyFilter: { ...props },
     };
+    console.log('newState', newState);
     this.setState(newState);
   };
 
   render() {
     const { classes, adminTasks } = this.props;
-    if (!adminTasks) {
-      return (
-        <Button onClick={this.downloadClickHandler}>
-          123
-        </Button>
-      );
-    }
-
     if (adminTasks) {
       return (
         <Grid
@@ -103,6 +92,10 @@ class AdminTaskPage extends Component {
         >
           <Grid item className={classes.SearcBox}>
             <SearchBox handleHistoryFilter={this.handleHistoryFilter} />
+            <Button className={classes.button} onClick={this.handleDownload}>
+              Загрузить excel
+              <CloudDownload className={classes.icon} />
+            </Button>
           </Grid>
           <Grid
             item
@@ -113,14 +106,17 @@ class AdminTaskPage extends Component {
               component="nav"
               className={classes.noMargin}
             >
-              <ActivityListItems info={mocks} />
+              <ActivityListItems info={adminTasks} />
             </List>
           </Grid>
-          <h1>Tasks</h1>
         </Grid>
       );
     }
-    return null;
+    return (
+      <div className={classes.absoluteCenter}>
+        <Spinner className={classes.center} />
+      </div>
+    );
   }
 }
 
@@ -130,7 +126,7 @@ const mapStateToProps = state => ({
 });
 
 const mapCommandsToProps = dispatch => ({
-  getAdminTasks: param => dispatch(getAdminTasks(param)),
+  getAdminTasks: (param, isFile) => dispatch(getAdminTasks(param, isFile)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(AdminTaskPage));

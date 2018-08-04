@@ -76,9 +76,11 @@ class ActivityListItems extends Component {
     const sortedInfo = this.sort(info, sortBy, isDecreasing);
 
     const dateToString = (_date) => {
+      const addFirstZero = time => (`${time}`.length == 1 ? `0${time}` : time);
+
       const date = new Date(Date.parse(_date));
       const parsedTime = `${date.getDay()}.${date.getMonth()}.${date.getFullYear()}`;
-      const parsedData = `${date.getHours()}:${date.getMinutes()}`;
+      const parsedData = `${addFirstZero(date.getHours())}:${addFirstZero(date.getMinutes())}`;
       return `${parsedTime} ${parsedData}`;
     };
 

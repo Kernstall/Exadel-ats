@@ -1,9 +1,46 @@
 import React, { Component } from 'react';
 import { withStyles, Paper } from '@material-ui/core/es';
-import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import localize from '../../../localization/localization';
+
+const kind = [
+  'without answer option',
+  'without answer with verification',
+  'one answer',
+  'multiple answers',
+].map(element => ({
+  label: localize(element),
+  value: element,
+}));
+kind.unshift({
+  label: 'Варианты ответа',
+  value: 'all',
+});
+
+const difficultyRate = [1, 2, 3, 4].map(element => ({
+  label: element,
+  value: element,
+}));
+difficultyRate.unshift({
+  label: 'Сложность',
+  value: 'all',
+});
+
+const isTraining = [
+  {
+    label: 'Тип',
+    value: 'all',
+  },
+  {
+    label: 'Тренировочный',
+    value: true,
+  },
+  {
+    label: 'Контрольный',
+    value: false,
+  },
+];
 
 const styles = {
   parent: {
@@ -42,36 +79,18 @@ class SearchBox extends Component {
   constructor(props) { // eslint-disable-line
     super(props);
     this.state = {
-      weight: 'all',
-      language: 'all',
-      name: '',
+      kind: 'all',
+      difficultyRate: 'all',
+      isTraining: 'all',
     };
-    this.weight.unshift({
-      value: 'all',
-      label: 'Любая сложность ...',
-    });
-    this.language.unshift({
-      value: 'all',
-      label: 'Любые языки ...',
-    });
   }
-
-  weight = [4, 6, 8, 10].map(element => ({
-    value: element,
-    label: element,
-  }));
-
-  language = ['Java', 'C++'].map(element => ({
-    value: element,
-    label: element,
-  }))
 
   handleChange = input => (event) => {
     const newState = {
       ...this.state,
       [input]: event.target.value,
     };
-    console.log(newState);
+
     this.setState(newState);
     this.props.handleHistoryFilter(newState);
   };
@@ -81,28 +100,20 @@ class SearchBox extends Component {
     return (
       <Paper className={[classes.parent].join(' ')}>
         <div className={classes.caption}>
-          {localize('Search tasks by:')}
+          {localize('Search questions by:')}
         </div>
-        <Paper className={classes.child} elevation={0}>
-          <Input
-            placeholder="Название задачи ..."
-            className={classes.input}
-            disableUnderline
-            onChange={this.handleChange('name')}
-          />
-        </Paper>
         <Paper className={classes.child} elevation={0}>
           <TextField
             id="select-university"
             select
             className={classes.textField}
-            value={this.state.weight}
-            onChange={this.handleChange('weight')}
+            value={this.state.kind}
+            onChange={this.handleChange('kind')}
             InputProps={{
               disableUnderline: true,
             }}
           >
-            {this.weight.map(option => (
+            {kind.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -114,13 +125,31 @@ class SearchBox extends Component {
             id="select-university"
             select
             className={classes.textField}
-            value={this.state.language}
-            onChange={this.handleChange('language')}
+            value={this.state.difficultyRate}
+            onChange={this.handleChange('difficultyRate')}
             InputProps={{
               disableUnderline: true,
             }}
           >
-            {this.language.map(option => (
+            {difficultyRate.map(option => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Paper>
+        <Paper className={classes.child} elevation={0}>
+          <TextField
+            id="select-university"
+            select
+            className={classes.textField}
+            value={this.state.isTraining}
+            onChange={this.handleChange('isTraining')}
+            InputProps={{
+              disableUnderline: true,
+            }}
+          >
+            {isTraining.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>

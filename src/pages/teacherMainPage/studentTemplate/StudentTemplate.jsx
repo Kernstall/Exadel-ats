@@ -18,6 +18,9 @@ const styles = {
       color: blue[500],
     },
   },
+  colored: {
+    color: '#000',
+  },
   checked: {},
   size: {
     width: 40,
@@ -55,7 +58,7 @@ class StudentTemplate extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <Grid container alignItems="center" justify="center" spacing={40}>
+      <Grid className={classes.colored} container alignItems="center" justify="center" spacing={40}>
         <Grid item xs>
           {this.props.name}
         </Grid>
