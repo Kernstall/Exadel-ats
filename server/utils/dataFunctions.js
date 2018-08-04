@@ -666,7 +666,6 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
   } catch (e) {
     console.log(e.toString());
   }
-
 };
 
 function getExtension(fileName) {
@@ -1048,6 +1047,6 @@ exports.getRandomTest = async (topicId, count) => {
     topicId,
     _id: { $nin: notSearch },
   }).select({ _id: 1 });
-  const test = [...firstQuestions, ...arrRandom(all, count - 4)];
+  const test = [...firstQuestions, ...arrRandom(all, count - 4)].map((el) => { return { questionId: el._id }; });
   return test;
 };

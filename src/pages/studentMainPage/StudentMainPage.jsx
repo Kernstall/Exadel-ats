@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Grid } from '@material-ui/core/es';
 import { withStyles } from '@material-ui/core/styles';
-import DirectionsRun from '@material-ui/icons/DirectionsRun';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/es/Button/Button';
 import { Route, Link, Redirect } from 'react-router-dom';
@@ -35,21 +34,6 @@ const styles = {
     width: '100%',
     top: 0,
     left: 0,
-  },
-  position: {
-    position: 'absolute',
-    right: 10,
-    top: 10,
-    color: 'black',
-  },
-  icon: {
-    width: 38,
-    height: 38,
-    transition: '.3s',
-    opacity: 0.3,
-    '&:hover': {
-      opacity: 0.8,
-    },
   },
 };
 
@@ -105,7 +89,7 @@ class StudentMainPage extends Component {
       groupList = (
         <div>
           <Capture className={classes.captionMargin}>
-            Current groups
+            Мои группы
           </Capture>
           <List info={studentGroups} />
         </div>
@@ -113,7 +97,7 @@ class StudentMainPage extends Component {
       studentInfoComponent = (
         <div>
           <Capture className={classes.captionMargin}>
-            Information about you
+            Информация обо мне
           </Capture>
           <Grid container direction="row">
             {this.JSONtoJSX(studentGroups.student, classes, keysToRender)}
@@ -130,8 +114,9 @@ class StudentMainPage extends Component {
           {studentInfoComponent}
         </Grid>
         <Link to="/">
-        <Link onClick={this._logout} className={classes.position} to="/"><DirectionsRun className={classes.icon} /></Link>
-
+          <Button onClick={this._logout} className={classes.createNewGroupButton} variant="contained">
+            Выйти
+          </Button>
         </Link>
       </Grid>
     );

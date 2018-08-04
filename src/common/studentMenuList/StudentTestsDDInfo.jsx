@@ -45,7 +45,7 @@ class StudentTestsDDInfo extends React.Component {
             <ListItemText primary={themes.join(' ')} />
           </Grid>
           <Grid item xs={6}>
-            <ListItemText primary={(test.result > 0) ? test.result : 'Not sent'} />
+            <ListItemText primary={(test.result > 0) ? test.result : 'Не пройдено'} />
           </Grid>
           <Grid item xs={6}>
             <ListItemText primary={availableTest.name} />
