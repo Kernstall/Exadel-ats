@@ -80,19 +80,6 @@ router.post('/task/editing', async (req, res, next) => {
   }
 });
 
-// {
-//   topicId: String;
-//   tags: [String];
-//   description: String;
-//   name: String;
-//   weight: Number;
-//   language: String;
-//   tests: [{
-//     _id: String;
-//     weight: Number;
-//   }];
-//   passResult: Number;
-// }
 router.put('/task/editing', uploadFiles.uploadTests.array('tests'), async (req, res) => {
   const dataBaseEdit = {};
   const testsEdit = [];
