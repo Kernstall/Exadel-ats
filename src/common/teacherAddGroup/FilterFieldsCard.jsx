@@ -153,7 +153,7 @@ class FilterStudentCard extends React.Component {
               className={classes.contentFit}
             />
             <Button className={classes.contentFit} onClick={() => this.handleApplyFilter()}>
-              Filter
+              Фильтровать
             </Button>
           </FormControl>
 

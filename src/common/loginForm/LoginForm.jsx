@@ -58,13 +58,13 @@ class LoginForm extends React.Component {
           </div>
           <div className="input-panels">
             <Typography variant="subheading" className={classes.link}>
-              Not a member yet?
+              Не зарегистрированы?
               {' '}
               <Link to="/registration" className="sign-up-button">
-                Sign Up
+                Зарегистрируйтесь
               </Link>
               {' '}
-              now.
+              сейчас.
             </Typography>
             <TextField
               autoFocus
@@ -75,7 +75,7 @@ class LoginForm extends React.Component {
                 className: classes.input,
               }}
               id="name"
-              label="Login"
+              label="Почта"
               className="text-field"
               margin="normal"
               onChange={this.handleChange('username')}
@@ -88,7 +88,7 @@ class LoginForm extends React.Component {
                 className: classes.input,
               }}
               id="password-input"
-              label="Password"
+              label="Пароль"
               className="text-field"
               type="password"
               autoComplete="current-password"
@@ -96,7 +96,7 @@ class LoginForm extends React.Component {
               onChange={this.handleChange('password')}
             />
             <Button onClick={this.handleClick} className="login-button" fullWidth>
-              Login
+              Войти
             </Button>
           </div>
         </div>

@@ -89,7 +89,7 @@ class StudentMainPage extends Component {
       groupList = (
         <div>
           <Capture className={classes.captionMargin}>
-            Current groups
+            Мои группы
           </Capture>
           <List info={studentGroups} />
         </div>
@@ -97,7 +97,7 @@ class StudentMainPage extends Component {
       studentInfoComponent = (
         <div>
           <Capture className={classes.captionMargin}>
-            Information about you
+            Информация обо мне
           </Capture>
           <Grid container direction="row">
             {this.JSONtoJSX(studentGroups.student, classes, keysToRender)}
@@ -115,7 +115,7 @@ class StudentMainPage extends Component {
         </Grid>
         <Link to="/">
           <Button onClick={this._logout} className={classes.createNewGroupButton} variant="contained">
-            LOG OUT
+            Выйти
           </Button>
         </Link>
       </Grid>

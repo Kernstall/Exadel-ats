@@ -19,11 +19,11 @@ class RegisterForm extends React.Component {
     return (
       <form className="sign-up">
         <Typography className="sign-up-header" variant="headline">
-          Sign Up
+          Регистрация
         </Typography>
         <section className="checkbox">
           <Typography>
-            I'm a student
+            Я студент
           </Typography>
           <Link to="/registration/student">
             <Radio
@@ -35,7 +35,7 @@ class RegisterForm extends React.Component {
             />
           </Link>
           <Typography>
-            I'm a teacher
+            Я учитель
           </Typography>
           <Link to="/registration/teacher">
             <Radio

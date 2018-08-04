@@ -69,7 +69,7 @@ class TeacherSelectedGroupComponent extends React.Component {
             {this.props.groupName}
           </div>
           <div>
-            {this.props.groupMembers.length} students
+            студентов: {this.props.groupMembers.length}
           </div>
           <FormControlLabel
             control={(
@@ -102,17 +102,17 @@ class TeacherSelectedGroupComponent extends React.Component {
           ))}
         </List>
         <Button className={classes.addStudentButton} variant="contained">
-          Add student
+          Добавить студента
         </Button>
         <div className={classes.teacherButtonsHolder}>
           <div className={classes.buttonCorrection}>
             <Button className={classes.addStudentButton} variant="contained">
-              Add test
+              Назначить тест
             </Button>
           </div>
           <div className={classes.buttonCorrection}>
             <Button className={classes.addStudentButton} variant="contained">
-              Add task
+              Назначить задачу
             </Button>
           </div>
         </div>
