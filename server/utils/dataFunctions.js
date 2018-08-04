@@ -1111,7 +1111,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
     }
   }
   if (editObj.tests) {
-    if (req.files.lenght === 0) {
+    if (req.files.length === 0 && editObj.tests.length !== 0 && editObj.tests.length !== undefined) {
       throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
     }
     const set = new Set();
@@ -1202,8 +1202,8 @@ exports.checkAddTaskDataFunc = async (dataBaseAdd, addObj, req) => {
     throw new Error('At least one invalid argument: missing pass result');
   }
   if (addObj.tests) {
-    if (req.files.lenght === 0) {
-      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
+    if (req.files.length === 0) {
+      throw new Error('Invalid arguments: there must be at least one test for the task');
     }
     const set = new Set();
     req.files.forEach((file) => {
@@ -1226,9 +1226,7 @@ exports.checkAddTaskDataFunc = async (dataBaseAdd, addObj, req) => {
       throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
     }
   } else {
-    if (req.files.length !== 0) {
-      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
-    }
+    throw new Error('Invalid arguments: there must be at least one test for the task');
   }
 };
 

@@ -139,17 +139,18 @@ router.use(async (err, req, res, next) => {
 });
 
 router.post('/task', (req, res, next) => {
-  req.body.id = new mongoose.Types.ObjectId();
+  req.query.id = (new mongoose.Types.ObjectId()).toString();
   next();
 });
 
 router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) => {
-  const dataBaseAdd = {};
+  const dataBaseAdd = { _id: mongoose.Types.ObjectId(req.query.id) };
   const addObj = JSON.parse(req.body.taskInfo);
   try {
     await dataFunctions.checkAddTaskDataFunc(dataBaseAdd, addObj, req);
   } catch (error) {
     res.status(400).send(error.message);
+    dataFunctions.deleteTaskFolderFunc(req.query.id);
     return;
   }
   try {
@@ -157,6 +158,7 @@ router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) =>
     await newTask.save();
     res.status(200).send('Operation successful');
   } catch (error) {
+    dataFunctions.deleteTaskFolderFunc(req.query.id);
     res.status(500).send(error.message);
   }
 });
