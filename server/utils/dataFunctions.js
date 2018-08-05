@@ -1213,6 +1213,7 @@ exports.deleteTaskFolderFunc = async function deleteTaskFolderFunc(path) { // у
       resolve();
     });
   });
+};
 
 exports.getGroupsAndStudents = async (teacherId) => {
   try {
