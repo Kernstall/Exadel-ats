@@ -65,7 +65,7 @@ class StudentTestsDDInfo extends React.Component {
               <ListItemText primary={availableTest.name} />
             </Grid>
             <Grid item xs={6}>
-              <Link to="/student/passingTest" className={classes.link}>
+              <Link to={`/student/passingTest/${availableTest.id}`} className={classes.link}>
                 Пройти
               </Link>
             </Grid>

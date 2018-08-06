@@ -53,7 +53,7 @@ class App extends Component {
               <Route path="/teacher/tasks/:id" component={TaskView} />
               <Route path="/teacher/groups/:id" component={TeacherGroupComponent} />
               <Route path="/teacher/task/add" component={TeacherCreateTestQuestion} />
-              <Route path="/student/passingTest" component={PassingTest} />
+              <Route path="/student/passingTest/:topicId" component={PassingTest} />
             </div>
           </Router>
           <Footer />
