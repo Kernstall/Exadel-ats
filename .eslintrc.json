@@ -11,6 +11,7 @@
     "no-await-in-loop": "off",
     "arrow-body-style": "off",
     "no-param-reassign": "off",
+    "no-lonely-if": "off",
     "react/jsx-filename-extension": [
       1,
       {
