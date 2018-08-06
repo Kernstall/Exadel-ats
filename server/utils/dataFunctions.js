@@ -782,6 +782,8 @@ exports.getFullTaskInfo = async (taskId) => {
         weight: 1,
         tags: 1,
         tests: 1,
+        language: 1,
+        passResult: 1,
       });
     if (taskInfo.topicId) {
       taskInfo.topicName = taskInfo.topicId.name;
@@ -804,6 +806,8 @@ exports.getFullTaskInfo = async (taskId) => {
       tests: taskInfo.tests,
       topicName: taskInfo.topicName,
       topicId: taskInfo.topId,
+      language: taskInfo.language,
+      passResult: taskInfo.passResult,
     };
 
     return result;
