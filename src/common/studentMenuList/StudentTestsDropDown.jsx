@@ -22,8 +22,8 @@ class StudentTestsDropDown extends React.Component {
       <div className={classes.fullWidth}>
         <List
           component="nav"
-        >{
-          testsInfo.map(
+        >{ testsInfo
+          && testsInfo.map(
             (test, index) => (
               <StudentTestsDDInfo
                 test={test}
@@ -32,8 +32,8 @@ class StudentTestsDropDown extends React.Component {
             ),
           )
         }
-          {
-            testsAvailable.map(
+          { testsAvailable
+            && testsAvailable.map(
               (test, index) => (
                 <StudentTestsDDInfo
                   availableTest={test}

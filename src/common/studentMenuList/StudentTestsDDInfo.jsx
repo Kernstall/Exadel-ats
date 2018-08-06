@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
 
@@ -32,32 +32,48 @@ const styles = theme => ({
       backgroundColor: '#1b77c5',
     },
   },
+  link: {
+    textDecoration: 'none',
+    fontSize: '1rem',
+    color: theme.palette.custom.blue,
+  },
 });
 
 class StudentTestsDDInfo extends React.Component {
   render() {
     const { classes, test, availableTest } = this.props;
-    const themes = test.topicsNames.map(theme => theme.name);
-    return (
-      <div className={classes.root}>
-        <Grid container spacing={24}>
-          <Grid item xs={6}>
-            <ListItemText primary={themes.join(' ')} />
+    const themes = test ? test.topicsNames.map(theme => theme.name) : null;
+    if (test) {
+      return (
+        <div className={classes.root}>
+          <Grid container spacing={24}>
+            <Grid item xs={6}>
+              <ListItemText primary={themes.join(' ')} />
+            </Grid>
+            <Grid item xs={6}>
+              <ListItemText primary={(test.result > 0) ? test.result : 'Не пройдено'} />
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <ListItemText primary={(test.result > 0) ? test.result : 'Не пройдено'} />
+        </div>
+      );
+    }
+    if (availableTest) {
+      return (
+        <div className={classes.root}>
+          <Grid container spacing={24}>
+            <Grid item xs={6}>
+              <ListItemText primary={availableTest.name} />
+            </Grid>
+            <Grid item xs={6}>
+              <Link to="/student/passingTest" className={classes.link}>
+                Пройти
+              </Link>
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <ListItemText primary={availableTest.name} />
-          </Grid>
-          <Grid item xs={6}>
-            <Button variant="contained" color="primary" className={classes.button}>
-              Back
-            </Button>
-          </Grid>
-        </Grid>
-      </div>
-    );
+        </div>
+      );
+    }
+    return null;
   }
 }
 
