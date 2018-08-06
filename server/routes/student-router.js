@@ -13,12 +13,12 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 const router = express.Router();
 
-/*router.use((req, res, next) => {
+router.use((req, res, next) => {
   if (req.user.status !== 'student') {
     return res.status(403).end();
   }
   return next();
-});*/
+});
 
 router.get('/group/tasks', async (req, res) => {
   try {
@@ -150,7 +150,7 @@ router.get('/test/questions', async (req, res) => {
     const answer = await dataFunctions.getTestQuestions(topicId);
     res.status(200).json(answer);
   } catch (e) {
-    res.status(400).send();
+    res.status(400).send(e.toString());
   }
 });
 
