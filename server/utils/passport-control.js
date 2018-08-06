@@ -23,6 +23,7 @@ passport.use(new LocalStrategy((email, password, done) => {
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
+
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
     done(err, user);
