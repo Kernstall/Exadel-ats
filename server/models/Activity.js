@@ -37,12 +37,10 @@ const ActivitiesSchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'Question',
   },
-  testTopicsIds: {
-    type: [{
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: 'Topic',
-    }],
-  },
+  testTopicsIds: [{
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Topic',
+  }],
   date: Date,
 });
 
