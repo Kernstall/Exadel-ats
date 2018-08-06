@@ -13,12 +13,12 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 const router = express.Router();
 
-router.use((req, res, next) => {
+/*router.use((req, res, next) => {
   if (req.user.status !== 'student') {
     return res.status(403).end();
   }
   return next();
-});
+});*/
 
 router.get('/group/tasks', async (req, res) => {
   try {
@@ -141,6 +141,16 @@ router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, re
     }
   } catch (e) {
     res.status(400).send(e.toString());
+  }
+});
+
+router.get('/test/questions', async (req, res) => {
+  try {
+    const topicId = req.query.topicId;
+    const answer = await dataFunctions.getTestQuestions(topicId);
+    res.status(200).json(answer);
+  } catch (e) {
+    res.status(400).send();
   }
 });
 

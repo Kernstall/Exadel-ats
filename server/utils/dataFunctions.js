@@ -553,8 +553,16 @@ exports.getStudents = async () => {
 
 const isValidByQuestionsTypes = async (elem) => {
   const typeOne = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'one answer', isTraining: true });
-  const typeTwo = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'multiple answers', isTraining: true });
-  const typeThree = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'without answer option', isTraining: true });
+  const typeTwo = Question.find({
+    topicId: mongoose.Types.ObjectId(elem.id),
+    kind: 'multiple answers',
+    isTraining: true
+  });
+  const typeThree = Question.find({
+    topicId: mongoose.Types.ObjectId(elem.id),
+    kind: 'without answer option',
+    isTraining: true
+  });
   const typeFour = Question.find({
     topicId: mongoose.Types.ObjectId(elem.id),
     kind: 'without answer with verification',
@@ -1243,6 +1251,7 @@ exports.getGroupsAndStudents = async (teacherId) => {
 function random(num) {
   return Math.floor(Math.random() * num);
 }
+
 function arrRandom(arr, count) {
   let a = arr.slice();
   while (a.length > count) a.splice(random(a.length - 1), 1);
@@ -1266,6 +1275,35 @@ exports.getRandomTest = async (topicId, count) => {
     topicId,
     _id: { $nin: notSearch },
   }).select({ _id: 1 });
-  const test = [...firstQuestions, ...arrRandom(all, count - 4)].map((el) => { return { questionId: el._id }; });
+  const test = [...firstQuestions, ...arrRandom(all, count - 4)].map((el) => {
+    return { questionId: el._id };
+  });
   return test;
 };
+
+function randomInteger(min, max) {
+  let rand = min - 0.5 + Math.random() * (max - min + 1);
+  rand = Math.round(rand);
+  return rand;
+}
+
+exports.getTestQuestions = async (topicId) => {
+  const allQuestions = await Question.find({ topicId: mongoose.Types.ObjectId(topicId), isTraining: true })
+    .select({
+      _id: 1,
+      correctAnswersIndexes: 1,
+      answersVariants: 1,
+      description: 1,
+      kind: 1,
+    });
+
+  const result = [];
+
+  for (let i = 0; i < 10; i++) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    result.push(allQuestions[index]);
+    allQuestions.splice(index, 1);
+  }
+
+  return result;
+}
