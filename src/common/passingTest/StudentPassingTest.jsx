@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Questions from './Questions';
 import Spinner from '../shared/spinner/index';
 import Common from '../styles/Common';
+import { getStudentQuestions } from '../../commands/passingTest';
 
 
 const styles = theme => ({
@@ -52,7 +53,7 @@ const testQuestions = [
     type: '3',
   },
   {
-    name: 'tesdfghjklt1?',
+    name: 'Какое-то длинное и запутанное предложение, в котором спрашивается о чем-то странном и непонятном?',
     type: '4',
   },
 ];
@@ -61,17 +62,17 @@ const testQuestions = [
 
 
 class PassingTest extends Component {
-  // componentDidMount() {
-  //   this.props.getAttemptCode({
-  //     taskId: this.props.match.params.taskId,
-  //     attemptNumber: this.props.match.params.attemptNumber,
-  //   });
-  // }
+  componentDidMount() {
+    this.props.getStudentQuestions({
+      topicId: this.props.match.params.topicId,
+    });
+  }
 
 
   render() {
-    const { classes } = this.props;
-    if (testQuestions) {
+    const { classes, questionsList } = this.props;
+    if (questionsList) {
+      console.log('got it');
       return (
         <div className={classes.root}>
           <Paper className={classes.paper} elevation={3}>
@@ -82,14 +83,14 @@ class PassingTest extends Component {
               component="nav"
             >
               {
-              testQuestions.map(
-                (question, index) => (
-                  <Questions
-                    question={question}
-                    key={index}
-                  />
-                ),
-              )
+                questionsList.map(
+                  (question, index) => (
+                    <Questions
+                      question={question}
+                      key={index}
+                    />
+                  ),
+                )
             }
             </List>
             <Button variant="contained" color="primary" className={classes.button}>
@@ -109,16 +110,15 @@ PassingTest.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-// const mapStateToProps = state => ({
-//   // isLoading: state.tasksList.isLoading,
-//   attemptCode: state.attemptCode.attemptCode,
-// });
-//
-// const mapCommandsToProps = dispatch => ({
-//   getAttemptCode: param => dispatch(getAttemptCode(param)),
-// });
-//
-// const styled = withStyles(styles)(passingTest);
-//
-// export default connect(mapStateToProps, mapCommandsToProps)(styled);
-export default withStyles(styles)(PassingTest);
+const mapStateToProps = state => ({
+  // isLoading: state.tasksList.isLoading,
+  questionsList: state.passingTest.questionsList,
+});
+
+const mapCommandsToProps = dispatch => ({
+  getStudentQuestions: param => dispatch(getStudentQuestions(param)),
+});
+
+const styled = withStyles(styles)(PassingTest);
+
+export default connect(mapStateToProps, mapCommandsToProps)(styled);

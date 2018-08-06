@@ -18,6 +18,7 @@ import errorMessage from './errorMessage';
 import attemptCode from './attemptCode';
 import taskInfo from './taskInfo';
 import teacherCreateTestQuestion from './teacherCreateTestQuestion';
+import passingTest from './passingTest';
 
 export default combineReducers({
   students,
@@ -39,4 +40,5 @@ export default combineReducers({
   attemptCode,
   taskInfo,
   teacherCreateTestQuestion,
+  passingTest,
 });
