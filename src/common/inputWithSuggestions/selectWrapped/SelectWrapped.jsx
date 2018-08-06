@@ -20,7 +20,7 @@ function SelectWrapped(props) {
   return (
     <Select
       optionComponent={Option}
-      noResultsText={<Typography> {'No results found'} </Typography>}
+      noResultsText={<Typography> {'Ничего не найдено'} </Typography>}
       arrowRenderer={arrowProps => (
         arrowProps.isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />
       )}

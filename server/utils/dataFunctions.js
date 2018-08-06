@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
+const fs = require('fs.extra');
 const Task = require('../models/Task');
 const Question = require('../models/Question');
 const Group = require('../models/Group');
 const User = require('../models/User');
 const Topic = require('../models/Topic');
 const Activities = require('../models/Activity');
+const Language = require('../models/Language');
+
 const TopicCourse = require('../models/TopicCourse');
 const mapping = require('./mapping/map');
 
@@ -666,7 +668,6 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
   } catch (e) {
     console.log(e.toString());
   }
-
 };
 
 function getExtension(fileName) {
@@ -1007,6 +1008,212 @@ exports.createQuestion = async (creatorId, reqBody) => {
   }
 };
 
+exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) => {
+  if (editObj.testsIdsToDelete) {
+    const task = await Task.findById(req.query.id);
+    const testsSet = new Set();
+    const deleteSet = new Set(editObj.testsIdsToDelete);
+    task.tests.forEach((test) => {
+      testsSet.add(test.id);
+    });
+    editObj.tests.forEach((test) => {
+      testsSet.add(test.id);
+    });
+    if (deleteSet.size >= testsSet.size) {
+      throw new Error('Task should have at least one test left');
+    }
+  }
+  if (editObj.tags) {
+    dataBaseEdit.tags = editObj.tags;
+  }
+  if (editObj.description) {
+    if (editObj.description === '') {
+      throw new Error('At least one invalid argument: description should not be empty string');
+    }
+    dataBaseEdit.description = editObj.description;
+  }
+  if (editObj.topicId) {
+    if ((await Topic.findById(editObj.topicId))) {
+      dataBaseEdit.topicId = editObj.topicId;
+    } else {
+      throw new Error('At least one invalid argument: topicId');
+    }
+  }
+  if (editObj.name) {
+    if ((await Task.findById(req.query.id)).name !== editObj.name) {
+      if (!(await Task.findOne({ name: editObj.name }))) {
+        dataBaseEdit.name = editObj.name;
+      } else {
+        throw new Error('At least one invalid argument: new name is not unique');
+      }
+    }
+  }
+  if (editObj.weight) {
+    if (editObj.weight >= 1 && editObj.weight <= 10) {
+      dataBaseEdit.weight = editObj.weight;
+      if (!editObj.passResult) {
+        if ((await Task.findById(req.query.id)).passResult > dataBaseEdit.weight) {
+          dataBaseEdit.passResult = dataBaseEdit.weight;
+        }
+      }
+    } else {
+      throw new Error('At least one invalid argument: weight should be greater or equal to 1 and less or equal to 10');
+    }
+  }
+  if (editObj.language) {
+    if (await Language.findOne({ language: editObj.language.toLowerCase() })) {
+      dataBaseEdit.language = editObj.language.toLowerCase();
+    } else {
+      throw new Error('At least one invalid argument: new language is not present in the data base');
+    }
+  }
+  if (editObj.passResult) {
+    if (editObj.weight) {
+      if (editObj.passResult >= 1 && editObj.passResult <= editObj.weight) {
+        dataBaseEdit.passResult = editObj.passResult;
+      } else {
+        throw new Error('At least one invalid argument: pass result should be greater or equal to 1 and less or equal to weight');
+      }
+    } else {
+      const weight = (await Task.findById(req.query.id)).weight;
+      if (editObj.passResult >= 1 && editObj.passResult <= weight) {
+        dataBaseEdit.passResult = editObj.passResult;
+      } else {
+        throw new Error('At least one invalid argument: pass result should be greater or equal to 1 and less or equal to weight');
+      }
+    }
+  }
+  if (editObj.tests) {
+    if (req.files.length === 0 && editObj.tests.length !== 0 && editObj.tests.length !== undefined) {
+      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
+    }
+    const set = new Set();
+    req.files.forEach((file) => {
+      set.add(file.id);
+    });
+    for (let index = 0; index < editObj.tests.length; index++) {
+      if (set.has(editObj.tests[index].id)) {
+        if (editObj.tests[index].weight) {
+          if (editObj.tests[index].weight >= 1 && editObj.tests[index].weight <= 10) {
+            testsEdit.push({ id: editObj.tests[index].id, weight: editObj.tests[index].weight });
+            set.delete(editObj.tests[index].id);
+          } else {
+            throw new Error('At least one invalid argument: test weight should be greater or equal to 1 and less or equal to 10');
+          }
+        } else {
+          throw new Error('At least one invalid argument: test weight should be present');
+        }
+      }
+    }
+    if (set.size !== 0) {
+      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
+    }
+  } else {
+    if (req.files.length !== 0) {
+      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
+    }
+  }
+};
+
+exports.checkAddTaskDataFunc = async (dataBaseAdd, addObj, req) => {
+  if (addObj.tags) {
+    dataBaseAdd.tags = addObj.tags;
+  } else {
+    dataBaseAdd.tags = [];
+  }
+  if (addObj.description) {
+    if (addObj.description === '') {
+      throw new Error('At least one invalid argument: description should not be empty string');
+    }
+    dataBaseAdd.description = addObj.description;
+  } else {
+    throw new Error('At least one invalid argument: missing description');
+  }
+  if (addObj.topicId) {
+    if ((await Topic.findById(addObj.topicId))) {
+      dataBaseAdd.topicId = addObj.topicId;
+    } else {
+      throw new Error('At least one invalid argument: topicId');
+    }
+  } else {
+    throw new Error('At least one invalid argument: missing topic\'s id');
+  }
+  if (addObj.name) {
+    if (!(await Task.findOne({ name: addObj.name }))) {
+      dataBaseAdd.name = addObj.name;
+    } else {
+      throw new Error('At least one invalid argument: new name is not unique');
+    }
+  } else {
+    throw new Error('At least one invalid argument: missing name');
+  }
+  if (addObj.weight) {
+    if (addObj.weight >= 1 && addObj.weight <= 10) {
+      dataBaseAdd.weight = addObj.weight;
+    } else {
+      throw new Error('At least one invalid argument: weight should be greater or equal to 1 and less or equal to 10');
+    }
+  } else {
+    throw new Error('At least one invalid argument: missing weight');
+  }
+  if (addObj.language) {
+    if (await Language.findOne({ language: addObj.language.toLowerCase() })) {
+      dataBaseAdd.language = addObj.language.toLowerCase();
+    } else {
+      throw new Error('At least one invalid argument: new language is not present in the data base');
+    }
+  } else {
+    throw new Error('At least one invalid argument: missing language');
+  }
+  if (addObj.passResult) {
+    if (addObj.passResult >= 1 && addObj.passResult <= addObj.weight) {
+      dataBaseAdd.passResult = addObj.passResult;
+    } else {
+      throw new Error('At least one invalid argument: pass result should be greater or equal to 1 and less or equal to weight');
+    }
+  } else {
+    throw new Error('At least one invalid argument: missing pass result');
+  }
+  if (addObj.tests) {
+    if (req.files.length === 0) {
+      throw new Error('Invalid arguments: there must be at least one test for the task');
+    }
+    const set = new Set();
+    req.files.forEach((file) => {
+      set.add(file.id);
+    });
+    for (let index = 0; index < addObj.tests.length; index++) {
+      if (set.has(addObj.tests[index].id)) {
+        if (addObj.tests[index].weight) {
+          if (addObj.tests[index].weight >= 1 && addObj.tests[index].weight <= 10) {
+            set.delete(addObj.tests[index].id);
+          } else {
+            throw new Error('At least one invalid argument: test weight should be greater or equal to 1 and less or equal to 10');
+          }
+        } else {
+          throw new Error('At least one invalid argument: test weight should be present');
+        }
+      }
+    }
+    if (set.size !== 0) {
+      throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
+    }
+  } else {
+    throw new Error('Invalid arguments: there must be at least one test for the task');
+  }
+};
+
+exports.deleteTaskFolderFunc = async function deleteTaskFolderFunc(path) { // удаляет конечную папку
+  return new Promise((resolve, reject) => {
+    fs.rmrf(`${exports.commonTaskPath}/${path}`, (error) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve();
+    });
+  });
+
 exports.getGroupsAndStudents = async (teacherId) => {
   try {
     let groups = await Group.find({ teacherId }).populate('studentIdList', ['_id', 'firstName', 'lastName']);
@@ -1048,6 +1255,6 @@ exports.getRandomTest = async (topicId, count) => {
     topicId,
     _id: { $nin: notSearch },
   }).select({ _id: 1 });
-  const test = [...firstQuestions, ...arrRandom(all, count - 4)];
+  const test = [...firstQuestions, ...arrRandom(all, count - 4)].map((el) => { return { questionId: el._id }; });
   return test;
 };

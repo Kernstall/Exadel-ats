@@ -7,13 +7,13 @@ const FormData = require('form-data');
 const Group = require('../models/Group');
 const Task = require('../models/Task');
 const Topic = require('../models/Topic');
+const Language = require('../models/Language');
 const Question = require('../models/Question');
 const mapping = require('../utils/mapping/map');
 const User = require('../models/User');
 const dataFunctions = require('../utils/dataFunctions');
 const uploadFiles = require('../utils/uploadFiles.js');
 const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
-
 
 const router = express.Router();
 
@@ -72,7 +72,7 @@ router.get('/full/task', async (req, res) => {
   }
 });
 
-router.post('/task/tests', async (req, res, next) => {
+router.post('/task/editing', async (req, res, next) => {
   if (!(await Task.findById(req.query.id))) {
     res.status(400).send('Invalid task id, there is no such task id in the data base');
   } else {
@@ -80,7 +80,40 @@ router.post('/task/tests', async (req, res, next) => {
   }
 });
 
-router.post('/task/tests', uploadFiles.uploadTests.array('tests'), async (req, res) => {
+router.put('/task/editing', uploadFiles.uploadTests.array('tests'), async (req, res) => {
+  const dataBaseEdit = {};
+  const testsEdit = [];
+  const editObj = JSON.parse(req.body.taskInfo);
+  try {
+    await dataFunctions.checkEditTaskDataFunc(dataBaseEdit, testsEdit, editObj, req);
+  } catch (error) {
+    res.status(400).send(error.message);
+    return;
+  }
+  try {
+    try {
+      await Task.findByIdAndUpdate(req.query.id, dataBaseEdit);
+    } catch (error) {
+      res.status(400).send(error.message);
+      return;
+    }
+    for (let index = 0; index < testsEdit.length; index++) {
+      await Task.updateOne({ _id: mongoose.Types.ObjectId(req.query.id), 'tests._id': mongoose.Types.ObjectId(testsEdit[index].id) }, {
+        $set: { 'tests.$.weight': testsEdit[index].weight },
+      });
+      await Task.findByIdAndUpdate(req.query.id, { $addToSet: { tests: { _id: mongoose.Types.ObjectId(testsEdit[index].id), weight: testsEdit[index].weight } } });
+    }
+    for (let index = 0; index < editObj.testsIdsToDelete.length; index++) {
+      await dataFunctions.deleteTaskFolderFunc(`${req.query.id}/${editObj.testsIdsToDelete[index]}`);
+    }
+    editObj.testsIdsToDelete = editObj.testsIdsToDelete.map((id) => {
+      return mongoose.Types.ObjectId(id);
+    });
+    await Task.findByIdAndUpdate(req.query.id, { $pull: { tests: { _id: { $in: editObj.testsIdsToDelete } } } });
+  } catch (error) {
+    res.status(500).send('Critical saving error, some data might have not been saved into the data base');
+    return;
+  }
   res.status(200).send('Operation successful');
 });
 
@@ -93,12 +126,28 @@ router.use(async (err, req, res, next) => {
 });
 
 router.post('/task', (req, res, next) => {
-  req.body.id = new mongoose.Types.ObjectId();
+  req.query.id = (new mongoose.Types.ObjectId()).toString();
   next();
 });
 
 router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) => {
-
+  const dataBaseAdd = { _id: mongoose.Types.ObjectId(req.query.id) };
+  const addObj = JSON.parse(req.body.taskInfo);
+  try {
+    await dataFunctions.checkAddTaskDataFunc(dataBaseAdd, addObj, req);
+  } catch (error) {
+    res.status(400).send(error.message);
+    dataFunctions.deleteTaskFolderFunc(req.query.id);
+    return;
+  }
+  try {
+    const newTask = new Task(dataBaseAdd);
+    await newTask.save();
+    res.status(200).send('Operation successful');
+  } catch (error) {
+    dataFunctions.deleteTaskFolderFunc(req.query.id);
+    res.status(500).send(error.message);
+  }
 });
 
 router.get('/questions', (req, res) => {
@@ -244,7 +293,7 @@ router.get('/group/students', async (req, res) => {
   }
 });
 
-router.post('/test', async (req, res) => {
+router.post('/test/assignment', async (req, res) => {
   if (!req.body.questionAmount || !req.body.startDate || !req.body.finishDate ||
     !(req.body.student || req.body.group)) {
     return res.status(400).end();

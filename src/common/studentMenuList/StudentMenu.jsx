@@ -19,15 +19,15 @@ const styles = ({
 
 const blocks = [
   {
-    tabName: 'Tasks',
+    tabName: 'Задачи',
     tabInfo: [],
   },
   {
-    tabName: 'Tests',
+    tabName: 'Тесты',
     tabInfo: [],
   },
   {
-    tabName: 'History',
+    tabName: 'История',
     tabInfo: [],
   },
 
@@ -44,19 +44,19 @@ class StudentMenuList extends React.Component {
 
         blocks.forEach((block) => {
           switch (block.tabName) {
-            case 'Tasks':
+            case 'Задачи':
               TabHeaders.push({
                 tabName: block.tabName,
                 component: <StudentTabTasksList tasksList={block.tabInfo} />,
               });
               break;
-            case 'Tests':
+            case 'Тесты':
               TabHeaders.push({
                 tabName: block.tabName,
                 component: <StudentTabTestsList testsList={block.tabInfo} />,
               });
               break;
-            case 'History':
+            case 'История':
               TabHeaders.push({
                 tabName: block.tabName,
                 component: <StudentTabHistory historyList={block.tabInfo} />,

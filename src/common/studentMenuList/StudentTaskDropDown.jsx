@@ -50,10 +50,10 @@ class StudentTaskDropDown extends React.Component {
             {taskInfo.description}
           </Typography>
           <Button onClick={this.handleShowAttempts} variant="contained" color="primary" className={classes.button}>
-            Show attempts
+            Посмотреть попытки
           </Button>
           <Button variant="contained" color="primary" className={classes.button}>
-            Upload solution
+            Загрузить решение
           </Button>
           {
             this.state.isShowAttempts
