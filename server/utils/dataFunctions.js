@@ -1298,8 +1298,41 @@ exports.getTestQuestions = async (topicId) => {
     });
 
   const result = [];
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'without answer with verification') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
 
-  for (let i = 0; i < 10; i++) {
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'without answer option') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'multiple answers') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'one answer') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
+
+  for (let i = 0; i < 6; i++) {
     const index = randomInteger(0, allQuestions.length - 1);
     result.push(allQuestions[index]);
     allQuestions.splice(index, 1);
