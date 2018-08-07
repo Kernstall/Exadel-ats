@@ -40,7 +40,7 @@ class App extends Component {
         <div className={classes.minHeight}>
           <Router>
             <div className={classes.content}>
-              <Header />
+              <Route path="/" component={Header} />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
               <Route path="/studentMenu" component={StudentMenu} />

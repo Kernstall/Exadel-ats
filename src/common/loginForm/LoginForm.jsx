@@ -102,7 +102,9 @@ class LoginForm extends React.Component {
         </div>
         <Route exact path="/registration" component={RegisterForm} />
         {
-          this.props.response && !console.log('ligin', this.props.response) && <Redirect to={`/${this.props.response.status}/id/${this.props.response.id}`} />
+          this.props.response
+            && !sessionStorage.setItem('name', JSON.stringify([this.props.response.firstName, this.props.response.lastName]))
+            && <Redirect to={`/${this.props.response.status}/id/${this.props.response.id}`} />
         }
       </form>
     );
