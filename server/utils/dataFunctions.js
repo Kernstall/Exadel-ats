@@ -592,6 +592,8 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
         'tests.isTraining': 1,
         'tests.status': 1,
         'tests._id': 1,
+        'tests.startDate': 1,
+        'tests.finishDate': 1,
       });
     const trainingTests = [];
     const notTrainingTests = [];
@@ -625,6 +627,8 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
               status: result[0].tests[i].status,
               result: result[0].tests[i].result,
               id: result[0].tests[i]._id,
+              startDate: result[0].tests[i].startDate,
+              finishDate: result[0].tests[i].finishDate,
             });
           }
         }
