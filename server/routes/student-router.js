@@ -153,4 +153,14 @@ router.get('/test/questions', async (req, res) => {
   }
 });
 
+router.post('/test/questions/answers', async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    const questionsAnswers = req.body;
+    await dataFunctions.checkQuestions(questionsAnswers);
+  } catch (e) {
+    res.status(400).send(e.toString());
+  }
+});
+
 module.exports = router;
