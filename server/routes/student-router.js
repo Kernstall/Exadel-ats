@@ -90,7 +90,7 @@ router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, re
     if (req.files) {
       const fileNamesArray = [];
       const mainFile = req.query.mainFile;
-      const userId = req.query.userId;
+      const userId = req.user.id;
       const taskId = req.query.taskId;
       const attemptNumber = await dataFunctions.getUsersTasksAttemptNumber(userId, taskId);
       req.files.forEach((elem) => {
@@ -158,6 +158,17 @@ router.post('/test/questions/answers', async (req, res) => {
     const studentId = req.user.id;
     const questionsAnswers = req.body;
     await dataFunctions.checkQuestions(questionsAnswers);
+  } catch (e) {
+    res.status(400).send(e.toString());
+  }
+});
+
+router.get('/examination/test', async (req, res) => {
+  try {
+    const testId = req.query.testId;
+    const studentId = req.query.studentId;
+    const result = await dataFunctions.getExamTest(studentId, testId);
+    res.status(200).json(result);
   } catch (e) {
     res.status(400).send(e.toString());
   }
