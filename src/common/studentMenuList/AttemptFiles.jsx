@@ -11,7 +11,7 @@ import AttemptCode from './AttemptCode';
 import { getAttemptCode } from '../../commands/attemptCode';
 
 
-const styles = ({
+const styles = theme => ({
   ...Common,
   fullWidth: {
     width: '100%',
@@ -36,32 +36,6 @@ const styles = ({
     textDecoration: 'none',
   },
 });
-
-const codeInfo = [
-  {
-    name: 'test1',
-    extension: 'java',
-    code: 'function createChildren(style, useInlineStyles) {\n'
-    + '  let childrenCount = 0;\n'
-    + '  return children => {\n'
-    + '    childrenCount += 1;\n'
-    + '    return children.map((child, i) => createElement({\n'
-    + '      node: child,\n'
-    + '      style,',
-  },
-  {
-    name: 'test2',
-    extension: 'cpp',
-    code: 'type, tagName, value } = node;\n'
-    + '  if (type === "text") {\n'
-    + '    return value;\n'
-    + '  } else if (tagName) {\n'
-    + '    const TagName = tagName;\n'
-    + '    const childrenCreator = createChildren(style, useInlineStyles);\n'
-    + '    const props = (\n'
-    + '      useInlineStyles',
-  },
-];
 
 
 class AttemptFiles extends Component {
