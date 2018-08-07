@@ -14,12 +14,12 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 const router = express.Router();
 
-/*router.use((req, res, next) => {
+router.use((req, res, next) => {
   if (req.user.status !== 'student') {
     return res.status(403).end();
   }
   return next();
-});*/
+});
 
 router.get('/group/tasks', async (req, res) => {
   try {
