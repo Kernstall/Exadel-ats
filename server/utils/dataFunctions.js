@@ -591,6 +591,7 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
         'tests.groupId': 1,
         'tests.isTraining': 1,
         'tests.status': 1,
+        'tests._id': 1,
       });
     const trainingTests = [];
     const notTrainingTests = [];
@@ -614,6 +615,7 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
               topicsNames: result[0].tests[i].topicsIds,
               status: result[0].tests[i].status,
               result: result[0].tests[i].result,
+              id: result[0].tests[i]._id,
             });
           } else {
             notTrCount += 1;
@@ -622,6 +624,7 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
               topicsNames: result[0].tests[i].topicsIds,
               status: result[0].tests[i].status,
               result: result[0].tests[i].result,
+              id: result[0].tests[i]._id,
             });
           }
         }
