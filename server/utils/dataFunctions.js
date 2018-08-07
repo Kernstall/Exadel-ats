@@ -590,6 +590,9 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
         'tests.groupId': 1,
         'tests.isTraining': 1,
         'tests.status': 1,
+        'tests._id': 1,
+        'tests.startDate': 1,
+        'tests.finishDate': 1,
       });
     console.log('result1', result);
     const trainingTests = [];
@@ -614,6 +617,7 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
               topicsNames: result[0].tests[i].topicsIds,
               status: result[0].tests[i].status,
               result: result[0].tests[i].result,
+              id: result[0].tests[i]._id,
             });
           } else {
             notTrCount += 1;
@@ -622,6 +626,9 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
               topicsNames: result[0].tests[i].topicsIds,
               status: result[0].tests[i].status,
               result: result[0].tests[i].result,
+              id: result[0].tests[i]._id,
+              startDate: result[0].tests[i].startDate,
+              finishDate: result[0].tests[i].finishDate,
             });
           }
         }
@@ -1015,6 +1022,10 @@ exports.createQuestion = async (creatorId, reqBody) => {
       reqBody.wrongAnswersCount = 0;
       reqBody.isBlocked = false;
       reqBody.haveCheckedReport = false;
+      for (let i = 0; i < reqBody.correctAnswersIndexes.length; i++) {
+        reqBody.correctAnswersIndexes[i] = parseInt(reqBody.correctAnswersIndexes[i], 10);
+      }
+      reqBody.difficultyRate = parseInt(reqBody.difficultyRate, 10);
       const record = new Question(reqBody);
 
       await record.save();

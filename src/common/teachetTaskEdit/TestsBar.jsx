@@ -81,7 +81,6 @@ class TestsBar extends React.Component {
   render() {
     const { classes, handleClickAddTest } = this.props;
     const { propsTests } = this.state;
-    console.log(this.state);
     return (
       <div className={classes.root}>
         <div className={classes.testsTitleAndAdd}>

@@ -50,7 +50,6 @@ class Header extends Component {
   render() {
     const { classes } = this.props;
     const name = JSON.parse(sessionStorage.getItem('name'));
-    console.log('name', name);
     return (
       <div className={[classes.header, classes.flex].join(' ')}>
         <div className={[classes.center, classes.defaultCursor].join(' ')}>
