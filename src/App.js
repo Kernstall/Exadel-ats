@@ -43,7 +43,7 @@ class App extends Component {
               <Route path="/" component={Header} />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
-              <Route path="/studentMenu/:id" component={StudentMenu} />
+              <Route path="/studentMenu/:groupId" component={StudentMenu} />
               <Route exact path="/teacher/addGroup" component={TeacherAddGroup} />
               <PrivateRoute exact path="/student/id/:id" component={StudentMainPage} />
               <PrivateRoute exact path="/teacher/id/:id" component={TeacherMainPage} />
