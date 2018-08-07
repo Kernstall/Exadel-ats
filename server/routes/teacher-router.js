@@ -134,8 +134,10 @@ router.post('/task', (req, res, next) => {
 
 router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) => {
   const dataBaseAdd = { _id: mongoose.Types.ObjectId(req.query.id) };
+  console.log(req.body.taskInfo);
   const addObj = JSON.parse(req.body.taskInfo);
   try {
+    console.log(req.body.taskInfo);
     await dataFunctions.checkAddTaskDataFunc(dataBaseAdd, addObj, req);
   } catch (error) {
     res.status(400).send(error.message);

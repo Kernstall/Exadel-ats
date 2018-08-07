@@ -1051,6 +1051,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
       testsSet.add(test.id);
     });
     if (deleteSet.size >= testsSet.size) {
+      console.log('1');
       throw new Error('Task should have at least one test left');
     }
   }
@@ -1059,6 +1060,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
   }
   if (editObj.description) {
     if (editObj.description === '') {
+      console.log('2');
       throw new Error('At least one invalid argument: description should not be empty string');
     }
     dataBaseEdit.description = editObj.description;
@@ -1067,6 +1069,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
     if ((await Topic.findById(editObj.topicId))) {
       dataBaseEdit.topicId = editObj.topicId;
     } else {
+      console.log('3');
       throw new Error('At least one invalid argument: topicId');
     }
   }
@@ -1075,6 +1078,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
       if (!(await Task.findOne({ name: editObj.name }))) {
         dataBaseEdit.name = editObj.name;
       } else {
+        console.log('4');
         throw new Error('At least one invalid argument: new name is not unique');
       }
     }
@@ -1088,6 +1092,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
         }
       }
     } else {
+      console.log('5');
       throw new Error('At least one invalid argument: weight should be greater or equal to 1 and less or equal to 10');
     }
   }
