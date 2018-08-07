@@ -4,13 +4,14 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core/es';
+import localize from '../../localization/localization';
 
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
-    width: '92%',
+    width: '95%',
     margin: 5,
   },
   questionType: {
@@ -18,9 +19,8 @@ const styles = theme => ({
     justifyContent: 'flex-start',
     alignContent: 'center',
     alignItems: 'center',
-    width: '60%',
+    width: '80%',
     boxSizing: 'border-box',
-    maxWidth: '70%',
     fontSize: 17,
     fontWeight: 300,
   },
@@ -29,7 +29,7 @@ const styles = theme => ({
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    width: '30%',
+    width: '15%',
   },
   questionsCountInner: {
     width: 'auto',
@@ -49,7 +49,7 @@ class QuestionTypeItem extends React.Component {
         <Paper className={classes.root} elevation={1}>
           <Grid container className={classes.question} justify="space-between" wrap="nowrap">
             <Typography className={classes.questionType}>
-              {type}
+              {localize(type)}
             </Typography>
             <Typography className={classes.questionsCount}>
               <span className={classes.questionsCountInner}>вопросов: {count}</span>

@@ -17,7 +17,7 @@ export const login = state => (dispatch) => {
     .then(res => res.json())
     .then((res) => {
       if (res.status) {
-        localStorage.setItem('user', JSON.stringify(res.id));
+        localStorage.setItem('user', res.id);
       }
       return res;
     })

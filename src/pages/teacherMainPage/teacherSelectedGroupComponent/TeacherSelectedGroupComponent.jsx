@@ -34,7 +34,8 @@ const styles = {
   },
   teacherButtonsHolder: {
     display: 'flex',
-    paddingTop: 25,
+    paddingTop: 15,
+    marginBottom: 10,
   },
   buttonCorrection: {
     paddingRight: 25,
