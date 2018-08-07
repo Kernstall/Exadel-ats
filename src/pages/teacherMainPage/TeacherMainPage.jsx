@@ -125,11 +125,6 @@ class TeacherMainPage extends React.Component {
             )
           }
         </AppBar>
-        <Link to="/">
-          <Button onClick={this._logout} className={classes.createNewGroupButton} variant="contained">
-            LOG OUT
-          </Button>
-        </Link>
       </div>
     );
   }

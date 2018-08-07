@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import TaskInTopic from './TaskInTopic.jsx';
 import Spinner from '../shared/spinner/index';
 import { getTeacherTasks } from '../../commands/teacherTasks';
+import AssignTestTask from '../assignTestTask/AssignTestTask';
 
 const styles = theme => ({
   button: {
@@ -28,6 +29,10 @@ class TeacherTaskList extends React.Component {
   constructor() {
     super();
     this.Tasks = [];
+    this.state = {
+      tasksId: [],
+      assign: '',
+    };
   }
 
   componentDidMount() {
@@ -35,15 +40,58 @@ class TeacherTaskList extends React.Component {
   }
 
   objtoJSX = (array) => {
-    return array.map((element, index) => (
+    return array.map(element => (
       <TaskInTopic
         button
         topicName={element.topicName}
         tasks={element.tasks}
-        key={index}
+        key={element.topicId}
+        handleSetTask={this.handleSetTask}
+        handleClose={this.handleClose}
+        handleDelete={this.handleDelete}
       />
     ));
   };
+
+  handleSetTask = (taskId) => {
+    const { tasksId } = this.state;
+    const index = tasksId.indexOf(taskId);
+    if (index === -1) {
+      tasksId.push(taskId);
+      this.setState({ tasksId, assign: '' });
+      return;
+    }
+    tasksId.splice(index, 1);
+    this.setState({ tasksId, assign: '' });
+  }
+
+  isInvalid = (data) => {
+    return data.toString() === 'Invalid Date' || data === '';
+  }
+
+  handleClose = () => {
+    this.setState({ assign: '' });
+  }
+
+  handleDelete = (tasks) => {
+    const ids = tasks.map(el => el.taskId);
+    let { tasksId } = this.state;
+    tasksId = tasksId.filter(el => !ids.includes(el));
+    this.setState({ tasksId });
+  }
+
+  handleClick = () => {
+    const { tasksId } = this.state;
+    if (tasksId.length > 0) {
+      this.setState({
+        assign: (<AssignTestTask
+          handleClose={this.handleClose}
+          tasksIds={tasksId}
+          isTest={false}
+        />),
+      });
+    }
+  }
 
   render() {
     const { classes, teacherTasks } = this.props;
@@ -59,9 +107,17 @@ class TeacherTaskList extends React.Component {
           {this.Tasks}
           {load}
         </List>
-        <Button variant="contained" color="primary" className={classes.button}>
-          Назначить
-        </Button>
+        {this.state.assign}
+        {teacherTasks && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={this.handleClick}
+            className={classes.button}
+          >
+            Назначить
+          </Button>
+        )}
       </div>
     );
   }

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import Spinner from '../shared/spinner/index';
 import QuestionTopics from './QuestionTopics';
 import { getTeacherQuestions } from '../../commands/teacherQuestions';
-import AssignTest from './AssignTest';
+import AssignTestTask from '../assignTestTask/AssignTestTask';
 
 const styles = theme => ({
   button: {
@@ -59,10 +59,11 @@ class TeacherQuestionList extends React.Component {
       const questionsCount = questions.count;
       this.setState({
         assign: (
-          <AssignTest
+          <AssignTestTask
             handleClose={this.handleClose}
             topicId={clickedType}
             questionsCount={questionsCount}
+            isTest
           />
         ),
       });

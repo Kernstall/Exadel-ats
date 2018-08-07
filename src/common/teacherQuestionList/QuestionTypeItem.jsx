@@ -10,7 +10,7 @@ const styles = theme => ({
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
-    width: '92%',
+    width: '95%',
     margin: 5,
   },
   questionType: {
@@ -18,9 +18,8 @@ const styles = theme => ({
     justifyContent: 'flex-start',
     alignContent: 'center',
     alignItems: 'center',
-    width: '60%',
+    width: '80%',
     boxSizing: 'border-box',
-    maxWidth: '70%',
     fontSize: 17,
     fontWeight: 300,
   },
@@ -29,7 +28,7 @@ const styles = theme => ({
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    width: '30%',
+    width: '15%',
   },
   questionsCountInner: {
     width: 'auto',

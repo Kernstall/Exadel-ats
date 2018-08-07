@@ -48,7 +48,7 @@ router.post('/', (req, res, next) => {
         });
       });
     }
-    return res.status(401).send({ err: 'not right fiels' });
+    return res.status(401).send({ err: 'not right fiedls' });
   })(req, res, next);
 });
 
