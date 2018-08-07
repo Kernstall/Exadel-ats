@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const FormData = require('form-data');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const got = require('got');
 
@@ -82,6 +83,15 @@ router.get('/task/attempt', async (req, res) => {
     res.status(200).send(JSON.stringify(result));
   } catch (e) {
     res.status(400).send(e.toString());
+  }
+});
+
+router.post('/src/files', async (req, res, next) => {
+  try {
+    await User.find({ _id: req.user._id, tasks: { $elemMatch: { taskId: mongoose.Types.ObjectId(req.query.taskId) } } });
+    next();
+  } catch (error) {
+    res.status(400).send('Invalid task id');
   }
 });
 
