@@ -1367,8 +1367,28 @@ exports.getExamTest = async (studentId, testId) => {
           },
         },
       },
-
+    },
+    {
+      $project: {
+        'test.questions': 1,
+      },
     },
   ]);
-  return result;
+  const questions = result[0].test[0].questions;
+
+  const questionsPromises = [];
+
+  for (let i = 0; i < questions.length; i++) {
+    questionsPromises.push(Question.findById(questions[i].questionId)
+      .select({
+        _id: 1,
+        answersVariants: 1,
+        description: 1,
+        kind: 1,
+      }));
+  }
+
+  const promisesResult = await Promise.all(questionsPromises);
+
+  return promisesResult;
 };
