@@ -58,10 +58,10 @@ exports.uploadTests = multer({
 
 const storageSrcCode = multer.diskStorage({
   async destination(req, file, cb) {
-    const userId = req.query.userId;
+    const userId = req.user.id;
     const taskId = req.query.taskId;
     const result = await dataFunctions.getUsersTasksAttemptNumber(userId, taskId);
-    const path = `${exports.commonSrcCodePath}/${req.query.userId}/${req.query.taskId}/${result + 1}/src`;
+    const path = `${exports.commonSrcCodePath}/${userId}/${taskId}/${result + 1}/src`;
     await fileSystemFunctions.createDirFunc(path);
     cb(null, path);
   },

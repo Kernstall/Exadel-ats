@@ -861,7 +861,6 @@ const compileProcessing = (testsResult, taskWeight) => {
 exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files, testsResult, bestResult, taskWeight) => {
   try {
     const result = compileProcessing(testsResult, taskWeight);
-    result.result = 8;
     if (result.result > bestResult) {
       await User.update(
         { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
@@ -1051,6 +1050,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
       testsSet.add(test.id);
     });
     if (deleteSet.size >= testsSet.size) {
+      console.log('1');
       throw new Error('Task should have at least one test left');
     }
   }
@@ -1059,6 +1059,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
   }
   if (editObj.description) {
     if (editObj.description === '') {
+      console.log('2');
       throw new Error('At least one invalid argument: description should not be empty string');
     }
     dataBaseEdit.description = editObj.description;
@@ -1067,6 +1068,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
     if ((await Topic.findById(editObj.topicId))) {
       dataBaseEdit.topicId = editObj.topicId;
     } else {
+      console.log('3');
       throw new Error('At least one invalid argument: topicId');
     }
   }
@@ -1075,6 +1077,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
       if (!(await Task.findOne({ name: editObj.name }))) {
         dataBaseEdit.name = editObj.name;
       } else {
+        console.log('4');
         throw new Error('At least one invalid argument: new name is not unique');
       }
     }
@@ -1088,6 +1091,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
         }
       }
     } else {
+      console.log('5');
       throw new Error('At least one invalid argument: weight should be greater or equal to 1 and less or equal to 10');
     }
   }
@@ -1292,6 +1296,56 @@ exports.getRandomTest = async (topicId, count) => {
     return { questionId: el._id };
   });
   return test;
+};
+
+function clone(params) {
+  let clonex = {};
+  for (let i = 0; i < Object.keys(params).length; i += 1) {
+    clonex[Object.keys(params)[i]] = params[Object.keys(params)[i]];
+  }
+  return clonex;
+}
+
+exports.setTasks = async (body) => {
+  try {
+    let newTask = {};
+    newTask.startDate = new Date(body.startDate);
+    newTask.finishDate = new Date(body.finishDate);
+    newTask.bestResult = 0;
+    newTask.isPassed = false;
+    let studentId;
+    if (body.student) {
+      [studentId, newTask.groupId] = body.student.split('_');
+    } else {
+      newTask.groupId = body.group;
+    }
+    const tasksArray = [];
+    body.tasksIds.forEach((el) => {
+      newTask.taskId = el;
+      const task = clone(newTask);
+      tasksArray.push(task);
+    });
+    if (studentId) {
+      const resultStudent = await User.findByIdAndUpdate(
+        studentId,
+        { $push: { tasks: tasksArray } },
+        { safe: true, new: true },
+      );
+      return resultStudent;
+    }
+    const group = await Group.findById(newTask.groupId);
+    const studentIds = group.studentIdList;
+    const resultGroup = await User.update(
+      {
+        _id: { $in: studentIds },
+      },
+      { $push: { tasks: tasksArray } },
+      { safe: true, new: true, multi: true },
+    );
+    return resultGroup;
+  } catch (err) {
+    throw err;
+  }
 };
 
 function randomInteger(min, max) {

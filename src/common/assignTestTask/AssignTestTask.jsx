@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Spinner from '../shared/spinner/index';
-import Button from '@material-ui/core/Button';
 import FormSelect from '../shared/select/index';
 
 const styles = theme => ({
@@ -30,11 +30,12 @@ const styles = theme => ({
   },
   root: {
     display: 'flex',
-    width: '35%',
-    minWidth: '300px',
-    margin: 'auto',
+    width: '18%',
     flexDirection: 'column',
     alignItems: 'center',
+    position: 'fixed',
+    top: 70,
+    right: 15,
   },
   textField: {
     marginRight: theme.spacing.unit,
@@ -75,7 +76,7 @@ function getDataTextField(type, label, classname, defaultThing, onChangeThing) {
   );
 }
 
-class AssingTest extends React.Component {
+class AssingTestTask extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -128,7 +129,7 @@ class AssingTest extends React.Component {
     if (mi < 10) {
       mi = `o${mi}`;
     }
-    const data = `${y}-${m}-${d}T${h}:${mi}`;
+    const data = `${y}-${m}-${d}T${h}:${mi}:00`;
     return data;
   }
 
@@ -165,9 +166,11 @@ class AssingTest extends React.Component {
       this.setState({ error: 'Выберите группу или студента' });
       return;
     }
-    if (!count) {
-      this.setState({ error: 'Выберите количество вопросов' });
-      return;
+    if (this.props.isTest) {
+      if (!count) {
+        this.setState({ error: 'Выберите количество вопросов' });
+        return;
+      }
     }
     if (this.isInvalid(deadline) || this.isInvalid(start)) {
       this.setState({ error: 'Выберите правильно дату' });
@@ -183,12 +186,17 @@ class AssingTest extends React.Component {
     }
     const myBody = {};
     myBody[flag] = this.state[flag];
-    myBody.questionAmount = count;
-    myBody.topicId = this.props.topicId;
+    if (this.props.isTest) {
+      myBody.questionAmount = count;
+      myBody.topicId = this.props.topicId;
+    } else {
+      myBody.tasksIds = this.props.tasksIds;
+    }
     myBody.startDate = start;
     myBody.finishDate = deadline;
+    const url = (this.props.isTest) ? 'test' : 'task';
 
-    fetch('/api/teacher/test/assignment', {
+    fetch(`/api/teacher/${url}/assignment`, {
       method: 'post',
       headers: {
         'Content-type': 'application/json',
@@ -203,13 +211,12 @@ class AssingTest extends React.Component {
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ error: err });
       });
   }
 
-  handleChangeCount = () => (event) => {
+  handleChangeCountTime = name => (event) => {
     this.setState({
-      count: event.target.value,
+      [name]: event.target.value,
     });
   }
 
@@ -218,9 +225,16 @@ class AssingTest extends React.Component {
   }
 
   render() {
-    const { classes, handleClose, questionsCount } = this.props;
+    const {
+      classes, handleClose, questionsCount, isTest,
+    } = this.props;
     const { groups, students, error } = this.state;
-    const questionCount = ['10', '15', '20', '25', '30', '35', '40'].filter(el => parseInt(el, 10) <= questionsCount);
+    let count = questionsCount;
+    if (!isTest) {
+      count = 0;
+    }
+    const questionCount = ['10', '15', '20', '25', '30', '35', '40'].filter(el => parseInt(el, 10) <= count);
+    // const time = ['10', '15', '20', '25', '30', '40', '50', '60'];
     const errorCode = this.getErrorJSX(error, classes.error);
     const dvs = this.getInputDate();
     const dvd = this.getInputDate(5);
@@ -233,18 +247,19 @@ class AssingTest extends React.Component {
             <form className={classes.container} noValidate>
               {getDataTextField('start', 'Дата и время старта', classes.textField, dvs, this.handleChangeData)}
               {getDataTextField('deadline', 'Дата и время дедлайна', classes.textField, dvd, this.handleChangeData)}
-              <FormSelect
-                id="count-placeholder"
-                label="Количество вопросов"
-                value={this.state.count}
-                inputProps={{
-                  university: 'Count',
-                  id: '0',
-                }}
-                onChange={this.handleChangeCount()}
-                options={questionCount}
-                className={classes.select}
-              />
+              {isTest && (
+                <FormSelect
+                  id="count-placeholder"
+                  label="Количество вопросов"
+                  value={this.state.count}
+                  inputProps={{
+                    university: 'Count',
+                    id: '0',
+                  }}
+                  onChange={this.handleChangeCountTime('count')}
+                  options={questionCount}
+                  className={classes.select}
+                />)}
               <TextField
                 id="groups-placeholder"
                 select
@@ -308,9 +323,9 @@ class AssingTest extends React.Component {
   }
 }
 
-AssingTest.propTypes = {
+AssingTestTask.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
 
-export default withStyles(styles)(AssingTest);
+export default withStyles(styles)(AssingTestTask);
