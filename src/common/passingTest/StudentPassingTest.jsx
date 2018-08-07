@@ -37,30 +37,6 @@ const styles = theme => ({
   },
 });
 
-const testQuestions = [
-  {
-    name: 'test1?',
-    answers: ['answer1', 'answer2'],
-    type: '1',
-  },
-  {
-    name: 'testtest?',
-    answers: ['answer1', 'answer2', 'answer3'],
-    type: '2',
-  },
-  {
-    name: 'dfghjk?',
-    type: '3',
-  },
-  {
-    name: 'Какое-то длинное и запутанное предложение, в котором спрашивается о чем-то странном и непонятном?',
-    type: '4',
-  },
-];
-
-// const testTheme = 'Test theme 1';
-
-
 class PassingTest extends Component {
   componentDidMount() {
     this.props.getStudentQuestions({
@@ -72,7 +48,6 @@ class PassingTest extends Component {
   render() {
     const { classes, questionsList } = this.props;
     if (questionsList) {
-      console.log('got it');
       return (
         <div className={classes.root}>
           <Paper className={classes.paper} elevation={3}>

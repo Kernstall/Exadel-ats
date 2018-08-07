@@ -64,7 +64,6 @@ router.get('/group/tests', async (req, res) => {
     const studentId = req.user.id;
     const groupId = req.query.groupId;
     const result = await dataFunctions.getGroupStudentTests(studentId, groupId);
-    console.log('res', result);
     res.status(200).json(result);
   } catch (e) {
     res.status(400).send(e.toString());

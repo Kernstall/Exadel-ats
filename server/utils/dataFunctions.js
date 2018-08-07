@@ -594,7 +594,6 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
         'tests.startDate': 1,
         'tests.finishDate': 1,
       });
-    console.log('result1', result);
     const trainingTests = [];
     const notTrainingTests = [];
     let trCount = 0;
