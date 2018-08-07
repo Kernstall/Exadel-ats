@@ -39,8 +39,8 @@ function InsetList(props) {
     <Paper className={classes.control}>
       <ListItem button>
         <Grid container>
-          <Grid item xs={4}>
-            <Link to="/studentMenu">
+          <Grid item xs={4}>{console.log(element)}
+            <Link to={`/studentMenu/${element.id}`}>
               <ListItemText primary={`${element.groupName}`} />
             </Link>
           </Grid>

@@ -27,7 +27,7 @@ const styles = {
     left: 0,
     top: 0,
     width: 'fit-content',
-  }, 
+  },
   headerItem: {
     width: 50,
     height: 60,
@@ -150,7 +150,6 @@ class HeaderMenue extends Component {
             </div>
           </Link>
         </Grid>
-        <Link className={classes.position} to="/"><DirectionsRun className={classes.icon} /></Link>
       </div>
     );
   }

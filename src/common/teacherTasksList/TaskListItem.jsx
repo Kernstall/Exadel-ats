@@ -118,13 +118,14 @@ class TaskListItem extends React.Component {
     return result;
   }
 
-  handleChange = name => (event) => {
+  handleChange = (name, handle, taskId) => (event) => {
+    handle(taskId);
     this.setState({ [name]: event.target.checked });
   };
 
   render() {
     const {
-      classes, taskName, tags, score, taskId,
+      classes, taskName, tags, score, taskId, handleSetTask,
     } = this.props;
     const link = `/teacher/tasks/${taskId}`;
     const tagsText = this.getTags(tags);
@@ -148,7 +149,7 @@ class TaskListItem extends React.Component {
             <Checkbox
               className={classes.checkbox}
               checked={this.state.checked}
-              onChange={this.handleChange('checked')}
+              onChange={this.handleChange('checked', handleSetTask, taskId)}
               value="checked"
               color="primary"
             />

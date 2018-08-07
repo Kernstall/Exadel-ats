@@ -1294,6 +1294,56 @@ exports.getRandomTest = async (topicId, count) => {
   return test;
 };
 
+function clone(params) {
+  let clonex = {};
+  for (let i = 0; i < Object.keys(params).length; i += 1) {
+    clonex[Object.keys(params)[i]] = params[Object.keys(params)[i]];
+  }
+  return clonex;
+}
+
+exports.setTasks = async (body) => {
+  try {
+    let newTask = {};
+    newTask.startDate = new Date(body.startDate);
+    newTask.finishDate = new Date(body.finishDate);
+    newTask.bestResult = 0;
+    newTask.isPassed = false;
+    let studentId;
+    if (body.student) {
+      [studentId, newTask.groupId] = body.student.split('_');
+    } else {
+      newTask.groupId = body.group;
+    }
+    const tasksArray = [];
+    body.tasksIds.forEach((el) => {
+      newTask.taskId = el;
+      const task = clone(newTask);
+      tasksArray.push(task);
+    });
+    if (studentId) {
+      const resultStudent = await User.findByIdAndUpdate(
+        studentId,
+        { $push: { tasks: tasksArray } },
+        { safe: true, new: true },
+      );
+      return resultStudent;
+    }
+    const group = await Group.findById(newTask.groupId);
+    const studentIds = group.studentIdList;
+    const resultGroup = await User.update(
+      {
+        _id: { $in: studentIds },
+      },
+      { $push: { tasks: tasksArray } },
+      { safe: true, new: true, multi: true },
+    );
+    return resultGroup;
+  } catch (err) {
+    throw err;
+  }
+};
+
 function randomInteger(min, max) {
   let rand = min - 0.5 + Math.random() * (max - min + 1);
   rand = Math.round(rand);
