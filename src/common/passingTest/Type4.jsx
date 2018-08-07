@@ -34,7 +34,7 @@ class Type4 extends React.Component {
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
           id="multiline-static"
-          label={question}
+          label={question.description}
           multiline
           rows="4"
           className={classes.textField}

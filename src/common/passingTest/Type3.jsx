@@ -34,7 +34,7 @@ class Type3 extends React.Component {
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
           id="with-placeholder"
-          label={question}
+          label={question.description}
           className={classes.textField}
           margin="normal"
         />

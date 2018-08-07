@@ -1,7 +1,7 @@
 import { studentTasks as Actions } from '../actions';
 
 // eslint-disable-next-line
-export const getStudentTasks = ({studentId, groupId}) => (dispatch) => {
+export const getStudentTasks = ({groupId}) => (dispatch) => {
 
   dispatch(Actions.tasksRequest());
   fetch(`/api/student/group/tasks?groupId=${groupId}`, {

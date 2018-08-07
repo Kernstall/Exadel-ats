@@ -1,7 +1,7 @@
 import { studentTests as Actions } from '../actions';
 
 // eslint-disable-next-line
-export const getStudentTests = ({studentId, groupId}) => (dispatch) => {
+export const getStudentTests = ({groupId}) => (dispatch) => {
 
   dispatch(Actions.testsRequest());
   fetch(`/api/student/group/tests?groupId=${groupId}`, {

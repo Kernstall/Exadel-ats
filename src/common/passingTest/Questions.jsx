@@ -16,22 +16,22 @@ const styles = theme => ({
 class Questions extends Component {
   render() {
     const { classes, question } = this.props;
-    switch (question.type) {
-      case '1':
+    switch (question.kind) {
+      case 'one answer':
         return (
           <Type1 question={question} />
         );
-      case '2':
+      case 'multiple answers':
         return (
-          <Type2 name={question.name} answers={question.answers} />
+          <Type2 question={question} />
         );
-      case '3':
+      case 'without answer option':
         return (
-          <Type3 question={question.name} />
+          <Type3 question={question} />
         );
-      case '4':
+      case 'without answer with verification':
         return (
-          <Type4 question={question.name} />
+          <Type4 question={question} />
         );
       default:
         return null;
