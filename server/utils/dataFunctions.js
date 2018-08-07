@@ -1022,6 +1022,10 @@ exports.createQuestion = async (creatorId, reqBody) => {
       reqBody.wrongAnswersCount = 0;
       reqBody.isBlocked = false;
       reqBody.haveCheckedReport = false;
+      for (let i = 0; i < reqBody.correctAnswersIndexes.length; i++) {
+        reqBody.correctAnswersIndexes[i] = parseInt(reqBody.correctAnswersIndexes[i], 10);
+      }
+      reqBody.difficultyRate = parseInt(reqBody.difficultyRate, 10);
       const record = new Question(reqBody);
 
       await record.save();
