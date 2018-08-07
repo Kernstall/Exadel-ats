@@ -18,12 +18,12 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 const router = express.Router();
 
-/*router.use((req, res, next) => {
+router.use((req, res, next) => {
   if (req.user.status === 'teacher' || req.user.status === 'admin') {
     return next();
   }
   return res.status(403).end();
-});*/
+});
 
 router.get('/tasks', (req, res) => {
   let hashSet = {};
@@ -293,7 +293,7 @@ router.get('/all/topics', async (req, res) => {
 
 router.post('/new/question', async (req, res) => {
   try {
-    await dataFunctions.createQuestion(req.user.id, req.body);
+    await dataFunctions.createQuestion(req.teacherId, req.body);
     res.status(200).send();
   } catch (e) {
     res.status(400).send(e.message);
