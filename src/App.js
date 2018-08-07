@@ -40,10 +40,10 @@ class App extends Component {
         <div className={classes.minHeight}>
           <Router>
             <div className={classes.content}>
-              <Header />
+              <Route path="/" component={Header} />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
-              <Route path="/studentMenu/" component={StudentMenu} />
+              <Route path="/studentMenu/:id" component={StudentMenu} />
               <Route exact path="/teacher/addGroup" component={TeacherAddGroup} />
               <PrivateRoute exact path="/student/id/:id" component={StudentMainPage} />
               <PrivateRoute exact path="/teacher/id/:id" component={TeacherMainPage} />

@@ -9,7 +9,6 @@ import List from '../../common/shared/list/List';
 import Common from '../../common/styles/Common';
 import { getStudentGroups } from '../../commands/studentGroups';
 import Spinner from '../../common/shared/spinner/index';
-import { logout } from '../../commands/userLogin';
 
 const styles = {
   ...Common,
@@ -57,10 +56,6 @@ class StudentMainPage extends Component {
         );
       }
     }));
-
-  _logout = () => {
-    this.props.logout();
-  };
 
   render() {
     const { classes, studentGroups } = this.props;
@@ -113,11 +108,6 @@ class StudentMainPage extends Component {
         <Grid className={[classes.font, classes.wrapper].join(' ')}>
           {studentInfoComponent}
         </Grid>
-        <Link to="/">
-          <Button onClick={this._logout} className={classes.createNewGroupButton} variant="contained">
-            Выйти
-          </Button>
-        </Link>
       </Grid>
     );
   }
@@ -127,12 +117,10 @@ const styledComponent = withStyles(styles)(StudentMainPage);
 const mapStateToProps = state => ({
   isLoading: state.studentGroups.isLoading,
   studentGroups: state.studentGroups.studentGroups,
-  response: state.userLogin.response,
 });
 
 const mapCommandsToProps = dispatch => ({
   getStudentGroups: param => dispatch(getStudentGroups(param)),
-  logout: param => dispatch(logout(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(styledComponent);

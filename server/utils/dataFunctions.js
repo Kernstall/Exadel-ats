@@ -670,12 +670,12 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
     });
 
     return [{
-      name: 'Training tests',
+      name: 'Тренировочные тесты',
       info: trainingTests,
       avgMark: trSum / trCount,
       availableTopics: topicsFilter2,
     }, {
-      name: 'Examination tests',
+      name: 'Экзаменационные тесты',
       info: notTrainingTests,
       avgMark: notTrSum / notTrCount,
     }];
@@ -1291,7 +1291,6 @@ exports.getTestQuestions = async (topicId) => {
   const allQuestions = await Question.find({ topicId: mongoose.Types.ObjectId(topicId), isTraining: true })
     .select({
       _id: 1,
-      correctAnswersIndexes: 1,
       answersVariants: 1,
       description: 1,
       kind: 1,
@@ -1339,4 +1338,8 @@ exports.getTestQuestions = async (topicId) => {
   }
 
   return result;
-}
+};
+
+exports.checkQuestions = async (questionsAnswers) => {
+
+};
