@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ErrorWindow from './ErrorWindow';
-import { requestErrorMessage } from '../../../commands/errorMessage';
+import { requestErrorMessage, flushRedirectPath } from '../../../commands/errorMessage';
+import { Redirect } from 'react-router';
 
 class ErrorDispatcher extends React.Component {
   constructor() {
     super();
+    this.redirectPath = '';
     this.errorWindowOnCLick = this.errorWindowOnCLick.bind(this);
   }
 
@@ -18,10 +20,16 @@ class ErrorDispatcher extends React.Component {
 
   errorWindowOnCLick() {
     this.props.messageQueue.shift();
+    this.redirectPath = this.props.redirectPath;
+    this.props.flushRedirectPath();
     this.forceUpdate();
   }
 
   render() {
+    if (this.redirectPath !== '') {
+      this.redirectPath = '';
+      return (<Redirect to={this.redirectPath} />);
+    }
     return (
       this.props.messageQueue.length
         ? (
@@ -36,10 +44,12 @@ class ErrorDispatcher extends React.Component {
 
 const mapStateToProps = state => ({
   messageQueue: state.errorMessage.messageQueue,
+  redirectPath: state.errorMessage.redirectPath,
 });
 
 const mapCommandsToProps = dispatch => ({
   requestErrorMessage: message => dispatch(requestErrorMessage(message)),
+  flushRedirectPath: () => dispatch(flushRedirectPath()),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(ErrorDispatcher);
