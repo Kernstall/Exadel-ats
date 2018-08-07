@@ -861,7 +861,6 @@ const compileProcessing = (testsResult, taskWeight) => {
 exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files, testsResult, bestResult, taskWeight) => {
   try {
     const result = compileProcessing(testsResult, taskWeight);
-    result.result = 8;
     if (result.result > bestResult) {
       await User.update(
         { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
@@ -1422,8 +1421,28 @@ exports.getExamTest = async (studentId, testId) => {
           },
         },
       },
-
+    },
+    {
+      $project: {
+        'test.questions': 1,
+      },
     },
   ]);
-  return result;
+  const questions = result[0].test[0].questions;
+
+  const questionsPromises = [];
+
+  for (let i = 0; i < questions.length; i++) {
+    questionsPromises.push(Question.findById(questions[i].questionId)
+      .select({
+        _id: 1,
+        answersVariants: 1,
+        description: 1,
+        kind: 1,
+      }));
+  }
+
+  const promisesResult = await Promise.all(questionsPromises);
+
+  return promisesResult;
 };
