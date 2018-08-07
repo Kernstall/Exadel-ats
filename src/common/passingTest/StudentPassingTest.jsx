@@ -48,7 +48,6 @@ class PassingTest extends Component {
   render() {
     const { classes, questionsList } = this.props;
     if (questionsList) {
-      console.log('got it');
       return (
         <div className={classes.root}>
           <Paper className={classes.paper} elevation={3}>
