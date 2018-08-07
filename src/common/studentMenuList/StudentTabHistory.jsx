@@ -20,7 +20,7 @@ const styles = theme => ({
 class StudentTabHistory extends Component {
   componentDidMount() {
     this.props.getStudentHistory({
-      groupId: '5b4625ba877b5e0734c0a5e3',
+      groupId: this.props.groupId,
     });
   }
 

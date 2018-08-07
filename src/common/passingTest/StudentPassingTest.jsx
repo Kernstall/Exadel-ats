@@ -94,7 +94,7 @@ class PassingTest extends Component {
             }
             </List>
             <Button variant="contained" color="primary" className={classes.button}>
-              Submit
+              Готово
             </Button>
           </Paper>
         </div>

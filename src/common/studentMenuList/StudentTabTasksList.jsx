@@ -22,7 +22,7 @@ const styles = theme => ({
 class StudentTabTasksList extends Component {
   componentDidMount() {
     this.props.getStudentTasks({
-      groupId: '5b4625ba877b5e0734c0a5e3',
+      groupId: this.props.groupId,
     });
   }
 

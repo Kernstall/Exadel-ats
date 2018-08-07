@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 
@@ -35,9 +36,16 @@ const styles = theme => ({
   link: {
     textDecoration: 'none',
     fontSize: '1rem',
-    color: theme.palette.custom.blue,
+    fontWeight: '400',
+    lineHeight: '1.5em',
+    fontFamily: 'Roboto',
+    color: theme.palette.custom.primary,
+  },
+  primary: {
+    color: theme.palette.custom.primary,
   },
 });
+
 
 class StudentTestsDDInfo extends React.Component {
   render() {
@@ -67,6 +75,7 @@ class StudentTestsDDInfo extends React.Component {
             <Grid item xs={6}>
               <Link to={`/student/passingTest/${availableTest.id}`} className={classes.link}>
                 Пройти
+                {/* <ListItemText primary="Пройти" className={classes.primary} /> */}
               </Link>
             </Grid>
           </Grid>
