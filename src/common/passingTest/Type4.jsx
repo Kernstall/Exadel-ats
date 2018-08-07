@@ -33,12 +33,16 @@ class Type4 extends React.Component {
     return (
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
-          id="multiline-static"
+          id="full-width"
           label={question.description}
+          InputLabelProps={{
+            shrink: true,
+            margin: 'dense',
+          }}
+          fullWidth
           multiline
           rows="4"
-          className={classes.textField}
-          margin="normal"
+          margin="dense"
         />
       </form>
     );

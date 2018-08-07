@@ -33,10 +33,14 @@ class Type3 extends React.Component {
     return (
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
-          id="with-placeholder"
+          id="full-width"
           label={question.description}
-          className={classes.textField}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          fullWidth
           margin="normal"
+          className={classes.marginDense}
         />
       </form>
     );
