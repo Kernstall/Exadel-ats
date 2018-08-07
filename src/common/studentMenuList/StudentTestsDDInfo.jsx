@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
 
@@ -23,24 +25,75 @@ const styles = theme => ({
   minWidthItem: {
     minWidth: '50%',
   },
+  buttonBack: {
+    margin: '20px',
+    color: '#fff',
+    backgroundColor: '#2196f3',
+    '&:hover': {
+      backgroundColor: '#1b77c5',
+    },
+  },
+  link: {
+    textDecoration: 'none',
+    fontSize: '1rem',
+    fontWeight: '400',
+    lineHeight: '1.5em',
+    fontFamily: 'Roboto',
+    color: theme.palette.custom.primary,
+  },
+  primary: {
+    color: theme.palette.custom.primary,
+  },
 });
+
 
 class StudentTestsDDInfo extends React.Component {
   render() {
-    const { classes, test } = this.props;
-    const themes = test.topicsNames.map(theme => theme.name);
-    return (
-      <div className={classes.root}>
-        <Grid container spacing={24}>
-          <Grid item xs={6}>
-            <ListItemText primary={themes.join(' ')} />
+    const { classes, test, availableTest } = this.props;
+    const themes = test ? test.topicsNames.map(theme => theme.name) : null;
+    if (test) {
+      return (
+        <div className={classes.root}>
+          <Grid container spacing={24}>
+            <Grid item xs={6}>
+              <ListItemText primary={themes.join(' ')} />
+            </Grid>
+            <Grid item xs={6}>
+              {test.result > 0
+              && <ListItemText primary={test.result} />
+              }
+              {!(test.result > 0)
+              && (
+              <Link to={`/student/examination/test/${test.id}`} className={classes.link}>
+                Пройти
+                {/* <ListItemText primary="Пройти" className={classes.primary} /> */}
+              </Link>
+              )
+              }
+              {/*<ListItemText primary={(test.result > 0) ? test.result : 'Не пройдено'} />*/}
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <ListItemText primary={(test.result > 0) ? test.result : 'Не пройдено'} />
+        </div>
+      );
+    }
+    if (availableTest) {
+      return (
+        <div className={classes.root}>
+          <Grid container spacing={24}>
+            <Grid item xs={6}>
+              <ListItemText primary={availableTest.name} />
+            </Grid>
+            <Grid item xs={6}>
+              <Link to={`/student/passingTest/${availableTest.id}`} className={classes.link}>
+                Пройти
+                {/* <ListItemText primary="Пройти" className={classes.primary} /> */}
+              </Link>
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
-    );
+        </div>
+      );
+    }
+    return null;
   }
 }
 

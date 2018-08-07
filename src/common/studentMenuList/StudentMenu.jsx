@@ -47,25 +47,37 @@ class StudentMenuList extends React.Component {
             case 'Задачи':
               TabHeaders.push({
                 tabName: block.tabName,
-                component: <StudentTabTasksList tasksList={block.tabInfo} />,
+                component: <StudentTabTasksList
+                  tasksList={block.tabInfo}
+                  groupId={this.props.match.params.groupId}
+                />,
               });
               break;
             case 'Тесты':
               TabHeaders.push({
                 tabName: block.tabName,
-                component: <StudentTabTestsList testsList={block.tabInfo} />,
+                component: <StudentTabTestsList
+                  testsList={block.tabInfo}
+                  groupId={this.props.match.params.groupId}
+                />,
               });
               break;
             case 'История':
               TabHeaders.push({
                 tabName: block.tabName,
-                component: <StudentTabHistory historyList={block.tabInfo} />,
+                component: <StudentTabHistory
+                  historyList={block.tabInfo}
+                  groupId={this.props.match.params.groupId}
+                />,
               });
               break;
             default:
               TabHeaders.push({
                 tabName: block.tabName,
-                component: <StudentTabTasksList tasksList={block.tabInfo} />,
+                component: <StudentTabTasksList
+                  tasksList={block.tabInfo}
+                  groupId={this.props.match.params.groupId}
+                />,
               });
           }
         })

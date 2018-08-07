@@ -582,7 +582,6 @@ const isValidByQuestionsTypes = async (elem) => {
 
 exports.getGroupStudentTests = async (studentId, groupId) => {
   try {
-    console.log(studentId);
     const result = await User.find({ _id: mongoose.Types.ObjectId(studentId) })
       .populate('tests.topicsIds', { _id: 1, name: 1 })
       .select({
