@@ -10,6 +10,18 @@ const University = require('../models/University');
 
 const router = express.Router();
 
+router.get('/session/status', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).end();
+  }
+  const result = await User.findById(req.user.id)
+    .select({
+      id: 1,
+      status: 1,
+    });
+  res.status(200).json(result);
+});
+
 router.get('/tops', async (req, res) => {
   try {
     const result = await dataFunctions.getTopTenStudents();

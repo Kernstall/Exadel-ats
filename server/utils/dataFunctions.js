@@ -552,15 +552,29 @@ exports.getStudents = async () => {
 };
 
 const isValidByQuestionsTypes = async (elem) => {
-  const typeOne = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'one answer' });
-  const typeTwo = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'multiple answers' });
-  const typeThree = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'without answer option' });
+  const typeOne = Question.find({ topicId: mongoose.Types.ObjectId(elem.id), kind: 'one answer', isTraining: true });
+  const typeTwo = Question.find({
+    topicId: mongoose.Types.ObjectId(elem.id),
+    kind: 'multiple answers',
+    isTraining: true
+  });
+  const typeThree = Question.find({
+    topicId: mongoose.Types.ObjectId(elem.id),
+    kind: 'without answer option',
+    isTraining: true
+  });
   const typeFour = Question.find({
     topicId: mongoose.Types.ObjectId(elem.id),
     kind: 'without answer with verification',
+    isTraining: true
   });
   const result = await Promise.all([typeOne, typeTwo, typeThree, typeFour]);
-  if (result[0].length === 0 || result[1].length === 0 || result[2].length === 0 || result[3].length === 0) {
+  const len1 = result[0].length;
+  const len2 = result[1].length;
+  const len3 = result[2].length;
+  const len4 = result[3].length;
+  const commonLen = len1 + len2 + len3 + len4;
+  if ((len1 === 0 || len2 === 0 || len3 === 0 || len4 === 0) && commonLen > 0) {
     return { isValid: false, id: elem.id, name: elem.name };
   }
   return { isValid: true, id: elem.id, name: elem.name };
@@ -577,6 +591,9 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
         'tests.groupId': 1,
         'tests.isTraining': 1,
         'tests.status': 1,
+        'tests._id': 1,
+        'tests.startDate': 1,
+        'tests.finishDate': 1,
       });
     const trainingTests = [];
     const notTrainingTests = [];
@@ -600,6 +617,7 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
               topicsNames: result[0].tests[i].topicsIds,
               status: result[0].tests[i].status,
               result: result[0].tests[i].result,
+              id: result[0].tests[i]._id,
             });
           } else {
             notTrCount += 1;
@@ -608,6 +626,9 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
               topicsNames: result[0].tests[i].topicsIds,
               status: result[0].tests[i].status,
               result: result[0].tests[i].result,
+              id: result[0].tests[i]._id,
+              startDate: result[0].tests[i].startDate,
+              finishDate: result[0].tests[i].finishDate,
             });
           }
         }
@@ -656,12 +677,12 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
     });
 
     return [{
-      name: 'Training tests',
+      name: 'Тренировочные тесты',
       info: trainingTests,
       avgMark: trSum / trCount,
       availableTopics: topicsFilter2,
     }, {
-      name: 'Examination tests',
+      name: 'Экзаменационные тесты',
       info: notTrainingTests,
       avgMark: notTrSum / notTrCount,
     }];
@@ -782,6 +803,8 @@ exports.getFullTaskInfo = async (taskId) => {
         weight: 1,
         tags: 1,
         tests: 1,
+        language: 1,
+        passResult: 1,
       });
     if (taskInfo.topicId) {
       taskInfo.topicName = taskInfo.topicId.name;
@@ -804,6 +827,8 @@ exports.getFullTaskInfo = async (taskId) => {
       tests: taskInfo.tests,
       topicName: taskInfo.topicName,
       topicId: taskInfo.topId,
+      language: taskInfo.language,
+      passResult: taskInfo.passResult,
     };
 
     return result;
@@ -997,6 +1022,10 @@ exports.createQuestion = async (creatorId, reqBody) => {
       reqBody.wrongAnswersCount = 0;
       reqBody.isBlocked = false;
       reqBody.haveCheckedReport = false;
+      for (let i = 0; i < reqBody.correctAnswersIndexes.length; i++) {
+        reqBody.correctAnswersIndexes[i] = parseInt(reqBody.correctAnswersIndexes[i], 10);
+      }
+      reqBody.difficultyRate = parseInt(reqBody.difficultyRate, 10);
       const record = new Question(reqBody);
 
       await record.save();
@@ -1233,6 +1262,7 @@ exports.getGroupsAndStudents = async (teacherId) => {
 function random(num) {
   return Math.floor(Math.random() * num);
 }
+
 function arrRandom(arr, count) {
   let a = arr.slice();
   while (a.length > count) a.splice(random(a.length - 1), 1);
@@ -1256,7 +1286,9 @@ exports.getRandomTest = async (topicId, count) => {
     topicId,
     _id: { $nin: notSearch },
   }).select({ _id: 1 });
-  const test = [...firstQuestions, ...arrRandom(all, count - 4)].map((el) => { return { questionId: el._id }; });
+  const test = [...firstQuestions, ...arrRandom(all, count - 4)].map((el) => {
+    return { questionId: el._id };
+  });
   return test;
 };
 
@@ -1308,4 +1340,63 @@ exports.setTasks = async (body) => {
   } catch (err) {
     throw err;
   }
+};
+
+function randomInteger(min, max) {
+  let rand = min - 0.5 + Math.random() * (max - min + 1);
+  rand = Math.round(rand);
+  return rand;
+}
+
+exports.getTestQuestions = async (topicId) => {
+  const allQuestions = await Question.find({ topicId: mongoose.Types.ObjectId(topicId), isTraining: true })
+    .select({
+      _id: 1,
+      answersVariants: 1,
+      description: 1,
+      kind: 1,
+    });
+
+  const result = [];
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'without answer with verification') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
+
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'without answer option') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'multiple answers') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'one answer') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
+
+  for (let i = 0; i < 6; i++) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    result.push(allQuestions[index]);
+    allQuestions.splice(index, 1);
+  }
+
+  return result;
 };

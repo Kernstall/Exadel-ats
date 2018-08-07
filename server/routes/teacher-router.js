@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const FormData = require('form-data');
 
+const Activity = require('../models/Activity');
 const Group = require('../models/Group');
 const Task = require('../models/Task');
 const Topic = require('../models/Topic');
@@ -145,6 +146,20 @@ router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) =>
     const newTask = new Task(dataBaseAdd);
     await newTask.save();
     res.status(200).send('Operation successful');
+    try {
+      const date = new Date();
+      date.setHours(date.getHours() + 3);
+      const newActivity = new Activity({
+        type: '14)teacherTaskCreation',
+        userType: 'teacher',
+        userId: req.user.id,
+        taskId: req.query.id,
+        date,
+      });
+      newActivity.save();
+    } catch (error) {
+      console.log(error.message);
+    }
   } catch (error) {
     dataFunctions.deleteTaskFolderFunc(req.query.id);
     res.status(500).send(error.message);
@@ -281,7 +296,7 @@ router.post('/new/question', async (req, res) => {
     await dataFunctions.createQuestion(req.user.id, req.body);
     res.status(200).send();
   } catch (e) {
-    res.status(400).send(e.toString());
+    res.status(400).send(e.message);
   }
 });
 
@@ -349,5 +364,6 @@ router.post('/task/assignment', async (req, res) => {
     return res.send({ message: 'Ups' });
   }
 });
+
 
 module.exports = router;

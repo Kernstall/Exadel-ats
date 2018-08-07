@@ -23,6 +23,7 @@ passport.use(new LocalStrategy((email, password, done) => {
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
+
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
     done(err, user);
@@ -47,7 +48,7 @@ router.post('/', (req, res, next) => {
         });
       });
     }
-    return res.status(401).send({ err: 'not right fiels' });
+    return res.status(401).send({ err: 'not right fiedls' });
   })(req, res, next);
 });
 

@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import RegisterForm from '../../pages/registerFormPage/RegisterFormPage.jsx';
 import logo from '../../img/logo.png';
 import { login } from '../../commands/userLogin';
+import { requestErrorMessage } from '../../commands/errorMessage';
 
 const styles = {
   img: {
@@ -36,6 +37,7 @@ class LoginForm extends React.Component {
   }
 
   componentDidUpdate() {
+
   }
 
   handleChange = name => (e) => {
@@ -50,6 +52,16 @@ class LoginForm extends React.Component {
 
   render() {
     const { classes } = this.props;
+
+    console.log(this.props.response);
+
+    if (this.props.response && !this.props.response.err) {
+      sessionStorage.setItem('name', JSON.stringify([this.props.response.firstName, this.props.response.lastName]))
+      return <Redirect to={`/${this.props.response.status}/id/${this.props.response.id}`} />
+    } if (this.props.response && this.props.response.err === 'not right fiedls') {
+      this.props.requestErrorMessage('Неправильный логин или пароль.');
+      this.props.response.err = -1;
+    }
     return (
       <form className="container" noValidate autoComplete="off">
         <div className="input-container">
@@ -58,13 +70,15 @@ class LoginForm extends React.Component {
           </div>
           <div className="input-panels">
             <Typography variant="subheading" className={classes.link}>
-              Не зарегистрированы?
+              <p>Не зарегистрированы?</p>
               {' '}
-              <Link to="/registration" className="sign-up-button">
-                Зарегистрируйтесь
-              </Link>
-              {' '}
-              сейчас.
+              <p>
+                <Link to="/registration" className="sign-up-button">
+                  Зарегистрируйтесь
+                </Link>
+                {' '}
+                сейчас.
+              </p>
             </Typography>
             <TextField
               autoFocus
@@ -74,8 +88,7 @@ class LoginForm extends React.Component {
               inputProps={{
                 className: classes.input,
               }}
-              id="name"
-              label="Почта"
+              id="name" label="Почта"
               className="text-field"
               margin="normal"
               onChange={this.handleChange('username')}
@@ -101,9 +114,6 @@ class LoginForm extends React.Component {
           </div>
         </div>
         <Route exact path="/registration" component={RegisterForm} />
-        {
-          this.props.response && !console.log('ligin', this.props.response) && <Redirect to={`/${this.props.response.status}/id/${this.props.response.id}`} />
-        }
       </form>
     );
   }
@@ -116,6 +126,7 @@ const mapStateToProps = state => ({
 
 const mapCommandsToProps = dispatch => ({
   login: param => dispatch(login(param)),
+  requestErrorMessage: param => dispatch(requestErrorMessage(param)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(withStyles(styles)(LoginForm));
