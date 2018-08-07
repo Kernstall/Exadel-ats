@@ -59,7 +59,18 @@ class StudentTestsDDInfo extends React.Component {
               <ListItemText primary={themes.join(' ')} />
             </Grid>
             <Grid item xs={6}>
-              <ListItemText primary={(test.result > 0) ? test.result : 'Не пройдено'} />
+              {test.result > 0
+              && <ListItemText primary={test.result} />
+              }
+              {!(test.result > 0)
+              && (
+              <Link to={`/student/examination/test/${test.id}`} className={classes.link}>
+                Пройти
+                {/* <ListItemText primary="Пройти" className={classes.primary} /> */}
+              </Link>
+              )
+              }
+              {/*<ListItemText primary={(test.result > 0) ? test.result : 'Не пройдено'} />*/}
             </Grid>
           </Grid>
         </div>
