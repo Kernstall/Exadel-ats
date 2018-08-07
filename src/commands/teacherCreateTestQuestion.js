@@ -43,7 +43,7 @@ export const addTestQuestion = questionObject => (dispatch) => {
   })
     .then(() => {
       dispatch(TestQuestionActions.addTaskSuccess());
-      dispatch(errorEmmiter.messageRequested('Вопрос успешно создан!', '/тест'));
+      dispatch(errorEmmiter.messageRequested('Вопрос успешно создан!', `/teacher/id/${localStorage.getItem('user')}`));
     })
     .catch((err) => {
       dispatch(TestQuestionActions.addTaskError(err));

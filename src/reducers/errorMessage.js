@@ -16,6 +16,7 @@ const reducer = (state = INITIAL_STATE, action) => {
     case 'Entity/ErrorMessage/Redirect':
       return {
         redirectPath: '',
+        ...state,
       };
     default:
       return state;
