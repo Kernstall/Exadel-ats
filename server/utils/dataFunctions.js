@@ -982,7 +982,7 @@ const checkQuestion = (reqBody) => {
   const commonFields = ['topicId', 'tags', 'description', 'kind', 'isTraining', 'difficultyRate'];
   let flag = true;
   commonFields.forEach((elem) => {
-    if (!reqBody[elem]) {
+    if (reqBody[elem] === undefined) {
       flag = false;
     }
   });
@@ -993,7 +993,7 @@ const checkQuestion = (reqBody) => {
   const type3 = ['answersVariants'];
   if (reqBody.kind === 'one answer' || reqBody.kind === 'multiple answers') {
     type1_2.forEach((elem) => {
-      if (!reqBody[elem]) {
+      if (reqBody[elem] === undefined) {
         flag = false;
       }
     });
@@ -1003,7 +1003,7 @@ const checkQuestion = (reqBody) => {
   }
   if (reqBody.kind === 'without answer option') {
     type3.forEach((elem) => {
-      if (!reqBody[elem]) {
+      if (reqBody[elem] === undefined) {
         flag = false;
       }
     });
@@ -1022,8 +1022,10 @@ exports.createQuestion = async (creatorId, reqBody) => {
       reqBody.wrongAnswersCount = 0;
       reqBody.isBlocked = false;
       reqBody.haveCheckedReport = false;
-      for (let i = 0; i < reqBody.correctAnswersIndexes.length; i++) {
-        reqBody.correctAnswersIndexes[i] = parseInt(reqBody.correctAnswersIndexes[i], 10);
+      if (reqBody.correctAnswersIndexes) {
+        for (let i = 0; i < reqBody.correctAnswersIndexes.length; i++) {
+          reqBody.correctAnswersIndexes[i] = parseInt(reqBody.correctAnswersIndexes[i], 10);
+        }
       }
       reqBody.difficultyRate = parseInt(reqBody.difficultyRate, 10);
       const record = new Question(reqBody);
@@ -1351,6 +1353,22 @@ exports.getTestQuestions = async (topicId) => {
   return result;
 };
 
-exports.checkQuestions = async (questionsAnswers) => {
+exports.getExamTest = async (studentId, testId) => {
+  const result = await User.aggregate([
+    { $match: { _id: mongoose.Types.ObjectId(studentId) } },
+    {
+      $project: {
+        _id: 0,
+        test: {
+          $filter: {
+            input: '$tests',
+            as: 'test',
+            cond: { $eq: ['$$test._id', mongoose.Types.ObjectId(testId)] },
+          },
+        },
+      },
 
+    },
+  ]);
+  return result;
 };
