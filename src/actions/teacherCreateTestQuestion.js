@@ -12,8 +12,25 @@ const getThemesSuccess = themesList => ({
   payload: { themesList },
 });
 
+const addTaskError = error => ({
+  type: 'Entity/TeacherAddTask/Error',
+  payload: error.message,
+});
+
+const addTaskRequest = taskObject => ({
+  type: 'Entity/TeacherAddTask/Request',
+  payload: { taskObject },
+});
+
+const addTaskSuccess = () => ({
+  type: 'Entity/TeacherAddTask/Success',
+});
+
 export default {
   getThemesSuccess,
   getThemesRequest,
   getThemesError,
+  addTaskError,
+  addTaskRequest,
+  addTaskSuccess,
 };

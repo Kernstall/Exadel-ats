@@ -295,7 +295,7 @@ router.post('/new/question', async (req, res) => {
     await dataFunctions.createQuestion(req.user.id, req.body);
     res.status(200).send();
   } catch (e) {
-    res.status(400).send(e.toString());
+    res.status(400).send(e.message);
   }
 });
 
