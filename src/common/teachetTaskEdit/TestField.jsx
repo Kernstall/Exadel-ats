@@ -3,6 +3,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Edit from '@material-ui/icons/Edit';
+import MenuItem from "@material-ui/core/es/MenuItem/MenuItem";
 
 const styles = theme => ({
   inputOutput: {
@@ -69,17 +70,22 @@ class TestField extends React.Component {
     super();
     this.id = '';
     this.state = {
-      isUploaded: false,
+      mark: 0,
     };
   }
 
+  handleChange = (e) => {
+    this.setState({
+      mark: e.target.value,
+    });
+  };
+
   render() {
-    const { isUploaded } = this.state;
     const { classes, inputText, isNew, id } = this.props;
     console.log(id);
     const inputId = `add-file-${id}`;
     return (
-      <div className={classes.testItem}>
+      <div className={`${classes.testItem} test-upload`} id={id.slice(0, -1)}>
         <TextField
           value={inputText}
           rows={1}
@@ -107,12 +113,13 @@ class TestField extends React.Component {
               type="file"
               onChange={this.props.handleTestsUpload}
             />
-            <label htmlFor={inputId}>
+            <label id={inputId} htmlFor={inputId}>
               <CloudUploadIcon
                 className={classes.addButton}
               />
             </label>
-          </div>)}
+          </div>
+        )}
       </div>
     );
   }

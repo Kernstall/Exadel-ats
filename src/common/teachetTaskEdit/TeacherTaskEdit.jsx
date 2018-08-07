@@ -8,11 +8,14 @@ import { Typography } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Chip from '@material-ui/core/Chip';
 import { Link } from 'react-router-dom';
+import Close from '@material-ui/icons/Close';
+import MenuItem from '@material-ui/core/es/MenuItem/MenuItem';
 import TestsBar from './TestsBar';
 import generateRandomId from '../../util/generateRandomId';
-import TestSet from "./TestSet";
-import TestField from "./TestField";
-import Close from '@material-ui/icons/Close';
+import TestSet from './TestSet';
+import TestField from './TestField';
+
+const marks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const styles = theme => ({
   button: {
@@ -218,21 +221,30 @@ class TeacherTaskEdit extends React.Component {
       id: props.match.params.id,
       tags: [],
       tagToAdd: '',
-      tests: [],
+      weightBuffer: 0,
+      tests: new FormData(),
+      renderTests: [],
+      sendingData: new FormData(),
       weight: 0,
+      language: '',
       description: '',
+      tests2: [],
+      passResult: '',
       name: '',
       file: new FormData(),
+      topicId: '',
+      testsIdsToDelete: [],
     };
 
-    this.handleTestsUpload = this.handleTestsUpload.bind(this);
+    this.handleTestsInputUpload = this.handleTestsInputUpload.bind(this);
+    this.handleTestsOutputUpload = this.handleTestsOutputUpload.bind(this);
 
     this.handleDelete = data => () => {
       this.setState((state) => {
         const tags = state.tags;
         const tagToDelete = tags.indexOf(data);
-        tags.splice(tagToDelete, 1);
-        return { tags };
+        const testsIdsToDelete = tags.splice(tagToDelete, 1);
+        return { tags, testsIdsToDelete };
       });
     };
   }
@@ -252,18 +264,34 @@ class TeacherTaskEdit extends React.Component {
   };
 
   handleClickAddTest = (e) => {
-    const { tests } = this.state;
+    const { renderTests } = this.state;
     const pushedTest = { input: 'null', output: 'null' };
     pushedTest.isNew = true;
     pushedTest._id = generateRandomId();
-    tests.push(pushedTest);
-    this.setState({ tests });
+    console.log('HELLO');
+    const buff = {};
+    buff.id = pushedTest._id;
+    buff.weight = 0;
+    const { tests2 } = this.state;
+    tests2.push(buff);
+    renderTests.push(pushedTest);
+    this.setState({ renderTests, tests2 });
   };
 
   handleChange = name => (e) => {
     this.setState({
       [name]: e.target.value,
     });
+  };
+
+  handleSetWeight = id => (e) => {
+    const { tests2 } = this.state;
+    tests2.forEach((el) => {
+      if (el.id === id) {
+        el.weight = e.target.value;
+      }
+    });
+    this.setState({ tests2 });
   };
 
   componentDidMount() {
@@ -277,24 +305,59 @@ class TeacherTaskEdit extends React.Component {
     })
       .then(res => res.json())
       .then((res) => {
+        console.log(res);
+        return res;
+      })
+      .then((res) => {
         this.setState({
           tags: res.tags,
-          tests: res.tests,
+          renderTests: res.tests,
           weight: res.weight,
           description: res.description,
           name: res.name,
+          topicId: res.topicId,
+          passResult: res.passResult,
+          language: res.language,
         });
         return res;
-      })
-      .then(console.log);
+      });
   }
+
+  handleUpload = () => {
+    const { sendingData } = this.state;
+    const send = {
+      topicId: this.state.topicId,
+      tags: this.state.tags,
+      description: this.state.description,
+      name: this.state.name,
+      weight: this.state.weight,
+      language: this.state.language,
+      tests: this.state.tests2,
+      passResult: this.state.passResult,
+      testsIdsToDelete: this.state.testsIdsToDelete,
+    };
+    sendingData.append('taskInfo', JSON.stringify(send));
+    console.log(sendingData.getAll('tests'));
+    fetch(`/api/teacher/task/editing?id=${this.state.id}`, {
+      method: 'put',
+      body: sendingData,
+      headers: {
+        'Content-type': 'multipart/form-data',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(console.log)
+      .catch(rej => console.log(rej));
+  };
 
   _handleInputReading = (e) => {
     const content = fileInputReader.result;
-    const { tests } = this.state;
-    tests[0].input = content;
+    const { renderTests } = this.state;
+    renderTests[0].input = content;
     this.setState({
-      tests,
+      renderTests,
     });
   };
 
@@ -302,7 +365,7 @@ class TeacherTaskEdit extends React.Component {
     console.log('in', file);
     fileInputReader = new FileReader();
     const formData = new FormData();
-    formData.append('tests', file, `${[]}`);
+    formData.append('tests', file, `${file.name}`);
     console.log(formData.get('tests'));
     fileInputReader.onloadend = this._handleInputReading;
     fileInputReader.readAsText(file);
@@ -310,10 +373,10 @@ class TeacherTaskEdit extends React.Component {
 
   _handleOutputReading = (e) => {
     const content = fileOutputReader.result;
-    const { tests } = this.state;
-    tests[0].output = content;
+    const { renderTests } = this.state;
+    renderTests[0].output = content;
     this.setState({
-      tests,
+      renderTests,
     });
   };
 
@@ -324,26 +387,38 @@ class TeacherTaskEdit extends React.Component {
     fileOutputReader.readAsText(file);
   };
 
-  handleTestsUpload(e) {
+  handleTestsInputUpload(e) {
     const selectedFile = e.target.files[0];
-    const { file } = this.state;
-    file.append('tests', selectedFile, 'in.txt');
-    this.setState({ file });
+    const { tests } = this.state;
+    const id = e.target.closest('.test-upload').id;
+    console.log(id);
+    const { sendingData } = this.state;
+    sendingData.append('tests', selectedFile, `${id}${selectedFile.name}`);
+    console.log(sendingData.get('tests'));
+    tests.append('tests', selectedFile, `${id}${selectedFile.name}`);
+    this.setState({ tests, sendingData });
+  }
+
+  handleTestsOutputUpload(e) {
+    const selectedFile = e.target.files[0];
+    const { tests } = this.state;
+    const id = e.target.closest('.test-upload').id;
+    tests.append('tests', selectedFile, `${id}${selectedFile.name}`);
+    this.setState({ tests });
   }
 
   handleClickDeleteTest = (key) => {
-    const { tests } = this.state;
-    const deleteId = tests.findIndex(element => element._id === key);
-    tests.splice(deleteId, 1);
-    this.setState({ tests });
+    const { renderTests } = this.state;
+    const deleteId = renderTests.findIndex(element => element._id === key);
+    renderTests.splice(deleteId, 1);
+    this.setState({ renderTests });
   };
 
   render() {
     const { classes } = this.props;
     const { tagToAdd } = this.state;
-    console.log(this);
-    const inputExample = (typeof this.state.tests[0] === 'undefined') ? 'val' : this.state.tests[0].input;
-    const outputExample = (typeof this.state.tests[0] === 'undefined') ? 'val' : this.state.tests[0].output;
+    const inputExample = (typeof this.state.renderTests[0] === 'undefined') ? 'val' : this.state.renderTests[0].input;
+    const outputExample = (typeof this.state.renderTests[0] === 'undefined') ? 'val' : this.state.renderTests[0].output;
     return (
       <div className={classes.root}>
         <div className={classes.main}>
@@ -471,7 +546,7 @@ class TeacherTaskEdit extends React.Component {
                 <Typography variant="body2" className={classes.inputOutputTitle}>Input</Typography>
                 <Typography variant="body2" className={classes.inputOutputTitle}>Output</Typography>
               </div>
-              {/*{this.state.tests.map(element => (
+              {/* {this.state.tests.map(element => (
                 <TestSet
                   handleTestsUpload={this.props.handleTestsUpload}
                   input={element.input}
@@ -481,16 +556,17 @@ class TeacherTaskEdit extends React.Component {
                   key={element._id}
                   isNew={element.isNew}
                 />
-              ))}*/}
-              {this.state.tests.map(element => (
+              ))} */}
+              {this.state.renderTests.map(element => (
                 <div className={classes.test}>
                   <TestField
-                    handleTestsUpload={this.handleTestsUpload}
+                    handleTestsUpload={this.handleTestsInputUpload}
                     inputText={element.input}
                     isNew={element.isNew}
                     id={`${element._id}1`}
                   />
                   <TestField
+                    handleTestsUpload={this.handleTestsInputUpload}
                     inputText={element.output}
                     isNew={element.isNew}
                     id={`${element._id}2`}
@@ -499,12 +575,37 @@ class TeacherTaskEdit extends React.Component {
                     className={classes.deleteButton}
                     onClick={() => this.handleClickDeleteTest(this.state.id)}
                   />
+                  {element.isNew
+                  && (
+                  <TextField
+                    id="select-currency"
+                    select
+                    label="Select"
+                    className={classes.textField}
+                    value={this.state.mark}
+                    onChange={this.handleSetWeight(element._id)}
+                    SelectProps={{
+                      MenuProps: {
+                        className: classes.menu,
+                      },
+                    }}
+                    helperText="Выберите стоимость теста"
+                    margin="normal"
+                  >
+                    {marks.map(option => (
+                      <MenuItem key={`mark-${option}`} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  )
+                  }
                 </div>
               ))}
             </div>
           </div>
           <div className={classes.buttonContainer}>
-            <Button variant="contained" color="primary" className={classes.button}>
+            <Button onClick={this.handleUpload} variant="contained" color="primary" className={classes.button}>
               Сохранить
             </Button>
             <Link to={`/teacher/tasks/${this.state.id}`}>
