@@ -854,7 +854,6 @@ const compileProcessing = (testsResult, taskWeight) => {
 exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files, testsResult, bestResult, taskWeight) => {
   try {
     const result = compileProcessing(testsResult, taskWeight);
-    result.result = 8;
     if (result.result > bestResult) {
       await User.update(
         { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
