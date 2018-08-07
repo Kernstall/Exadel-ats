@@ -284,7 +284,6 @@ class TeacherTaskEdit extends React.Component {
   render() {
     const { classes } = this.props;
     const { tagToAdd } = this.state;
-    console.log(this);
     const inputExample = (typeof this.state.tests[0] === 'undefined') ? 'val' : this.state.tests[0].input;
     const outputExample = (typeof this.state.tests[0] === 'undefined') ? 'val' : this.state.tests[0].output;
     return (
