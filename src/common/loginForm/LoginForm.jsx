@@ -58,8 +58,9 @@ class LoginForm extends React.Component {
     if (this.props.response && !this.props.response.err) {
       sessionStorage.setItem('name', JSON.stringify([this.props.response.firstName, this.props.response.lastName]))
       return <Redirect to={`/${this.props.response.status}/id/${this.props.response.id}`} />
-    } if (this.props.response && this.props.response.err) {
+    } if (this.props.response && this.props.response.err === 'not right fiedls') {
       this.props.requestErrorMessage('Неправильный логин или пароль.');
+      this.props.response.err = -1;
     }
     return (
       <form className="container" noValidate autoComplete="off">
