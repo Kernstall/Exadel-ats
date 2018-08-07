@@ -23,6 +23,11 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
   },
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+  },
 });
 
 class TeacherTaskList extends React.Component {
@@ -109,14 +114,24 @@ class TeacherTaskList extends React.Component {
         </List>
         {this.state.assign}
         {teacherTasks && (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.handleClick}
-            className={classes.button}
-          >
-            Назначить
-          </Button>
+          <div className={classes.buttonContainer}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.handleClick}
+              className={classes.button}
+            >
+              Назначить
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={this.handleClickAdd}
+            >
+              Создать задачу
+            </Button>
+          </div>
         )}
       </div>
     );
