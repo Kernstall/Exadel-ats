@@ -14,6 +14,7 @@ exports.mapTaskToDto = model => ({
   tags: model.tags,
 });
 exports.mapGroupToDto = model => ({
+  id: model.id,
   groupName: model.groupName,
   studentsCount: model.studentIdList.length,
   teacherFullName: `${model.lastName} ${model.firstName} ${model.fathersName}`,

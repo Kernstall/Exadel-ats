@@ -297,7 +297,7 @@ router.post('/new/question', async (req, res) => {
     await dataFunctions.createQuestion(req.user.id, req.body);
     res.status(200).send();
   } catch (e) {
-    res.status(400).send(e.toString());
+    res.status(400).send(e.message);
   }
 });
 
@@ -354,5 +354,6 @@ router.post('/test/assignment', async (req, res) => {
     return res.status(500).send(err);
   }
 });
+
 
 module.exports = router;

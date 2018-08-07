@@ -2,6 +2,7 @@ const INITIAL_STATE = {
   themesList: null,
   error: null,
   isLoading: false,
+  taskAddRequestSent: false,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -25,6 +26,22 @@ const reducer = (state = INITIAL_STATE, action) => {
         themesList: payload.themesList,
         error: null,
         isLoading: false,
+      };
+
+    case 'Entity/TeacherAddTask/Success':
+      return {
+        error: null,
+        taskAddRequestSent: false,
+      };
+    case 'Entity/TeacherAddTask/Request':
+      return {
+        error: null,
+        taskAddRequestSent: true,
+      };
+    case 'Entity/TeacherAddTask/Error':
+      return {
+        error: payload,
+        taskAddRequestSent: false,
       };
 
     default:

@@ -108,6 +108,7 @@ const styles = theme => ({
   },
   testsTitle: {
     display: 'flex',
+    justifyContent: 'flex-start',
     color: 'grey',
   },
   testsTitleAndAdd: {
@@ -231,7 +232,6 @@ class TeacherTaskEdit extends React.Component {
       tests2: [],
       passResult: '',
       name: '',
-      file: new FormData(),
       topicId: '',
       testsIdsToDelete: [],
     };
@@ -249,10 +249,6 @@ class TeacherTaskEdit extends React.Component {
     };
   }
 
-  componentDidUpdate() {
-    console.log(this.state);
-  }
-
   handleClick = (data) => {
     if (data.length < 3) {
       return;
@@ -268,7 +264,6 @@ class TeacherTaskEdit extends React.Component {
     const pushedTest = { input: 'null', output: 'null' };
     pushedTest.isNew = true;
     pushedTest._id = generateRandomId();
-    console.log('HELLO');
     const buff = {};
     buff.id = pushedTest._id;
     buff.weight = 0;
@@ -337,19 +332,15 @@ class TeacherTaskEdit extends React.Component {
       testsIdsToDelete: this.state.testsIdsToDelete,
     };
     sendingData.append('taskInfo', JSON.stringify(send));
-    console.log(sendingData.getAll('tests'));
     fetch(`/api/teacher/task/editing?id=${this.state.id}`, {
       method: 'put',
       body: sendingData,
       headers: {
-        'Content-type': 'multipart/form-data',
         'Set-Cookie': 'true',
       },
       credentials: 'include',
     })
-      .then(res => res.json())
-      .then(console.log)
-      .catch(rej => console.log(rej));
+      .then(res => console.log(res));
   };
 
   _handleInputReading = (e) => {
@@ -362,11 +353,9 @@ class TeacherTaskEdit extends React.Component {
   };
 
   handleInputFileRead = (file) => {
-    console.log('in', file);
     fileInputReader = new FileReader();
     const formData = new FormData();
     formData.append('tests', file, `${file.name}`);
-    console.log(formData.get('tests'));
     fileInputReader.onloadend = this._handleInputReading;
     fileInputReader.readAsText(file);
   };
@@ -381,7 +370,6 @@ class TeacherTaskEdit extends React.Component {
   };
 
   handleOutputFileRead = (file) => {
-    console.log('out', file);
     fileOutputReader = new FileReader();
     fileOutputReader.onloadend = this._handleOutputReading;
     fileOutputReader.readAsText(file);
@@ -391,10 +379,8 @@ class TeacherTaskEdit extends React.Component {
     const selectedFile = e.target.files[0];
     const { tests } = this.state;
     const id = e.target.closest('.test-upload').id;
-    console.log(id);
     const { sendingData } = this.state;
-    sendingData.append('tests', selectedFile, `${id}${selectedFile.name}`);
-    console.log(sendingData.get('tests'));
+    sendingData.append('tests', selectedFile, `${id}input.txt`);
     tests.append('tests', selectedFile, `${id}${selectedFile.name}`);
     this.setState({ tests, sendingData });
   }
@@ -403,15 +389,18 @@ class TeacherTaskEdit extends React.Component {
     const selectedFile = e.target.files[0];
     const { tests } = this.state;
     const id = e.target.closest('.test-upload').id;
+    const { sendingData } = this.state;
+    sendingData.append('tests', selectedFile, `${id}output.txt`);
     tests.append('tests', selectedFile, `${id}${selectedFile.name}`);
-    this.setState({ tests });
+    this.setState({ tests, sendingData });
   }
 
   handleClickDeleteTest = (key) => {
-    const { renderTests } = this.state;
+    const { renderTests, testsIdsToDelete } = this.state;
     const deleteId = renderTests.findIndex(element => element._id === key);
+    testsIdsToDelete.push(key);
     renderTests.splice(deleteId, 1);
-    this.setState({ renderTests });
+    this.setState({ renderTests, testsIdsToDelete });
   };
 
   render() {
@@ -422,6 +411,23 @@ class TeacherTaskEdit extends React.Component {
     return (
       <div className={classes.root}>
         <div className={classes.main}>
+          <TextField
+            value={this.state.name}
+            label="Название задачи"
+            onChange={this.handleChange('name')}
+            rows={4}
+            InputProps={{
+              disableUnderline: true,
+              classes: {
+                root: classes.bootstrapRoot,
+                input: classes.bootstrapInput,
+              },
+            }}
+            InputLabelProps={{
+              shrink: true,
+              className: classes.bootstrapFormLabel,
+            }}
+          />
           <TextField
             value={this.state.description}
             label="Условие"
@@ -546,17 +552,6 @@ class TeacherTaskEdit extends React.Component {
                 <Typography variant="body2" className={classes.inputOutputTitle}>Input</Typography>
                 <Typography variant="body2" className={classes.inputOutputTitle}>Output</Typography>
               </div>
-              {/* {this.state.tests.map(element => (
-                <TestSet
-                  handleTestsUpload={this.props.handleTestsUpload}
-                  input={element.input}
-                  output={element.output}
-                  callback={this.handleClickDeleteTest}
-                  id={element._id}
-                  key={element._id}
-                  isNew={element.isNew}
-                />
-              ))} */}
               {this.state.renderTests.map(element => (
                 <div className={classes.test}>
                   <TestField
@@ -566,14 +561,14 @@ class TeacherTaskEdit extends React.Component {
                     id={`${element._id}1`}
                   />
                   <TestField
-                    handleTestsUpload={this.handleTestsInputUpload}
+                    handleTestsUpload={this.handleTestsOutputUpload}
                     inputText={element.output}
                     isNew={element.isNew}
                     id={`${element._id}2`}
                   />
                   <Close
                     className={classes.deleteButton}
-                    onClick={() => this.handleClickDeleteTest(this.state.id)}
+                    onClick={() => this.handleClickDeleteTest(element._id)}
                   />
                   {element.isNew
                   && (

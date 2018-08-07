@@ -591,6 +591,9 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
         'tests.groupId': 1,
         'tests.isTraining': 1,
         'tests.status': 1,
+        'tests._id': 1,
+        'tests.startDate': 1,
+        'tests.finishDate': 1,
       });
     const trainingTests = [];
     const notTrainingTests = [];
@@ -614,6 +617,7 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
               topicsNames: result[0].tests[i].topicsIds,
               status: result[0].tests[i].status,
               result: result[0].tests[i].result,
+              id: result[0].tests[i]._id,
             });
           } else {
             notTrCount += 1;
@@ -622,6 +626,9 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
               topicsNames: result[0].tests[i].topicsIds,
               status: result[0].tests[i].status,
               result: result[0].tests[i].result,
+              id: result[0].tests[i]._id,
+              startDate: result[0].tests[i].startDate,
+              finishDate: result[0].tests[i].finishDate,
             });
           }
         }
@@ -670,12 +677,12 @@ exports.getGroupStudentTests = async (studentId, groupId) => {
     });
 
     return [{
-      name: 'Training tests',
+      name: 'Тренировочные тесты',
       info: trainingTests,
       avgMark: trSum / trCount,
       availableTopics: topicsFilter2,
     }, {
-      name: 'Examination tests',
+      name: 'Экзаменационные тесты',
       info: notTrainingTests,
       avgMark: notTrSum / notTrCount,
     }];
@@ -1038,6 +1045,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
       testsSet.add(test.id);
     });
     if (deleteSet.size >= testsSet.size) {
+      console.log('1');
       throw new Error('Task should have at least one test left');
     }
   }
@@ -1046,6 +1054,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
   }
   if (editObj.description) {
     if (editObj.description === '') {
+      console.log('2');
       throw new Error('At least one invalid argument: description should not be empty string');
     }
     dataBaseEdit.description = editObj.description;
@@ -1054,6 +1063,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
     if ((await Topic.findById(editObj.topicId))) {
       dataBaseEdit.topicId = editObj.topicId;
     } else {
+      console.log('3');
       throw new Error('At least one invalid argument: topicId');
     }
   }
@@ -1062,6 +1072,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
       if (!(await Task.findOne({ name: editObj.name }))) {
         dataBaseEdit.name = editObj.name;
       } else {
+        console.log('4');
         throw new Error('At least one invalid argument: new name is not unique');
       }
     }
@@ -1075,6 +1086,7 @@ exports.checkEditTaskDataFunc = async (dataBaseEdit, testsEdit, editObj, req) =>
         }
       }
     } else {
+      console.log('5');
       throw new Error('At least one invalid argument: weight should be greater or equal to 1 and less or equal to 10');
     }
   }
@@ -1291,19 +1303,55 @@ exports.getTestQuestions = async (topicId) => {
   const allQuestions = await Question.find({ topicId: mongoose.Types.ObjectId(topicId), isTraining: true })
     .select({
       _id: 1,
-      correctAnswersIndexes: 1,
       answersVariants: 1,
       description: 1,
       kind: 1,
     });
 
   const result = [];
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'without answer with verification') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
 
-  for (let i = 0; i < 10; i++) {
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'without answer option') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'multiple answers') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
+  while (true) {
+    const index = randomInteger(0, allQuestions.length - 1);
+    if (allQuestions[index].kind === 'one answer') {
+      result.push(allQuestions[index]);
+      allQuestions.splice(index, 1);
+      break;
+    }
+  }
+
+  for (let i = 0; i < 6; i++) {
     const index = randomInteger(0, allQuestions.length - 1);
     result.push(allQuestions[index]);
     allQuestions.splice(index, 1);
   }
 
   return result;
-}
+};
+
+exports.checkQuestions = async (questionsAnswers) => {
+
+};
