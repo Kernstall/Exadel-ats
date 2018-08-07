@@ -37,7 +37,7 @@ const localize = (keyWord) => {
     numberTestsToCheck: 'Тесты для проверки',
     university: 'ВУЗ',
     nameOrEmail: 'Имя или почта ...',
-    'without answer option': 'Без вариантов ответа',
+    'without answer option': 'С автоматической проверкой',
     'without answer with verification': 'С ручной проверкой',
     'one answer': 'Один ответ',
     'multiple answers': 'Несколько ответов',

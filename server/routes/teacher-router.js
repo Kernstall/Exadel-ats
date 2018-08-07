@@ -18,21 +18,22 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 const router = express.Router();
 
-/*router.use((req, res, next) => {
+router.use((req, res, next) => {
   if (req.user.status === 'teacher' || req.user.status === 'admin') {
     return next();
   }
   return res.status(403).end();
-});*/
+});
 
 router.get('/tasks', (req, res) => {
   let hashSet = {};
-  Task.find().populate('topicId', 'name').exec((err, tasks) => {
+  Task.find().populate('topicId', ['name', '_id']).exec((err, tasks) => {
     if (err) res.status(500).end();
     tasks.forEach((task) => {
       const newTask = mapping.mapTaskToDto(task);
       if (!hashSet[task.topicId.name]) {
         hashSet[task.topicId.name] = {
+          topicId: task.topicId._id,
           topicName: task.topicId.name,
           tasks: [newTask],
         };
@@ -133,8 +134,10 @@ router.post('/task', (req, res, next) => {
 
 router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) => {
   const dataBaseAdd = { _id: mongoose.Types.ObjectId(req.query.id) };
+  console.log(req.body.taskInfo);
   const addObj = JSON.parse(req.body.taskInfo);
   try {
+    console.log(req.body.taskInfo);
     await dataFunctions.checkAddTaskDataFunc(dataBaseAdd, addObj, req);
   } catch (error) {
     res.status(400).send(error.message);
@@ -292,7 +295,7 @@ router.get('/all/topics', async (req, res) => {
 
 router.post('/new/question', async (req, res) => {
   try {
-    await dataFunctions.createQuestion(req.user.id, req.body);
+    await dataFunctions.createQuestion(req.teacherId, req.body);
     res.status(200).send();
   } catch (e) {
     res.status(400).send(e.message);
@@ -338,7 +341,6 @@ router.post('/test/assignment', async (req, res) => {
     }
     const group = await Group.findById(newTest.groupId);
     const studentIds = group.studentIdList;
-    console.log(group.studentIdList.length);
     const resultGroup = await User.update(
       {
         _id: { $in: studentIds },
@@ -349,7 +351,19 @@ router.post('/test/assignment', async (req, res) => {
     return res.send(resultGroup);
   } catch (err) {
     console.error(err);
-    return res.status(500).send(err);
+    return res.status(500).send({ error: 'Ups' });
+  }
+});
+
+router.post('/task/assignment', async (req, res) => {
+  if (!req.body.startDate || !req.body.finishDate || !(req.body.student || req.body.group)) {
+    return res.status(400).end();
+  }
+  try {
+    const result = await dataFunctions.setTasks(req.body);
+    return res.send(result);
+  } catch (err) {
+    return res.send({ message: 'Ups' });
   }
 });
 

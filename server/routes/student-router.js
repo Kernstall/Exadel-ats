@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const FormData = require('form-data');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const got = require('got');
 
@@ -86,12 +87,21 @@ router.get('/task/attempt', async (req, res) => {
   }
 });
 
+router.post('/src/files', async (req, res, next) => {
+  try {
+    await User.find({ _id: req.user._id, tasks: { $elemMatch: { taskId: mongoose.Types.ObjectId(req.query.taskId) } } });
+    next();
+  } catch (error) {
+    res.status(400).send('Invalid task id');
+  }
+});
+
 router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, res) => {
   try {
     if (req.files) {
       const fileNamesArray = [];
       const mainFile = req.query.mainFile;
-      const userId = req.query.userId;
+      const userId = req.user.id;
       const taskId = req.query.taskId;
       const attemptNumber = await dataFunctions.getUsersTasksAttemptNumber(userId, taskId);
       req.files.forEach((elem) => {
@@ -159,6 +169,17 @@ router.post('/test/questions/answers', async (req, res) => {
     const studentId = req.user.id;
     const questionsAnswers = req.body;
     await dataFunctions.checkQuestions(questionsAnswers);
+  } catch (e) {
+    res.status(400).send(e.toString());
+  }
+});
+
+router.get('/examination/test', async (req, res) => {
+  try {
+    const testId = req.query.testId;
+    const studentId = req.user.id;
+    const result = await dataFunctions.getExamTest(studentId, testId);
+    res.status(200).json(result);
   } catch (e) {
     res.status(400).send(e.toString());
   }

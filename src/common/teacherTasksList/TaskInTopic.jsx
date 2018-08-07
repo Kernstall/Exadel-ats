@@ -41,12 +41,25 @@ class TaskInTopic extends React.Component {
   }
 
   handleClick = () => {
-    this.setState(state => ({ open: !state.open }));
+    const { open } = this.state;
+    this.props.handleClose();
+    if (open) {
+      this.props.handleDelete(this.props.tasks);
+    }
+    this.setState({ open: !open });
   };
 
   objtoJSX = array => (
-    array.map((element, index) => (
-      <TaskListItem button key={index} taskName={element.taskName} tags={element.tags} score={element.score} taskId={element.taskId} />
+    array.map(element => (
+      <TaskListItem
+        button
+        key={element.taskId}
+        taskName={element.taskName}
+        tags={element.tags}
+        score={element.score}
+        taskId={element.taskId}
+        handleSetTask={this.props.handleSetTask}
+      />
     ))
   );
 
