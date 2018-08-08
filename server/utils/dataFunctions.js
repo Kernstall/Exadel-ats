@@ -1496,11 +1496,11 @@ async function testAnalysis(answers) {
       result.push({});
       result[i].questionId = mongoose.Types.ObjectId(answers[i]._id);
       result[i].selectedAnswers = [];
+
       answers[i].selectedIndexes.forEach((elem) => {
         result[i].selectedAnswers.push(elem.toString());
       });
       set = new Set(questionArray[i].correctAnswersIndexes);
-
       answers[i].selectedIndexes.forEach((elem) => {
         if (!set.has(Number(elem))) {
           flag = false;

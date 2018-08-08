@@ -26,7 +26,7 @@ router.get('/group/tasks', async (req, res) => {
     const result = await dataFunctions.getStudentTasksByGroup(req.user.id, req.query.groupId);
     res.send(JSON.stringify(result));
   } catch (err) {
-    res.status(500).send(err);
+    res.status(400).send(err);
   }
 });
 
@@ -44,7 +44,7 @@ router.get('/', async (req, res) => {
     const result = { student, groups };
     res.status(200).json(result);
   } catch (err) {
-    res.status(500).send({ err: err.message });
+    res.status(400).send({ err: err.message });
   }
 });
 
@@ -55,7 +55,7 @@ router.get('/group/history', (res, req) => {
     .then((answer) => {
       req.send(JSON.stringify(dataFunctions.deleteOtherGroupInfo(answer, groupId)));
     })
-    .catch(err => req.status(500).send(err));
+    .catch(err => req.status(400).send(err));
 });
 
 router.get('/group/tests', async (req, res) => {
@@ -179,6 +179,7 @@ router.get('/examination/test', async (req, res) => {
     const testId = req.query.testId;
     const studentId = req.user.id;
     const result = await dataFunctions.getExamTest(studentId, testId);
+    console.log(result);
     res.status(200).json(result);
   } catch (e) {
     res.status(400).send(e.toString());
@@ -192,7 +193,7 @@ router.post('/test/checking', async (req, res) => {
     const topicId = req.query.topicId;
     const studentId = req.user.id;
     const answers = req.body;
-    if (testId) {
+    if (testId !== 'undefined') {
       await dataFunctions.saveExamTest(studentId, answers, testId);
       res.status(200).json();
     } else if (topicId) {
