@@ -36,10 +36,10 @@ class App extends Component {
     const { classes } = this.props;
     return (
       <MuiThemeProvider theme={createMuiTheme}>
-        <ErrorDispatcher />
         <div className={classes.minHeight}>
           <Router>
             <div className={classes.content}>
+              <ErrorDispatcher />
               <Route path="/" component={Header} />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />

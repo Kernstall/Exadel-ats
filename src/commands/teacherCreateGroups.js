@@ -45,7 +45,7 @@ export const teacherCreateGroup = studentsObject => (dispatch) => {
     })
     .then((body) => {
       dispatch(Actions.createGroupSuccess(body.id));
-      dispatch(errorEmmiter.messageRequested('Группа успешно создана!'));
+      dispatch(errorEmmiter.messageRequested('Группа успешно создана!', `/teacher/id/${localStorage.getItem('user')}`));
     })
     .catch((err) => {
       dispatch(Actions.createGroupError(err));
