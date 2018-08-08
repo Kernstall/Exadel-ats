@@ -124,7 +124,7 @@ class TeacherTaskList extends React.Component {
             >
               Назначить
             </Button>
-            <Link to="/teacher/create-task">
+            <Link to={`/teacher/create-task/${localStorage.getItem('user')}`}>
               <Button
                 variant="contained"
                 color="primary"

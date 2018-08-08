@@ -233,9 +233,10 @@ let fileInputReader;
 let fileOutputReader;
 
 class TeacherCreateTask extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      id: props.match.params.id,
       tags: [],
       tagToAdd: '',
       weightBuffer: 0,
@@ -693,7 +694,7 @@ class TeacherCreateTask extends React.Component {
             <Button onClick={this.handleUpload} variant="contained" color="primary" className={classes.button}>
                 Сохранить
             </Button>
-            <Link to={`/teacher/tasks/${this.state.id}`}>
+            <Link to={`/teacher/id/${this.state.id}`}>
               <Button variant="contained" color="primary" className={classes.button}>
                   Отмена
               </Button>
