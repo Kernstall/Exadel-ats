@@ -38,7 +38,7 @@ const styles = {
 
 class StudentMainPage extends Component {
   componentDidMount() {
-    this.props.getStudentGroups({id: this.props.match.params.id}); // eslint-disable-line
+    this.props.getStudentGroups({ id: this.props.match.params.id }); // eslint-disable-line
   }
 
   JSONtoJSX = (studentInfo, classes, keysToRender) => (
@@ -103,11 +103,11 @@ class StudentMainPage extends Component {
 
     return (
       <Grid className={classes.centerScreen}>
-        {spinner}
-        {groupList}
         <Grid className={[classes.font, classes.wrapper].join(' ')}>
           {studentInfoComponent}
         </Grid>
+        {spinner}
+        {groupList}
       </Grid>
     );
   }
