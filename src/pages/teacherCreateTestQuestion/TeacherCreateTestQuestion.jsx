@@ -45,6 +45,16 @@ const styles = theme => ({
   block: {
     display: 'block',
   },
+  button: {
+    marginTop: '5px',
+    float: 'right',
+    backgroundColor: theme.palette.custom.dark,
+    width: '100%',
+    color: theme.palette.custom.whiteText,
+    '&:hover': {
+      color: theme.palette.custom.blackText,
+    },
+  },
 });
 
 class TeacherCreateTestQuestion extends React.Component {
@@ -284,7 +294,7 @@ class TeacherCreateTestQuestion extends React.Component {
           </div>
         )}
         <Link to={`/teacher/id/${localStorage.getItem('user')}`}>
-          <Button>Назад</Button>
+          <Button className={classes.button}>Назад</Button>
         </Link>
       </Paper>
     );

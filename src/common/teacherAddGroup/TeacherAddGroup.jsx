@@ -6,6 +6,7 @@ import FilterStudentCard from './FilterFieldsCard.jsx';
 import DragAndDropStudents from './DragAndDropStudents';
 import { getAvailableStudents, teacherCreateGroup } from '../../commands/teacherCreateGroups';
 import Spinner from '../shared/spinner';
+import {Link} from "react-router-dom";
 
 const styles = theme => ({
   FlexContainerHorizontal: {
@@ -113,6 +114,9 @@ class TeacherAddGroup extends React.Component {
             : <Spinner />
           }
         </div>
+        <Link to={`/teacher/id/${localStorage.getItem('user')}`}>
+          <Button className={classes.button}>Назад</Button>
+        </Link>
       </div>
     );
   }
