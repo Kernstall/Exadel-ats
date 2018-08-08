@@ -38,7 +38,7 @@ class StudentTaskDropDown extends React.Component {
   };
 
   render() {
-    const { classes, taskInfo } = this.props;
+    const { classes, taskInfo, groupId } = this.props;
 
     return (
       <div className={classes.fullWidth}>
@@ -67,6 +67,7 @@ class StudentTaskDropDown extends React.Component {
                     (attempt, index) => (
                       <Attempts
                         attempt={attempt}
+                        groupId={groupId}
                         taskId={taskInfo.taskId}
                         key={index}
                       />

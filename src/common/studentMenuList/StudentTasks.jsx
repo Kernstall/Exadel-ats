@@ -53,7 +53,7 @@ class StudentTasks extends React.Component {
   };
 
   render() {
-    const { classes, task } = this.props;
+    const { classes, task, groupId } = this.props;
 
     return (
       <div className={classes.root}>
@@ -80,6 +80,7 @@ class StudentTasks extends React.Component {
             <ListItem className={classes.nested}>
               <StudentTaskDropDown
                 taskInfo={task}
+                groupId={groupId}
                 className={this.props.classes.fullWidth}
               />
             </ListItem>
