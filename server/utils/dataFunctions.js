@@ -1271,20 +1271,20 @@ exports.getRandomTest = async (topicId, count) => {
   const typeOne = Question.find({ topicId, kind: 'one answer' }).select({ _id: 1 });
   const typeTwo = Question.find({ topicId, kind: 'multiple answers' }).select({ _id: 1 });
   const typeThree = Question.find({ topicId, kind: 'without answer option' }).select({ _id: 1 });
-  const typeFour = Question.find({ topicId, kind: 'without answer with verification' }).select({ _id: 1 });
-  const result = await Promise.all([typeOne, typeTwo, typeThree, typeFour]);
-  if (result[0].length === 0 || result[1].length === 0 || result[2].length === 0
-    || result[3].length === 0) {
+  // const typeFour = Question.find({ topicId, kind: 'without answer with verification' }).select({ _id: 1 });
+  const result = await Promise.all([typeOne, typeTwo, typeThree]);
+  if (result[0].length === 0 || result[1].length === 0 || result[2].length === 0) {
     throw new Error('Недостаточно вопросов');
   }
   const firstQuestions = [result[0][random(result[0].length)], result[1][random(result[1]
-    .length)], result[2][random(result[2].length)], result[2][random(result[2].length)]];
+    .length)], result[2][random(result[2].length)]];
   const notSearch = firstQuestions.map(el => el = el._id);
   const all = await Question.find({
     topicId,
     _id: { $nin: notSearch },
+    kind: { $nin: 'without answer with verification' },
   }).select({ _id: 1 });
-  const test = [...firstQuestions, ...arrRandom(all, count - 4)].map((el) => {
+  const test = [...firstQuestions, ...arrRandom(all, count - 3)].map((el) => {
     return { questionId: el._id };
   });
   return test;

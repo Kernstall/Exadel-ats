@@ -198,6 +198,17 @@ router.get('/questions', (req, res) => {
     hashSet.forEach((set) => {
       set.questions = Object.keys(set.questions).map(key => set.questions[key]);
     });
+    let count;
+    hashSet = hashSet.map((el) => {
+      count = 0;
+      const index = el.questions.findIndex(elem => elem.type === 'without answer with verification');
+      if (index >= 0) {
+        count = el.questions[index].count;
+        el.questions.splice(index, 1);
+      }
+      el.count -= count;
+      return el;
+    });
     res.send(hashSet);
   });
 });
