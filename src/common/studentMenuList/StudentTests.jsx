@@ -33,6 +33,10 @@ class StudentTests extends React.Component {
 
   render() {
     const { classes, test } = this.props;
+    let mark = test.avgMark;
+    if (test.avgMark === null) {
+      mark = 0;
+    }
     return (
       <div className={classes.root}>
         <ListItem open="false" button onClick={this.handleClick}>
@@ -41,7 +45,7 @@ class StudentTests extends React.Component {
               <ListItemText primary={test.name} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <ListItemText primary={'Средний балл: ' + test.avgMark} />
+              <ListItemText primary={'Средний балл: ' + mark} />
             </Grid>
           </Grid>
 
