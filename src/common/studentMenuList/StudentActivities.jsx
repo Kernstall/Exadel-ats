@@ -21,16 +21,23 @@ const styles = theme => ({
 class StudentActivities extends React.Component {
   render() {
     const dateToString = (_date) => {
-      function addZero(i) {
-        if (i < 10) {
-          i = `0${i}`;
-        }
-        return i;
+      const date = new Date(_date);
+
+      let day = date.getDate().toString();
+      let monthIndex = (date.getMonth() + 1).toString();
+      const year = (date.getFullYear()).toString();
+      const hour = (date.getHours()).toString();
+      const minute = (date.getMinutes()).toString();
+
+      if (day.length === 1) {
+        day = 0 + day;
       }
-      const date = new Date(Date.parse(_date));
-      const parsedTime = `${addZero(date.getDay())}.${addZero(date.getMonth())}.${addZero(date.getFullYear())}`;
-      const parsedData = `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
-      return `${parsedTime} ${parsedData}`;
+
+      if (monthIndex.length === 1) {
+        monthIndex = 0 + monthIndex;
+      }
+
+      return `${day}.${monthIndex}.${year} ${hour}:${minute}`;
     };
     const { classes, activity } = this.props;
     return (

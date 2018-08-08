@@ -78,13 +78,21 @@ class ActivityListItems extends Component {
     const dateToString = (_date) => {
       const date = new Date(_date);
 
-      const day = date.getDate();
-      const monthIndex = date.getMonth();
-      const year = date.getFullYear();
-      const hour = date.getHours();
-      const minute = date.getMinutes();
+      let day = date.getDate().toString();
+      let monthIndex = (date.getMonth() + 1).toString();
+      const year = (date.getFullYear()).toString();
+      const hour = (date.getHours()).toString();
+      const minute = (date.getMinutes()).toString();
 
-      return `0${day}.0${monthIndex + 1}.${year} ${hour}:${minute}`;
+      if (day.length === 1) {
+        day = 0 + day;
+      }
+
+      if (monthIndex.length === 1) {
+        monthIndex = 0 + monthIndex;
+      }
+
+      return `${day}.${monthIndex}.${year} ${hour}:${minute}`;
     };
 
     return (

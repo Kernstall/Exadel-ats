@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Paper from '@material-ui/core/Paper';
 import ListItem from '@material-ui/core/ListItem';
 import Grid from '@material-ui/core/Grid';
 import ListItemText from '@material-ui/core/ListItemText';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Common from '../../../common/styles/Common';
 import localize from '../../../localization/localization';
 import Caption from '../caption/Caption';
@@ -55,11 +55,13 @@ class ActivityListItems extends Component {
   comparator = key => (a, b) => {
     if (a[key] < b[key]) {
       return 1;
-    } if (a[key] > b[key]) {
+    }
+    if (a[key] > b[key]) {
       return -1;
     }
     return 0;
   };
+
   // eslint-disable-next-line
   sort(array, cryterions, isDecreasing) {
     const result = array.sort(this.comparator(cryterions));
@@ -75,13 +77,21 @@ class ActivityListItems extends Component {
     const dateToString = (_date) => {
       const date = new Date(_date);
 
-      const day = date.getDate();
-      const monthIndex = date.getMonth();
-      const year = date.getFullYear();
-      const hour = date.getHours();
-      const minute = date.getMinutes();
+      let day = date.getDate().toString();
+      let monthIndex = (date.getMonth() + 1).toString();
+      const year = (date.getFullYear()).toString();
+      const hour = (date.getHours()).toString();
+      const minute = (date.getMinutes()).toString();
 
-      return `0${day}.0${monthIndex + 1}.${year} ${hour}:${minute}`;
+      if (day.length === 1) {
+        day = 0 + day;
+      }
+
+      if (monthIndex.length === 1) {
+        monthIndex = 0 + monthIndex;
+      }
+
+      return `${day}.${monthIndex}.${year} ${hour}:${minute}`;
     };
 
     return (
@@ -98,13 +108,13 @@ class ActivityListItems extends Component {
             <ListItem button elevation={0}>
               <Grid container className={classes.fullWidth}>
                 <Grid item className={classes.names}>
-                  <ListItemText classes={{ primary: classes.primary }} primary={`${element.name}`} />
+                  <ListItemText classes={{ primary: classes.primary }} primary={`${element.name}`}/>
                 </Grid>
                 <Grid item className={classes.date}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${element.score}`} />
+                  <ListItemText className={{ root: classes.root }} secondary={`${element.score}`}/>
                 </Grid>
                 <Grid item className={classes.role}>
-                  <ListItemText className={{ root: classes.root }} secondary={`${element.language}`} />
+                  <ListItemText className={{ root: classes.root }} secondary={`${element.language}`}/>
                 </Grid>
               </Grid>
             </ListItem>
