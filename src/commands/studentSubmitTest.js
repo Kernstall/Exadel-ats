@@ -5,9 +5,9 @@ export const studentSubmitTest = ({answersObject, groupId, topicId}) => (dispatc
   console.log(answersObject);
   fetch(`/api/student/test/checking?groupId=${groupId}&topicId=${topicId}`, {
     method: 'POST',
-    body: JSON.stringify({
-      ...answersObject,
-    }),
+    body: JSON.stringify(
+      answersObject,
+    ),
     headers: {
       'Content-type': 'application/json',
       'Set-Cookie': 'true',

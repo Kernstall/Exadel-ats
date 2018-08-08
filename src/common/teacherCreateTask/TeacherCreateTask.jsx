@@ -305,6 +305,7 @@ class TeacherCreateTask extends React.Component {
         el.weight = e.target.value;
       }
     });
+
     this.setState({ tests2 });
   };
 
@@ -525,27 +526,29 @@ class TeacherCreateTask extends React.Component {
             ))}
           </TextField>
           {this.state.weight &&
-          <TextField
-            id="select-pass-result"
-            select
-            label="Минимальная оценка"
-            className={classes.textField}
-            value={this.state.passResult}
-            onChange={this.handleChange('passResult')}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu,
-              },
-            }}
-            helperText="Выберите минимальную оценку, необходимую набрать за задачу"
-            margin="normal"
-          >
-            {Array.from(Array(this.state.weight).keys()).map(option => (
-              <MenuItem key={`min-mark-${option}`} value={option + 1}>
-                {option + 1}
-              </MenuItem>
-            ))}
-          </TextField>
+            (
+              <TextField
+                id="select-pass-result"
+                select
+                label="Минимальная оценка"
+                className={classes.textField}
+                value={this.state.passResult}
+                onChange={this.handleChange('passResult')}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes.menu,
+                  },
+                }}
+                helperText="Выберите минимальную оценку, необходимую набрать за задачу"
+                margin="normal"
+              >
+                {Array.from(Array(this.state.weight).keys()).map(option => (
+                  <MenuItem key={`min-mark-${option}`} value={option + 1}>
+                    {option + 1}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )
           }
           <form className={classes.infoUpload}>
             <Typography className={classes.infoUploadTitle} variant="subheading">Пример входного файла</Typography>
@@ -643,7 +646,7 @@ class TeacherCreateTask extends React.Component {
                 <Typography variant="body2" className={classes.inputOutputTitle}>Input</Typography>
                 <Typography variant="body2" className={classes.inputOutputTitle}>Output</Typography>
               </div>
-              {this.state.renderTests.map(element => (
+              {this.state.renderTests.map((element, index) => (
                 <div className={classes.test}>
                   <TestField
                     handleTestsUpload={this.handleTestsInputUpload}
@@ -662,13 +665,13 @@ class TeacherCreateTask extends React.Component {
                     onClick={() => this.handleClickDeleteTest(element._id)}
                   />
                   {element.isNew
-                      && (
+                    && (
                       <TextField
                         id="select-currency"
                         select
-                        label="Select"
+                        label="Стоимость"
                         className={classes.textField}
-                        value={this.state.mark}
+                        value={this.state.tests2[index].weight}
                         onChange={this.handleSetWeight(element._id)}
                         SelectProps={{
                           MenuProps: {
@@ -684,19 +687,19 @@ class TeacherCreateTask extends React.Component {
                           </MenuItem>
                         ))}
                       </TextField>
-                      )
-                      }
+                    )
+                  }
                 </div>
               ))}
             </div>
           </div>
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleUpload} variant="contained" color="primary" className={classes.button}>
-                Сохранить
+              Сохранить
             </Button>
             <Link to={`/teacher/id/${this.state.id}`}>
               <Button variant="contained" color="primary" className={classes.button}>
-                  Отмена
+                Отмена
               </Button>
             </Link>
           </div>

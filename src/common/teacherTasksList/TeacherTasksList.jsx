@@ -8,7 +8,7 @@ import TaskInTopic from './TaskInTopic.jsx';
 import Spinner from '../shared/spinner/index';
 import { getTeacherTasks } from '../../commands/teacherTasks';
 import AssignTestTask from '../assignTestTask/AssignTestTask';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const styles = theme => ({
   button: {
@@ -28,6 +28,10 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'row',
     alignSelf: 'flex-end',
+  },
+  mylink: {
+    textDecoration: 'none',
+    color: 'white',
   },
 });
 

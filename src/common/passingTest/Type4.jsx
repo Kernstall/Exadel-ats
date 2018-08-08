@@ -10,6 +10,7 @@ const styles = theme => ({
     display: 'flex',
     flexWrap: 'wrap',
     margin: '24px',
+    userSelect: 'none',
   },
   textField: {
     marginLeft: theme.spacing.unit,
