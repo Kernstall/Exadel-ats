@@ -1,6 +1,11 @@
-export const messageRequested = message => ({
+export const messageRequested = (message, redirectPath) => ({
   type: 'Entity/ErrorMessage/Request',
   payload: message,
+  redirectPath,
+});
+
+export const redirectSuccess = () => ({
+  type: 'Entity/ErrorMessage/Redirect',
 });
 
 /* const messageResolved = () => ({
@@ -8,6 +13,7 @@ export const messageRequested = message => ({
 }); */
 
 export default {
-  messageRequested, /*
+  messageRequested,
+  redirectSuccess, /*
   messageResolved, */
 };
