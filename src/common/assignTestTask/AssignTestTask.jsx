@@ -127,7 +127,7 @@ class AssingTestTask extends React.Component {
       h = `0${h}`;
     }
     if (mi < 10) {
-      mi = `o${mi}`;
+      mi = `0${mi}`;
     }
     const data = `${y}-${m}-${d}T${h}:${mi}:00`;
     return data;

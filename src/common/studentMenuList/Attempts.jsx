@@ -27,19 +27,28 @@ const styles = theme => ({
   green: {
     backgroundColor: '#3AC54A',
     ...theme.mixins.gutters(),
-    paddingBottom: theme.spacing.unit * 2,
-    height: '2px',
+    height: '10px',
     maxWidth: '15%',
+    padding: '10px 10px !important',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   red: {
     backgroundColor: '#c5313b',
     ...theme.mixins.gutters(),
-    paddingBottom: theme.spacing.unit * 2,
-    height: '2px',
+    height: '10px',
     maxWidth: '15%',
+    padding: '10px 10px !important',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   noUnderline: {
     textDecoration: 'none',
+  },
+  score: {
+    display: 'flex',
   },
 });
 
@@ -74,7 +83,7 @@ class Attempts extends React.Component {
               </Grid>
               <Grid item xs>
                 <Paper className={attempt.isPassed ? classes.green : classes.red}>
-                  <Typography component="p">
+                  <Typography component="p" className={classes.score}>
                     {attempt.result}
                   </Typography>
                 </Paper>

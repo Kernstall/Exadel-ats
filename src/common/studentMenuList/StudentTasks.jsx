@@ -21,26 +21,28 @@ const styles = theme => ({
   nested: {
     paddingLeft: theme.spacing.unit * 4,
   },
-  paper: {
-    ...theme.mixins.gutters(),
-    paddingBottom: theme.spacing.unit * 2,
-    height: '2px',
-    maxWidth: '15%',
-
-  },
   green: {
     backgroundColor: '#3AC54A',
     ...theme.mixins.gutters(),
     paddingBottom: theme.spacing.unit * 2,
-    height: '2px',
-    maxWidth: '15%',
+    height: '10px',
+    maxWidth: '12%',
+    display: 'flex',
+    justifyContent: 'center',
   },
   red: {
     backgroundColor: '#c5313b',
     ...theme.mixins.gutters(),
     paddingBottom: theme.spacing.unit * 2,
-    height: '2px',
-    maxWidth: '15%',
+    height: '10px',
+    width: 'auto',
+    maxWidth: '12%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  score: {
+    display: 'flex',
+    padding: 4,
   },
 });
 
@@ -72,7 +74,7 @@ class StudentTasks extends React.Component {
             <Grid item xs>
             {console.log(task)}
               <Paper className={task.isPassed ? classes.green : classes.red}>
-                <Typography component="p">
+                <Typography className={classes.score}>
                   {task.bestResult}/{task.weight}
                 </Typography>
               </Paper>
