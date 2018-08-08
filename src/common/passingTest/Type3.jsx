@@ -23,14 +23,15 @@ const styles = theme => ({
 
 class Type3 extends React.Component {
 
-  handleChange = name => (event) => {
+  handleChange = input => {
     this.setState({
-      [name]: event.target.value,
+      answer: input.value,
     });
+    console.log(this.state);
   };
 
   render() {
-    const { classes, question } = this.props;
+    const { classes, question, updateInputCallback } = this.props;
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
@@ -45,6 +46,7 @@ class Type3 extends React.Component {
           fullWidth
           margin="normal"
           className={classes.marginDense}
+          onChange={event => updateInputCallback(event.target.value)}
         />
       </form>
     );

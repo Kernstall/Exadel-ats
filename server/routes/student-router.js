@@ -25,8 +25,7 @@ router.get('/group/tasks', async (req, res) => {
   try {
     const result = await dataFunctions.getStudentTasksByGroup(req.user.id, req.query.groupId);
     res.send(JSON.stringify(result));
-  }
-  catch (err) {
+  } catch (err) {
     res.status(500).send(err);
   }
 });
@@ -157,8 +156,10 @@ router.get('/test/questions', async (req, res) => {
   try {
     const topicId = req.query.topicId;
     const answer = await dataFunctions.getTestQuestions(topicId);
+    console.log(answer);
     res.status(200).json(answer);
   } catch (e) {
+    console.log(e.toString());
     res.status(400).send(e.toString());
   }
 });
