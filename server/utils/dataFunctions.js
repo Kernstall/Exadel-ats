@@ -1496,7 +1496,7 @@ async function testAnalysis(answers) {
       set = new Set(questionArray[i].correctAnswersIndexes);
 
       answers[i].selectedIndexes.forEach((elem) => {
-        if (!set.has(elem)) {
+        if (!set.has(elem.toString())) {
           flag = false;
         }
       });
@@ -1561,7 +1561,6 @@ exports.saveTrainigTest = async (studentId, answers, groupId, topicId) => {
   obj.date = new Date();
   obj.questions = result.questions;
 
-  console.log(obj);
   try {
     await User.update(
       { _id: mongoose.Types.ObjectId(studentId) },
@@ -1577,8 +1576,9 @@ exports.saveTrainigTest = async (studentId, answers, groupId, topicId) => {
 };
 
 exports.saveExamTest = async (studentId, answers, testId) => {
+  //console.log(answers);
   const result = await testAnalysis(answers);
-  console.log(result);
+  //console.log(result);
 
   if (result.isPassed) {
     result.status = 'passed';
