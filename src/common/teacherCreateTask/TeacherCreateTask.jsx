@@ -298,16 +298,12 @@ class TeacherCreateTask extends React.Component {
   };
 
   handleSetWeight = id => (e) => {
-    console.log('handleSetWeight', id, e);
-    console.log('e.target.value', e.target.value);
-    console.log('test2', this.state.tests2);
     const { tests2 } = this.state;
     tests2.forEach((el) => {
       if (el.id === id) {
         el.weight = e.target.value;
       }
     });
-    console.log('test2after', tests2);
 
     this.setState({ tests2 });
   };
@@ -427,7 +423,6 @@ class TeacherCreateTask extends React.Component {
     const { tagToAdd } = this.state;
     const inputExample = (typeof this.state.renderTests[0] === 'undefined') ? 'val' : this.state.renderTests[0].input;
     const outputExample = (typeof this.state.renderTests[0] === 'undefined') ? 'val' : this.state.renderTests[0].output;
-    console.log('this.state', this.state);
     return (
       <div className={classes.root}>
         <div className={classes.main}>
