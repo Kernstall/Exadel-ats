@@ -81,8 +81,8 @@ class ActivityListItems extends Component {
       let day = date.getDate().toString();
       let monthIndex = (date.getMonth() + 1).toString();
       const year = (date.getFullYear()).toString();
-      const hour = (date.getHours()).toString();
-      const minute = (date.getMinutes()).toString();
+      let hour = (date.getHours()).toString();
+      let minute = (date.getMinutes()).toString();
 
       if (day.length === 1) {
         day = 0 + day;
