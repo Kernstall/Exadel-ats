@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles, Paper } from '@material-ui/core/es';
+import { withStyles, Paper } from '@material-ui/core';
 import Input from '@material-ui/core/Input';
 import localize from '../../../localization/localization';
 

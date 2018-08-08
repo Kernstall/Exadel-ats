@@ -1,9 +1,9 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import './style.css';
-import MenuItem from '@material-ui/core/es/MenuItem/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-import Button from '@material-ui/core/es/Button/Button';
+import Button from '@material-ui/core/Button';
 import { Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import FormSelect from '../../../common/shared/select/index';

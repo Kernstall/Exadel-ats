@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import { Paper } from '@material-ui/core';
 import Spinner from '../shared/spinner/index';
-import Link from 'react-router-dom/es/Link';
+import Link from 'react-router-dom/Link';
 import TabComponent from '../tabComponent/TabComponent.jsx';
 import Common from '../styles/Common';
 import AttemptCode from './AttemptCode';

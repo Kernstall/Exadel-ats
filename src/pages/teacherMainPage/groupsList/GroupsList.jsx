@@ -1,9 +1,9 @@
 import React from 'react';
-import List from '@material-ui/core/es/List/List';
-import ListItem from '@material-ui/core/es/ListItem/ListItem';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import { Link, Route } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/es/Button/Button';
+import Button from '@material-ui/core/Button';
 import GroupTemplate from '../groupTemplate/GroupTemplate.jsx';
 import TeacherAddGroup from '../../../common/teacherAddGroup/TeacherAddGroup';
 

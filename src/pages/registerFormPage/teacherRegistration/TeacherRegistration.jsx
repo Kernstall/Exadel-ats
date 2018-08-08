@@ -2,7 +2,7 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import './style.css';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
-import Button from '@material-ui/core/es/Button/Button';
+import Button from '@material-ui/core/Button/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { Redirect } from 'react-router-dom';
 import FormSelect from '../../../common/shared/select/index';

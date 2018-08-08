@@ -1,15 +1,15 @@
 import React from 'react';
-import Typography from '@material-ui/core/es/Typography/Typography';
-import List from '@material-ui/core/es/List/List';
-import ListItem from '@material-ui/core/es/ListItem/ListItem';
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import { withStyles } from '@material-ui/core/styles';
-import FormControlLabel from '@material-ui/core/es/FormControlLabel/FormControlLabel';
-import Checkbox from '@material-ui/core/es/Checkbox/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import blue from '@material-ui/core/colors/blue';
 import StudentTemplate from '../studentTemplate/StudentTemplate.jsx';
-import Button from "@material-ui/core/es/Button/Button";
+import Button from '@material-ui/core/Button';
 
 const styles = {
   groupsAlign: {

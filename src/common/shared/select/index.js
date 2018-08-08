@@ -1,6 +1,6 @@
 import React from 'react';
-import MenuItem from '@material-ui/core/es/MenuItem/MenuItem';
-import Select from '@material-ui/core/es/Select/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 
