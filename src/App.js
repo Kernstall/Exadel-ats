@@ -22,13 +22,8 @@ import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent.jsx';
 import PassingTest from './common/passingTest/StudentPassingTest.jsx';
 import TeacherCreateTestQuestion from './pages/teacherCreateTestQuestion/TeacherCreateTestQuestion';
-import ExaminationTest from "./common/passingTest/ExaminationTest";
-import TeacherCreateTask from "./common/teacherCreateTask/TeacherCreateTask";
-<<<<<<< HEAD
+import ExaminationTest from './common/passingTest/ExaminationTest';
 import TeacherCreateTask from './common/teacherCreateTask/TeacherCreateTask';
-=======
-import ExaminationTest from './common/passingTest/ExaminationTest.jsx';
->>>>>>> b2ba2a09bc518d1fe98bd5870590f7f43850454b
 
 const styles = ({
   content: {
