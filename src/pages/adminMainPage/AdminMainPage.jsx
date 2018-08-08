@@ -37,7 +37,6 @@ class AdminMainPage extends Component {
         <Route path="/admin/questions" exact component={AdminQuestionPage} />
         <Route path="/admin/tasks" exact component={AdminTaskPage} />
         <PrivateRoute exact path="/teacher/id/:id" component={TeacherMainPage} />
-        <Link to={pathBack}>123</Link>
       </div>
     );
   }

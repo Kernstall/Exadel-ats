@@ -188,7 +188,7 @@ class StudentTaskDropDown extends React.Component {
                     <List>
                       <ListItem>
                         <Typography className={classes.marginTop} component="p">
-                          Оценка: <Button size={'small'} className={!this.state.res.status ? classes.red : classes.green}>{this.state.res.result}</Button>
+                          Оценка: <Button size={'small'} className={!this.state.res.isComplete ? classes.red : classes.green}>{this.state.res.result}</Button>
                         </Typography>
                       </ListItem>
                       <ListItem>
@@ -233,7 +233,7 @@ class StudentTaskDropDown extends React.Component {
                                 </Grid>
                                 <Grid item xs={2}>
                                   <ListItemText>
-                                    <Button size={'small'} className={!test.seccess ? classes.red : classes.green}>{this.state.res.result}</Button>
+                                    <Button size={'small'} className={!test.success ? classes.red : classes.green}>{!test.success ? 'Провалено' : 'Пройдено'}</Button>
                                   </ListItemText>
                                 </Grid>
                               </ListItem>

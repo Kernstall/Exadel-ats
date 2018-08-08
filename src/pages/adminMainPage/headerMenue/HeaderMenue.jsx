@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import DirectionsRun from '@material-ui/icons/DirectionsRun';
 import TeacherImg from '../../../img/teacher.svg';
 import TasksImg from '../../../img/tasks.svg';
 import StudentImg from '../../../img/student.svg';
 import GroupsImg from '../../../img/groups.svg';
 import HistoryImg from '../../../img/history.svg';
 import QuestionsImg from '../../../img/questions.svg';
+import ManagingImg from '../../../img/managing.svg';
 import Hint from './hint/Hint';
 
 const styles = {
@@ -65,9 +65,9 @@ class HeaderMenue extends Component {
     };
   }
 
-  handleMouseEnterSuggestions = suggestion => (event) => {
+  handleMouseEnterSuggestions = (suggestion, isShown) => (event) => {
     this.setState({
-      isHover: !this.state.isHover,
+      isHover: isShown,
       suggestion,
       mauseCoordinates: {
         x: event.clientX,
@@ -79,6 +79,11 @@ class HeaderMenue extends Component {
   render() {
     const { classes } = this.props;
     const { isHover } = this.state;
+
+    let pathBack = localStorage.getItem('user');
+    pathBack = pathBack.substring(1, pathBack.length - 1);
+    pathBack = `/teacher/id/${pathBack}`;
+
     return (
       <div>
         <Grid container className={classes.root}>
@@ -89,8 +94,8 @@ class HeaderMenue extends Component {
                 className={classes.img}
                 src={HistoryImg}
                 alt="history"
-                onMouseEnter={this.handleMouseEnterSuggestions('история')}
-                onMouseLeave={this.handleMouseEnterSuggestions('teacher')}
+                onMouseEnter={this.handleMouseEnterSuggestions('история', true)}
+                onMouseLeave={this.handleMouseEnterSuggestions('история', false)}
               />
             </div>
           </Link>
@@ -98,8 +103,8 @@ class HeaderMenue extends Component {
             <div className={classes.headerItem}>
               <img
                 className={classes.img}
-                onMouseEnter={this.handleMouseEnterSuggestions('учителя')}
-                onMouseLeave={this.handleMouseEnterSuggestions('teacher')}
+                onMouseEnter={this.handleMouseEnterSuggestions('учителя', true)}
+                onMouseLeave={this.handleMouseEnterSuggestions('учителя', false)}
                 src={TeacherImg}
                 alt="teacher"
               />
@@ -111,8 +116,8 @@ class HeaderMenue extends Component {
                 className={classes.img}
                 src={StudentImg}
                 alt="student"
-                onMouseEnter={this.handleMouseEnterSuggestions('студенты')}
-                onMouseLeave={this.handleMouseEnterSuggestions('teacher')}
+                onMouseEnter={this.handleMouseEnterSuggestions('студенты', true)}
+                onMouseLeave={this.handleMouseEnterSuggestions('студенты', false)}
               />
             </div>
           </Link>
@@ -122,8 +127,8 @@ class HeaderMenue extends Component {
                 className={classes.img}
                 src={GroupsImg}
                 alt="groups"
-                onMouseEnter={this.handleMouseEnterSuggestions('группы')}
-                onMouseLeave={this.handleMouseEnterSuggestions('teacher')}
+                onMouseEnter={this.handleMouseEnterSuggestions('группы', true)}
+                onMouseLeave={this.handleMouseEnterSuggestions('группы', false)}
               />
             </div>
           </Link>
@@ -133,8 +138,8 @@ class HeaderMenue extends Component {
                 className={classes.img}
                 src={TasksImg}
                 alt="tasks"
-                onMouseEnter={this.handleMouseEnterSuggestions('задачи')}
-                onMouseLeave={this.handleMouseEnterSuggestions('teacher')}
+                onMouseEnter={this.handleMouseEnterSuggestions('задачи', true)}
+                onMouseLeave={this.handleMouseEnterSuggestions('задачи', false)}
               />
             </div>
           </Link>
@@ -144,8 +149,19 @@ class HeaderMenue extends Component {
                 className={classes.img}
                 src={QuestionsImg}
                 alt="questions"
-                onMouseEnter={this.handleMouseEnterSuggestions('вопросы')}
-                onMouseLeave={this.handleMouseEnterSuggestions('teacher')}
+                onMouseEnter={this.handleMouseEnterSuggestions('вопросы', true)}
+                onMouseLeave={this.handleMouseEnterSuggestions('вопросы', false)}
+              />
+            </div>
+          </Link>
+          <Link to={pathBack}>
+            <div className={classes.headerItem}>
+              <img
+                className={classes.img}
+                src={ManagingImg}
+                alt="managing"
+                onMouseEnter={this.handleMouseEnterSuggestions('Мои группы', true)}
+                onMouseLeave={this.handleMouseEnterSuggestions('Мои группы', false)}
               />
             </div>
           </Link>
