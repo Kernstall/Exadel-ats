@@ -8,8 +8,7 @@ int main() {
 	ofstream out("output.txt"); 
 	int num, n;
 	in >> num >> n;
-    int k = let(num);
+        int k = let(num);
 	out << (num % (int)(pow(10, k - n + 1)) - num % (int)(pow(10, k - n))) / (int)(pow(10, k - n));
-	system("pause");
 	return 0;
 }
