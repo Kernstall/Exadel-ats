@@ -118,16 +118,6 @@ class TeacherSelectedGroupComponent extends React.Component {
               Добавить студента
             </Button>
           </div>
-          <div className={classes.buttonCorrection}>
-            <Button className={classes.addStudentButton} variant="contained">
-              Назначить тест
-            </Button>
-          </div>
-          <div className={classes.buttonCorrection}>
-            <Button className={classes.addStudentButton} variant="contained">
-              Назначить задачу
-            </Button>
-          </div>
         </div>
       </div>
     );

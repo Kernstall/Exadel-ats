@@ -67,3 +67,10 @@ exports.mapGroupForChooseToDto = model => ({
   groupName: model.groupName,
   groupId: model._id,
 });
+exports.mapUniversityToDto = model => ({
+  name: model.shortName,
+  faculties: model.faculties,
+});
+exports.mapFacultyToDto = model => ({
+  name: model.shortName,
+});

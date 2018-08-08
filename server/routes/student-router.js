@@ -184,4 +184,23 @@ router.get('/examination/test', async (req, res) => {
   }
 });
 
+router.post('/test/checking', async (req, res) => {
+  try {
+    const testId = req.query.testId;
+    const groupId = req.query.groupId;
+    const topicId = req.query.topicId;
+    const studentId = req.user.id;
+    const answers = req.body;
+    if (testId) {
+      await dataFunctions.saveExamTest(studentId, answers, testId);
+      res.status(200).json();
+    } else if (topicId) {
+      await dataFunctions.saveTrainigTest(studentId, answers, groupId, topicId);
+      res.status(200).json();
+    }
+  } catch (e) {
+    res.status(400).json(e.message);
+  }
+});
+
 module.exports = router;

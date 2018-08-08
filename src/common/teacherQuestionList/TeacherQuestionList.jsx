@@ -67,16 +67,18 @@ class TeacherQuestionList extends React.Component {
       const { teacherQuestions } = this.props;
       const questions = teacherQuestions.find(el => el.topicId === clickedType);
       const questionsCount = questions.count;
-      this.setState({
-        assign: (
-          <AssignTestTask
-            handleClose={this.handleClose}
-            topicId={clickedType}
-            questionsCount={questionsCount}
-            isTest
-          />
-        ),
-      });
+      if (questionsCount > 9) {
+        this.setState({
+          assign: (
+            <AssignTestTask
+              handleClose={this.handleClose}
+              topicId={clickedType}
+              questionsCount={questionsCount}
+              isTest
+            />
+          ),
+        });
+      }
     }
   }
 

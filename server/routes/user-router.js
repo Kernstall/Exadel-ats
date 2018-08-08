@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
+const mapping = require('../utils/mapping/map');
 const User = require('../models/User');
 const passportControl = require('../utils/passport-control');
 const dataFunctions = require('../utils/dataFunctions');
@@ -33,10 +34,15 @@ router.get('/tops', async (req, res) => {
 });
 router.get('/universities', async (req, res) => {
   try {
-    const result = await University.find();
-    res.send(result);
+    let result = await University.find();
+    result = result.map(el => mapping.mapUniversityToDto(el));
+    result = result.map((item) => {
+      item.faculties = item.faculties.map(el => mapping.mapFacultyToDto(el));
+      return item;
+    });
+    return res.send(result);
   } catch (err) {
-    res.status(500).end();
+    return res.status(500).end();
   }
 });
 

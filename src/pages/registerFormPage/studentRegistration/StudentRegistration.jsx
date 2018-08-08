@@ -70,6 +70,8 @@ class StudentRegistration extends React.Component {
 
   render() {
     const universitiesArr = Object.keys(universities);
+    console.log(universitiesArr);
+    console.log(this.state.topics);
     const { university } = this.state;
     const { classes } = this.props;
     const facultiesArr = universities[university];
@@ -134,7 +136,7 @@ class StudentRegistration extends React.Component {
         {facultiesArr && (
         <FormSelect
           id="faculty-placeholder"
-          label="Факультут"
+          label="Факультет"
           value={this.state.faculty}
           inputProps={{
             university: 'Faculty',

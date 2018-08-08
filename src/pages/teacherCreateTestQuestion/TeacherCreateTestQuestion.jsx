@@ -18,6 +18,7 @@ import Spinner from '../../common/shared/spinner';
 import CreateMultipleAnswerTest from './CreateMultipleAnswerTest';
 import CreateSingleWordTest from './CreateSingleWordTest';
 import CreateUncheckedWordAnswerTest from './CreateUncheckedWordAnswerTest';
+import { requestErrorMessage } from '../../commands/errorMessage';
 
 const styles = theme => ({
   outerWrapper: {
@@ -44,6 +45,16 @@ const styles = theme => ({
   },
   block: {
     display: 'block',
+  },
+  button: {
+    marginTop: '5px',
+    float: 'right',
+    backgroundColor: theme.palette.custom.dark,
+    width: '100%',
+    color: theme.palette.custom.whiteText,
+    '&:hover': {
+      color: theme.palette.custom.blackText,
+    },
   },
 });
 
@@ -134,7 +145,12 @@ class TeacherCreateTestQuestion extends React.Component {
       isTraining: this.state.isTraining,
       difficultyRate: this.state.testComplexity,
     };
-    this.props.addTestQuestion(questionObject);
+    console.log(questionObject)
+    if ((questionObject.kind!=='without answer with verification'&&questionObject.kind!=='without answer option' && questionObject.correctAnswersIndexes.length===0) || questionObject.description === '' || questionObject.difficultyRate === undefined || (questionObject.kind!=='without answer with verification' && questionObject.answersVariants.length===0)) {
+      this.props.requestErrorMessage('Данные введены неверно');
+    } else {
+      this.props.addTestQuestion(questionObject);
+    }
   }
 
   correctAnswerMultipleChangeCallback(event) {
@@ -284,7 +300,7 @@ class TeacherCreateTestQuestion extends React.Component {
           </div>
         )}
         <Link to={`/teacher/id/${localStorage.getItem('user')}`}>
-          <Button>Назад</Button>
+          <Button className={classes.button}>Назад</Button>
         </Link>
       </Paper>
     );
@@ -301,6 +317,7 @@ const mapStateToProps = state => ({
 const mapCommandsToProps = dispatch => ({
   getTestThemes: () => dispatch(getTestThemes()),
   addTestQuestion: questionObject => dispatch(addTestQuestion(questionObject)),
+  requestErrorMessage: message => dispatch(requestErrorMessage(message)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(styledComponent);

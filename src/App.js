@@ -22,7 +22,8 @@ import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent.jsx';
 import PassingTest from './common/passingTest/StudentPassingTest.jsx';
 import TeacherCreateTestQuestion from './pages/teacherCreateTestQuestion/TeacherCreateTestQuestion';
-import ExaminationTest from './common/passingTest/ExaminationTest.jsx';
+import ExaminationTest from './common/passingTest/ExaminationTest';
+import TeacherCreateTask from './common/teacherCreateTask/TeacherCreateTask';
 
 const styles = ({
   content: {
@@ -53,6 +54,7 @@ class App extends Component {
               <Route path="/teacher/tasks/:id" component={TaskView} />
               <Route path="/teacher/groups/:id" component={TeacherGroupComponent} />
               <Route path="/teacher/question/add" component={TeacherCreateTestQuestion} />
+              <Route path="/teacher/create-task" component={TeacherCreateTask} />
               <Route path="/teacher/task/add" component={TeacherCreateTestQuestion} />
               <Route path="/student/passingTest/:groupId/:topicId" component={PassingTest} />
               <Route path="/student/examination/test/:groupId/:testId" component={ExaminationTest} />
