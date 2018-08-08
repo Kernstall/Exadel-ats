@@ -19,10 +19,7 @@ import attemptCode from './attemptCode';
 import taskInfo from './taskInfo';
 import teacherCreateTestQuestion from './teacherCreateTestQuestion';
 import passingTest from './passingTest';
-<<<<<<< HEAD
-=======
 import studentSubmitTest from './studentSubmitTest';
->>>>>>> 837f0752e274bed584a0451e4da029c0c7bccdca
 
 export default combineReducers({
   students,
@@ -45,8 +42,5 @@ export default combineReducers({
   taskInfo,
   teacherCreateTestQuestion,
   passingTest,
-<<<<<<< HEAD
-=======
   studentSubmitTest,
->>>>>>> 837f0752e274bed584a0451e4da029c0c7bccdca
 });
