@@ -6,10 +6,8 @@ import { withStyles } from '@material-ui/core/styles/index';
 const styles = theme => ({
   dragAndDropOuterWrapper: {
     display: 'flex',
-    'min-width': 'fit-content',
     height: '500px',
-    width: 'fit-content',
-    position: 'relative',
+    width: '700px',
   },
   studentsContainer: {
     display: 'flex',
