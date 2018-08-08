@@ -15,7 +15,10 @@ module.exports = {
   graduateYear: Number,
   course: String,
   groupNumber: Number,
-  mediumTaskScore: Number,
+  mediumTaskScore: {
+    type: Number,
+    default: 0,
+  },
   tasks: [{
     taskId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -52,7 +55,10 @@ module.exports = {
         }],
       }],
   }],
-  mediumTestScore: Number,
+  mediumTestScore: {
+    type: Number,
+    default: 0,
+  },
   tests: [{
     groupId: {
       type: mongoose.Schema.Types.ObjectId,
