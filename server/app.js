@@ -41,6 +41,7 @@ async function connectDatabase() {
 
 connectDatabase();
 
+// app.use(express.static('../build'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
