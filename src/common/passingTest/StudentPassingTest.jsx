@@ -85,12 +85,10 @@ class PassingTest extends Component {
 
   handleSubmitTest() {
     console.log(this.state.taskList);
-    let answrToString;
     const answersObject = this.state.taskList.map((qst) => {
-      qst.chosenAnswers.forEach(i => (answrToString = i.toString()));
       return {
         _id: qst.id,
-        selectedIndexes: answrToString,
+        selectedIndexes: qst.chosenAnswers,
         answer: qst.stringAnswer,
       };
     });
