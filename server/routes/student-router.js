@@ -25,8 +25,7 @@ router.get('/group/tasks', async (req, res) => {
   try {
     const result = await dataFunctions.getStudentTasksByGroup(req.user.id, req.query.groupId);
     res.send(JSON.stringify(result));
-  }
-  catch (err) {
+  } catch (err) {
     res.status(500).send(err);
   }
 });
