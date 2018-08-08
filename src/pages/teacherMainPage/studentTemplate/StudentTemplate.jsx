@@ -1,5 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/es/Grid/Grid';
+import Paper from '@material-ui/core/Paper';
 import FormGroup from '@material-ui/core/FormGroup';
 import { withStyles } from '@material-ui/core/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -21,7 +22,10 @@ const styles = {
   colored: {
     color: '#000',
   },
-  checked: {},
+  student: {
+    width: '100%',
+    padding: '10px 20px !important',
+  },
   size: {
     width: 40,
     height: 40,
@@ -29,6 +33,7 @@ const styles = {
   sizeIcon: {
     fontSize: 20,
   },
+  checked: {},
 };
 
 class StudentTemplate extends React.Component {
@@ -58,37 +63,39 @@ class StudentTemplate extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <Grid className={classes.colored} container alignItems="center" justify="center" spacing={40}>
-        <Grid item xs>
-          {this.props.name}
+      <Paper className={classes.student}>
+        <Grid className={classes.colored} container alignItems="center" justify="center" spacing={40}>
+          <Grid item xs={3}>
+            {this.props.name}
+          </Grid>
+          <Grid item xs={3}>
+            {`Сдано задач: ${this.props.tasksComplete}`}
+          </Grid>
+          <Grid item xs={3}>
+            {`Пройдено тестов: ${this.props.testsComplete}`}
+          </Grid>
+          <Grid item xs={2}>
+            {`Балл: ${this.props.score}`}
+          </Grid>
+          <Grid item xs={1}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.checked}
+                  classes={{
+                    root: classes.root,
+                    checked: classes.checked,
+                  }}
+                  onChange={this.handleChange('checked')}
+                  icon={<CheckBoxOutlineBlankIcon className={classes.sizeIcon} />}
+                  checkedIcon={<CheckBoxIcon className={classes.sizeIcon} />}
+                  value="checkedI"
+                />
+              }
+            />
+          </Grid>
         </Grid>
-        <Grid item xs>
-          {`Сдано задач: ${this.props.tasksComplete}`}
-        </Grid>
-        <Grid item xs>
-          {`Пройдено тестов: ${this.props.testsComplete}`}
-        </Grid>
-        <Grid item xs>
-          {`Балл: ${this.props.score}`}
-        </Grid>
-        <Grid item xs>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={this.state.checked}
-                classes={{
-                  root: classes.root,
-                  checked: classes.checked,
-                }}
-                onChange={this.handleChange('checked')}
-                icon={<CheckBoxOutlineBlankIcon className={classes.sizeIcon} />}
-                checkedIcon={<CheckBoxIcon className={classes.sizeIcon} />}
-                value="checkedI"
-              />
-            }
-          />
-        </Grid>
-      </Grid>
+      </Paper>
     );
   }
 }

@@ -13,7 +13,10 @@ const styles = theme => ({
     margin: 'auto',
     color: 'whitesmoke',
     height: 'fit-content',
-    width: 700,
+    width: '95%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   addStudentButton: {
     '&:hover': {

@@ -43,6 +43,7 @@ class StudentTabTasksList extends Component {
               tasksList.map(
                 (task, index) => (
                   <StudentTasks
+                    groupId={this.props.groupId}
                     task={task}
                     key={index}
                     index={index}

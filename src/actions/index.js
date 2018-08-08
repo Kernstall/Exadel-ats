@@ -19,3 +19,4 @@ export { default as attemptCode } from './attemptCode';
 export { default as taskInfo } from './taskInfo';
 export { default as teacherCreateTestQuestion } from './teacherCreateTestQuestion';
 export { default as passingTest } from './passingTest';
+export { default as studentSubmitTest } from './studentSubmitTest';

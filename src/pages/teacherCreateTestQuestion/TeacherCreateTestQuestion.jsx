@@ -10,9 +10,14 @@ import Typography from '@material-ui/core/es/Typography/Typography';
 import Select from '@material-ui/core/es/Select/Select';
 import Input from '@material-ui/core/es/Input/Input';
 import MenuItem from '@material-ui/core/es/MenuItem/MenuItem';
+import Button from '@material-ui/core/es/Button/Button';
+import { Link } from 'react-router-dom';
 import CreateSingleAnswerTest from './CreateSingleAnswerTest';
 import { getTestThemes, addTestQuestion } from '../../commands/teacherCreateTestQuestion';
 import Spinner from '../../common/shared/spinner';
+import CreateMultipleAnswerTest from './CreateMultipleAnswerTest';
+import CreateSingleWordTest from './CreateSingleWordTest';
+import CreateUncheckedWordAnswerTest from './CreateUncheckedWordAnswerTest';
 
 const styles = theme => ({
   outerWrapper: {
@@ -40,6 +45,16 @@ const styles = theme => ({
   block: {
     display: 'block',
   },
+  button: {
+    marginTop: '5px',
+    float: 'right',
+    backgroundColor: theme.palette.custom.dark,
+    width: '100%',
+    color: theme.palette.custom.whiteText,
+    '&:hover': {
+      color: theme.palette.custom.blackText,
+    },
+  },
 });
 
 class TeacherCreateTestQuestion extends React.Component {
@@ -62,11 +77,15 @@ class TeacherCreateTestQuestion extends React.Component {
     this.correctAnswerChangeCallback = this.correctAnswerChangeCallback.bind(this);
     this.submitQuestionFormCallback = this.submitQuestionFormCallback.bind(this);
     this.deleteTestAnswerCallback = this.deleteTestAnswerCallback.bind(this);
+    this.correctAnswerMultipleChangeCallback = this.correctAnswerMultipleChangeCallback.bind(this);
+    this.singleWordChangeCallback = this.singleWordChangeCallback.bind(this);
   }
 
   handleRadioBoxChange(event) {
     this.setState({
       selectedTestType: event.target.value,
+      testAnswerOptions: [],
+      correctAnswer: [],
     });
   }
 
@@ -76,6 +95,7 @@ class TeacherCreateTestQuestion extends React.Component {
     arr.splice(index, 1);
     this.setState({
       testAnswerOptions: arr,
+      correctAnswer: [],
     });
   }
 
@@ -127,6 +147,20 @@ class TeacherCreateTestQuestion extends React.Component {
     this.props.addTestQuestion(questionObject);
   }
 
+  correctAnswerMultipleChangeCallback(event) {
+    const arr = [...this.state.correctAnswer, event.target.value];
+    this.setState({
+      correctAnswer: arr,
+    });
+  }
+
+  singleWordChangeCallback(event) {
+    this.state.testAnswerOptions[0] = event.target.value;
+    this.setState({
+      testAnswerOptions: this.state.testAnswerOptions,
+    });
+  }
+
   componentDidMount() {
     this.props.getTestThemes();
   }
@@ -153,74 +187,115 @@ class TeacherCreateTestQuestion extends React.Component {
         );
         break;
       case 'multiple answers':
-        renderingComponent = 'Hello World 2';
+        renderingComponent = (
+          <CreateMultipleAnswerTest
+            trainingTask={this.state.isTraining}
+            trainingCheckboxCallback={this.handleTrainingCheckbox}
+            dataChangeCallback={this.handleChange}
+            testDescription={this.state.testDescription}
+            testComplexity={this.state.testComplexity}
+            testAnswerOptions={this.state.testAnswerOptions}
+            correctAnswer={this.state.correctAnswer}
+            addTestAnswerCallback={this.addTestAnswerCallback}
+            correctAnswerChangeCallback={this.correctAnswerMultipleChangeCallback}
+            submitQuestionFormCallback={this.submitQuestionFormCallback}
+            deleteTestAnswerCallback={this.deleteTestAnswerCallback}
+          />
+        );
         break;
       case 'without answer option':
-        renderingComponent = 'Hello World 3';
+        renderingComponent = (
+          <CreateSingleWordTest
+            trainingTask={this.state.isTraining}
+            trainingCheckboxCallback={this.handleTrainingCheckbox}
+            dataChangeCallback={this.handleChange}
+            testDescription={this.state.testDescription}
+            testComplexity={this.state.testComplexity}
+            testAnswerOptions={this.state.testAnswerOptions}
+            submitQuestionFormCallback={this.submitQuestionFormCallback}
+            singleWordChangeCallback={this.singleWordChangeCallback}
+          />
+        );
         break;
       case 'without answer with verification':
-        renderingComponent = 'Hello World 4';
+        renderingComponent = (
+          <CreateUncheckedWordAnswerTest
+            trainingTask={this.state.isTraining}
+            trainingCheckboxCallback={this.handleTrainingCheckbox}
+            dataChangeCallback={this.handleChange}
+            testDescription={this.state.testDescription}
+            testComplexity={this.state.testComplexity}
+            submitQuestionFormCallback={this.submitQuestionFormCallback}
+          />
+        );
         break;
       default:
         renderingComponent = null;
     }
 
-    return this.props.isLoading ? <Spinner /> : (
+    return (
       <Paper className={classes.outerWrapper}>
-        <FormControl>
-          <Typography align="center">Выберите тему:</Typography>
+        {this.props.isLoading ? <Spinner /> : (
+          <div>
+            <FormControl>
+              <Typography align="center">Выберите тему:</Typography>
 
-          <Select
-            className={classes.select}
-            value={this.state.selectedTheme}
-            onChange={this.handleSelectUpdate}
-            input={<Input name="theme" id="task-theme" />}
-          >
-            {this.props.themesList && this.props.themesList.map(element => (<MenuItem value={element._id}>{element.name}</MenuItem>))}
-          </Select>
+              <Select
+                className={classes.select}
+                value={this.state.selectedTheme}
+                onChange={this.handleSelectUpdate}
+                input={<Input name="theme" id="task-theme" />}
+              >
+                {this.props.themesList && this.props.themesList.map(element => (<MenuItem value={element._id}>{element.name}</MenuItem>))}
+              </Select>
 
-          {this.state.selectedTheme === '' ? null : (
-            <RadioGroup
-              aria-label="Тип теста: "
-              name="testType"
-              className={classes.flexContainerHorizontal}
-              value={this.state.selectedTestType}
-              onChange={this.handleRadioBoxChange}
-            >
-              <FormControlLabel
-                value="one answer"
-                control={<Radio color="primary" />}
-                label="С выбором одного варианта"
-                labelPlacement="start"
-                className={classes.flexChildHorizontal}
-              />
-              <FormControlLabel
-                value="multiple answers"
-                control={<Radio color="primary" />}
-                label="Со множественным выбором"
-                labelPlacement="start"
-                className={classes.flexChildHorizontal}
-              />
-              <FormControlLabel
-                value="without answer option"
-                control={<Radio color="primary" />}
-                label="Со словом - ответом"
-                labelPlacement="start"
-                className={classes.flexChildHorizontal}
-              />
-              <FormControlLabel
-                value="without answer with verification"
-                control={<Radio color="primary" />}
-                label="С предложением - ответом"
-                labelPlacement="start"
-                className={classes.flexChildHorizontal}
-              />
-            </RadioGroup>
-          )}
-        </FormControl>
-        <div className={classes.content}>
-          {renderingComponent}
-        </div>
+              {this.state.selectedTheme === '' ? null : (
+                <RadioGroup
+                  aria-label="Тип теста: "
+                  name="testType"
+                  className={classes.flexContainerHorizontal}
+                  value={this.state.selectedTestType}
+                  onChange={this.handleRadioBoxChange}
+                >
+                  <FormControlLabel
+                    value="one answer"
+                    control={<Radio color="primary" />}
+                    label="С выбором одного варианта"
+                    labelPlacement="start"
+                    className={classes.flexChildHorizontal}
+                  />
+                  <FormControlLabel
+                    value="multiple answers"
+                    control={<Radio color="primary" />}
+                    label="Со множественным выбором"
+                    labelPlacement="start"
+                    className={classes.flexChildHorizontal}
+                  />
+                  <FormControlLabel
+                    value="without answer option"
+                    control={<Radio color="primary" />}
+                    label="Со словом - ответом"
+                    labelPlacement="start"
+                    className={classes.flexChildHorizontal}
+                  />
+                  <FormControlLabel
+                    value="without answer with verification"
+                    control={<Radio color="primary" />}
+                    label="С предложением - ответом"
+                    labelPlacement="start"
+                    className={classes.flexChildHorizontal}
+                  />
+                </RadioGroup>
+              )}
+            </FormControl>
+            <div className={classes.content}>
+              {renderingComponent}
+            </div>
+          </div>
+        )}
+        <Link to={`/teacher/id/${localStorage.getItem('user')}`}>
+          <Button className={classes.button}>Назад</Button>
+        </Link>
       </Paper>
     );
   }

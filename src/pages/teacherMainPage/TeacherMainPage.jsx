@@ -87,7 +87,6 @@ class TeacherMainPage extends React.Component {
   render() {
     const { classes } = this.props;
     const { value } = this.state;
-    console.log(this.props.match.params.id);
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">

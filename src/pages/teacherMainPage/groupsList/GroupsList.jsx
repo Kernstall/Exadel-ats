@@ -3,9 +3,9 @@ import List from '@material-ui/core/es/List/List';
 import ListItem from '@material-ui/core/es/ListItem/ListItem';
 import { Link, Route } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/es/Button/Button';
 import GroupTemplate from '../groupTemplate/GroupTemplate.jsx';
-import Button from "@material-ui/core/es/Button/Button";
-import TeacherAddGroup from "../../../common/teacherAddGroup/TeacherAddGroup";
+import TeacherAddGroup from '../../../common/teacherAddGroup/TeacherAddGroup';
 
 const styles = {
   noUnderline: {
@@ -38,7 +38,7 @@ class GroupsList extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/api/teacher/group`, {
+    fetch('/api/teacher/group', {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
@@ -47,7 +47,7 @@ class GroupsList extends React.Component {
       credentials: 'include',
     })
       .then(res => res.json())
-      .then(res => {
+      .then((res) => {
         this.setState({
           response: res,
         });
@@ -57,15 +57,14 @@ class GroupsList extends React.Component {
   }
 
   render() {
-    console.log(this.state.response);
     const { classes } = this.props;
     return (
       <List>
         {this.state.response.map((item, index) => (
           <div key={`group${index}`}>
-              <ListItem button onClick={() => this.props.getGroupId(item._id)}>
-                <GroupTemplate response={item} />
-              </ListItem>
+            <ListItem button onClick={() => this.props.getGroupId(item._id)}>
+              <GroupTemplate response={item} />
+            </ListItem>
           </div>
         ))}
         <Link className={classes.buttonContainer} to="/teacher/addGroup">

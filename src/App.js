@@ -36,10 +36,10 @@ class App extends Component {
     const { classes } = this.props;
     return (
       <MuiThemeProvider theme={createMuiTheme}>
-        <ErrorDispatcher />
         <div className={classes.minHeight}>
           <Router>
             <div className={classes.content}>
+              <ErrorDispatcher />
               <Route path="/" component={Header} />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
@@ -48,7 +48,7 @@ class App extends Component {
               <PrivateRoute exact path="/student/id/:id" component={StudentMainPage} />
               <PrivateRoute exact path="/teacher/id/:id" component={TeacherMainPage} />
               <Route path="/admin" component={AdminMainPage} />
-              <Route exact path="/task/attempt/:taskId/:attemptNumber" component={AttemptFiles} />
+              <Route exact path="/task/attempt/:groupId/:taskId/:attemptNumber" component={AttemptFiles} />
               <Route path="/teacher/task/edit/:id" component={TeacherTaskEdit} />
               <Route path="/teacher/tasks/:id" component={TaskView} />
               <Route path="/teacher/groups/:id" component={TeacherGroupComponent} />

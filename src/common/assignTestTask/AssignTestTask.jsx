@@ -66,7 +66,7 @@ function getDataTextField(type, label, classname, defaultThing, onChangeThing) {
       id={`datetime-${type}`}
       label={label}
       type="datetime-local"
-      defaultValue={defaultThing}
+      value={defaultThing}
       className={classname}
       onChange={() => onChangeThing(type)}
       InputLabelProps={{

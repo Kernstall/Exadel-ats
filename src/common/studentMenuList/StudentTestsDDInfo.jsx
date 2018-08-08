@@ -65,12 +65,11 @@ class StudentTestsDDInfo extends React.Component {
               {!(test.result > 0)
               && (
               <Link to={`/student/examination/test/${test.id}`} className={classes.link}>
-                Пройти
-                {/* <ListItemText primary="Пройти" className={classes.primary} /> */}
+
+                <ListItemText primary="Пройти" />
               </Link>
               )
               }
-              {/*<ListItemText primary={(test.result > 0) ? test.result : 'Не пройдено'} />*/}
             </Grid>
           </Grid>
         </div>
@@ -85,8 +84,7 @@ class StudentTestsDDInfo extends React.Component {
             </Grid>
             <Grid item xs={6}>
               <Link to={`/student/passingTest/${availableTest.id}`} className={classes.link}>
-                Пройти
-                {/* <ListItemText primary="Пройти" className={classes.primary} /> */}
+                <ListItemText primary="Пройти" />
               </Link>
             </Grid>
           </Grid>

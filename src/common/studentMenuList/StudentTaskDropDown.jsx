@@ -119,9 +119,7 @@ class StudentTaskDropDown extends React.Component {
   }
 
   render() {
-    const { classes, taskInfo } = this.props;
-    console.log('this.state', this.state);
-    console.log('this.props', this.props);
+    const { classes, taskInfo, groupId } = this.props;
 
     return (
       <div className={classes.fullWidth}>
@@ -139,8 +137,8 @@ class StudentTaskDropDown extends React.Component {
             Загрузить решение
           </Button>
           {
-            (this.state.isShowAttempts && !console.log('taskInfo', taskInfo) && taskInfo.attempts.length > 0)
-            && (
+            (this.state.isShowAttempts && taskInfo.attempts.length > 0)
+              && (
               <div className={classes.root}>
                 <List
                   component="nav"
