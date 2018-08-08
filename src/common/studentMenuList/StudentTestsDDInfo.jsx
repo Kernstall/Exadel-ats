@@ -34,6 +34,7 @@ const styles = theme => ({
     },
   },
   link: {
+    textDecoration: 'none',
     fontSize: '1rem',
     fontWeight: '400',
     lineHeight: '1.5em',
@@ -64,11 +65,11 @@ class StudentTestsDDInfo extends React.Component {
               {!(test.result > 0)
               && (
               <Link to={`/student/examination/test/${test.id}`} className={classes.link}>
+
                 <ListItemText primary="Пройти" />
               </Link>
               )
               }
-              {/* <ListItemText primary={(test.result > 0) ? test.result : 'Не пройдено'} /> */}
             </Grid>
           </Grid>
         </div>

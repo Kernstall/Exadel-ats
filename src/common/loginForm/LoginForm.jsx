@@ -88,7 +88,8 @@ class LoginForm extends React.Component {
               inputProps={{
                 className: classes.input,
               }}
-              id="name" label="Почта"
+              id="name"
+              label="Почта"
               className="text-field"
               margin="normal"
               onChange={this.handleChange('username')}

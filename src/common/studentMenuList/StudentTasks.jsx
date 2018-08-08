@@ -52,8 +52,12 @@ class StudentTasks extends React.Component {
     this.setState(state => ({ open: !state.open }));
   };
 
+  handlerUploadAttempts = () => {
+    this.props.handlerUploadAttempts();
+  }
+
   render() {
-    const { classes, task, groupId } = this.props;
+    const { classes, task, index, groupId } = this.props;
 
     return (
       <div className={classes.root}>
@@ -82,6 +86,8 @@ class StudentTasks extends React.Component {
                 taskInfo={task}
                 groupId={groupId}
                 className={this.props.classes.fullWidth}
+                handlerUploadAttempts={this.handlerUploadAttempts}
+                index={index}
               />
             </ListItem>
           </List>
