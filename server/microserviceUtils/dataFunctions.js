@@ -112,7 +112,7 @@ exports.javaRunFunc = async function javaRunFunc(path, mainFileName) {
 
 exports.cppRunFunc = async function cppRunFunc(path) {
   return new Promise((resolve, reject) => {
-    cp.exec(`cd ${path} && ./main.exe`, { timeout: 30 * 1000 }, (error, stdout, stderr) => {
+    cp.exec(`cd ${path} && main.exe`, { timeout: 30 * 1000 }, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
