@@ -556,25 +556,19 @@ const isValidByQuestionsTypes = async (elem) => {
   const typeTwo = Question.find({
     topicId: mongoose.Types.ObjectId(elem.id),
     kind: 'multiple answers',
-    isTraining: true
+    isTraining: true,
   });
   const typeThree = Question.find({
     topicId: mongoose.Types.ObjectId(elem.id),
     kind: 'without answer option',
-    isTraining: true
+    isTraining: true,
   });
-  const typeFour = Question.find({
-    topicId: mongoose.Types.ObjectId(elem.id),
-    kind: 'without answer with verification',
-    isTraining: true
-  });
-  const result = await Promise.all([typeOne, typeTwo, typeThree, typeFour]);
+  const result = await Promise.all([typeOne, typeTwo, typeThree]);
   const len1 = result[0].length;
   const len2 = result[1].length;
   const len3 = result[2].length;
-  const len4 = result[3].length;
-  const commonLen = len1 + len2 + len3 + len4;
-  if ((len1 === 0 || len2 === 0 || len3 === 0 || len4 === 0) && commonLen > 0) {
+  const commonLen = len1 + len2 + len3;
+  if ((len1 === 0 || len2 === 0 || len3 === 0) && commonLen > 0) {
     return { isValid: false, id: elem.id, name: elem.name };
   }
   return { isValid: true, id: elem.id, name: elem.name };
@@ -1363,14 +1357,6 @@ exports.getTestQuestions = async (topicId) => {
     });
 
   const result = [];
-  while (true) {
-    const index = randomInteger(0, allQuestions.length - 1);
-    if (allQuestions[index].kind === 'without answer with verification') {
-      result.push(allQuestions[index]);
-      allQuestions.splice(index, 1);
-      break;
-    }
-  }
 
   while (true) {
     const index = randomInteger(0, allQuestions.length - 1);
@@ -1397,9 +1383,12 @@ exports.getTestQuestions = async (topicId) => {
     }
   }
 
-  for (let i = 0; i < 6; i++) {
+  while (result.length !== 10) {
     const index = randomInteger(0, allQuestions.length - 1);
-    result.push(allQuestions[index]);
+    const tmp = allQuestions[index];
+    if (tmp.kind !== 'without answer with verification') {
+      result.push(tmp);
+    }
     allQuestions.splice(index, 1);
   }
 
