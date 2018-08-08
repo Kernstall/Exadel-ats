@@ -53,13 +53,19 @@ class PassingTest extends Component {
         },
       ],
     };
-    this.handleUpdate = this.handleUpdate.bind(this);
     this.updateSingleCallback = this.updateSingleCallback.bind(this);
     this.updateState = this.updateState.bind(this);
+    this.updateMultipleCallback = this.updateMultipleCallback.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.getStudentQuestions({
+      topicId: this.props.match.params.topicId,
+      callback: this.updateState,
+    });
   }
 
   updateState() {
-    console.log(this.props.questionsList);
     const array = this.props.questionsList.map((elem, index) => {
       return {
         availableAnswers: elem.answersVariants,
@@ -74,12 +80,6 @@ class PassingTest extends Component {
     });
   }
 
-  componentDidMount() {
-    this.props.getStudentQuestions({
-      topicId: this.props.match.params.topicId,
-      callback: this.updateState,
-    });
-  }
 
   handleSubmitTest() {
     const studentIdArray = this.selectedStudents.map(element => element._id);
@@ -90,15 +90,21 @@ class PassingTest extends Component {
     this.props.teacherCreateGroup(groupObject);
   }
 
-  handleUpdate(arg) {
-    this.setState({
-      [arg]: arg,
-    });
-  }
 
   updateSingleCallback(indexInArray, indexInQuestion) {
     const arr = [...this.state.taskList];
     arr[indexInArray].chosenAnswers[0] = indexInQuestion;
+    this.setState({
+      taskList: arr,
+    });
+  }
+
+  updateMultipleCallback(indexInArray, indexInQuestion) {
+    const arr = [...this.state.taskList];
+    const found = arr[indexInArray].chosenAnswers.find(element => element === indexInQuestion);
+    const position = arr[indexInArray].chosenAnswers.indexOf(found);
+    found === undefined ? arr[indexInArray].chosenAnswers.push(indexInQuestion) : arr[indexInArray].chosenAnswers.splice(position, 1);
+
     this.setState({
       taskList: arr,
     });
@@ -121,7 +127,7 @@ class PassingTest extends Component {
                   (question, index) => (
                     <Questions
                       updateSingleCallback={indexInQuestion => (this.updateSingleCallback(index, indexInQuestion))}
-                      handleUpdate={this.handleUpdate}
+                      updateMultipleCallback={indexInQuestion => (this.updateMultipleCallback(index, indexInQuestion))}
                       question={question}
                       key={index}
                     />

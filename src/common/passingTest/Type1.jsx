@@ -38,7 +38,6 @@ class Type1 extends React.Component {
             aria-label={question.description}
             className={classes.group}
             value={question.chosenAnswers[0]}
-            a={console.log(typeof(question.chosenAnswers[0]))}
             onChange={event => {  return updateSingleCallback(event.target.value)}}
           >
             {
