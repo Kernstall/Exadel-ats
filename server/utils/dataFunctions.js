@@ -567,10 +567,12 @@ const isValidByQuestionsTypes = async (elem) => {
   const len2 = result[1].length;
   const len3 = result[2].length;
   const commonLen = len1 + len2 + len3;
-  if ((len1 === 0 || len2 === 0 || len3 === 0) && commonLen > 0) {
-    return { isValid: false, id: elem.id, name: elem.name };
+  console.log(commonLen);
+  if ((len1 !== 0 && len2 !== 0 && len3 !== 0) && commonLen > 10) {
+    return { isValid: true, id: elem.id, name: elem.name };
   }
-  return { isValid: true, id: elem.id, name: elem.name };
+  return { isValid: false, id: elem.id, name: elem.name };
+
 };
 
 exports.getGroupStudentTests = async (studentId, groupId) => {
@@ -1366,10 +1368,14 @@ exports.getTestQuestions = async (topicId) => {
       kind: 1,
     });
 
+  console.log(allQuestions.length);
   const result = [];
 
   while (true) {
     const index = randomInteger(0, allQuestions.length - 1);
+    console.log(allQuestions.length);
+    console.log(index);
+    console.log();
     if (allQuestions[index].kind === 'without answer option') {
       result.push(allQuestions[index]);
       allQuestions.splice(index, 1);
@@ -1378,6 +1384,9 @@ exports.getTestQuestions = async (topicId) => {
   }
   while (true) {
     const index = randomInteger(0, allQuestions.length - 1);
+    console.log(allQuestions.length);
+    console.log(index);
+    console.log();
     if (allQuestions[index].kind === 'multiple answers') {
       result.push(allQuestions[index]);
       allQuestions.splice(index, 1);
@@ -1386,6 +1395,9 @@ exports.getTestQuestions = async (topicId) => {
   }
   while (true) {
     const index = randomInteger(0, allQuestions.length - 1);
+    console.log(allQuestions.length);
+    console.log(index);
+    console.log();
     if (allQuestions[index].kind === 'one answer') {
       result.push(allQuestions[index]);
       allQuestions.splice(index, 1);
@@ -1395,6 +1407,11 @@ exports.getTestQuestions = async (topicId) => {
 
   while (result.length !== 10) {
     const index = randomInteger(0, allQuestions.length - 1);
+    console.log(allQuestions.length);
+    console.log(index);
+    console.log(allQuestions[index].kind);
+    console.log(result.length);
+    console.log();
     const tmp = allQuestions[index];
     if (tmp.kind !== 'without answer with verification') {
       result.push(tmp);
