@@ -49,6 +49,7 @@ class PassingTest extends Component {
           id: 'asdf',
           description: 'описание вопроса',
           kind: 'one answer',
+          stringAnswer: '',
 
         },
       ],
@@ -104,7 +105,15 @@ class PassingTest extends Component {
     const found = arr[indexInArray].chosenAnswers.find(element => element === indexInQuestion);
     const position = arr[indexInArray].chosenAnswers.indexOf(found);
     found === undefined ? arr[indexInArray].chosenAnswers.push(indexInQuestion) : arr[indexInArray].chosenAnswers.splice(position, 1);
+    this.setState({
+      taskList: arr,
+    });
+  }
 
+  updateInputCallback(inputValue, indexInArray) {
+    const arr = [...this.state.taskList];
+    arr[indexInArray].stringAnswer = inputValue;
+    console.log(arr[indexInArray].stringAnswer);
     this.setState({
       taskList: arr,
     });
@@ -128,6 +137,7 @@ class PassingTest extends Component {
                     <Questions
                       updateSingleCallback={indexInQuestion => (this.updateSingleCallback(index, indexInQuestion))}
                       updateMultipleCallback={indexInQuestion => (this.updateMultipleCallback(index, indexInQuestion))}
+                      updateInputCallback={inputValue => (this.updateInputCallback(inputValue, index))}
                       question={question}
                       key={index}
                     />

@@ -38,7 +38,7 @@ class Type1 extends React.Component {
             aria-label={question.description}
             className={classes.group}
             value={question.chosenAnswers[0]}
-            onChange={event => {  return updateSingleCallback(event.target.value)}}
+            onChange={(event) => { return updateSingleCallback(event.target.value); }}
           >
             {
               question.availableAnswers.map((answer, index) => (
