@@ -92,7 +92,10 @@ router.post('/questions', async (req, res) => {
   try {
     const skip = parseInt(req.query.skip, 10);
     let result = await dataFunctions.filterQuestion(skip, 15, req.body);
-    result = result.map(element => element = mapping.mapQuestionsToDto(element));
+    result = result.map((element) => {
+      element = mapping.mapQuestionsToDto(element);
+      return element;
+    });
     return res.send(result);
   } catch (err) {
     console.error(err);
