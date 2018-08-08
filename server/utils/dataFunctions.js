@@ -1285,7 +1285,7 @@ exports.getRandomTest = async (topicId, count) => {
     throw new Error('Недостаточно вопросов');
   }
   const firstQuestions = [result[0][random(result[0].length)], result[1][random(result[1]
-    .length)], result[2][random(result[2].length)], result[2][random(result[2].length)]];
+    .length)], result[2][random(result[2].length)], result[3][random(result[3].length)]];
   const notSearch = firstQuestions.map(el => el = el._id);
   const all = await Question.find({
     topicId,
