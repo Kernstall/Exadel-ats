@@ -289,12 +289,17 @@ class TeacherCreateTask extends React.Component {
   };
 
   handleSetWeight = id => (e) => {
+    console.log('handleSetWeight', id, e);
+    console.log('e.target.value', e.target.value);
+    console.log('test2', this.state.tests2);
     const { tests2 } = this.state;
     tests2.forEach((el) => {
       if (el.id === id) {
         el.weight = e.target.value;
       }
     });
+    console.log('test2after', tests2);
+
     this.setState({ tests2 });
   };
 
@@ -417,6 +422,7 @@ class TeacherCreateTask extends React.Component {
     const { tagToAdd } = this.state;
     const inputExample = (typeof this.state.renderTests[0] === 'undefined') ? 'val' : this.state.renderTests[0].input;
     const outputExample = (typeof this.state.renderTests[0] === 'undefined') ? 'val' : this.state.renderTests[0].output;
+    console.log('this.state', this.state);
     return (
       <div className={classes.root}>
         <div className={classes.main}>
@@ -519,27 +525,29 @@ class TeacherCreateTask extends React.Component {
             ))}
           </TextField>
           {this.state.weight &&
-          <TextField
-            id="select-pass-result"
-            select
-            label="Минимальная оценка"
-            className={classes.textField}
-            value={this.state.passResult}
-            onChange={this.handleChange('passResult')}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu,
-              },
-            }}
-            helperText="Выберите минимальную оценку, необходимую набрать за задачу"
-            margin="normal"
-          >
-            {Array.from(Array(this.state.weight).keys()).map(option => (
-              <MenuItem key={`min-mark-${option}`} value={option + 1}>
-                {option + 1}
-              </MenuItem>
-            ))}
-          </TextField>
+            (
+              <TextField
+                id="select-pass-result"
+                select
+                label="Минимальная оценка"
+                className={classes.textField}
+                value={this.state.passResult}
+                onChange={this.handleChange('passResult')}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes.menu,
+                  },
+                }}
+                helperText="Выберите минимальную оценку, необходимую набрать за задачу"
+                margin="normal"
+              >
+                {Array.from(Array(this.state.weight).keys()).map(option => (
+                  <MenuItem key={`min-mark-${option}`} value={option + 1}>
+                    {option + 1}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )
           }
           <form className={classes.infoUpload}>
             <Typography className={classes.infoUploadTitle} variant="subheading">Пример входного файла</Typography>
@@ -637,7 +645,7 @@ class TeacherCreateTask extends React.Component {
                 <Typography variant="body2" className={classes.inputOutputTitle}>Input</Typography>
                 <Typography variant="body2" className={classes.inputOutputTitle}>Output</Typography>
               </div>
-              {this.state.renderTests.map(element => (
+              {this.state.renderTests.map((element, index) => (
                 <div className={classes.test}>
                   <TestField
                     handleTestsUpload={this.handleTestsInputUpload}
@@ -656,13 +664,13 @@ class TeacherCreateTask extends React.Component {
                     onClick={() => this.handleClickDeleteTest(element._id)}
                   />
                   {element.isNew
-                      && (
+                    && (
                       <TextField
                         id="select-currency"
                         select
-                        label="Select"
+                        label="Стоимость"
                         className={classes.textField}
-                        value={this.state.mark}
+                        value={this.state.tests2[index].weight}
                         onChange={this.handleSetWeight(element._id)}
                         SelectProps={{
                           MenuProps: {
@@ -678,19 +686,19 @@ class TeacherCreateTask extends React.Component {
                           </MenuItem>
                         ))}
                       </TextField>
-                      )
-                      }
+                    )
+                  }
                 </div>
               ))}
             </div>
           </div>
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleUpload} variant="contained" color="primary" className={classes.button}>
-                Сохранить
+              Сохранить
             </Button>
             <Link to={`/teacher/tasks/${this.state.id}`}>
               <Button variant="contained" color="primary" className={classes.button}>
-                  Отмена
+                Отмена
               </Button>
             </Link>
           </div>
