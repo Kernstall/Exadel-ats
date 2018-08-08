@@ -189,7 +189,7 @@ router.post('/test/checking', async (req, res) => {
     const testId = req.query.testId;
     const groupId = req.query.groupId;
     const topicId = req.query.topicId;
-    const studentId = req.query.studentId;
+    const studentId = req.user.id;
     const answers = req.body;
     if (testId) {
       await dataFunctions.saveExamTest(studentId, answers, testId);
