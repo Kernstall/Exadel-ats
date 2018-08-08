@@ -150,6 +150,7 @@ class StudentTaskDropDown extends React.Component {
                           attempt={attempt}
                           taskId={taskInfo.taskId}
                           key={index}
+                          groupId={groupId}
                         />
                       ),
                     )
