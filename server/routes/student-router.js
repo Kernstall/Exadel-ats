@@ -14,12 +14,12 @@ const fileSystemFunctions = require('../utils/fileSystemFunctions.js');
 
 const router = express.Router();
 
-router.use((req, res, next) => {
+/*router.use((req, res, next) => {
   if (req.user.status !== 'student') {
     return res.status(403).end();
   }
   return next();
-});
+});*/
 
 router.get('/group/tasks', async (req, res) => {
   try {
@@ -181,6 +181,25 @@ router.get('/examination/test', async (req, res) => {
     res.status(200).json(result);
   } catch (e) {
     res.status(400).send(e.toString());
+  }
+});
+
+router.post('/test/checking', async (req, res) => {
+  try {
+    const testId = req.query.testId;
+    const groupId = req.query.groupId;
+    const topicId = req.query.topicId;
+    const studentId = req.query.studentId;
+    const answers = req.body;
+    if (testId) {
+      await dataFunctions.saveExamTest(studentId, answers, testId);
+      res.status(200).json();
+    } else if (topicId) {
+      await dataFunctions.saveTrainigTest(studentId, answers, groupId, topicId);
+      res.status(200).json();
+    }
+  } catch (e) {
+    res.status(400).json(e.message);
   }
 });
 

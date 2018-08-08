@@ -1433,3 +1433,139 @@ exports.getExamTest = async (studentId, testId) => {
 
   return promisesResult;
 };
+
+async function testAnalysis(answers) {
+  const promiseArray = [];
+
+  for (let i = 0; i < answers.length; i++) {
+    promiseArray.push(Question.findById(answers[i]._id)
+      .select({
+        _id: 1,
+        correctAnswersIndexes: 1,
+        answersVariants: 1,
+        difficultyRate: 1,
+      }));
+  }
+  const questionArray = await Promise.all(promiseArray);
+
+  let max = 0;
+  let current = 0;
+
+  let set;
+
+  let result = [];
+  let flag = true;
+
+  for (let i = 0; i < answers.length; i++) {
+    if (answers[i].selectedIndexes) {
+      result.push({});
+      result[i].questionId = mongoose.Types.ObjectId(answers[i]._id);
+      result[i].selectedAnswers = [];
+      answers[i].selectedIndexes.forEach((elem) => {
+        result[i].selectedAnswers.push(elem.toString());
+      });
+      set = new Set(questionArray[i].correctAnswersIndexes);
+
+      answers[i].selectedIndexes.forEach((elem) => {
+        if (!set.has(elem)) {
+          flag = false;
+        }
+      });
+
+      if (answers[i].selectedIndexes.length !== questionArray[i].correctAnswersIndexes.length) {
+        flag = false;
+      }
+
+      max += questionArray[i].difficultyRate;
+
+      if (flag) {
+        result[i].isPassed = true;
+        current += questionArray[i].difficultyRate;
+      } else {
+        result[i].isPassed = false;
+      }
+
+    } else {
+      result.push({});
+      result[i].questionId = mongoose.Types.ObjectId(answers[i]._id);
+      result[i].selectedAnswers = [answers[i].answer];
+      max += questionArray[i].difficultyRate;
+      if (answers[i].answer === questionArray[i].answersVariants[0]) {
+        result[i].isPassed = true;
+        current += questionArray[i].difficultyRate;
+      } else {
+        result[i].isPassed = false;
+      }
+    }
+
+    flag = true;
+  }
+
+  let isPassed = false;
+  const outcome = Number(((current / max) * 10).toFixed(1));
+
+  if (outcome >= 4) {
+    isPassed = true;
+  }
+
+
+  return {
+    questions: result,
+    isPassed: isPassed,
+    result: outcome,
+  };
+}
+
+exports.saveTrainigTest = async (studentId, answers, groupId, topicId) => {
+  const result = await testAnalysis(answers);
+  const obj = {};
+
+  obj.groupId = mongoose.Types.ObjectId(groupId);
+  obj.topicsIds = [mongoose.Types.ObjectId(topicId)];
+  obj.result = result.result;
+  if (result.isPassed) {
+    obj.status = 'passed';
+  } else {
+    obj.status = 'notPassed';
+  }
+  obj.isTraining = true;
+  obj.date = new Date();
+  obj.questions = result.questions;
+
+  console.log(obj);
+  try {
+    await User.update(
+      { _id: mongoose.Types.ObjectId(studentId) },
+      {
+        $push: {
+          tests: obj,
+        },
+      },
+    );
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+exports.saveExamTest = async (studentId, answers, testId) => {
+  const result = await testAnalysis(answers);
+  console.log(result);
+
+  if (result.isPassed) {
+    result.status = 'passed';
+  } else {
+    result.status = 'notPassed';
+  }
+
+  await User.update(
+    { _id: mongoose.Types.ObjectId(studentId), 'tests._id': mongoose.Types.ObjectId(testId) },
+    {
+      $set: {
+        'tests.$.result': result.result,
+        'tests.$.status': result.status,
+        'tests.$.questions': result.questions,
+      },
+    },
+  );
+
+};
