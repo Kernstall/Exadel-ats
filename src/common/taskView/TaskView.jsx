@@ -60,6 +60,7 @@ const styles = theme => ({
     display: 'flex',
     width: '90%',
     padding: 5,
+    userSelect: 'none',
   },
   tags: {
     display: 'flex',
