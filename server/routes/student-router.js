@@ -27,7 +27,7 @@ router.get('/group/tasks', async (req, res) => {
     res.send(JSON.stringify(result));
   }
   catch (err) {
-    res.status(500).send(err);
+    res.status(400).send(err);
   }
 });
 
@@ -197,8 +197,6 @@ router.post('/test/checking', async (req, res) => {
       await dataFunctions.saveExamTest(studentId, answers, testId);
       res.status(200).json();
     } else if (topicId) {
-      console.log(topicId);
-      console.log(studentId, answers);
       await dataFunctions.saveTrainigTest(studentId, answers, groupId, topicId);
       res.status(200).json();
     }
