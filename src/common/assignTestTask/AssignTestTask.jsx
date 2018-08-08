@@ -66,7 +66,7 @@ function getDataTextField(type, label, classname, defaultThing, onChangeThing) {
       id={`datetime-${type}`}
       label={label}
       type="datetime-local"
-      defaultValue={defaultThing}
+      value={defaultThing}
       className={classname}
       onChange={() => onChangeThing(type)}
       InputLabelProps={{
@@ -120,8 +120,8 @@ class AssingTestTask extends React.Component {
     if (d < 10) {
       d = `0${d}`;
     }
-    if (m < 10) {
-      m = `0${m}`;
+    if (m + 1 < 10) {
+      m = `0${m + 1}`;
     }
     if (h < 10) {
       h = `0${h}`;

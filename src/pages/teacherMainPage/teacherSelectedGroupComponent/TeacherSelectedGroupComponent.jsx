@@ -34,6 +34,7 @@ const styles = {
   },
   teacherButtonsHolder: {
     display: 'flex',
+    justifyContent: 'flex-end',
     paddingTop: 15,
     marginBottom: 10,
   },
@@ -45,6 +46,14 @@ const styles = {
     color: '#000',
   },
   checked: {},
+  group: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  student: {
+    padding: '4px 5px !important',
+  },
 };
 
 class TeacherSelectedGroupComponent extends React.Component {
@@ -64,7 +73,7 @@ class TeacherSelectedGroupComponent extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
+      <div className={classes.group}>
         <Typography className={classes.groupsAlign} align="center">
           <div>
             {this.props.groupName}
@@ -85,12 +94,12 @@ class TeacherSelectedGroupComponent extends React.Component {
                 checkedIcon={<CheckBoxIcon className={classes.sizeIcon} />}
                 value="checkedI"
               />
-)}
+            )}
           />
         </Typography>
         <List>
           {this.props.groupMembers.map((item, index) => (
-            <ListItem button key={`selectedgroup${index}`}>
+            <ListItem className={classes.student} button key={`selectedgroup${index}`}>
               <StudentTemplate
                 key={`stud${index}`}
                 name={`${item.firstName} ${item.lastName}`}
@@ -102,10 +111,13 @@ class TeacherSelectedGroupComponent extends React.Component {
             </ListItem>
           ))}
         </List>
-        <Button className={classes.addStudentButton} variant="contained">
-          Добавить студента
-        </Button>
+
         <div className={classes.teacherButtonsHolder}>
+          <div className={classes.buttonCorrection}>
+            <Button className={classes.addStudentButton} variant="contained">
+              Добавить студента
+            </Button>
+          </div>
           <div className={classes.buttonCorrection}>
             <Button className={classes.addStudentButton} variant="contained">
               Назначить тест

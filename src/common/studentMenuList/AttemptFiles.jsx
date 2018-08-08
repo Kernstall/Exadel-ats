@@ -46,9 +46,9 @@ class AttemptFiles extends Component {
     });
   }
 
-
   render() {
     const { classes, attemptCode } = this.props;
+    console.log(this.props.match.params);
     const TabHeaders = [];
     if (attemptCode) {
       return (
@@ -67,7 +67,7 @@ class AttemptFiles extends Component {
               tabHeaders={TabHeaders}
             />
           </div>
-          <Link to="/studentMenu" className={classes.noUnderline}>
+          <Link to={`/studentMenu/${this.props.match.params.groupId}`} className={classes.noUnderline}>
             <Button variant="contained" color="primary" className={[classes.flex, classes.buttonBack].join(' ')}>
             Назад
             </Button>

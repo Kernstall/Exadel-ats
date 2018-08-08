@@ -59,6 +59,7 @@
   "scripts": {
     "start": "concurrently -k -p \"[{name}]\" -n \"React,Node\" -c \"cyan.bold,green.bold\" \"react-scripts start\" \"nodemon ./server/app\" \"node ./server/srcCodeRunner\"",
     "start:react": "react-scripts start",
+    "start:server": "concurrently -k -p \"[{name}]\" -n \"React,Node\" -c \"cyan.bold,green.bold\" \"react-scripts start\" \"nodemon ./server/app\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
