@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
@@ -15,7 +15,6 @@ const styles = theme => ({
     paddingLeft: theme.spacing.unit * 4,
   },
 });
-
 
 
 class StudentActivities extends React.Component {
@@ -37,6 +36,14 @@ class StudentActivities extends React.Component {
         monthIndex = 0 + monthIndex;
       }
 
+      if (hour.length === 1) {
+        hour = 0 + hour;
+      }
+
+      if (minute.length === 1) {
+        minute = 0 + minute;
+      }
+
       return `${day}.${monthIndex}.${year} ${hour}:${minute}`;
     };
     const { classes, activity } = this.props;
@@ -45,13 +52,13 @@ class StudentActivities extends React.Component {
         <ListItem open="false" onClick={this.handleClick}>
           <Grid container>
             <Grid item xs>
-              <ListItemText primary={`${dateToString(activity.date)}`} />
+              <ListItemText primary={`${dateToString(activity.date)}`}/>
             </Grid>
             <Grid item xs>
-              <ListItemText primary={activity.name} />
+              <ListItemText primary={activity.name}/>
             </Grid>
             <Grid item xs>
-              <ListItemText primary={activity.isPassed || activity.status ? 'Пройдено' : 'Не пройдено'} />
+              <ListItemText primary={activity.isPassed || activity.status ? 'Пройдено' : 'Не пройдено'}/>
             </Grid>
           </Grid>
         </ListItem>

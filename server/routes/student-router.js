@@ -193,7 +193,7 @@ router.post('/test/checking', async (req, res) => {
     const topicId = req.query.topicId;
     const studentId = req.user.id;
     const answers = req.body;
-    if (testId) {
+    if (testId !== 'undefined') {
       await dataFunctions.saveExamTest(studentId, answers, testId);
       res.status(200).json();
     } else if (topicId) {

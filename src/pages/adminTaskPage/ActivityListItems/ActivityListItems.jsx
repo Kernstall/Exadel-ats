@@ -91,6 +91,14 @@ class ActivityListItems extends Component {
         monthIndex = 0 + monthIndex;
       }
 
+      if (hour.length === 1) {
+        hour = 0 + hour;
+      }
+
+      if (minute.length === 1) {
+        minute = 0 + minute;
+      }
+
       return `${day}.${monthIndex}.${year} ${hour}:${minute}`;
     };
 
