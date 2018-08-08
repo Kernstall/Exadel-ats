@@ -218,7 +218,16 @@ const styles = theme => ({
   },
 });
 
-const languages = ['Java', 'C++'];
+const languagesData = [
+  {
+    name: 'Java',
+    id: 'java',
+  },
+  {
+    name: 'C++',
+    id: 'cpp',
+  },
+];
 
 let fileInputReader;
 let fileOutputReader;
@@ -321,10 +330,6 @@ class TeacherCreateTask extends React.Component {
     })
       .then(res => console.log(res));
   };
-
-  componentDidUpdate() {
-    console.log(this.state);
-  }
 
   componentDidMount() {
     fetch('/api/teacher/all/topics', {
@@ -470,9 +475,9 @@ class TeacherCreateTask extends React.Component {
             helperText="Выберите язык задачи"
             margin="normal"
           >
-            {languages.map(option => (
-              <MenuItem key={`lang-${option}`} value={option}>
-                {option}
+            {languagesData.map(option => (
+              <MenuItem key={`lang-${option.id}`} value={option.id}>
+                {option.name}
               </MenuItem>
             ))}
           </TextField>

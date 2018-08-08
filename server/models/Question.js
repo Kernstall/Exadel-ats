@@ -17,7 +17,7 @@ const question = mongoose.Schema({
     type: String,
     enum: ['one answer', 'multiple answers', 'without answer option', 'without answer with verification'],
   },
-  correntAnswersCount: Number,
+  correctAnswersCount: Number,
   wrongAnswersCount: Number,
   difficultyRate: Number,
   isTraining: Boolean,

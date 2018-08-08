@@ -1227,6 +1227,7 @@ exports.checkAddTaskDataFunc = async (dataBaseAdd, addObj, req) => {
     if (set.size !== 0) {
       throw new Error('Invalid arguments: files\' ids in the dataInfo field do not match binary files ids');
     }
+    dataBaseAdd.tests = addObj.tests.map((item) => { return { _id: mongoose.Types.ObjectId(item.id), weight: item.weight }; });
   } else {
     throw new Error('Invalid arguments: there must be at least one test for the task');
   }
