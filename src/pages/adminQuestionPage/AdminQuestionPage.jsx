@@ -81,11 +81,12 @@ class AdminQuestionPage extends Component {
   render() {
     const { classes, adminQuestions } = this.props;
     if (adminQuestions) {
+
       const newAdminQuestions = adminQuestions.map(element => ({
         kind: `${element.kind}`,
         isTraining: `${element.isTraining ? 'тренировочный' : 'тестовый'}`,
         difficultyRate: `${element.difficultyRate}`,
-        correctPrecent: `${Math.round((element.correntAnswersCount / element.wrongAnswersCount) * 100)}%`,
+        correctPrecent: `${Math.round(((element.correctAnswersCount) / (element.correctAnswersCount + element.wrongAnswersCount)) * 100)}%`,
       }));
       return (
         <Grid

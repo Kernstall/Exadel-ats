@@ -60,7 +60,7 @@ exports.mapQuestionsToDto = model => ({
   kind: model.kind,
   difficultyRate: model.difficultyRate,
   isTraining: model.isTraining,
-  correntAnswersCount: model.correntAnswersCount,
+  correctAnswersCount: model.correctAnswersCount,
   wrongAnswersCount: model.wrongAnswersCount,
 });
 exports.mapGroupForChooseToDto = model => ({

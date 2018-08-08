@@ -56,12 +56,17 @@ class ActivityListItems extends Component {
   }
 
   comparator = key => (a, b) => {
-    if (a[key] < b[key]) {
-      return 1;
-    } if (a[key] > b[key]) {
-      return -1;
+    if (a[key][a[key].length - 1] !== '%') {
+      if (a[key] < b[key]) {
+        return 1;
+      } if (a[key] > b[key]) {
+        return -1;
+      }
+      return 0;
     }
-    return 0;
+    const intA = a[key].substring(0, a[key].length - 2);
+    const intB = b[key].substring(0, b[key].length - 2);
+    return intB - intA;
   };
   // eslint-disable-next-line
   sort(array, cryterions, isDecreasing) {
