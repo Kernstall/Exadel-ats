@@ -15,24 +15,24 @@ const styles = theme => ({
 
 class Questions extends Component {
   render() {
-    const { classes, question } = this.props;
+    const { classes, question, handleUpdate, updateSingleCallback } = this.props;
     switch (question.kind) {
       case 'one answer':
         return (
-          <Type1 question={question} />
+          <Type1 question={question} handleUpdate={handleUpdate} updateSingleCallback={updateSingleCallback} />
         );
-      case 'multiple answers':
-        return (
-          <Type2 question={question} />
-        );
-      case 'without answer option':
-        return (
-          <Type3 question={question} />
-        );
-      case 'without answer with verification':
+      // case 'multiple answers':
+      //   return (
+      //     <Type2 question={question} handleUpdate={handleUpdate} />
+      //   );
+      // case 'without answer option':
+      //   return (
+      //     <Type3 question={question} handleUpdate={handleUpdate} />
+      //   );
+      /*case 'without answer with verification':
         return (
           <Type4 question={question} />
-        );
+        );*/
       default:
         return null;
     }

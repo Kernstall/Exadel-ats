@@ -33,7 +33,7 @@ class Type2 extends React.Component {
   };
 
   render() {
-    const { classes, question } = this.props;
+    const { classes, question, handleUpdate } = this.props;
     console.log(this.state);
     return (
       <div className={classes.root}>

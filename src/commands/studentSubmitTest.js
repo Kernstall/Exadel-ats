@@ -1,6 +1,6 @@
 import { studentSubmitTest as Actions, errorMessage as errorEmmiter } from '../actions';
 
-export const submitTest = testObject => (dispatch) => {
+export const studentSubmitTest = testObject => (dispatch) => {
   dispatch(Actions.studentSubmitTestRequest(testObject));
   fetch('Мой адрес запроса !!!', {
     method: 'POST',

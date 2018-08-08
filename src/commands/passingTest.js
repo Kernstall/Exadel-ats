@@ -1,7 +1,7 @@
 import { passingTest as Actions } from '../actions';
 
 // eslint-disable-next-line
-export const getStudentQuestions = ({topicId}) => (dispatch) => {
+export const getStudentQuestions = ({topicId, callback}) => (dispatch) => {
 
   dispatch(Actions.questionsRequest());
   fetch(`/api/student/test/questions?topicId=${topicId}`, {
@@ -13,5 +13,6 @@ export const getStudentQuestions = ({topicId}) => (dispatch) => {
   })
     .then(response => response.json())
     .then(body => dispatch(Actions.questionsSuccess(body)))
+    .then(() => callback())
     .catch(err => dispatch(Actions.questionsError(err)));
 };

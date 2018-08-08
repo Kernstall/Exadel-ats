@@ -10,6 +10,7 @@ import Questions from './Questions';
 import Spinner from '../shared/spinner/index';
 import Common from '../styles/Common';
 import { getStudentQuestions } from '../../commands/passingTest';
+import { studentSubmitTest } from '../../commands/studentSubmitTest';
 
 
 const styles = theme => ({
@@ -38,12 +39,70 @@ const styles = theme => ({
 });
 
 class PassingTest extends Component {
-  componentDidMount() {
-    this.props.getStudentQuestions({
-      topicId: this.props.match.params.topicId,
+  constructor() {
+    super();
+    this.state = {
+      taskList: [
+        {
+          availableAnswers: ['ответ1', 'ответ2', 'ответ3'],
+          chosenAnswers: [],
+          id: 'asdf',
+          description: 'описание вопроса',
+          kind: 'one answer',
+
+        },
+      ],
+    };
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.updateSingleCallback = this.updateSingleCallback.bind(this);
+    this.updateState = this.updateState.bind(this);
+  }
+
+  updateState() {
+    console.log(this.props.questionsList);
+    const array = this.props.questionsList.map((elem, index) => {
+      return {
+        availableAnswers: elem.answersVariants,
+        chosenAnswers: [],
+        id: elem._id,
+        description: elem.description,
+        kind: elem.kind,
+      };
+    });
+    this.setState({
+      taskList: array,
     });
   }
 
+  componentDidMount() {
+    this.props.getStudentQuestions({
+      topicId: this.props.match.params.topicId,
+      callback: this.updateState,
+    });
+  }
+
+  handleSubmitTest() {
+    const studentIdArray = this.selectedStudents.map(element => element._id);
+    const groupObject = {
+      studentsList: studentIdArray,
+      groupName: this.groupName,
+    };
+    this.props.teacherCreateGroup(groupObject);
+  }
+
+  handleUpdate(arg) {
+    this.setState({
+      [arg]: arg,
+    });
+  }
+
+  updateSingleCallback(indexInArray, indexInQuestion) {
+    const arr = [...this.state.taskList];
+    arr[indexInArray].chosenAnswers[0] = indexInQuestion;
+    this.setState({
+      taskList: arr,
+    });
+  }
 
   render() {
     const { classes, questionsList } = this.props;
@@ -58,9 +117,11 @@ class PassingTest extends Component {
               component="nav"
             >
               {
-                questionsList.map(
+                this.state.taskList.map(
                   (question, index) => (
                     <Questions
+                      updateSingleCallback={indexInQuestion => (this.updateSingleCallback(index, indexInQuestion))}
+                      handleUpdate={this.handleUpdate}
                       question={question}
                       key={index}
                     />
@@ -68,7 +129,7 @@ class PassingTest extends Component {
                 )
             }
             </List>
-            <Button variant="contained" color="primary" className={classes.button}>
+            <Button variant="contained" color="primary" onClick={this.handleSubmitTest} className={classes.button}>
               Готово
             </Button>
           </Paper>
@@ -92,6 +153,7 @@ const mapStateToProps = state => ({
 
 const mapCommandsToProps = dispatch => ({
   getStudentQuestions: param => dispatch(getStudentQuestions(param)),
+  studentSubmitTest: param => dispatch(studentSubmitTest(param)),
 });
 
 const styled = withStyles(styles)(PassingTest);
