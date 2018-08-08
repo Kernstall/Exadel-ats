@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
 
 const styles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    margin: '24px',
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -32,13 +34,18 @@ class Type4 extends React.Component {
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
+        <InputLabel>
+          {question.description}
+        </InputLabel>
         <TextField
-          id="multiline-static"
-          label={question}
+          id="full-width"
+          InputLabelProps={{
+            margin: 'dense',
+          }}
+          fullWidth
           multiline
           rows="4"
-          className={classes.textField}
-          margin="normal"
+          margin="dense"
         />
       </form>
     );

@@ -9,7 +9,6 @@ import StudentTasks from './StudentTasks.jsx';
 import { getStudentTasks } from '../../commands/studentTasks';
 
 const styles = theme => ({
-
   root: {
     width: '100%',
     backgroundColor: theme.palette.background.paper,
@@ -22,8 +21,13 @@ const styles = theme => ({
 class StudentTabTasksList extends Component {
   componentDidMount() {
     this.props.getStudentTasks({
-      studentId: '5b45b16f75224332745f7595',
-      groupId: '5b4625ba877b5e0734c0a5e3',
+      groupId: this.props.groupId,
+    });
+  }
+
+  handlerUploadAttempts = () => {
+    this.props.getStudentTasks({
+      groupId: this.props.groupId,
     });
   }
 
@@ -41,6 +45,8 @@ class StudentTabTasksList extends Component {
                   <StudentTasks
                     task={task}
                     key={index}
+                    index={index}
+                    handlerUploadAttempts={this.handlerUploadAttempts}
                   />
                 ),
               )

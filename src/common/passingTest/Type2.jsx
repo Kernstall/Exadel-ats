@@ -20,7 +20,7 @@ const styles = theme => ({
 class Type2 extends React.Component {
   constructor(props) {
     super(props);
-    this.state = props.answers.reduce((acc, curr) => {
+    this.state = props.question.answersVariants.reduce((acc, curr) => {
       Object.defineProperty(acc, curr, {
         value: false,
       });
@@ -33,15 +33,15 @@ class Type2 extends React.Component {
   };
 
   render() {
-    const { classes, name, answers } = this.props;
+    const { classes, question } = this.props;
     console.log(this.state);
     return (
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
-          <FormLabel component="legend">{name}</FormLabel>
+          <FormLabel component="legend">{question.description}</FormLabel>
           <FormGroup>
             {
-              answers.map((answer, index) => (
+              question.answersVariants.map((answer, index) => (
                 <FormControlLabel
                   control={(
                     <Checkbox

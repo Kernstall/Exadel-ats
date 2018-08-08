@@ -18,3 +18,4 @@ export { default as errorMessage } from './errorMessage';
 export { default as attemptCode } from './attemptCode';
 export { default as taskInfo } from './taskInfo';
 export { default as teacherCreateTestQuestion } from './teacherCreateTestQuestion';
+export { default as passingTest } from './passingTest';
