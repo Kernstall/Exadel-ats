@@ -32,6 +32,7 @@ class TeacherRegistration extends React.Component {
     super();
 
     this.state = {
+      universityList: [],
       status: 'teacher',
       firstName: '',
       lastName: '',
@@ -41,6 +42,23 @@ class TeacherRegistration extends React.Component {
       university: '',
       isRedirected: false,
     };
+  }
+
+  componentDidMount() {
+    fetch('/api/user/universities', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          universityList: res.map(el => el.name),
+        });
+      });
   }
 
   handleChange = name => (event) => {
@@ -63,8 +81,6 @@ class TeacherRegistration extends React.Component {
   };
 
   render() {
-    const universitiesArr = Object.keys(universities);
-
     const { classes } = this.props;
 
     return (
@@ -131,7 +147,7 @@ class TeacherRegistration extends React.Component {
           }}
           className={classes.width}
           onChange={this.handleChange('university')}
-          options={universitiesArr}
+          options={this.state.universityList}
         />
         <Button onClick={this.handleSubmit} className={classes.registerButton}>
           Зарегистрироваться
