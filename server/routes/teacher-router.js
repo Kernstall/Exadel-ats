@@ -70,13 +70,13 @@ router.get('/full/task', async (req, res) => {
     return res.json(result);
   } catch (error) {
     console.log(error);
-    return res.status(500).send(error);
+    return res.status(500).json(error.message);
   }
 });
 
 router.post('/task/editing', async (req, res, next) => {
   if (!(await Task.findById(req.query.id))) {
-    res.status(400).send('Invalid task id, there is no such task id in the data base');
+    res.status(400).json('Invalid task id, there is no such task id in the data base');
   } else {
     next();
   }
@@ -89,14 +89,14 @@ router.put('/task/editing', uploadFiles.uploadTests.array('tests'), async (req, 
   try {
     await dataFunctions.checkEditTaskDataFunc(dataBaseEdit, testsEdit, editObj, req);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json(error.message);
     return;
   }
   try {
     try {
       await Task.findByIdAndUpdate(req.query.id, dataBaseEdit);
     } catch (error) {
-      res.status(400).send(error.message);
+      res.status(400).json(error.message);
       return;
     }
     for (let index = 0; index < testsEdit.length; index++) {
@@ -113,15 +113,15 @@ router.put('/task/editing', uploadFiles.uploadTests.array('tests'), async (req, 
     });
     await Task.findByIdAndUpdate(req.query.id, { $pull: { tests: { _id: { $in: editObj.testsIdsToDelete } } } });
   } catch (error) {
-    res.status(500).send('Critical saving error, some data might have not been saved into the data base');
+    res.status(500).json('Critical saving error, some data might have not been saved into the data base');
     return;
   }
-  res.status(200).send('Operation successful');
+  res.status(200).json('Operation successful');
 });
 
 router.use(async (err, req, res, next) => {
   if (err.message === 'Invalid format of some files') {
-    res.status(400).send(err.message);
+    res.status(400).json(err.message);
   } else {
     throw (err);
   }
@@ -137,17 +137,17 @@ router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) =>
   console.log(req.body.taskInfo);
   const addObj = JSON.parse(req.body.taskInfo);
   try {
-    console.log(req.body.taskInfo);
+    // console.log(req.body.taskInfo);
     await dataFunctions.checkAddTaskDataFunc(dataBaseAdd, addObj, req);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json(error.message);
     dataFunctions.deleteTaskFolderFunc(req.query.id);
     return;
   }
   try {
     const newTask = new Task(dataBaseAdd);
     await newTask.save();
-    res.status(200).send('Operation successful');
+    res.status(200).json('Operation successful');
     try {
       const date = new Date();
       date.setHours(date.getHours() + 3);
@@ -164,7 +164,7 @@ router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) =>
     }
   } catch (error) {
     dataFunctions.deleteTaskFolderFunc(req.query.id);
-    res.status(500).send(error.message);
+    res.status(500).json(error.message);
   }
 });
 
