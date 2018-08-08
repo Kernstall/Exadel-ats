@@ -157,8 +157,10 @@ router.get('/test/questions', async (req, res) => {
   try {
     const topicId = req.query.topicId;
     const answer = await dataFunctions.getTestQuestions(topicId);
+    console.log(answer);
     res.status(200).json(answer);
   } catch (e) {
+    console.log(e.toString());
     res.status(400).send(e.toString());
   }
 });
@@ -195,6 +197,8 @@ router.post('/test/checking', async (req, res) => {
       await dataFunctions.saveExamTest(studentId, answers, testId);
       res.status(200).json();
     } else if (topicId) {
+      console.log(topicId);
+      console.log(studentId, answers);
       await dataFunctions.saveTrainigTest(studentId, answers, groupId, topicId);
       res.status(200).json();
     }

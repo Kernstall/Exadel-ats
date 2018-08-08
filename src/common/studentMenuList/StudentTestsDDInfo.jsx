@@ -34,7 +34,6 @@ const styles = theme => ({
     },
   },
   link: {
-    textDecoration: 'none',
     fontSize: '1rem',
     fontWeight: '400',
     lineHeight: '1.5em',
@@ -49,7 +48,7 @@ const styles = theme => ({
 
 class StudentTestsDDInfo extends React.Component {
   render() {
-    const { classes, test, availableTest } = this.props;
+    const { classes, test, availableTest, groupId } = this.props;
     const themes = test ? test.topicsNames.map(theme => theme.name) : null;
     if (test) {
       return (
@@ -64,12 +63,12 @@ class StudentTestsDDInfo extends React.Component {
               }
               {!(test.result > 0)
               && (
-              <Link to={`/student/examination/test/${test.id}`} className={classes.link}>
-
+              <Link to={`/student/examination/test/${groupId}/${test.id}`} className={classes.link}>
                 <ListItemText primary="Пройти" />
               </Link>
               )
               }
+              {/* <ListItemText primary={(test.result > 0) ? test.result : 'Не пройдено'} /> */}
             </Grid>
           </Grid>
         </div>
@@ -83,7 +82,7 @@ class StudentTestsDDInfo extends React.Component {
               <ListItemText primary={availableTest.name} />
             </Grid>
             <Grid item xs={6}>
-              <Link to={`/student/passingTest/${availableTest.id}`} className={classes.link}>
+              <Link to={`/student/passingTest/${groupId}/${availableTest.id}`} className={classes.link}>
                 <ListItemText primary="Пройти" />
               </Link>
             </Grid>

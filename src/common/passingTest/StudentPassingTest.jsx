@@ -10,6 +10,7 @@ import Questions from './Questions';
 import Spinner from '../shared/spinner/index';
 import Common from '../styles/Common';
 import { getStudentQuestions } from '../../commands/passingTest';
+import { studentSubmitTest } from '../../commands/studentSubmitTest';
 
 
 const styles = theme => ({
@@ -38,12 +39,93 @@ const styles = theme => ({
 });
 
 class PassingTest extends Component {
+  constructor() {
+    super();
+    this.state = {
+      taskList: [
+        {
+          availableAnswers: [],
+          chosenAnswers: undefined,
+          id: '',
+          description: '',
+          kind: '',
+          stringAnswer: undefined,
+
+        },
+      ],
+    };
+    this.updateSingleCallback = this.updateSingleCallback.bind(this);
+    this.updateState = this.updateState.bind(this);
+    this.updateMultipleCallback = this.updateMultipleCallback.bind(this);
+    this.handleSubmitTest = this.handleSubmitTest.bind(this);
+  }
+
   componentDidMount() {
     this.props.getStudentQuestions({
       topicId: this.props.match.params.topicId,
+      callback: this.updateState,
     });
   }
 
+  updateState() {
+    const array = this.props.questionsList.map((elem, index) => {
+      return {
+        availableAnswers: elem.answersVariants,
+        chosenAnswers: [],
+        id: elem._id,
+        description: elem.description,
+        kind: elem.kind,
+      };
+    });
+    this.setState({
+      taskList: array,
+    });
+  }
+
+
+  handleSubmitTest () {
+    console.log(this.state.taskList);
+    const answersObject = this.state.taskList.map(qst => {
+      return {
+        _id: qst.id,
+        selectedIndexes: qst.chosenAnswers,
+        answer: qst.stringAnswer,
+      };
+    });
+    this.props.studentSubmitTest({
+      avswerObject: answersObject,
+      topicId: this.props.match.params.topicId,
+      groupId: this.props.match.params.groupId,
+    });
+  }
+
+
+  updateSingleCallback(indexInArray, indexInQuestion) {
+    const arr = [...this.state.taskList];
+    arr[indexInArray].chosenAnswers[0] = indexInQuestion;
+    this.setState({
+      taskList: arr,
+    });
+  }
+
+  updateMultipleCallback(indexInArray, indexInQuestion) {
+    const arr = [...this.state.taskList];
+    const found = arr[indexInArray].chosenAnswers.find(element => element === indexInQuestion);
+    const position = arr[indexInArray].chosenAnswers.indexOf(found);
+    found === undefined ? arr[indexInArray].chosenAnswers.push(indexInQuestion) : arr[indexInArray].chosenAnswers.splice(position, 1);
+    this.setState({
+      taskList: arr,
+    });
+  }
+
+  updateInputCallback(inputValue, indexInArray) {
+    const arr = [...this.state.taskList];
+    arr[indexInArray].stringAnswer = inputValue;
+    console.log(arr[indexInArray].stringAnswer);
+    this.setState({
+      taskList: arr,
+    });
+  }
 
   render() {
     const { classes, questionsList } = this.props;
@@ -58,9 +140,12 @@ class PassingTest extends Component {
               component="nav"
             >
               {
-                questionsList.map(
+                this.state.taskList.map(
                   (question, index) => (
                     <Questions
+                      updateSingleCallback={indexInQuestion => (this.updateSingleCallback(index, indexInQuestion))}
+                      updateMultipleCallback={indexInQuestion => (this.updateMultipleCallback(index, indexInQuestion))}
+                      updateInputCallback={inputValue => (this.updateInputCallback(inputValue, index))}
                       question={question}
                       key={index}
                     />
@@ -68,7 +153,7 @@ class PassingTest extends Component {
                 )
             }
             </List>
-            <Button variant="contained" color="primary" className={classes.button}>
+            <Button variant="contained" color="primary" onClick={this.handleSubmitTest} className={classes.button}>
               Готово
             </Button>
           </Paper>
@@ -92,6 +177,7 @@ const mapStateToProps = state => ({
 
 const mapCommandsToProps = dispatch => ({
   getStudentQuestions: param => dispatch(getStudentQuestions(param)),
+  studentSubmitTest: param => dispatch(studentSubmitTest(param)),
 });
 
 const styled = withStyles(styles)(PassingTest);
