@@ -1363,14 +1363,6 @@ exports.getTestQuestions = async (topicId) => {
     });
 
   const result = [];
-  while (true) {
-    const index = randomInteger(0, allQuestions.length - 1);
-    if (allQuestions[index].kind === 'without answer with verification') {
-      result.push(allQuestions[index]);
-      allQuestions.splice(index, 1);
-      break;
-    }
-  }
 
   while (true) {
     const index = randomInteger(0, allQuestions.length - 1);
@@ -1397,7 +1389,7 @@ exports.getTestQuestions = async (topicId) => {
     }
   }
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 7; i++) {
     const index = randomInteger(0, allQuestions.length - 1);
     result.push(allQuestions[index]);
     allQuestions.splice(index, 1);
