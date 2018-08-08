@@ -85,10 +85,12 @@ class PassingTest extends Component {
 
   handleSubmitTest() {
     console.log(this.state.taskList);
+    let answrToString;
     const answersObject = this.state.taskList.map((qst) => {
+      qst.chosenAnswers.forEach(i => (answrToString = i.toString()));
       return {
         _id: qst.id,
-        selectedIndexes: qst.chosenAnswers,
+        selectedIndexes: answrToString,
         answer: qst.stringAnswer,
       };
     });
@@ -102,7 +104,7 @@ class PassingTest extends Component {
 
   updateSingleCallback(indexInArray, indexInQuestion) {
     const arr = [...this.state.taskList];
-    arr[indexInArray].chosenAnswers[0] = indexInQuestion;
+    arr[indexInArray].chosenAnswers.push(indexInQuestion);
     this.setState({
       taskList: arr,
     });
