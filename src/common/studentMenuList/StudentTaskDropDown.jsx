@@ -125,7 +125,7 @@ class StudentTaskDropDown extends React.Component {
       <div className={classes.fullWidth}>
         <Paper className={classes.root} elevation={1}>
           <Typography variant="headline" component="h3">
-            Info
+            Условие задачи
           </Typography>
           <Typography component="p">
             {taskInfo.description}

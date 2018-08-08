@@ -83,9 +83,9 @@ class PassingTest extends Component {
   }
 
 
-  handleSubmitTest () {
+  handleSubmitTest() {
     console.log(this.state.taskList);
-    const answersObject = this.state.taskList.map(qst => {
+    const answersObject = this.state.taskList.map((qst) => {
       return {
         _id: qst.id,
         selectedIndexes: qst.chosenAnswers,
@@ -93,7 +93,7 @@ class PassingTest extends Component {
       };
     });
     this.props.studentSubmitTest({
-      avswerObject: answersObject,
+      answersObject,
       topicId: this.props.match.params.topicId,
       groupId: this.props.match.params.groupId,
     });
