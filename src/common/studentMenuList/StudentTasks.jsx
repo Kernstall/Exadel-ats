@@ -70,6 +70,7 @@ class StudentTasks extends React.Component {
               <ListItemText primary={task.theme} />
             </Grid>
             <Grid item xs>
+            {console.log(task)}
               <Paper className={task.isPassed ? classes.green : classes.red}>
                 <Typography component="p">
                   {task.bestResult}/{task.weight}

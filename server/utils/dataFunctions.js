@@ -861,6 +861,12 @@ exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files,
         { $set: { 'tasks.$.bestResult': result.result } },
       );
     }
+    if (result.isPassed) {
+      await User.update(
+        { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
+        { $set: { 'tasks.$.isPassed': result.isPassed } },
+      );
+    }
     const obj = {};
     obj.date = new Date();
     obj.number = attemptNumber + 1;
