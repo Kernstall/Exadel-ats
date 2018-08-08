@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import Questions from './Questions';
 import Spinner from '../shared/spinner/index';
 import Common from '../styles/Common';
-import { getStudentQuestions } from '../../commands/passingTest';
+import { getStudentExamQuestions } from '../../commands/examinationTest';
 
 
 const styles = theme => ({
@@ -37,10 +37,11 @@ const styles = theme => ({
   },
 });
 
-class PassingTest extends Component {
+
+class ExaminationTest extends Component {
   componentDidMount() {
-    this.props.getStudentQuestions({
-      topicId: this.props.match.params.topicId,
+    this.props.getStudentExamQuestions({
+      testId: this.props.match.params.testId,
     });
   }
 
@@ -48,6 +49,7 @@ class PassingTest extends Component {
   render() {
     const { classes, questionsList } = this.props;
     if (questionsList) {
+      console.log('got it');
       return (
         <div className={classes.root}>
           <Paper className={classes.paper} elevation={3}>
@@ -66,7 +68,7 @@ class PassingTest extends Component {
                     />
                   ),
                 )
-            }
+              }
             </List>
             <Button variant="contained" color="primary" className={classes.button}>
               Готово
@@ -81,7 +83,7 @@ class PassingTest extends Component {
   }
 }
 
-PassingTest.propTypes = {
+ExaminationTest.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
@@ -91,9 +93,9 @@ const mapStateToProps = state => ({
 });
 
 const mapCommandsToProps = dispatch => ({
-  getStudentQuestions: param => dispatch(getStudentQuestions(param)),
+  getStudentExamQuestions: param => dispatch(getStudentExamQuestions(param)),
 });
 
-const styled = withStyles(styles)(PassingTest);
+const styled = withStyles(styles)(ExaminationTest);
 
 export default connect(mapStateToProps, mapCommandsToProps)(styled);
