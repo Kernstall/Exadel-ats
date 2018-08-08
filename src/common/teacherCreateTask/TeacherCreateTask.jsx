@@ -449,6 +449,27 @@ class TeacherCreateTask extends React.Component {
             }}
           />
           <TextField
+            id="select-language"
+            select
+            label="Язык"
+            className={classes.textField}
+            value={this.state.language}
+            onChange={this.handleChange('language')}
+            SelectProps={{
+              MenuProps: {
+                className: classes.menu,
+              },
+            }}
+            helperText="Выберите язык задачи"
+            margin="normal"
+          >
+            {languages.map(option => (
+              <MenuItem key={`lang-${option}`} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
             id="select-topic"
             select
             label="Тема"
