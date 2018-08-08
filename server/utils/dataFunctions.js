@@ -408,10 +408,8 @@ exports.deleteOtherGroupInfo = function deleteOtherGroupInfo(array, groupId) {
       task.attempts.forEach((attempt) => {
         result.push({
           name: task.taskId.name,
-          // 'taskWeight': task.taskId.weight,
           isPassed: attempt.isPassed,
           date: attempt.date,
-          // 'result': attempt.result,
         });
       });
     });
@@ -421,22 +419,23 @@ exports.deleteOtherGroupInfo = function deleteOtherGroupInfo(array, groupId) {
       return String(elem.groupId) === String(groupId);
     });
     testArray.forEach((test) => {
-      let status = test.status;
-      if (status !== 'passed') {
-        status = false;
-      } else {
-        status = true;
-      }
-      result.push({
-        name: '',
-        status,
-        date: test.date,
-        // 'result': test.result,
-      });
+      if (test.status !== 'notSent') {
+        let status = test.status;
+        if (status !== 'passed') {
+          status = false;
+        } else {
+          status = true;
+        }
+        result.push({
+          name: '',
+          status,
+          date: test.date,
+        });
 
-      test.topicsIds.forEach((topic) => {
-        result[result.length - 1].name += ` ${topic.name}`;
-      });
+        test.topicsIds.forEach((topic) => {
+          result[result.length - 1].name += ` ${topic.name}`;
+        });
+      }
     });
   }
   return result.sort(compareByDate);
