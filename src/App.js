@@ -54,8 +54,8 @@ class App extends Component {
               <Route path="/teacher/groups/:id" component={TeacherGroupComponent} />
               <Route path="/teacher/question/add" component={TeacherCreateTestQuestion} />
               <Route path="/teacher/task/add" component={TeacherCreateTestQuestion} />
-              <Route path="/student/passingTest/:topicId" component={PassingTest} />
-              <Route path="/student/examination/test/:testId" component={ExaminationTest} />
+              <Route path="/student/passingTest/:groupId/:topicId" component={PassingTest} />
+              <Route path="/student/examination/test/:groupId/:testId" component={ExaminationTest} />
             </div>
           </Router>
           <Footer />

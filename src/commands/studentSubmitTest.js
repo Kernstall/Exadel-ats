@@ -1,11 +1,11 @@
 import { studentSubmitTest as Actions, errorMessage as errorEmmiter } from '../actions';
 
-export const studentSubmitTest = testObject => (dispatch) => {
-  dispatch(Actions.studentSubmitTestRequest(testObject));
-  fetch('Мой адрес запроса !!!', {
+export const studentSubmitTest = ({answersObject, groupId, topicId}) => (dispatch) => {
+  dispatch(Actions.studentSubmitTestRequest(answersObject));
+  fetch(`/api/student/test/checking?groupId=${groupId}&topicId=${topicId}`, {
     method: 'POST',
     body: JSON.stringify({
-      ...testObject,
+      ...answersObject,
     }),
     headers: {
       'Content-type': 'application/json',
@@ -26,7 +26,7 @@ export const studentSubmitTest = testObject => (dispatch) => {
     })
     .then((body) => {
       dispatch(Actions.studentSubmitTestSuccess());
-      dispatch(errorEmmiter.messageRequested('Тест успешно отправлен на проверку', `Юрла для редиректа!!!!`));
+      dispatch(errorEmmiter.messageRequested('Тест успешно отправлен на проверку', `/studentMenu/${groupId}`));
     })
     .catch((err) => {
       dispatch(Actions.studentSubmitTestError(err));

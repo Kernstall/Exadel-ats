@@ -32,7 +32,7 @@ class StudentTests extends React.Component {
   };
 
   render() {
-    const { classes, test } = this.props;
+    const { classes, test, groupId } = this.props;
     let mark = test.avgMark;
     if (test.avgMark === null) {
       mark = 0;
@@ -55,6 +55,7 @@ class StudentTests extends React.Component {
           <List component="div" disablePadding className={classes.width}>
             <ListItem className={classes.nested}>
               <StudentTestsDropDown
+                groupId={groupId}
                 testsInfo={test.info}
                 testsAvailable={test.availableTopics}
                 className={this.props.classes.fullWidth}

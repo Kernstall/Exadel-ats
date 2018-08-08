@@ -44,12 +44,12 @@ class PassingTest extends Component {
     this.state = {
       taskList: [
         {
-          availableAnswers: ['ответ1', 'ответ2', 'ответ3'],
-          chosenAnswers: [],
-          id: 'asdf',
-          description: 'описание вопроса',
-          kind: 'one answer',
-          stringAnswer: '',
+          availableAnswers: [],
+          chosenAnswers: undefined,
+          id: '',
+          description: '',
+          kind: '',
+          stringAnswer: undefined,
 
         },
       ],
@@ -57,6 +57,7 @@ class PassingTest extends Component {
     this.updateSingleCallback = this.updateSingleCallback.bind(this);
     this.updateState = this.updateState.bind(this);
     this.updateMultipleCallback = this.updateMultipleCallback.bind(this);
+    this.handleSubmitTest = this.handleSubmitTest.bind(this);
   }
 
   componentDidMount() {
@@ -82,13 +83,20 @@ class PassingTest extends Component {
   }
 
 
-  handleSubmitTest() {
-    const studentIdArray = this.selectedStudents.map(element => element._id);
-    const groupObject = {
-      studentsList: studentIdArray,
-      groupName: this.groupName,
-    };
-    this.props.teacherCreateGroup(groupObject);
+  handleSubmitTest () {
+    console.log(this.state.taskList);
+    const answersObject = this.state.taskList.map(qst => {
+      return {
+        _id: qst.id,
+        selectedIndexes: qst.chosenAnswers,
+        answer: qst.stringAnswer,
+      };
+    });
+    this.props.studentSubmitTest({
+      avswerObject: answersObject,
+      topicId: this.props.match.params.topicId,
+      groupId: this.props.match.params.groupId,
+    });
   }
 
 
