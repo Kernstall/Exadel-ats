@@ -59,11 +59,11 @@ class Attempts extends React.Component {
       return `${parsedTime} ${parsedData}`;
     };
 
-    const { classes, attempt, taskId } = this.props;
+    const { classes, attempt, taskId, groupId } = this.props;
 
     return (
       <div className={classes.root}>
-        <Link to={`/task/attempt/${taskId}/${attempt.number}`} className={classes.noUnderline}>
+        <Link to={`/task/attempt/${groupId}/${taskId}/${attempt.number}`} className={classes.noUnderline}>
           <ListItem open="false" button>
             <Grid container>
               <Grid item xs>
