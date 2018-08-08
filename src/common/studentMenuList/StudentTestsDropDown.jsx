@@ -17,7 +17,7 @@ const styles = theme => ({
 
 class StudentTestsDropDown extends React.Component {
   render() {
-    const { classes, testsInfo, testsAvailable } = this.props;
+    const { classes, testsInfo, testsAvailable, groupId } = this.props;
     return (
       <div className={classes.fullWidth}>
         <List
@@ -26,6 +26,7 @@ class StudentTestsDropDown extends React.Component {
           && testsInfo.map(
             (test, index) => (
               <StudentTestsDDInfo
+                groupId={groupId}
                 test={test}
                 key={index}
               />
@@ -36,6 +37,7 @@ class StudentTestsDropDown extends React.Component {
             && testsAvailable.map(
               (test, index) => (
                 <StudentTestsDDInfo
+                  groupId={groupId}
                   availableTest={test}
                   key={index}
                 />

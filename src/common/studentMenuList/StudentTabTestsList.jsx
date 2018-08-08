@@ -27,7 +27,7 @@ class StudentTabTestsList extends React.Component {
   }
 
   render() {
-    const { classes, testsList } = this.props;
+    const { classes, testsList, groupId } = this.props;
     if (testsList) {
       return (
         <div className={classes.root}>
@@ -38,6 +38,7 @@ class StudentTabTestsList extends React.Component {
               testsList.map(
                 (test, index) => (
                   <StudentTests
+                    groupId={groupId}
                     test={test}
                     key={index}
                   />

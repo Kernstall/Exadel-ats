@@ -19,37 +19,22 @@ const styles = theme => ({
 });
 
 class Type2 extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = props.question.answersVariants.reduce((acc, curr) => {
-      Object.defineProperty(acc, curr, {
-        value: false,
-      });
-      return acc;
-    }, {});
-  }
-
-  handleChange = name => (event) => {
-    this.setState({ [name]: event.target.checked });
-  };
-
   render() {
-    const { classes, question } = this.props;
-    console.log(this.state);
+    const { classes, question, updateMultipleCallback } = this.props;
     return (
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">{question.description}</FormLabel>
           <FormGroup>
             {
-              question.answersVariants.map((answer, index) => (
+              question.availableAnswers.map((answer, index) => (
                 <FormControlLabel
                   control={(
                     <Checkbox
                       key={index}
-                      checked={this.state.ansrws}
-                      onChange={this.handleChange(answer)}
-                      value={answer}
+                      checked={question.chosenAnswers.some(element => (element === index))}
+                      onChange={() => updateMultipleCallback(index)}
+                      /*value={`${index}`}*/
                     />
                   )}
                   label={answer}

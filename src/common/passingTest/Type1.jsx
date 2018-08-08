@@ -23,9 +23,6 @@ const styles = theme => ({
 class Type1 extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      value: 'answer',
-    };
   }
 
   handleChange = (event) => {
@@ -33,22 +30,20 @@ class Type1 extends React.Component {
   };
 
   render() {
-    const { classes, question } = this.props;
-
+    const { classes, question, updateSingleCallback } = this.props;
     return (
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">{question.description}</FormLabel>
           <RadioGroup
             aria-label={question.description}
-            name="gender1"
             className={classes.group}
-            value={this.state.value}
-            onChange={this.handleChange}
+            value={question.chosenAnswers[0]}
+            onChange={(event) => { return updateSingleCallback(event.target.value); }}
           >
             {
-              question.answersVariants.map((answer, index) => (
-                <FormControlLabel key={index} value={answer} control={<Radio />} label={answer} />
+              question.availableAnswers.map((answer, index) => (
+                <FormControlLabel key={index} value={`${index}`} control={<Radio color="secondary" />} label={answer} />
               ))
             }
           </RadioGroup>
