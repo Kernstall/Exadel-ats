@@ -37,16 +37,16 @@ class Type1 extends React.Component {
     return (
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
-          <FormLabel component="legend">{question.name}</FormLabel>
+          <FormLabel component="legend">{question.description}</FormLabel>
           <RadioGroup
-            aria-label={question.name}
+            aria-label={question.description}
             name="gender1"
             className={classes.group}
             value={this.state.value}
             onChange={this.handleChange}
           >
             {
-              question.answers.map((answer, index) => (
+              question.answersVariants.map((answer, index) => (
                 <FormControlLabel key={index} value={answer} control={<Radio />} label={answer} />
               ))
             }

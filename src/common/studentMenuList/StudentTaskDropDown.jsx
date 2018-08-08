@@ -56,7 +56,7 @@ class StudentTaskDropDown extends React.Component {
             Загрузить решение
           </Button>
           {
-            this.state.isShowAttempts
+            (this.state.isShowAttempts && taskInfo.attempts.length > 0)
               && (
               <div className={classes.root}>
                 <List

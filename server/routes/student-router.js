@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const FormData = require('form-data');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const got = require('got');
 
@@ -85,6 +86,15 @@ router.get('/task/attempt', async (req, res) => {
   }
 });
 
+router.post('/src/files', async (req, res, next) => {
+  try {
+    await User.find({ _id: req.user._id, tasks: { $elemMatch: { taskId: mongoose.Types.ObjectId(req.query.taskId) } } });
+    next();
+  } catch (error) {
+    res.status(400).send('Invalid task id');
+  }
+});
+
 router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, res) => {
   try {
     if (req.files) {
@@ -166,7 +176,7 @@ router.post('/test/questions/answers', async (req, res) => {
 router.get('/examination/test', async (req, res) => {
   try {
     const testId = req.query.testId;
-    const studentId = req.query.studentId;
+    const studentId = req.user.id;
     const result = await dataFunctions.getExamTest(studentId, testId);
     res.status(200).json(result);
   } catch (e) {

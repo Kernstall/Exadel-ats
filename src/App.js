@@ -21,8 +21,8 @@ import { PrivateRoute } from './common/loginForm/PrivateRouter';
 import ErrorDispatcher from './common/shared/ErrorDispatcher/ErrorDispatcher';
 import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent/TeacherGroupComponent.jsx';
 import PassingTest from './common/passingTest/StudentPassingTest.jsx';
-
 import TeacherCreateTestQuestion from './pages/teacherCreateTestQuestion/TeacherCreateTestQuestion';
+import ExaminationTest from './common/passingTest/ExaminationTest.jsx';
 
 const styles = ({
   content: {
@@ -43,7 +43,7 @@ class App extends Component {
               <Route path="/" component={Header} />
               <Route path="/" exact component={MainPage} />
               <Route path="/registration" component={RegisterForm} />
-              <Route path="/studentMenu/:id" component={StudentMenu} />
+              <Route path="/studentMenu/:groupId" component={StudentMenu} />
               <Route exact path="/teacher/addGroup" component={TeacherAddGroup} />
               <PrivateRoute exact path="/student/id/:id" component={StudentMainPage} />
               <Route exact path="/teacher/id/:id" component={TeacherMainPage} />
@@ -53,7 +53,9 @@ class App extends Component {
               <Route path="/teacher/tasks/:id" component={TaskView} />
               <Route path="/teacher/groups/:id" component={TeacherGroupComponent} />
               <Route path="/teacher/question/add" component={TeacherCreateTestQuestion} />
-              <Route path="/student/passingTest" component={PassingTest} />
+              <Route path="/teacher/task/add" component={TeacherCreateTestQuestion} />
+              <Route path="/student/passingTest/:topicId" component={PassingTest} />
+              <Route path="/student/examination/test/:testId" component={ExaminationTest} />
             </div>
           </Router>
           <Footer />

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
+import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import Spinner from '../shared/spinner/index';
@@ -22,6 +23,15 @@ const styles = theme => ({
   flex: {
     display: 'flex',
     flexDirection: 'column',
+  },
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+  },
+  mylink: {
+    textDecoration: 'none',
+    color: 'white',
   },
 });
 
@@ -101,14 +111,21 @@ class TeacherQuestionList extends React.Component {
         </List>
         {this.state.assign}
         {teacherQuestions && (
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={this.handleClickAdd}
-          >
-            Назначить
-          </Button>)}
+          <div className={classes.buttonContainer}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={this.handleClickAdd}
+            >
+              Назначить
+            </Button>
+            <Button variant="contained" color="primary" className={classes.button}>
+              <Link to="/teacher/question/add" className={classes.mylink}>
+                Создать вопрос
+              </Link>
+            </Button>
+          </div>)}
       </div>
     );
   }

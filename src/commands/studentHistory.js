@@ -1,10 +1,10 @@
 import { studentHistory as Actions } from '../actions';
 
 // eslint-disable-next-line
-export const getStudentHistory = ({studentId, groupId}) => (dispatch) => {
+export const getStudentHistory = ({groupId}) => (dispatch) => {
 
   dispatch(Actions.historyRequest());
-  fetch(`/api/student/group/history?studentId=${studentId}&&groupId=${groupId}`, {
+  fetch(`/api/student/group/history?groupId=${groupId}`, {
     headers: {
       'Content-type': 'application/json',
       'Set-Cookie': 'true',

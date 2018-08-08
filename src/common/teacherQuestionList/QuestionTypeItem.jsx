@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core/es';
+import localize from '../../localization/localization';
 
 const styles = theme => ({
   root: {
@@ -48,7 +49,7 @@ class QuestionTypeItem extends React.Component {
         <Paper className={classes.root} elevation={1}>
           <Grid container className={classes.question} justify="space-between" wrap="nowrap">
             <Typography className={classes.questionType}>
-              {type}
+              {localize(type)}
             </Typography>
             <Typography className={classes.questionsCount}>
               <span className={classes.questionsCountInner}>вопросов: {count}</span>
