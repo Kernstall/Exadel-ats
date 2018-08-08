@@ -2,11 +2,12 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button/Button';
+import { Link } from 'react-router-dom';
 import FilterStudentCard from './FilterFieldsCard.jsx';
 import DragAndDropStudents from './DragAndDropStudents';
 import { getAvailableStudents, teacherCreateGroup } from '../../commands/teacherCreateGroups';
 import Spinner from '../shared/spinner';
-import {Link} from "react-router-dom";
+import {requestErrorMessage} from "../../commands/errorMessage";
 
 const styles = theme => ({
   FlexContainerHorizontal: {
@@ -71,12 +72,16 @@ class TeacherAddGroup extends React.Component {
   }
 
   handleCreateGroup() {
-    const studentIdArray = this.selectedStudents.map(element => element._id);
-    const groupObject = {
-      studentsList: studentIdArray,
-      groupName: this.groupName,
-    };
-    this.props.teacherCreateGroup(groupObject);
+    if (this.groupName === '') {
+      this.props.requestErrorMessage('Имя группы не может быть пустым');
+    } else {
+      const studentIdArray = this.selectedStudents.map(element => element._id);
+      const groupObject = {
+        studentsList: studentIdArray,
+        groupName: this.groupName,
+      };
+      this.props.teacherCreateGroup(groupObject);
+    }
   }
 
   render() {
@@ -132,6 +137,7 @@ const mapStateToProps = state => ({
 const mapCommandsToProps = dispatch => ({
   getAvailableStudents: param => dispatch(getAvailableStudents(param)),
   teacherCreateGroup: param => dispatch(teacherCreateGroup(param)),
+  requestErrorMessage: message => dispatch(requestErrorMessage(message)),
 });
 
 export default connect(mapStateToProps, mapCommandsToProps)(styledComponent);

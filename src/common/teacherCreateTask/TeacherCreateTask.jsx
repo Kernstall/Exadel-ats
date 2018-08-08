@@ -10,10 +10,9 @@ import Chip from '@material-ui/core/Chip';
 import { Link } from 'react-router-dom';
 import Close from '@material-ui/icons/Close';
 import MenuItem from '@material-ui/core/es/MenuItem/MenuItem';
-import TestsBar from './TestsBar';
 import generateRandomId from '../../util/generateRandomId';
-import TestSet from './TestSet';
 import TestField from './TestField';
+import FormSelect from '../shared/select';
 
 const marks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -219,21 +218,22 @@ const styles = theme => ({
   },
 });
 
+const languages = ['Java', 'C++'];
+
 let fileInputReader;
 let fileOutputReader;
 
-class TeacherTaskEdit extends React.Component {
-  constructor(props) {
-    super(props);
+class TeacherCreateTask extends React.Component {
+  constructor() {
+    super();
     this.state = {
-      id: props.match.params.id,
       tags: [],
       tagToAdd: '',
       weightBuffer: 0,
       tests: new FormData(),
       renderTests: [],
       sendingData: new FormData(),
-      weight: 0,
+      weight: '',
       language: '',
       description: '',
       tests2: [],
@@ -241,6 +241,8 @@ class TeacherTaskEdit extends React.Component {
       name: '',
       topicId: '',
       testsIdsToDelete: [],
+      topics: [],
+      currentTopic: '',
     };
 
     this.handleTestsInputUpload = this.handleTestsInputUpload.bind(this);
@@ -260,7 +262,7 @@ class TeacherTaskEdit extends React.Component {
     if (data.length < 3) {
       return;
     }
-    const tags = this.state.tags;
+    const { tags } = this.state;
     tags.push(data);
     const tagToAdd = '';
     this.setState({ tags, tagToAdd });
@@ -268,7 +270,7 @@ class TeacherTaskEdit extends React.Component {
 
   handleClickAddTest = (e) => {
     const { renderTests } = this.state;
-    const pushedTest = { input: 'input', output: 'output' };
+    const pushedTest = { input: 'null', output: 'null' };
     pushedTest.isNew = true;
     pushedTest._id = generateRandomId();
     const buff = {};
@@ -296,35 +298,6 @@ class TeacherTaskEdit extends React.Component {
     this.setState({ tests2 });
   };
 
-  componentDidMount() {
-    fetch(`/api/teacher/full/task?id=${this.props.match.params.id}`, {
-      method: 'get',
-      headers: {
-        'Content-type': 'application/json',
-        'Set-Cookie': 'true',
-      },
-      credentials: 'include',
-    })
-      .then(res => res.json())
-      .then((res) => {
-        console.log(res);
-        return res;
-      })
-      .then((res) => {
-        this.setState({
-          tags: res.tags,
-          renderTests: res.tests,
-          weight: res.weight,
-          description: res.description,
-          name: res.name,
-          topicId: res.topicId,
-          passResult: res.passResult,
-          language: res.language,
-        });
-        return res;
-      });
-  }
-
   handleUpload = () => {
     const { sendingData } = this.state;
     const send = {
@@ -336,11 +309,10 @@ class TeacherTaskEdit extends React.Component {
       language: this.state.language,
       tests: this.state.tests2,
       passResult: this.state.passResult,
-      testsIdsToDelete: this.state.testsIdsToDelete,
     };
     sendingData.append('taskInfo', JSON.stringify(send));
-    fetch(`/api/teacher/task/editing?id=${this.state.id}`, {
-      method: 'put',
+    fetch('/api/teacher/task/', {
+      method: 'post',
       body: sendingData,
       headers: {
         'Set-Cookie': 'true',
@@ -349,6 +321,26 @@ class TeacherTaskEdit extends React.Component {
     })
       .then(res => console.log(res));
   };
+
+  componentDidUpdate() {
+    console.log(this.state);
+  }
+
+  componentDidMount() {
+    fetch('/api/teacher/all/topics', {
+      method: 'GET',
+      headers: {
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then((res) => {
+        this.setState({
+          topics: res,
+        });
+      });
+  }
 
   _handleInputReading = (e) => {
     const content = fileInputReader.result;
@@ -384,23 +376,33 @@ class TeacherTaskEdit extends React.Component {
 
   handleTestsInputUpload(e) {
     const selectedFile = e.target.files[0];
-    const { tests } = this.state;
     const id = e.target.closest('.test-upload').id;
     const { sendingData } = this.state;
+    fileInputReader = new FileReader();
+    fileInputReader.onloadend = this._handleInputReading;
+    fileInputReader.readAsText(selectedFile);
     sendingData.append('tests', selectedFile, `${id}input.txt`);
-    tests.append('tests', selectedFile, `${id}${selectedFile.name}`);
-    this.setState({ tests, sendingData });
+    this.setState({ sendingData });
   }
 
   handleTestsOutputUpload(e) {
     const selectedFile = e.target.files[0];
-    const { tests } = this.state;
     const id = e.target.closest('.test-upload').id;
     const { sendingData } = this.state;
+    fileOutputReader = new FileReader();
+    fileOutputReader.onloadend = this._handleOutputReading;
+    fileOutputReader.readAsText(selectedFile);
     sendingData.append('tests', selectedFile, `${id}output.txt`);
-    tests.append('tests', selectedFile, `${id}${selectedFile.name}`);
-    this.setState({ tests, sendingData });
+    this.setState({ sendingData });
   }
+
+  handleTopicChange = (e) => {
+    const topicId = this.state.topics.find(el => el.name === e.target.value)._id;
+    this.setState({
+      topicId: topicId,
+      currentTopic: e.target.value,
+    });
+  };
 
   handleClickDeleteTest = (key) => {
     const { renderTests, testsIdsToDelete } = this.state;
@@ -453,6 +455,92 @@ class TeacherTaskEdit extends React.Component {
               className: classes.bootstrapFormLabel,
             }}
           />
+          <TextField
+            id="select-language"
+            select
+            label="Язык"
+            className={classes.textField}
+            value={this.state.language}
+            onChange={this.handleChange('language')}
+            SelectProps={{
+              MenuProps: {
+                className: classes.menu,
+              },
+            }}
+            helperText="Выберите язык задачи"
+            margin="normal"
+          >
+            {languages.map(option => (
+              <MenuItem key={`lang-${option}`} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            id="select-topic"
+            select
+            label="Тема"
+            className={classes.textField}
+            value={this.state.currentTopic}
+            onChange={this.handleTopicChange}
+            SelectProps={{
+              MenuProps: {
+                className: classes.menu,
+              },
+            }}
+            helperText="Выберите тему задачи"
+            margin="normal"
+          >
+            {this.state.topics.map(option => (
+              <MenuItem key={option._id} value={option.name}>
+                {option.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            id="select-currency"
+            select
+            label="Стоимость задачи"
+            className={classes.textField}
+            value={this.state.weight}
+            onChange={this.handleChange('weight')}
+            SelectProps={{
+              MenuProps: {
+                className: classes.menu,
+              },
+            }}
+            helperText="Выберите стоимость задачи"
+            margin="normal"
+          >
+            {marks.map(option => (
+              <MenuItem key={`mark-${option}`} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+          {this.state.weight &&
+          <TextField
+            id="select-pass-result"
+            select
+            label="Минимальная оценка"
+            className={classes.textField}
+            value={this.state.passResult}
+            onChange={this.handleChange('passResult')}
+            SelectProps={{
+              MenuProps: {
+                className: classes.menu,
+              },
+            }}
+            helperText="Выберите минимальную оценку, необходимую набрать за задачу"
+            margin="normal"
+          >
+            {Array.from(Array(this.state.weight).keys()).map(option => (
+              <MenuItem key={`min-mark-${option}`} value={option + 1}>
+                {option + 1}
+              </MenuItem>
+            ))}
+          </TextField>
+          }
           <form className={classes.infoUpload}>
             <Typography className={classes.infoUploadTitle} variant="subheading">Пример входного файла</Typography>
             <input
@@ -462,11 +550,6 @@ class TeacherTaskEdit extends React.Component {
               type="file"
               onChange={event => this.handleInputFileRead(event.target.files[0])}
             />
-            <label htmlFor="contained-button-input-file">
-              <Button variant="contained" component="span" color="default" className={classes.button}>
-                Загрузить<CloudUploadIcon className={classes.rightIcon} />
-              </Button>
-            </label>
           </form>
           <TextField
             value={inputExample}
@@ -494,11 +577,6 @@ class TeacherTaskEdit extends React.Component {
               type="file"
               onChange={e => this.handleOutputFileRead(e.target.files[0])}
             />
-            <label htmlFor="contained-button-output-file">
-              <Button variant="contained" component="span" color="default" className={classes.button}>
-                Загрузить<CloudUploadIcon className={classes.rightIcon} />
-              </Button>
-            </label>
           </div>
           <TextField
             value={outputExample}
@@ -578,41 +656,41 @@ class TeacherTaskEdit extends React.Component {
                     onClick={() => this.handleClickDeleteTest(element._id)}
                   />
                   {element.isNew
-                  && (
-                  <TextField
-                    id="select-currency"
-                    select
-                    label="Select"
-                    className={classes.textField}
-                    value={this.state.mark}
-                    onChange={this.handleSetWeight(element._id)}
-                    SelectProps={{
-                      MenuProps: {
-                        className: classes.menu,
-                      },
-                    }}
-                    helperText="Выберите стоимость теста"
-                    margin="normal"
-                  >
-                    {marks.map(option => (
-                      <MenuItem key={`mark-${option}`} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  )
-                  }
+                      && (
+                      <TextField
+                        id="select-currency"
+                        select
+                        label="Select"
+                        className={classes.textField}
+                        value={this.state.mark}
+                        onChange={this.handleSetWeight(element._id)}
+                        SelectProps={{
+                          MenuProps: {
+                            className: classes.menu,
+                          },
+                        }}
+                        helperText="Выберите стоимость теста"
+                        margin="normal"
+                      >
+                        {marks.map(option => (
+                          <MenuItem key={`mark-${option}`} value={option}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                      )
+                      }
                 </div>
               ))}
             </div>
           </div>
           <div className={classes.buttonContainer}>
             <Button onClick={this.handleUpload} variant="contained" color="primary" className={classes.button}>
-              Сохранить
+                Сохранить
             </Button>
             <Link to={`/teacher/tasks/${this.state.id}`}>
               <Button variant="contained" color="primary" className={classes.button}>
-                Отмена
+                  Отмена
               </Button>
             </Link>
           </div>
@@ -622,11 +700,11 @@ class TeacherTaskEdit extends React.Component {
   }
 }
 
-TeacherTaskEdit.propTypes = {
+TeacherCreateTask.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-TeacherTaskEdit.contextTypes = {
+TeacherCreateTask.contextTypes = {
   router: PropTypes.object,
 };
 
-export default (withStyles(styles)(TeacherTaskEdit));
+export default (withStyles(styles)(TeacherCreateTask));

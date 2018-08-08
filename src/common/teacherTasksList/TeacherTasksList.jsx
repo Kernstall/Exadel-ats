@@ -8,6 +8,7 @@ import TaskInTopic from './TaskInTopic.jsx';
 import Spinner from '../shared/spinner/index';
 import { getTeacherTasks } from '../../commands/teacherTasks';
 import AssignTestTask from '../assignTestTask/AssignTestTask';
+import {Link} from "react-router-dom";
 
 const styles = theme => ({
   button: {
@@ -123,14 +124,16 @@ class TeacherTaskList extends React.Component {
             >
               Назначить
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={this.handleClickAdd}
-            >
-              Создать задачу
-            </Button>
+            <Link to="/teacher/create-task">
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={this.handleClickAdd}
+              >
+                Создать задачу
+              </Button>
+            </Link>
           </div>
         )}
       </div>

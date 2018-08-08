@@ -158,7 +158,7 @@ router.post('/task', uploadFiles.uploadTests.array('tests'), async (req, res) =>
         taskId: req.query.id,
         date,
       });
-      newActivity.save();
+      await newActivity.save();
     } catch (error) {
       console.log(error.message);
     }
@@ -197,6 +197,17 @@ router.get('/questions', (req, res) => {
     hashSet = Object.keys(hashSet).map(key => hashSet[key]);
     hashSet.forEach((set) => {
       set.questions = Object.keys(set.questions).map(key => set.questions[key]);
+    });
+    let count;
+    hashSet = hashSet.map((el) => {
+      count = 0;
+      const index = el.questions.findIndex(elem => elem.type === 'without answer with verification');
+      if (index >= 0) {
+        count = el.questions[index].count;
+        el.questions.splice(index, 1);
+      }
+      el.count -= count;
+      return el;
     });
     res.send(hashSet);
   });
@@ -360,7 +371,7 @@ router.post('/task/assignment', async (req, res) => {
     return res.status(400).end();
   }
   try {
-    const result = await dataFunctions.setTasks(req.body);
+    const result = await dataFunctions.setTasks(req.body, req.user.id);
     return res.send(result);
   } catch (err) {
     return res.send({ message: 'Ups' });

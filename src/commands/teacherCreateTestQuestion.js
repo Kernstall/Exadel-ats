@@ -36,7 +36,7 @@ export const addTestQuestion = questionObject => (dispatch) => {
     }
     switch (response.status) {
       case 400:
-        throw new Error(`Не удалось создать вопрос, ${response.body}`);
+        throw new Error(`Не удалось создать вопрос`/*, ${console.log(response.body)}`*/);
       default:
         throw new Error('Неизвестная ошибка');
     }
