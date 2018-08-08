@@ -35,6 +35,7 @@ class StudentRegistration extends React.Component {
     super();
 
     this.state = {
+      universityList: [],
       status: 'student',
       firstName: '',
       lastName: '',
@@ -47,6 +48,23 @@ class StudentRegistration extends React.Component {
       graduateYear: 0,
       isRedirected: false,
     };
+  }
+
+  componentDidMount() {
+    fetch('/api/user/universities', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          universityList: res,
+        });
+      });
   }
 
   handleChange = name => (event) => {
@@ -69,12 +87,14 @@ class StudentRegistration extends React.Component {
   };
 
   render() {
-    const universitiesArr = Object.keys(universities);
-    console.log(universitiesArr);
-    console.log(this.state.topics);
-    const { university } = this.state;
     const { classes } = this.props;
-    const facultiesArr = universities[university];
+    const unArr = this.state.universityList.map(el => el.name);
+    const un = this.state.university;
+    let facArr = this.state.universityList.find(el => el.name === un);
+    if (typeof facArr !== 'undefined') {
+      facArr = facArr.faculties.map(el => el.name);
+    }
+    console.log(facArr);
 
     return (
       <section className="student-container">
@@ -130,10 +150,10 @@ class StudentRegistration extends React.Component {
             id: '0',
           }}
           onChange={this.handleChange('university')}
-          options={universitiesArr}
+          options={unArr}
           className={classes.width}
         />
-        {facultiesArr && (
+        {facArr && (
         <FormSelect
           id="faculty-placeholder"
           label="Факультет"
@@ -144,7 +164,7 @@ class StudentRegistration extends React.Component {
           }}
           className={classes.width}
           onChange={this.handleChange('faculty')}
-          options={facultiesArr}
+          options={facArr}
         />
         )}
         <TextField
