@@ -210,6 +210,13 @@ const styles = theme => ({
       width: '95%',
     },
   },
+  test: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 let fileInputReader;
@@ -261,7 +268,7 @@ class TeacherTaskEdit extends React.Component {
 
   handleClickAddTest = (e) => {
     const { renderTests } = this.state;
-    const pushedTest = { input: 'null', output: 'null' };
+    const pushedTest = { input: 'input', output: 'output' };
     pushedTest.isNew = true;
     pushedTest._id = generateRandomId();
     const buff = {};

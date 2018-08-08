@@ -136,7 +136,7 @@ class StudentRegistration extends React.Component {
         {facultiesArr && (
         <FormSelect
           id="faculty-placeholder"
-          label="Факультут"
+          label="Факультет"
           value={this.state.faculty}
           inputProps={{
             university: 'Faculty',

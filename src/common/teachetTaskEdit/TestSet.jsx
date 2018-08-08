@@ -4,13 +4,6 @@ import Close from '@material-ui/icons/Close';
 import TestField from './TestField';
 
 const styles = {
-  test: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   deleteButton: {
     cursor: 'pointer',
     width: '5%',

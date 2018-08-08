@@ -1298,7 +1298,7 @@ function clone(params) {
   return clonex;
 }
 
-exports.setTasks = async (body) => {
+exports.setTasks = async (body, userId) => {
   try {
     let newTask = {};
     newTask.startDate = new Date(body.startDate);
@@ -1323,6 +1323,17 @@ exports.setTasks = async (body) => {
         { $push: { tasks: tasksArray } },
         { safe: true, new: true },
       );
+      const activityArray = [];
+      tasksArray.forEach((el) => {
+        activityArray.push({
+          type: '04)studentTaskAssignment',
+          userType: 'teacher',
+          userId,
+          taskId: el,
+          date: new Date(),
+        });
+      });
+      await Activities.insert(activityArray);
       return resultStudent;
     }
     const group = await Group.findById(newTask.groupId);
