@@ -1389,9 +1389,12 @@ exports.getTestQuestions = async (topicId) => {
     }
   }
 
-  for (let i = 0; i < 7; i++) {
+  while (result.length !== 10) {
     const index = randomInteger(0, allQuestions.length - 1);
-    result.push(allQuestions[index]);
+    const tmp = allQuestions[index];
+    if (tmp.kind !== 'without answer with verification') {
+      result.push(tmp);
+    }
     allQuestions.splice(index, 1);
   }
 
