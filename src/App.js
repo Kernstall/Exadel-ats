@@ -23,6 +23,7 @@ import TeacherGroupComponent from './pages/teacherMainPage/teacherGroupComponent
 import PassingTest from './common/passingTest/StudentPassingTest.jsx';
 
 import TeacherCreateTestQuestion from './pages/teacherCreateTestQuestion/TeacherCreateTestQuestion';
+import TeacherCreateTask from './common/teacherCreateTask/TeacherCreateTask';
 
 const styles = ({
   content: {
@@ -54,6 +55,7 @@ class App extends Component {
               <Route path="/teacher/groups/:id" component={TeacherGroupComponent} />
               <Route path="/teacher/question/add" component={TeacherCreateTestQuestion} />
               <Route path="/student/passingTest" component={PassingTest} />
+              <Route path="/teacher/create-task" component={TeacherCreateTask} />
             </div>
           </Router>
           <Footer />
