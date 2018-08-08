@@ -209,6 +209,13 @@ const styles = theme => ({
       width: '95%',
     },
   },
+  test: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 const languages = ['Java', 'C++'];
