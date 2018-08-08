@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
+import { Redirect } from 'react-router-dom';
 import ErrorWindow from './ErrorWindow';
 import { requestErrorMessage, flushRedirectPath } from '../../../commands/errorMessage';
 
@@ -26,6 +26,7 @@ class ErrorDispatcher extends React.Component {
   }
 
   render() {
+    debugger;
     if (this.redirectPath !== '') {
       return (<Redirect to={this.redirectPath} />);
     }

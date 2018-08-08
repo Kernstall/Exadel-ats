@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import MuiThemeProvider from '@material-ui/core/es/styles/MuiThemeProvider';
 import Header from './common/Header.jsx';
@@ -46,7 +46,7 @@ class App extends Component {
               <Route path="/studentMenu/:id" component={StudentMenu} />
               <Route exact path="/teacher/addGroup" component={TeacherAddGroup} />
               <PrivateRoute exact path="/student/id/:id" component={StudentMainPage} />
-              <PrivateRoute exact path="/teacher/id/:id" component={TeacherMainPage} />
+              <Route exact path="/teacher/id/:id" component={TeacherMainPage} />
               <Route path="/admin" component={AdminMainPage} />
               <Route exact path="/task/attempt/:taskId/:attemptNumber" component={AttemptFiles} />
               <Route path="/teacher/task/edit/:id" component={TeacherTaskEdit} />
