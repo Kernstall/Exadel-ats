@@ -1,9 +1,11 @@
 import { studentSubmitTest as Actions, errorMessage as errorEmmiter } from '../actions';
 
-export const studentSubmitTest = ({answersObject, groupId, topicId}) => (dispatch) => {
+export const studentSubmitTest = ({
+  answersObject, groupId, topicId, testId,
+}) => (dispatch) => {
   dispatch(Actions.studentSubmitTestRequest(answersObject));
   console.log(answersObject);
-  fetch(`/api/student/test/checking?groupId=${groupId}&topicId=${topicId}`, {
+  fetch(`/api/student/test/checking?groupId=${groupId}&topicId=${topicId}&testId=${testId}`, {
     method: 'POST',
     body: JSON.stringify(
       answersObject,
