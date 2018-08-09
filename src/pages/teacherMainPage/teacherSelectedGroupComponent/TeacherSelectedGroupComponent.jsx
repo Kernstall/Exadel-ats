@@ -23,6 +23,9 @@ const styles = {
       color: blue[500],
     },
   },
+  noneElement: {
+    display: 'none',
+  },
   addStudentButton: {
     '&:hover': {
       backgroundColor: '#1b77c5',
@@ -82,6 +85,7 @@ class TeacherSelectedGroupComponent extends React.Component {
             студентов: {this.props.groupMembers.length}
           </div>
           <FormControlLabel
+            className={classes.noneElement}
             control={(
               <Checkbox
                 checked={this.state.checked}
@@ -112,13 +116,6 @@ class TeacherSelectedGroupComponent extends React.Component {
           ))}
         </List>
 
-        <div className={classes.teacherButtonsHolder}>
-          <div className={classes.buttonCorrection}>
-            <Button className={classes.addStudentButton} variant="contained">
-              Добавить студента
-            </Button>
-          </div>
-        </div>
       </div>
     );
   }
