@@ -831,10 +831,10 @@ exports.getFullTaskInfo = async (taskId) => {
   }
 };
 
-const compileProcessing = (testsResult, taskWeight) => {
+const compileProcessing = (testsResult, taskWeight, passResult) => {
   let mark = 0;
   let isPassedFlag = false;
-  const isPassedValue = 0.4;
+  const isPassedValue = passResult;
   let maxValue = 0;
   let currentValue = 0;
 
@@ -845,16 +845,16 @@ const compileProcessing = (testsResult, taskWeight) => {
     }
   });
 
-  mark = (currentValue / maxValue) * taskWeight;
-  if (mark >= 0.4) {
+  mark = (currentValue / maxValue) * taskWeight * 10;
+  if (mark >= isPassedValue) {
     isPassedFlag = true;
   }
   return { isPassed: isPassedFlag, result: mark };
 };
 
-exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files, testsResult, bestResult, taskWeight) => {
+exports.saveAttemptInfo = async (userId, taskId, attemptNumber, mainFile, files, testsResult, bestResult, taskWeight, passResult) => {
   try {
-    const result = compileProcessing(testsResult, taskWeight);
+    const result = compileProcessing(testsResult, taskWeight, passResult);
     if (result.result > bestResult) {
       await User.update(
         { _id: mongoose.Types.ObjectId(userId), 'tasks.taskId': taskId },
@@ -909,6 +909,7 @@ exports.getTaskTests = async (taskId) => {
       tests: 1,
       language: 1,
       weight: 1,
+      passResult: 1,
     });
   return answer;
 };

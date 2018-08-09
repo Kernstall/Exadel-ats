@@ -135,7 +135,7 @@ router.post('/src/files', uploadFiles.uploadSrcCode.array('src'), async (req, re
             await fileSystemFunctions.deleteFile(`${dataFunctions.commonTaskPath}/${taskId}/${String(taskTests.tests[i]._id)}/${String(taskTests.tests[i]._id)}input.txt`);
           }
           const result = await dataFunctions.saveAttemptInfo(userId, taskId,
-            attemptNumber, mainFile, req.files, JSON.parse(answer.body), bestResult, taskTests.weight);
+            attemptNumber, mainFile, req.files, JSON.parse(answer.body), bestResult, taskTests.weight, taskTests.passResult);
           res.status(200).json({
             result: result.result,
             isPassed: result.isPassed,
