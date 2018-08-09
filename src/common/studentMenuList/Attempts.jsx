@@ -84,7 +84,7 @@ class Attempts extends React.Component {
               <Grid item xs>
                 <Paper className={attempt.isPassed ? classes.green : classes.red}>
                   <Typography component="p" className={classes.score}>
-                    {attempt.result}
+                    {Math.round(attempt.result * 10) / 10}
                   </Typography>
                 </Paper>
               </Grid>

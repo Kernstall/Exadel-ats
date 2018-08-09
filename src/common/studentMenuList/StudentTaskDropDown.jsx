@@ -190,7 +190,7 @@ class StudentTaskDropDown extends React.Component {
                     <List>
                       <ListItem>
                         <Typography className={classes.marginTop} component="p">
-                          Оценка: <Button size={'small'} className={!this.state.res.isPassed ? classes.red : classes.green}>{this.state.res.result}</Button>
+                          Оценка: <Button size={'small'} className={!this.state.res.isPassed ? classes.red : classes.green}>{Math.round(this.state.res.result * 10) / 10}</Button>
                         </Typography>
                       </ListItem>
                       <ListItem>
