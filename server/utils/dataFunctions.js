@@ -1582,9 +1582,7 @@ exports.saveTrainigTest = async (studentId, answers, groupId, topicId) => {
 };
 
 exports.saveExamTest = async (studentId, answers, testId) => {
-  //console.log(answers);
   const result = await testAnalysis(answers);
-  //console.log(result);
 
   if (result.isPassed) {
     result.status = 'passed';
@@ -1599,8 +1597,8 @@ exports.saveExamTest = async (studentId, answers, testId) => {
         'tests.$.result': result.result,
         'tests.$.status': result.status,
         'tests.$.questions': result.questions,
+        'tests.$.date': new Date(),
       },
     },
   );
-
 };
