@@ -3,7 +3,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Edit from '@material-ui/icons/Edit';
-import MenuItem from "@material-ui/core/es/MenuItem/MenuItem";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const styles = theme => ({
   inputOutput: {

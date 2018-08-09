@@ -67,7 +67,7 @@ const upload = multer({
   storage,
   fileFilter(req, file, cb) {
     try {
-      if (file.originalname.match(/^[\da-f]+input.txt$|^[\da-f]+output.txt$|.cpp$|.java$|.h|.c$/)) {
+      if (file.originalname.match(/^[\da-f]+input.txt$|^[\da-f]+output.txt$|.cpp$|.java$|.h$|.c$/)) {
         cb(null, true);
       } else {
         cb(null, false);

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import withStyles from '@material-ui/core/es/styles/withStyles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import generateRandomId from '../../util/generateRandomId';
 
 const styles = {

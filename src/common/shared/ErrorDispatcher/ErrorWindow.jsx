@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles/index';
-import Button from '@material-ui/core/es/Button/Button';
-import Paper from '@material-ui/core/es/Paper/Paper';
-import Typography from '@material-ui/core/es/Typography/Typography';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 const styles = {
   wrapper: {

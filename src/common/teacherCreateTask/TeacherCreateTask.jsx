@@ -9,7 +9,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Chip from '@material-ui/core/Chip';
 import { Link } from 'react-router-dom';
 import Close from '@material-ui/icons/Close';
-import MenuItem from '@material-ui/core/es/MenuItem/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import generateRandomId from '../../util/generateRandomId';
 import TestField from './TestField';
 import FormSelect from '../shared/select';

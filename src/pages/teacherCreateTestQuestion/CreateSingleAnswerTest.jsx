@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/es/Checkbox/Checkbox';
-import Typography from '@material-ui/core/es/Typography/Typography';
-import Button from '@material-ui/core/es/Button/Button';
-import TextField from '@material-ui/core/es/TextField/TextField';
-import FormControl from '@material-ui/core/es/FormControl/FormControl';
-import AddCircle from '@material-ui/icons/es/AddCircle';
-import RadioGroup from '@material-ui/core/es/RadioGroup/RadioGroup';
-import FormControlLabel from '@material-ui/core/es/FormControlLabel/FormControlLabel';
-import Radio from '@material-ui/core/es/Radio/Radio';
-import Close from '@material-ui/icons/es/Close';
+import Checkbox from '@material-ui/core/Checkbox';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import AddCircle from '@material-ui/icons/AddCircle';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import Close from '@material-ui/icons/Close';
 
 const styles = theme => ({
   flexContainerHorizontal: {

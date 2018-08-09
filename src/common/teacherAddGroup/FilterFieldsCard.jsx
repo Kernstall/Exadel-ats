@@ -6,8 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/es/Button/Button';
-import FormControl from '@material-ui/core/es/FormControl/FormControl';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
 import FormSelect from '../shared/select/index';
 
 const styles = {
