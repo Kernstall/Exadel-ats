@@ -563,19 +563,15 @@ class TeacherTaskEdit extends React.Component {
                 <div className={classes.test}>
                   <TestField
                     handleTestsUpload={this.handleTestsInputUpload}
-                    inputText={element.input}
+                    inputText={`${element._id}input.txt`}
                     isNew={element.isNew}
                     id={`${element._id}1`}
                   />
                   <TestField
                     handleTestsUpload={this.handleTestsOutputUpload}
-                    inputText={element.output}
+                    inputText={`${element._id}output.txt`}
                     isNew={element.isNew}
                     id={`${element._id}2`}
-                  />
-                  <Close
-                    className={classes.deleteButton}
-                    onClick={() => this.handleClickDeleteTest(element._id)}
                   />
                   {element.isNew
                   && (
