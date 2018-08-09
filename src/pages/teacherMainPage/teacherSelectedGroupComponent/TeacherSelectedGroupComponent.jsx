@@ -54,6 +54,9 @@ const styles = {
   student: {
     padding: '4px 5px !important',
   },
+  no: {
+    display: 'none',
+  },
 };
 
 class TeacherSelectedGroupComponent extends React.Component {
@@ -82,6 +85,7 @@ class TeacherSelectedGroupComponent extends React.Component {
             студентов: {this.props.groupMembers.length}
           </div>
           <FormControlLabel
+            className={classes.no}
             control={(
               <Checkbox
                 checked={this.state.checked}
@@ -111,14 +115,6 @@ class TeacherSelectedGroupComponent extends React.Component {
             </ListItem>
           ))}
         </List>
-
-        <div className={classes.teacherButtonsHolder}>
-          <div className={classes.buttonCorrection}>
-            <Button className={classes.addStudentButton} variant="contained">
-              Добавить студента
-            </Button>
-          </div>
-        </div>
       </div>
     );
   }

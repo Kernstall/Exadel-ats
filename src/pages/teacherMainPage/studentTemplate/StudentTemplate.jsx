@@ -34,6 +34,9 @@ const styles = {
     fontSize: 20,
   },
   checked: {},
+  no: {
+    opacity: '0',
+  },
 };
 
 class StudentTemplate extends React.Component {
@@ -75,10 +78,11 @@ class StudentTemplate extends React.Component {
             {`Пройдено тестов: ${this.props.testsComplete}`}
           </Grid>
           <Grid item xs={2}>
-            {`Балл: ${this.props.score}`}
+            {`Балл: ${(this.props.score) ? this.props.score : 0}`}
           </Grid>
           <Grid item xs={1}>
             <FormControlLabel
+              className={classes.no}
               control={
                 <Checkbox
                   checked={this.state.checked}
