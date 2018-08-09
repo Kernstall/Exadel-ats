@@ -845,7 +845,7 @@ const compileProcessing = (testsResult, taskWeight, passResult) => {
     }
   });
 
-  mark = (currentValue / maxValue) * taskWeight * 10;
+  mark = (currentValue / maxValue) * taskWeight;
   if (mark >= isPassedValue) {
     isPassedFlag = true;
   }
