@@ -8,6 +8,8 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Spinner from '../shared/spinner/index';
 import FormSelect from '../shared/select/index';
+import store from '../../store';
+import messageRequested from '../../actions/errorMessage';
 
 const styles = theme => ({
   button: {
@@ -177,7 +179,7 @@ class AssingTestTask extends React.Component {
       return;
     }
     if (start - this.startDefault < 0) {
-      this.setState({ error: 'Старт раньше чем сейчас' });
+      this.setState({ error: 'Старт раньше, чем сейчас' });
       return;
     }
     if (deadline - start < 0) {
@@ -207,6 +209,10 @@ class AssingTestTask extends React.Component {
     })
       .then(response => response.json())
       .then((body) => {
+        store.dispatch({
+          type: 'Entity/ErrorMessage/Request',
+          payload: 'Задача успешно назначена',
+        });
         handle();
       })
       .catch((err) => {
