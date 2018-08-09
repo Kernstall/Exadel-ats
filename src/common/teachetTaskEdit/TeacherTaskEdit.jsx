@@ -573,10 +573,6 @@ class TeacherTaskEdit extends React.Component {
                     isNew={element.isNew}
                     id={`${element._id}2`}
                   />
-                  <Close
-                    className={classes.deleteButton}
-                    onClick={() => this.handleClickDeleteTest(element._id)}
-                  />
                   {element.isNew
                   && (
                   <TextField
