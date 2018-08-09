@@ -74,7 +74,7 @@ exports.uploadSrcCode = multer({
   storage: storageSrcCode,
   fileFilter(req, file, cb) {
     try {
-      if (file.originalname.match(/.cpp$|.java$|.h|.c$/)) {
+      if (file.originalname.match(/.cpp$|.java$|.h$|.c$/)) {
         cb(null, true);
       } else {
         cb(null, false);
