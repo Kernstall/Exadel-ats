@@ -75,7 +75,7 @@ class StudentTasks extends React.Component {
             {console.log(task)}
               <Paper className={task.isPassed ? classes.green : classes.red}>
                 <Typography className={classes.score}>
-                  {task.bestResult}/{task.weight}
+                  {Math.round(task.bestResult * 10) / 10}/{task.weight}
                 </Typography>
               </Paper>
             </Grid>
