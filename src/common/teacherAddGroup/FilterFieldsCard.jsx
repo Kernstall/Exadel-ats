@@ -48,8 +48,8 @@ const styles = {
 };
 
 const universities = {
-  БГУ: ['A1', 'B1', 'C1'],
-  БГУИР: ['A2', 'B2', 'C2'],
+  BSU: ['A1', 'B1', 'C1'],
+  BSUIR: ['A2', 'B2', 'C2'],
 };
 
 class FilterStudentCard extends React.Component {
@@ -58,6 +58,7 @@ class FilterStudentCard extends React.Component {
     this.state = {
       university: '',
       faculties: '',
+      universityList: [],
     };
 
     this.handleSelectUnChange = this.handleSelectUnChange.bind(this);
@@ -88,11 +89,31 @@ class FilterStudentCard extends React.Component {
     });
   }
 
+  componentDidMount(){
+    fetch('/api/user/universities', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+        'Set-Cookie': 'true',
+      },
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          universityList: res.map(el => ({
+            name: el.name,
+            faculties: el.faculties,
+          })),
+        });
+      });
+  }
+
   render() {
     const { classes } = this.props;
-    const universitiesArr = Object.keys(universities);
+    const universitiesArr = this.state.universityList.map(el => el.name);
     const { university } = this.state;
-    const facultiesArr = universities[university];
+    const facultiesArr = this.state.universityList[university];
 
     return (
       <Card className={classes.card}>
